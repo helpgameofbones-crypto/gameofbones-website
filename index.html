@@ -431,6 +431,8 @@ footer{background:var(--dark);color:rgba(255,255,255,.6);padding:56px 6% 28px;ma
 #page-checkout.active ~ footer,
 #page-checkout.active + footer,
 body:has(#page-checkout.active) footer { display: none !important; }
+body:has(#page-login.active) footer { display: none !important; }
+body:has(#page-login.active) #mainNav { display: none !important; }
 </style>
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
@@ -2051,12 +2053,23 @@ body:has(#page-checkout.active) footer { display: none !important; }
             <div id="co-items-list" style="display:flex;flex-direction:column;gap:14px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--cream-mid)"></div>
 
             <!-- Discount code -->
-            <div style="margin-bottom:14px">
+            <div style="margin-bottom:10px">
               <div style="display:flex;gap:8px">
                 <input id="co-discount" type="text" placeholder="Discount code" style="flex:1;padding:10px 12px;border:1.5px solid var(--cream-mid);background:var(--cream);font-family:'Jost',sans-serif;font-size:13px;color:var(--dark);outline:none">
                 <button onclick="applyDiscount()" style="background:var(--dark);color:var(--white);border:none;padding:10px 16px;font-family:'Jost',sans-serif;font-size:12px;font-weight:700;letter-spacing:.08em;cursor:pointer">Apply</button>
               </div>
               <div id="discountMsg" style="display:none;font-size:12px;margin-top:6px;padding:6px 10px"></div>
+            </div>
+
+            <!-- Loyalty Points Redemption -->
+            <div id="loyaltyPointsSection" style="display:none;margin-bottom:14px;background:var(--teal-pale);border:1px solid var(--teal);padding:12px 14px">
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <div>
+                  <div style="font-size:12px;font-weight:700;color:var(--teal)">&#11088; Loyalty Points Available</div>
+                  <div id="loyaltyPointsMsg" style="font-size:12px;color:var(--muted);margin-top:2px"></div>
+                </div>
+                <button id="loyaltyApplyBtn" onclick="applyLoyaltyPoints()" style="background:var(--teal);color:var(--white);border:none;padding:8px 14px;font-family:'Jost',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer">Use Points</button>
+              </div>
             </div>
 
             <!-- Totals -->
@@ -2086,10 +2099,11 @@ body:has(#page-checkout.active) footer { display: none !important; }
 
 <!-- ── LOGIN PAGE ────────────────────────────────────────────────────────── -->
 <div id="page-login" class="page">
-  <section style="background:var(--cream);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:60px 20px">
+  <section style="background:var(--cream);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px 20px;position:fixed;inset:0;z-index:500;overflow-y:auto">
     <div style="background:var(--white);max-width:400px;width:100%;border-top:4px solid var(--gold);box-shadow:0 8px 40px rgba(0,0,0,.1)">
       <!-- Header -->
-      <div style="background:var(--dark);padding:28px 32px;text-align:center">
+      <div style="background:var(--dark);padding:28px 32px;text-align:center;position:relative">
+        <button onclick="showPage(sessionStorage.getItem('loginReturnPage')||'home')" style="position:absolute;top:14px;left:14px;background:none;border:none;color:rgba(255,255,255,.5);font-size:20px;cursor:pointer;line-height:1" title="Go back">&#8592;</button>
         <div style="font-size:32px;margin-bottom:8px">&#x1F43E;</div>
         <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--white)">Sign In</div>
         <div style="font-size:12px;color:rgba(255,255,255,.5);margin-top:4px">To leave verified reviews</div>
@@ -2230,8 +2244,11 @@ function showPage(id) {
   if (id === 'shop') { activeShopFilter = 'all'; activeShopSize = 'all'; }
   // Restore WA widget when leaving checkout
   var waW = document.querySelector('.wa-widget');
-  if (waW) waW.style.display = id === 'checkout' ? 'none' : '';
-  var footerEl = document.querySelector('footer'); if(footerEl) footerEl.style.display = id === 'checkout' ? 'none' : '';
+  if (waW) waW.style.display = (id === 'checkout' || id === 'login') ? 'none' : '';
+  var footerEl = document.querySelector('footer');
+  if(footerEl) footerEl.style.display = (id === 'checkout' || id === 'login') ? 'none' : '';
+  var mainNav = document.getElementById('mainNav');
+  if(mainNav) mainNav.style.display = id === 'login' ? 'none' : '';
   if (typeof initReveal === 'function') initReveal();
   if (typeof initReveal === 'function') setTimeout(initReveal, 80);
   if (id === 'home' && typeof renderProducts === 'function') { renderProducts(products.slice(0,4),'homeProd'); }
@@ -5655,19 +5672,30 @@ function saveProductImage(n,d){productImages[n]=d;var p=products.find(function(x
 function openImageUpload(n,e){if(e)e.stopPropagation();if(!n)return;var inp=document.createElement('input');inp.type='file';inp.accept='image/*';inp.onchange=function(ev){var f=ev.target.files[0];if(!f)return;if(f.size>3145728){showCartToast('Max 3MB');return;}var r=new FileReader();r.onload=function(ev2){saveProductImage(n,ev2.target.result);};r.readAsDataURL(f);};inp.click();}
 function removeProductImage(n,e){if(e)e.stopPropagation();delete productImages[n];var p=products.find(function(x){return x.name===n;});if(p)p.img='';try{localStorage.setItem('gobProductImages',JSON.stringify(productImages));}catch(e){}renderProducts(products.slice(0,4),'homeProd');renderProducts(products,'shopProd');restoreViewCartBtns();showCartToast('Image removed');}
 function handleLoginClick(){
+  // Close any open overlays first
   var pmO=document.getElementById('pmodalOverlay');
   if(pmO&&pmO.classList.contains('open')){pmO.classList.remove('open');document.body.style.overflow='';}
   var drawer=document.getElementById('cartDrawer');
   if(drawer&&drawer.classList.contains('open')){drawer.style.transform='translateX(100%)';drawer.classList.remove('open');var co=document.getElementById('cartOverlay');if(co){co.style.opacity='0';co.style.display='none';}document.body.style.overflow='';}
-  var ap=document.querySelector('.page.active');if(ap){var pid=ap.id.replace('page-','');if(pid!=='login')sessionStorage.setItem('loginReturnPage',pid);}
+  // Save return page (but not checkout or login)
+  var ap=document.querySelector('.page.active');
+  if(ap){var pid=ap.id.replace('page-','');if(pid!=='login'&&pid!=='checkout')sessionStorage.setItem('loginReturnPage',pid);}
+  // Hide nav and footer for login page
+  var footerEl=document.querySelector('footer');if(footerEl)footerEl.style.display='none';
+  var mainNav=document.getElementById('mainNav');if(mainNav)mainNav.style.display='none';
+  var waW=document.querySelector('.wa-widget');if(waW)waW.style.display='none';
+  // Hide all pages, show login
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  var loginPage=document.getElementById('page-login');
+  if(loginPage)loginPage.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  // Show correct login state
   if(currentUser){
-    showPage('login');
     var la=document.getElementById('loginAlreadyIn'),lf=document.getElementById('loginForm');
     if(la)la.style.display='block'; if(lf)lf.style.display='none';
     setText('loginWelcomeName',currentUser.name);
     if(typeof renderReorderSection==='function')renderReorderSection();
   } else {
-    showPage('login');
     var la2=document.getElementById('loginAlreadyIn'),lf2=document.getElementById('loginForm');
     if(la2)la2.style.display='none'; if(lf2)lf2.style.display='flex';
   }
@@ -5724,7 +5752,7 @@ function trackOrders() {
   result.innerHTML = html;
 }
 
-// Loyalty Points
+// Loyalty Points - fetches real order history from Supabase
 function checkRewards() {
   var phone = document.getElementById("rewardsPhone").value.replace(/\D/g,"");
   var result = document.getElementById("rewardsResult");
@@ -5732,28 +5760,113 @@ function checkRewards() {
     result.innerHTML = "<p style='color:#c0392b;font-size:13px'>Please enter a valid 10-digit number.</p>";
     return;
   }
-  var orders = [];
-  try { orders = JSON.parse(localStorage.getItem("gobOrders") || "[]"); } catch(e) {}
-  var myOrders = orders.filter(function(o){ return (o.phone||"").replace(/\D/g,"").slice(-10) === phone.slice(-10) && o.status !== "cancelled"; });
-  var totalSpent = myOrders.reduce(function(s,o){ return s + (o.total||0); }, 0);
-  var points = Math.floor(totalSpent / 10);
-  var rupees = Math.floor(points / 100) * 10;
-  var el = document.getElementById("rewardsResult");
-  el.innerHTML = "";
-  var div = document.createElement("div");
-  div.style.cssText = "background:var(--dark);padding:32px;text-align:center";
-  div.innerHTML = "<div style='font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:12px'>Your Balance</div>" +
-    "<div style='font-size:64px;font-weight:700;color:var(--white);font-family:Cormorant Garamond,serif;line-height:1'>" + points + "</div>" +
-    "<div style='font-size:14px;color:rgba(255,255,255,.5);margin-top:4px'>loyalty points</div>" +
-    (rupees > 0 ? "<div style='margin-top:16px;background:rgba(200,151,58,.15);border:1px solid rgba(200,151,58,.3);padding:12px;font-size:13px;color:var(--gold)'>Redeem for Rs." + rupees + " off your next order</div>" : "") +
-    "<div style='margin-top:12px;font-size:12px;color:rgba(255,255,255,.4)'>" + myOrders.length + " orders - Rs." + totalSpent.toLocaleString("en-IN") + " total spent</div>";
-  el.appendChild(div);
-  var btn = document.createElement("button");
-  btn.className = "btn-gold";
-  btn.style.cssText = "margin-top:16px;font-size:12px;padding:12px 28px";
-  btn.textContent = "Redeem Points on WhatsApp";
-  btn.onclick = function(){ openWA(); };
-  el.appendChild(btn);
+  result.innerHTML = "<p style='color:var(--muted);font-size:13px;text-align:center;padding:20px'>Loading your points...</p>";
+
+  // Try last 10 digits to match various formats
+  var phoneLast10 = phone.slice(-10);
+
+  fetch(SUPABASE_URL + '/rest/v1/orders?select=id,grand_total,total_amount,status,created_at&customer_phone=ilike.*' + phoneLast10 + '&status=neq.cancelled&order=created_at.desc', {
+    headers: {
+      'apikey': SUPABASE_ANON_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
+    }
+  })
+  .then(function(res) { return res.json(); })
+  .then(function(orders) {
+    var myOrders = Array.isArray(orders) ? orders : [];
+    var totalSpent = myOrders.reduce(function(s,o){ return s + (o.grand_total || o.total_amount || 0); }, 0);
+    var points = Math.floor(totalSpent / 10);
+    var rupees = Math.floor(points / 100) * 10;
+
+    var el = document.getElementById("rewardsResult");
+    el.innerHTML = "";
+
+    if (myOrders.length === 0) {
+            var noOrd = document.createElement("div");
+      noOrd.style.cssText = "background:var(--cream);border:1px solid var(--cream-mid);padding:24px;text-align:center";
+      noOrd.innerHTML = "<div style='font-size:32px;margin-bottom:12px'>&#128062;</div><div style='font-size:14px;font-weight:700;color:var(--dark);margin-bottom:8px'>No orders found</div><div style='font-size:13px;color:var(--muted)'>Place your first order to start earning loyalty points!</div>";
+      var shopBtn = document.createElement("button");
+      shopBtn.className = "btn-gold";
+      shopBtn.style.cssText = "margin-top:16px;font-size:12px;padding:10px 24px";
+      shopBtn.textContent = "Shop Now";
+      shopBtn.onclick = function(){ showPage("shop"); };
+      noOrd.appendChild(shopBtn);
+      el.appendChild(noOrd);
+      return;
+    }
+
+    var div = document.createElement("div");
+    div.style.cssText = "background:var(--dark);padding:32px;text-align:center";
+    div.innerHTML =
+      "<div style='font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:12px'>Your Points Balance</div>" +
+      "<div style='font-size:72px;font-weight:700;color:var(--white);font-family:Cormorant Garamond,serif;line-height:1'>" + points + "</div>" +
+      "<div style='font-size:14px;color:rgba(255,255,255,.5);margin-top:6px'>loyalty points</div>" +
+      (rupees > 0
+        ? "<div style='margin-top:20px;background:rgba(200,151,58,.15);border:1px solid rgba(200,151,58,.3);padding:14px;font-size:14px;color:var(--gold);font-weight:600'>&#127873; Redeem " + (rupees*10) + " points for <strong>Rs." + rupees + " off</strong> your next order</div>"
+        : "<div style='margin-top:16px;font-size:12px;color:rgba(255,255,255,.3)'>Earn " + (100 - (points % 100)) + " more points to unlock Rs.10 off</div>") +
+      "<div style='margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:12px'>" +
+        "<div style='background:rgba(255,255,255,.07);padding:14px;border-radius:2px'>" +
+          "<div style='font-size:22px;font-weight:800;color:var(--gold)'>" + myOrders.length + "</div>" +
+          "<div style='font-size:11px;color:rgba(255,255,255,.4);margin-top:4px'>Total Orders</div>" +
+        "</div>" +
+        "<div style='background:rgba(255,255,255,.07);padding:14px;border-radius:2px'>" +
+          "<div style='font-size:22px;font-weight:800;color:var(--gold)'>Rs." + Math.round(totalSpent).toLocaleString("en-IN") + "</div>" +
+          "<div style='font-size:11px;color:rgba(255,255,255,.4);margin-top:4px'>Total Spent</div>" +
+        "</div>" +
+      "</div>";
+    el.appendChild(div);
+
+    // Recent orders list
+    var hist = document.createElement("div");
+    hist.style.cssText = "margin-top:16px;background:var(--white);border:1px solid var(--cream-mid)";
+    hist.innerHTML = "<div style='padding:14px 16px;border-bottom:1px solid var(--cream-mid);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)'>Recent Orders</div>" +
+      myOrders.slice(0,5).map(function(o) {
+        var amt = o.grand_total || o.total_amount || 0;
+        var pts = Math.floor(amt / 10);
+        var date = new Date(o.created_at).toLocaleDateString("en-IN", {day:"numeric",month:"short",year:"numeric"});
+        return "<div style='padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--cream-mid)'>" +
+          "<div><div style='font-size:13px;font-weight:600;color:var(--dark)'>Rs." + amt.toLocaleString("en-IN") + "</div>" +
+          "<div style='font-size:11px;color:var(--muted);margin-top:2px'>" + date + "</div></div>" +
+          "<div style='font-size:12px;font-weight:700;color:var(--teal)'>+" + pts + " pts</div>" +
+          "</div>";
+      }).join("") +
+      "</div>";
+    el.appendChild(hist);
+
+    // Redeem button
+    if (rupees > 0) {
+      var btn = document.createElement("button");
+      btn.className = "btn-gold";
+      btn.style.cssText = "width:100%;margin-top:16px;font-size:13px;padding:14px";
+      btn.textContent = "Redeem Rs." + rupees + " off on WhatsApp";
+      btn.onclick = function(){
+        var msg = "Hi! I want to redeem my " + points + " loyalty points (Rs." + rupees + " off) on my next order. My phone number is " + phone + ".";
+        var url = "https://wa.me/919082503295?text=" + encodeURIComponent(msg);
+        window.open(url, "_blank");
+      };
+      el.appendChild(btn);
+    } else {
+      var btn2 = document.createElement("button");
+      btn2.className = "btn-gold";
+      btn2.style.cssText = "width:100%;margin-top:16px;font-size:13px;padding:14px";
+      btn2.textContent = "Shop Now to Earn More Points";
+      btn2.onclick = function(){ showPage("shop"); };
+      el.appendChild(btn2);
+    }
+  })
+  .catch(function(e) {
+    // Fallback to localStorage
+    var orders = [];
+    try { orders = JSON.parse(localStorage.getItem("gobOrders") || "[]"); } catch(ex) {}
+    var myOrders = orders.filter(function(o){ return (o.phone||"").replace(/\D/g,"").slice(-10) === phoneLast10 && o.status !== "cancelled"; });
+    var totalSpent = myOrders.reduce(function(s,o){ return s + (o.total||0); }, 0);
+    var points = Math.floor(totalSpent / 10);
+    result.innerHTML = "<div style='background:var(--cream);border:1px solid var(--cream-mid);padding:20px;text-align:center'>" +
+      "<div style='font-size:32px;margin-bottom:8px'>&#127881;</div>" +
+      "<div style='font-size:28px;font-weight:700;color:var(--dark);font-family:Cormorant Garamond,serif'>" + points + " points</div>" +
+      "<div style='font-size:13px;color:var(--muted);margin-top:8px'>Based on " + myOrders.length + " local orders</div>" +
+      "</div>";
+  });
 }
 
 // Referral
@@ -5860,6 +5973,159 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // reviews render hooked into showPage directly
 // ═══════════════════════ END NEW FEATURES ═════════════════════════════
+
+
+// ═══════════════════ SUPABASE PRODUCT SYNC v2 ═══════════════════════
+// Fetches live product data from Supabase and updates images/prices/status
+var SUPABASE_URL = 'https://syuostlqzzinigqwjzap.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5dW9zdGxxenppbmlncXdqemFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NTA3MzIsImV4cCI6MjA4OTQyNjczMn0.BKf4EF2QhNcW_u1SVVbtiGdlnzdthiptlVcNk3gP2KU';
+
+function syncProductsFromSupabase() {
+  fetch(SUPABASE_URL + '/rest/v1/products?select=name,image_url,images,price,description,category,filter,is_active,is_bestseller,tags&is_active=eq.true&order=name', {
+    headers: {
+      'apikey': SUPABASE_ANON_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
+    }
+  })
+  .then(function(res) { return res.json(); })
+  .then(function(dbProducts) {
+    if (!dbProducts || !Array.isArray(dbProducts) || dbProducts.length === 0) return;
+    var updated = 0;
+    dbProducts.forEach(function(dbP) {
+      // Find matching product in hardcoded array by name (case-insensitive)
+      var match = products.find(function(p) {
+        return p.name.toLowerCase().trim() === (dbP.name||'').toLowerCase().trim();
+      });
+      if (match) {
+        // Update image from Supabase if available
+        if (dbP.image_url) {
+          match.img = dbP.image_url;
+        } else if (dbP.images && dbP.images.length > 0) {
+          match.img = dbP.images[0];
+        }
+        // Update price if set in Supabase
+        if (dbP.price && dbP.price > 0 && match.sizes && match.sizes.length > 0) {
+          match.sizes[0].price = Math.round(dbP.price);
+        }
+        // Update bestseller badge
+        if (dbP.is_bestseller && !match.badge) {
+          match.badge = 'Bestseller';
+        }
+        updated++;
+      }
+    });
+    // Also hide products marked inactive in Supabase
+    var activeNames = dbProducts.map(function(p){ return (p.name||'').toLowerCase().trim(); });
+    // Re-render with updated images
+    if (updated > 0) {
+      var homeProd = document.getElementById('homeProd');
+      var shopProd = document.getElementById('shopProd');
+      if (homeProd && typeof renderProducts === 'function') renderProducts(products.slice(0,4), 'homeProd');
+      if (shopProd && typeof renderProducts === 'function') renderProducts(products, 'shopProd');
+      if (typeof restoreViewCartBtns === 'function') restoreViewCartBtns();
+    }
+  })
+  .catch(function(e) {
+    // Silently fail - hardcoded products still show
+    console.log('Supabase sync skipped:', e.message);
+  });
+}
+
+// Run sync after page loads
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(syncProductsFromSupabase, 500);
+});
+// ═══════════════════ END SUPABASE PRODUCT SYNC ═══════════════════
+
+
+// ── LOYALTY POINTS REDEMPTION AT CHECKOUT ──────────────────────────
+var _loyaltyPoints = 0;
+var _loyaltyPhone = '';
+var _loyaltyApplied = false;
+
+function checkLoyaltyAtCheckout() {
+  // Get phone from checkout form
+  var phoneEl = document.getElementById('co-phone');
+  if (!phoneEl || !phoneEl.value.trim()) return;
+  var phone = phoneEl.value.trim().replace(/\D/g,'');
+  if (phone.length < 10) return;
+  if (phone === _loyaltyPhone) return; // already checked this number
+
+  _loyaltyPhone = phone;
+  var phoneLast10 = phone.slice(-10);
+
+  fetch(SUPABASE_URL + '/rest/v1/orders?select=grand_total,total_amount,status&customer_phone=ilike.*' + phoneLast10 + '&status=neq.cancelled', {
+    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
+  })
+  .then(function(res){ return res.json(); })
+  .then(function(orders) {
+    if (!Array.isArray(orders) || orders.length === 0) return;
+    var totalSpent = orders.reduce(function(s,o){ return s + (o.grand_total||o.total_amount||0); }, 0);
+    _loyaltyPoints = Math.floor(totalSpent / 10);
+    var rupees = Math.floor(_loyaltyPoints / 100) * 10;
+    if (rupees > 0 && !_loyaltyApplied) {
+      var section = document.getElementById('loyaltyPointsSection');
+      var msg = document.getElementById('loyaltyPointsMsg');
+      var btn = document.getElementById('loyaltyApplyBtn');
+      if (section) section.style.display = 'block';
+      if (msg) msg.textContent = _loyaltyPoints + ' points = Rs.' + rupees + ' off your order';
+      if (btn) btn.textContent = 'Use Rs.' + rupees + ' Off';
+    }
+  })
+  .catch(function(){});
+}
+
+function applyLoyaltyPoints() {
+  var rupees = Math.floor(_loyaltyPoints / 100) * 10;
+  if (rupees <= 0) return;
+
+  // Apply as a fixed discount
+  appliedDiscount = { type: 'fixed', value: rupees, label: 'Loyalty Points (' + _loyaltyPoints + ' pts)' };
+  _loyaltyApplied = true;
+
+  // Update UI
+  var section = document.getElementById('loyaltyPointsSection');
+  var btn = document.getElementById('loyaltyApplyBtn');
+  if (section) {
+    section.style.background = 'rgba(42,124,111,.08)';
+    section.style.borderColor = 'var(--teal)';
+    var msg = document.getElementById('loyaltyPointsMsg');
+    if (msg) msg.textContent = 'Rs.' + rupees + ' off applied! Points will be deducted after order.';
+    if (btn) { btn.textContent = 'Applied ✓'; btn.disabled = true; btn.style.opacity = '0.6'; }
+  }
+
+  // Recalculate totals
+  updateOrderSummary();
+  showCartToast('Rs.' + rupees + ' loyalty discount applied!', 'success');
+}
+
+// Hook into phone field - check points when phone is entered
+document.addEventListener('DOMContentLoaded', function() {
+  var phoneEl = document.getElementById('co-phone');
+  if (phoneEl) {
+    phoneEl.addEventListener('blur', function() {
+      if (this.value.trim().replace(/\D/g,'').length >= 10) {
+        checkLoyaltyAtCheckout();
+      }
+    });
+  }
+});
+
+// Also check when checkout page opens
+var _origShowPageForLoyalty = showPage;
+showPage = function(id) {
+  _origShowPageForLoyalty(id);
+  if (id === 'checkout') {
+    _loyaltyPhone = '';
+    _loyaltyApplied = false;
+    _loyaltyPoints = 0;
+    var section = document.getElementById('loyaltyPointsSection');
+    if (section) section.style.display = 'none';
+    var btn = document.getElementById('loyaltyApplyBtn');
+    if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
+  }
+};
+// ── END LOYALTY POINTS REDEMPTION ──────────────────────────────────
 
 </script>
 </html>
