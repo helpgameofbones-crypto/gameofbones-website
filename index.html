@@ -3856,7 +3856,10 @@ function placeOrder() {
   _currentOrderTotal = grandTotal;
 
   // COD: skip Razorpay, go straight to success
-  if (selectedPayment === 'cod') {
+  // Check actual radio state too in case variable is out of sync
+  var codRadio = document.querySelector('input[name="payment"][value="cod"]');
+  if (selectedPayment === 'cod' || (codRadio && codRadio.checked)) {
+    selectedPayment = 'cod';
     _finaliseOrder(ref, phoneVal, orderItems);
     return;
   }
