@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -482,9 +482,8 @@ body:has(#page-login.active) #mainNav { display: none !important; }
         </div>
       </div>
       <div class="hero-visual">
-        <div class="hero-img-wrap">
-          <div class="hero-prod-placeholder">&#127831;</div>
-          <div class="hero-badge">Best<br>Seller</div>
+        <div class="hero-img-wrap" style="cursor:pointer" onclick="showPage('shop')">
+          <img id="heroProductImg" src="" alt="Game of Bones" style="width:380px;height:440px;object-fit:cover;border-radius:2px;box-shadow:0 40px 80px rgba(0,0,0,.5);display:none"><div id="heroPlaceholder" class="hero-prod-placeholder">&#127831;</div><div class="hero-badge">Best<br>Seller</div>
         </div>
       </div>
     </div>
@@ -6127,5 +6126,19 @@ showPage = function(id) {
 };
 // ── END LOYALTY POINTS REDEMPTION ──────────────────────────────────
 
-</script>
-</html>
+
+function initHeroImages() {
+  var names = ['Chicken Jerky','Buff Jerky','Chicken Feet','Chicken Neck'];
+  var img = document.getElementById('heroProductImg');
+  var ph = document.getElementById('heroPlaceholder');
+  for (var i=0;i<names.length;i++) {
+    var match = products.find(function(p){ return p.name===names[i]; });
+    if (match && match.img) {
+      if (img) { img.src=match.img; img.style.display='block'; }
+      if (ph) ph.style.display='none';
+      break;
+    }
+  }
+}
+setTimeout(function(){ if(typeof initHeroImages==='function') initHeroImages(); }, 1000);
+</script></html>
