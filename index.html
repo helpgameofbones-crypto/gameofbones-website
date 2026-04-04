@@ -111,7 +111,7 @@ section{padding:90px 6%}
 .step-title{font-size:14px;font-weight:700;color:var(--dark);margin-bottom:8px;letter-spacing:.05em;text-transform:uppercase}
 .step-desc{font-size:13px;color:var(--muted);line-height:1.6;font-weight:300}
 /* COMPARE TABLE */
-.compare-table{display:grid;grid-template-columns:1fr 1fr 1fr;max-width:800px;margin:0 auto}
+.compare-table{display:grid;grid-template-columns:1fr 1fr 1fr;max-width:800px;margin:0 auto;overflow-x:auto;-webkit-overflow-scrolling:touch}
 /* TESTIMONIALS */
 .testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px}
 .testi-card{background:var(--white);padding:32px;border:1px solid var(--cream-mid);position:relative}
@@ -403,6 +403,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.6);padding:56px 6% 28px;ma
 
 @media(max-width:480px){
   .prod-grid{grid-template-columns:repeat(2,1fr)!important;gap:8px!important}
+  .compare-table>div{padding:10px 6px!important;font-size:11px!important}
   .sec-title{font-size:clamp(24px,6vw,36px)!important}
   .hero{padding:48px 5% 60px!important}
   .btn-gold,.btn-outline{padding:12px 20px!important;font-size:11px!important}
@@ -1189,7 +1190,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
 
         <h3>Delivery Timeframes</h3>
         <p>Estimated delivery times from the date of dispatch. These are estimates and not guaranteed due to courier delays outside our control.</p>
-        <table>
+        <div style="overflow-x:auto;-webkit-overflow-scrolling:touch"><table>
           <tr><th>Location</th><th>Estimated Delivery</th><th>Typical Courier</th></tr>
           <tr><td>Kalyan, Thane &amp; Navi Mumbai</td><td><strong>1&ndash;2 working days</strong></td><td>Delhivery / Xpressbees</td></tr>
           <tr><td>Mumbai &amp; MMR</td><td><strong>1&ndash;3 working days</strong></td><td>Delhivery / Xpressbees</td></tr>
@@ -1202,7 +1203,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
         </table>
 
         <h3>Shipping Charges</h3>
-        <table>
+        <div style="overflow-x:auto;-webkit-overflow-scrolling:touch"><table>
           <tr><th>Order Value</th><th>Shipping Charge</th></tr>
           <tr><td>&#8377;599 and above</td><td><strong style="color:var(--teal)">FREE</strong></td></tr>
           <tr><td>Below &#8377;599</td><td>Flat &#8377;50 delivery charge</td></tr>
@@ -1351,7 +1352,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
         </div>
 
         <h3>Refund Timelines</h3>
-        <table>
+        <div style="overflow-x:auto;-webkit-overflow-scrolling:touch"><table>
           <tr><th>Payment Method</th><th>Refund Timeline (after approval)</th></tr>
           <tr><td>UPI / Net Banking / Wallets</td><td>3&ndash;5 business days</td></tr>
           <tr><td>Credit / Debit Card</td><td>5&ndash;7 business days</td></tr>
