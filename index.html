@@ -3745,6 +3745,49 @@ function _finaliseOrder(ref, phoneVal, orderItems) {
       localStorage.setItem('gobCurrentUser', JSON.stringify(currentUser));
     }
   } catch(e) {}
+  // Save order to Supabase
+  try {
+    var fname = document.getElementById('co-fname') ? document.getElementById('co-fname').value.trim() : '';
+    var lname = document.getElementById('co-lname') ? document.getElementById('co-lname').value.trim() : '';
+    var email = document.getElementById('co-email') ? document.getElementById('co-email').value.trim() : '';
+    var addr1 = document.getElementById('co-addr1') ? document.getElementById('co-addr1').value.trim() : '';
+    var addr2 = document.getElementById('co-addr2') ? document.getElementById('co-addr2').value.trim() : '';
+    var city = document.getElementById('co-city') ? document.getElementById('co-city').value.trim() : '';
+    var stateEl = document.getElementById('co-state');
+    var state = stateEl ? stateEl.value : '';
+    var pin = document.getElementById('co-pin') ? document.getElementById('co-pin').value.trim() : '';
+    var subtotalEl = document.getElementById('co-subtotal');
+    var subtotal = subtotalEl ? parseInt(subtotalEl.textContent.replace(/[^0-9]/g,'')) || 0 : 0;
+    var shippingEl = document.getElementById('co-shipping-val');
+    var shipping = shippingEl && shippingEl.textContent !== 'FREE' ? parseInt(shippingEl.textContent.replace(/[^0-9]/g,'')) || 0 : 0;
+    var discountEl = document.getElementById('co-discount-val');
+    var discount = discountEl ? parseInt(discountEl.textContent.replace(/[^0-9]/g,'')) || 0 : 0;
+    var orderData = {
+      ref: ref,
+      customer_name: fname + ' ' + lname,
+      customer_phone: phoneVal,
+      customer_email: email,
+      shipping_address: { line1: addr1, line2: addr2, city: city, state: state, pincode: pin },
+      items: cartItems.map(function(i){ return { name: i.name, size: i.sizeLabel, price: i.price, qty: i.qty }; }),
+      subtotal: subtotal,
+      discount: discount,
+      shipping: shipping,
+      grand_total: _currentOrderTotal,
+      payment_method: selectedPayment === 'cod' ? 'cod' : 'prepaid',
+      payment_status: selectedPayment === 'cod' ? 'pending' : 'paid',
+      status: 'placed',
+    };
+    fetch('https://syuostlqzzinigqwjzap.supabase.co/rest/v1/orders', {
+      method: 'POST',
+      headers: {
+        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5dW9zdGxxenppbmlncXdqemFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NTA3MzIsImV4cCI6MjA4OTQyNjczMn0.BKf4EF2QhNcW_u1SVVbtiGdlnzdthiptlVcNk3gP2KU',
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5dW9zdGxxenppbmlncXdqemFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NTA3MzIsImV4cCI6MjA4OTQyNjczMn0.BKf4EF2QhNcW_u1SVVbtiGdlnzdthiptlVcNk3gP2KU',
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(orderData)
+    }).catch(function(e){ console.log('Order save failed:', e); });
+  } catch(e) { console.log('Order save error:', e); }
   // Show success
   var osRef = document.getElementById('orderSuccessRef');
   if (osRef) osRef.textContent = 'Order Ref: ' + ref;
