@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -482,8 +482,9 @@ body:has(#page-login.active) #mainNav { display: none !important; }
         </div>
       </div>
       <div class="hero-visual">
-        <div class="hero-img-wrap" style="cursor:pointer" onclick="showPage('shop')">
-          <img id="heroProductImg" src="" alt="Game of Bones" style="width:380px;height:440px;object-fit:cover;border-radius:2px;box-shadow:0 40px 80px rgba(0,0,0,.5);display:none"><div id="heroPlaceholder" class="hero-prod-placeholder">&#127831;</div><div class="hero-badge">Best<br>Seller</div>
+        <div class="hero-img-wrap">
+          <div class="hero-prod-placeholder">&#127831;</div>
+          <div class="hero-badge">Best<br>Seller</div>
         </div>
       </div>
     </div>
@@ -1417,8 +1418,8 @@ body:has(#page-login.active) #mainNav { display: none !important; }
   <div class="pmodal">
     <button class="pmodal-close" onclick="closePModal()">&#10005;</button>
     <div class="pmodal-img" style="position:relative">
-      <img id="pmodal-img" src="" alt="" style="width:100%;height:100%;object-fit:cover;display:none">
-
+      <img id="pmodal-img" src="" alt="" onerror="this.style.display='none';document.getElementById('pmodal-placeholder').style.display='flex'">
+      <button id="pmodal-upload-btn" onclick="openImageUpload(currentModalProduct&&currentModalProduct.name,event)" style="position:absolute;bottom:10px;right:10px;background:rgba(26,16,8,.75);color:var(--gold-pale);border:1px solid var(--gold);padding:7px 12px;font-family:'Jost',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(4px);display:flex;align-items:center;gap:5px">&#128247; Add Photo</button>
       <div class="pmodal-img-placeholder" id="pmodal-placeholder" style="display:none">&#127831;</div>
     </div>
     <!-- Bundle image header — shown instead of product img for bundle products -->
@@ -3730,7 +3731,7 @@ function toggleBillingAddr(cb) {
 }
 
 // ── YOUR RAZORPAY KEY ────────────────────────────────────────────────
-var RAZORPAY_KEY_ID = 'rzp_live_SXJ6C2fj6Qa0As'; // Replace with your live key from Razorpay dashboard
+var RAZORPAY_KEY_ID = 'rzp_live_YOUR_KEY_HERE'; // Replace with your live key from Razorpay dashboard
 
 function _finaliseOrder(ref, phoneVal, orderItems) {
   // Save order locally
@@ -3745,49 +3746,6 @@ function _finaliseOrder(ref, phoneVal, orderItems) {
       localStorage.setItem('gobCurrentUser', JSON.stringify(currentUser));
     }
   } catch(e) {}
-  // Save order to Supabase
-  try {
-    var fname = document.getElementById('co-fname') ? document.getElementById('co-fname').value.trim() : '';
-    var lname = document.getElementById('co-lname') ? document.getElementById('co-lname').value.trim() : '';
-    var email = document.getElementById('co-email') ? document.getElementById('co-email').value.trim() : '';
-    var addr1 = document.getElementById('co-addr1') ? document.getElementById('co-addr1').value.trim() : '';
-    var addr2 = document.getElementById('co-addr2') ? document.getElementById('co-addr2').value.trim() : '';
-    var city = document.getElementById('co-city') ? document.getElementById('co-city').value.trim() : '';
-    var stateEl = document.getElementById('co-state');
-    var state = stateEl ? stateEl.value : '';
-    var pin = document.getElementById('co-pin') ? document.getElementById('co-pin').value.trim() : '';
-    var subtotalEl = document.getElementById('co-subtotal');
-    var subtotal = subtotalEl ? parseInt(subtotalEl.textContent.replace(/[^0-9]/g,'')) || 0 : 0;
-    var shippingEl = document.getElementById('co-shipping-val');
-    var shipping = shippingEl && shippingEl.textContent !== 'FREE' ? parseInt(shippingEl.textContent.replace(/[^0-9]/g,'')) || 0 : 0;
-    var discountEl = document.getElementById('co-discount-val');
-    var discount = discountEl ? parseInt(discountEl.textContent.replace(/[^0-9]/g,'')) || 0 : 0;
-    var orderData = {
-      ref: ref,
-      customer_name: fname + ' ' + lname,
-      customer_phone: phoneVal,
-      customer_email: email,
-      shipping_address: { line1: addr1, line2: addr2, city: city, state: state, pincode: pin },
-      items: cartItems.map(function(i){ return { name: i.name, size: i.sizeLabel, price: i.price, qty: i.qty }; }),
-      subtotal: subtotal,
-      discount: discount,
-      shipping: shipping,
-      grand_total: _currentOrderTotal,
-      payment_method: selectedPayment === 'cod' ? 'cod' : 'prepaid',
-      payment_status: selectedPayment === 'cod' ? 'pending' : 'paid',
-      status: 'placed',
-    };
-    fetch('https://syuostlqzzinigqwjzap.supabase.co/rest/v1/orders', {
-      method: 'POST',
-      headers: {
-        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5dW9zdGxxenppbmlncXdqemFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NTA3MzIsImV4cCI6MjA4OTQyNjczMn0.BKf4EF2QhNcW_u1SVVbtiGdlnzdthiptlVcNk3gP2KU',
-        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5dW9zdGxxenppbmlncXdqemFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NTA3MzIsImV4cCI6MjA4OTQyNjczMn0.BKf4EF2QhNcW_u1SVVbtiGdlnzdthiptlVcNk3gP2KU',
-        'Content-Type': 'application/json',
-        'Prefer': 'return=minimal'
-      },
-      body: JSON.stringify(orderData)
-    }).catch(function(e){ console.log('Order save failed:', e); });
-  } catch(e) { console.log('Order save error:', e); }
   // Show success
   var osRef = document.getElementById('orderSuccessRef');
   if (osRef) osRef.textContent = 'Order Ref: ' + ref;
@@ -3856,10 +3814,7 @@ function placeOrder() {
   _currentOrderTotal = grandTotal;
 
   // COD: skip Razorpay, go straight to success
-  // Check actual radio state too in case variable is out of sync
-  var codRadio = document.querySelector('input[name="payment"][value="cod"]');
-  if (selectedPayment === 'cod' || (codRadio && codRadio.checked)) {
-    selectedPayment = 'cod';
+  if (selectedPayment === 'cod') {
     _finaliseOrder(ref, phoneVal, orderItems);
     return;
   }
@@ -3901,13 +3856,11 @@ function placeOrder() {
   };
 
   try {
-    var _codCheck=document.querySelector('input[name="payment"][value="cod"]');
-    if(_codCheck&&_codCheck.checked){_finaliseOrder(ref,phoneVal,orderItems);return;}
-    fetch('https://gameofbones-admin.vercel.app/api/razorpay-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({amount:grandTotal*100,receipt:ref,notes:{order_ref:ref}})}).then(function(r){return r.json();}).then(function(od){if(od.error){if(errBox){errBox.textContent='Payment error: '+od.error;errBox.style.display='block';}return;}options.order_id=od.order_id;options.key=od.key||options.key;var rzp = new Razorpay(options);
+    var rzp = new Razorpay(options);
     rzp.on('payment.failed', function(response) {
       if (errBox) { errBox.textContent='Payment failed: ' + (response.error.description || 'Please try again.'); errBox.style.display='block'; }
     });
-    rzp.open();}).catch(function(e){if(errBox){errBox.textContent='Payment server error. Try COD.';errBox.style.display='block';}});return;
+    rzp.open();
   } catch(e) {
     if (errBox) { errBox.textContent='Could not open payment gateway. Please try again.'; errBox.style.display='block'; }
   }
@@ -4158,7 +4111,8 @@ function openPModal(idx) {
   const p = products[idx];
   currentModalProduct = p;
   currentModalPrice = p.sizes[0].price;
-  var _pimg=document.getElementById('pmodal-img');var _pph=document.getElementById('pmodal-placeholder');_pimg.alt=p.name;if(p.img){_pimg.src=p.img;_pimg.style.display='block';if(_pph)_pph.style.display='none';}fetch('https://syuostlqzzinigqwjzap.supabase.co/rest/v1/products?select=image_url,images&name=eq.'+encodeURIComponent(p.name),{headers:{'apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5dW9zdGxxenppbmlncXdqemFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NTA3MzIsImV4cCI6MjA4OTQyNjczMn0.BKf4EF2QhNcW_u1SVVbtiGdlnzdthiptlVcNk3gP2KU','Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5dW9zdGxxenppbmlncXdqemFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NTA3MzIsImV4cCI6MjA4OTQyNjczMn0.BKf4EF2QhNcW_u1SVVbtiGdlnzdthiptlVcNk3gP2KU'}}).then(function(r){return r.json();}).then(function(d){var url=d&&d[0]?(d[0].image_url||(d[0].images&&d[0].images.length>0?d[0].images[0]:null)):null;if(!url)url=p.img;if(url){p.img=url;_pimg.src=url;_pimg.style.display='block';if(_pph)_pph.style.display='none';}else{_pimg.style.display='none';if(_pph)_pph.style.display='flex';}}).catch(function(){});
+  document.getElementById('pmodal-img').src = p.img;
+  document.getElementById('pmodal-img').alt = p.name;
   // Image area: for bundles show upload section; for products show product image
   var imgWrap = document.querySelector('.pmodal-img');
   var bundleImgSection = document.getElementById('pmodal-bundle-img-section');
@@ -6071,16 +6025,6 @@ function syncProductsFromSupabase() {
       if (typeof restoreViewCartBtns === 'function') restoreViewCartBtns();
     }
   })
-  .then(function() {
-    // Extra pass: update any visible img tags directly
-    products.forEach(function(p) {
-      if (!p.img) return;
-      document.querySelectorAll('.prod-img-wrap img').forEach(function(img) {
-        if (img.alt === p.name && img.src !== p.img) { img.src = p.img; img.style.display = 'block'; }
-      });
-    });
-    if (typeof initHeroImages === 'function') initHeroImages();
-  })
   .catch(function(e) {
     // Silently fail - hardcoded products still show
     console.log('Supabase sync skipped:', e.message);
@@ -6089,7 +6033,7 @@ function syncProductsFromSupabase() {
 
 // Run sync after page loads
 document.addEventListener('DOMContentLoaded', function() {
-  syncProductsFromSupabase(); setTimeout(syncProductsFromSupabase, 2000);
+  setTimeout(syncProductsFromSupabase, 500);
 });
 // ═══════════════════ END SUPABASE PRODUCT SYNC ═══════════════════
 
@@ -6183,20 +6127,5 @@ showPage = function(id) {
 };
 // ── END LOYALTY POINTS REDEMPTION ──────────────────────────────────
 
-
-function initHeroImages() {
-  var names = ['Chicken Jerky','Buff Jerky','Chicken Feet','Chicken Neck'];
-  var img = document.getElementById('heroProductImg');
-  var ph = document.getElementById('heroPlaceholder');
-  for (var i=0;i<names.length;i++) {
-    var match = products.find(function(p){ return p.name===names[i]; });
-    if (match && match.img) {
-      if (img) { img.src=match.img; img.style.display='block'; }
-      if (ph) ph.style.display='none';
-      break;
-    }
-  }
-}
-setTimeout(function(){ if(typeof initHeroImages==='function') initHeroImages(); }, 1000);
-</script></html>
-<!-- deploy:20260404102846 -->
+</script>
+</html>
