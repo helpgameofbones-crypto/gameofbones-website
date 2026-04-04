@@ -6024,6 +6024,16 @@ function syncProductsFromSupabase() {
       if (typeof restoreViewCartBtns === 'function') restoreViewCartBtns();
     }
   })
+  .then(function() {
+    // Extra pass: update any visible img tags directly
+    products.forEach(function(p) {
+      if (!p.img) return;
+      document.querySelectorAll('.prod-img-wrap img').forEach(function(img) {
+        if (img.alt === p.name && img.src !== p.img) { img.src = p.img; img.style.display = 'block'; }
+      });
+    });
+    if (typeof initHeroImages === 'function') initHeroImages();
+  })
   .catch(function(e) {
     // Silently fail - hardcoded products still show
     console.log('Supabase sync skipped:', e.message);
