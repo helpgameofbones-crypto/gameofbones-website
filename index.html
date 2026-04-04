@@ -3855,11 +3855,11 @@ function placeOrder() {
   };
 
   try {
-    var rzp = new Razorpay(options);
+    fetch('https://gameofbones-admin.vercel.app/api/razorpay-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({amount:grandTotal*100,receipt:ref,notes:{order_ref:ref}})}).then(function(r){return r.json();}).then(function(od){if(od.error){if(errBox){errBox.textContent='Payment error: '+od.error;errBox.style.display='block';}return;}options.order_id=od.order_id;options.key=od.key||options.key;var rzp = new Razorpay(options);
     rzp.on('payment.failed', function(response) {
       if (errBox) { errBox.textContent='Payment failed: ' + (response.error.description || 'Please try again.'); errBox.style.display='block'; }
     });
-    rzp.open();
+    rzp.open();}).catch(function(e){if(errBox){errBox.textContent='Payment server error. Try COD.';errBox.style.display='block';}});return;
   } catch(e) {
     if (errBox) { errBox.textContent='Could not open payment gateway. Please try again.'; errBox.style.display='block'; }
   }
