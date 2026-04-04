@@ -4110,8 +4110,7 @@ function openPModal(idx) {
   const p = products[idx];
   currentModalProduct = p;
   currentModalPrice = p.sizes[0].price;
-  document.getElementById('pmodal-img').src = p.img;
-  document.getElementById('pmodal-img').alt = p.name;
+  var _pimg=document.getElementById('pmodal-img');var _pph=document.getElementById('pmodal-placeholder');_pimg.alt=p.name;if(p.img){_pimg.src=p.img;_pimg.style.display='block';if(_pph)_pph.style.display='none';}fetch('https://syuostlqzzinigqwjzap.supabase.co/rest/v1/products?select=image_url,images&name=eq.'+encodeURIComponent(p.name),{headers:{'apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5dW9zdGxxenppbmlncXdqemFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NTA3MzIsImV4cCI6MjA4OTQyNjczMn0.BKf4EF2QhNcW_u1SVVbtiGdlnzdthiptlVcNk3gP2KU','Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5dW9zdGxxenppbmlncXdqemFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NTA3MzIsImV4cCI6MjA4OTQyNjczMn0.BKf4EF2QhNcW_u1SVVbtiGdlnzdthiptlVcNk3gP2KU'}}).then(function(r){return r.json();}).then(function(d){var url=d&&d[0]?(d[0].image_url||(d[0].images&&d[0].images.length>0?d[0].images[0]:null)):null;if(!url)url=p.img;if(url){p.img=url;_pimg.src=url;_pimg.style.display='block';if(_pph)_pph.style.display='none';}else{_pimg.style.display='none';if(_pph)_pph.style.display='flex';}}).catch(function(){});
   // Image area: for bundles show upload section; for products show product image
   var imgWrap = document.querySelector('.pmodal-img');
   var bundleImgSection = document.getElementById('pmodal-bundle-img-section');
