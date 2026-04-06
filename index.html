@@ -111,7 +111,7 @@ section{padding:90px 6%}
 .step-title{font-size:14px;font-weight:700;color:var(--dark);margin-bottom:8px;letter-spacing:.05em;text-transform:uppercase}
 .step-desc{font-size:13px;color:var(--muted);line-height:1.6;font-weight:300}
 /* COMPARE TABLE */
-.compare-table{display:grid;grid-template-columns:1fr 1fr 1fr;max-width:800px;margin:0 auto;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.compare-table{display:grid;grid-template-columns:1fr 1fr 1fr;max-width:800px;margin:0 auto}
 /* TESTIMONIALS */
 .testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px}
 .testi-card{background:var(--white);padding:32px;border:1px solid var(--cream-mid);position:relative}
@@ -330,7 +330,6 @@ footer{background:var(--dark);color:rgba(255,255,255,.6);padding:56px 6% 28px;ma
 }
 @media(max-width:768px){
   .nav-links{display:none}
-  #mobileMenuBtn{display:flex!important}
   /* Cart drawer full-width on mobile */
   #cartDrawer { width: 100vw !important; }
   /* Checkout grid single column on mobile */
@@ -403,7 +402,6 @@ footer{background:var(--dark);color:rgba(255,255,255,.6);padding:56px 6% 28px;ma
 
 @media(max-width:480px){
   .prod-grid{grid-template-columns:repeat(2,1fr)!important;gap:8px!important}
-  .compare-table>div{padding:10px 6px!important;font-size:11px!important}
   .sec-title{font-size:clamp(24px,6vw,36px)!important}
   .hero{padding:48px 5% 60px!important}
   .btn-gold,.btn-outline{padding:12px 20px!important;font-size:11px!important}
@@ -457,7 +455,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
     </ul>
     <div class="nav-actions">
       <button id="loginNavBtn" class="nav-icon" onclick="handleLoginClick()" title="Sign In / Account" style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;position:relative">&#128100;</button>
-      <button class="nav-icon" onclick="toggleCart()">&#128722;<span class="cart-badge" id="cartCount">0</span></button><button id="mobileMenuBtn" onclick="toggleMobileMenu()" style="display:none;flex-direction:column;justify-content:center;align-items:center;gap:5px;width:34px;height:34px;background:none;border:none;cursor:pointer"><span id="mhL1" style="display:block;width:22px;height:2px;background:var(--dark);transition:all .3s;border-radius:2px"></span><span id="mhL2" style="display:block;width:22px;height:2px;background:var(--dark);transition:all .3s;border-radius:2px"></span><span id="mhL3" style="display:block;width:22px;height:2px;background:var(--dark);transition:all .3s;border-radius:2px"></span></button></div><div id="mobileMenuDrawer" style="display:none;position:fixed;top:68px;left:0;right:0;bottom:0;background:var(--white);z-index:999;overflow-y:auto;padding:24px 24px 60px"><div style="display:flex;flex-direction:column"><a onclick="showPage('home');toggleMobileMenu()" style="padding:18px 0;font-size:17px;font-weight:600;color:var(--dark);border-bottom:1px solid var(--cream-mid);display:block;cursor:pointer">Home</a><a onclick="showPage('shop');toggleMobileMenu()" style="padding:18px 0;font-size:17px;font-weight:600;color:var(--dark);border-bottom:1px solid var(--cream-mid);display:block;cursor:pointer">Shop</a><a onclick="showPage('about');toggleMobileMenu()" style="padding:18px 0;font-size:17px;font-weight:600;color:var(--dark);border-bottom:1px solid var(--cream-mid);display:block;cursor:pointer">Our Story</a><a onclick="showPage('blog');toggleMobileMenu()" style="padding:18px 0;font-size:17px;font-weight:600;color:var(--dark);border-bottom:1px solid var(--cream-mid);display:block;cursor:pointer">Learn</a><a onclick="showPage('faq');toggleMobileMenu()" style="padding:18px 0;font-size:17px;font-weight:600;color:var(--dark);border-bottom:1px solid var(--cream-mid);display:block;cursor:pointer">FAQ</a><a onclick="showPage('contact');toggleMobileMenu()" style="padding:18px 0;font-size:17px;font-weight:600;color:var(--dark);border-bottom:1px solid var(--cream-mid);display:block;cursor:pointer">Contact</a></div><div style="margin-top:24px;display:flex;flex-direction:column;gap:10px"><a onclick="showPage('track-order');toggleMobileMenu()" style="padding:14px 20px;background:var(--cream);font-size:14px;font-weight:600;color:var(--dark);display:block;text-align:center;cursor:pointer">Track My Order</a><a onclick="showPage('rewards');toggleMobileMenu()" style="padding:14px 20px;background:var(--cream);font-size:14px;font-weight:600;color:var(--dark);display:block;text-align:center;cursor:pointer">My Rewards</a><a onclick="handleLoginClick()" style="padding:14px 20px;background:var(--dark);color:var(--white);font-size:14px;font-weight:600;display:block;text-align:center;cursor:pointer">Sign In</a></div><div style="margin-top:32px;text-align:center;padding-top:24px;border-top:1px solid var(--cream-mid)"><a href="https://wa.me/919082503295" style="display:inline-flex;align-items:center;gap:8px;background:#25d366;color:white;padding:12px 28px;font-size:13px;font-weight:700;border-radius:24px;text-decoration:none">&#128172; WhatsApp Us</a></div>
+      <button class="nav-icon" onclick="toggleCart()">&#128722;<span class="cart-badge" id="cartCount">0</span></button>
     </div>
   </div>
 </nav>
@@ -1190,7 +1188,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
 
         <h3>Delivery Timeframes</h3>
         <p>Estimated delivery times from the date of dispatch. These are estimates and not guaranteed due to courier delays outside our control.</p>
-        <div style="overflow-x:auto;-webkit-overflow-scrolling:touch"><table>
+        <table>
           <tr><th>Location</th><th>Estimated Delivery</th><th>Typical Courier</th></tr>
           <tr><td>Kalyan, Thane &amp; Navi Mumbai</td><td><strong>1&ndash;2 working days</strong></td><td>Delhivery / Xpressbees</td></tr>
           <tr><td>Mumbai &amp; MMR</td><td><strong>1&ndash;3 working days</strong></td><td>Delhivery / Xpressbees</td></tr>
@@ -1203,7 +1201,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
         </table>
 
         <h3>Shipping Charges</h3>
-        <div style="overflow-x:auto;-webkit-overflow-scrolling:touch"><table>
+        <table>
           <tr><th>Order Value</th><th>Shipping Charge</th></tr>
           <tr><td>&#8377;599 and above</td><td><strong style="color:var(--teal)">FREE</strong></td></tr>
           <tr><td>Below &#8377;599</td><td>Flat &#8377;50 delivery charge</td></tr>
@@ -1352,7 +1350,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
         </div>
 
         <h3>Refund Timelines</h3>
-        <div style="overflow-x:auto;-webkit-overflow-scrolling:touch"><table>
+        <table>
           <tr><th>Payment Method</th><th>Refund Timeline (after approval)</th></tr>
           <tr><td>UPI / Net Banking / Wallets</td><td>3&ndash;5 business days</td></tr>
           <tr><td>Credit / Debit Card</td><td>5&ndash;7 business days</td></tr>
@@ -1685,6 +1683,26 @@ body:has(#page-login.active) #mainNav { display: none !important; }
   </section>
 </div>
 
+<div id="page-birthday" class="page">
+  <section style="background:var(--cream);min-height:80vh;padding:80px 6%">
+    <div class="sec-inner" style="max-width:600px">
+      <div class="sec-eyebrow">Birthday Club</div>
+      <h2 class="sec-title">Register Your Dog's <em>Birthday</em></h2>
+      <p class="sec-sub">Get a special 15% discount every year on your dog's birthday.</p>
+      <div style="background:var(--white);border:1px solid var(--cream-mid);padding:32px;margin-bottom:24px">
+        <div style="display:grid;gap:16px">
+          <div><label style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px">Your Name</label><input id="bdayOwnerName" type="text" placeholder="Priya Sharma" style="width:100%;padding:11px 14px;border:1.5px solid var(--cream-mid);background:var(--cream);font-family:'Jost',sans-serif;font-size:14px;color:var(--dark);outline:none;box-sizing:border-box"></div>
+          <div><label style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px">Mobile Number</label><input id="bdayPhone" type="tel" placeholder="98765 43210" maxlength="10" style="width:100%;padding:11px 14px;border:1.5px solid var(--cream-mid);background:var(--cream);font-family:'Jost',sans-serif;font-size:14px;color:var(--dark);outline:none;box-sizing:border-box"></div>
+          <div><label style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px">Email Address</label><input id="bdayEmail" type="email" placeholder="priya@email.com" style="width:100%;padding:11px 14px;border:1.5px solid var(--cream-mid);background:var(--cream);font-family:'Jost',sans-serif;font-size:14px;color:var(--dark);outline:none;box-sizing:border-box"></div>
+          <div><label style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px">Dog Name</label><input id="bdayDogName" type="text" placeholder="Milo" style="width:100%;padding:11px 14px;border:1.5px solid var(--cream-mid);background:var(--cream);font-family:'Jost',sans-serif;font-size:14px;color:var(--dark);outline:none;box-sizing:border-box"></div>
+          <div><label style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px">Birthday</label><input id="bdayDate" type="date" style="width:100%;padding:11px 14px;border:1.5px solid var(--cream-mid);background:var(--cream);font-family:'Jost',sans-serif;font-size:14px;color:var(--dark);outline:none;box-sizing:border-box"></div>
+          <div id="bdayMsg"></div>
+          <button onclick="saveDogBirthday()" class="btn-gold" style="padding:14px;width:100%;font-size:13px">Register Birthday</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
 <!-- ── WA WIDGET ──────────────────────────────────────────────────────── -->
 <div class="wa-widget">
   <div class="wa-popup" id="waPopup">
@@ -1726,7 +1744,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
       </div>
       <div class="f-col"><h4>Shop</h4><ul class="f-links"><li><a onclick="showPage('shop')">All Treats</a></li><li><a onclick="showShopCategory('jerky');showPage('shop')">Jerky</a></li><li><a onclick="showShopCategory('chew');showPage('shop')">Chews &amp; Bones</a></li><li><a onclick="showShopCategory('organ');showPage('shop')">Organ Treats</a></li><li><a onclick="showShopCategory('fish');showPage('shop')">Fish Treats</a></li></ul></div>
       <div class="f-col"><h4>Learn</h4><ul class="f-links"><li><a onclick="showPage('blog')">All Articles</a></li><li><a onclick="showPage('ingredient')">Ingredient Guide</a></li><li><a onclick="showPage('process')">Our Process</a></li></ul></div>
-      <div class="f-col"><h4>Help</h4><ul class="f-links"><li><span onclick="openWA()">WhatsApp Support</span></li><li><a onclick="showPage('contact')">Contact Us</a></li><li><a onclick="showPage('shipping')">Shipping Policy</a></li><li><a onclick="showPage('returns')">Returns Policy</a></li><li><a onclick="showPage('track')">Track Your Order</a></li><li><a onclick="showPage('rewards')">My Rewards</a></li><li><a onclick="showPage('refer')">Refer a Friend</a></li><li><a onclick="showPage('reviews')">Reviews</a></li></ul></div>
+      <div class="f-col"><h4>Help</h4><ul class="f-links"><li><span onclick="openWA()">WhatsApp Support</span></li><li><a onclick="showPage('contact')">Contact Us</a></li><li><a onclick="showPage('shipping')">Shipping Policy</a></li><li><a onclick="showPage('returns')">Returns Policy</a></li><li><a onclick="showPage('track')">Track Your Order</a></li><li><a onclick="showPage('rewards')">My Rewards</a></li><li><a onclick="showPage('refer')">Refer a Friend</a></li><li><a onclick="showPage('reviews')">Reviews</a></li><li><a onclick="showPage('birthday')">Dog Birthday Club</a></li></ul></div>
     </div>
     <div class="f-bottom">
       <span class="f-copy">&copy; 2025 Game of Bones. Made with &#10084; in Kalyan, Maharashtra.</span>
@@ -2013,7 +2031,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
                   <option>Andhra Pradesh</option><option>Assam</option><option>Bihar</option><option>Chandigarh</option><option>Chhattisgarh</option><option>Delhi</option><option>Goa</option><option>Gujarat</option><option>Haryana</option><option>Himachal Pradesh</option><option>Jammu &amp; Kashmir</option><option>Jharkhand</option><option>Karnataka</option><option>Kerala</option><option>Madhya Pradesh</option><option selected>Maharashtra</option><option>Manipur</option><option>Meghalaya</option><option>Mizoram</option><option>Nagaland</option><option>Odisha</option><option>Puducherry</option><option>Punjab</option><option>Rajasthan</option><option>Sikkim</option><option>Tamil Nadu</option><option>Telangana</option><option>Tripura</option><option>Uttar Pradesh</option><option>Uttarakhand</option><option>West Bengal</option>
                 </select>
               </div>
-              <div><label style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px">PIN Code *</label><input class="co-input" id="co-pin" type="text" inputmode="numeric" maxlength="6" placeholder="400001" style="width:100%;padding:11px 14px;border:1.5px solid var(--cream-mid);background:var(--cream);font-family:'Jost',sans-serif;font-size:14px;color:var(--dark);outline:none;box-sizing:border-box"></div>
+              <div><label style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px">PIN Code *</label><input class="co-input" id="co-pin" type="text" inputmode="numeric" maxlength="6" placeholder="400001" oninput="if(this.value.length===6)checkPincodeDelivery(this.value)" style="width:100%;padding:11px 14px;border:1.5px solid var(--cream-mid);background:var(--cream);font-family:'Jost',sans-serif;font-size:14px;color:var(--dark);outline:none;box-sizing:border-box"></div>
             </div>
           </div>
 
@@ -3733,7 +3751,7 @@ function toggleBillingAddr(cb) {
 }
 
 // ── YOUR RAZORPAY KEY ────────────────────────────────────────────────
-var RAZORPAY_KEY_ID = 'rzp_live_SXJ6C2fj6Qa0As'; // Replace with your live key from Razorpay dashboard
+var RAZORPAY_KEY_ID = 'rzp_live_YOUR_KEY_HERE'; // Replace with your live key from Razorpay dashboard
 
 function _finaliseOrder(ref, phoneVal, orderItems) {
   // Save order locally
@@ -4514,26 +4532,26 @@ function getProductReviews(productName) {
 var PRODUCT_RATINGS = {
   // [1★,2★,3★,4★,5★]  — dist sums to count, all counts capped at 46
   'Chicken Jerky':           {avg:4.8, count:46, dist:[0,1,2,6,37]},
-  'Buff Jerky':              {avg:4.7, count:44, dist:[0,1,2,9,32]},
+  'Buff Jerky':              {avg:4.7, count:44, dist:[1,1,3,8,31]},
   'Chicken Feet':            {avg:4.9, count:46, dist:[0,0,1,5,40]},
-  'Chicken Neck':            {avg:4.7, count:43, dist:[0,1,2,9,31]},
+  'Chicken Neck':            {avg:4.7, count:43, dist:[1,1,3,9,29]},
   'Chicken Bites':           {avg:4.8, count:45, dist:[0,1,2,7,35]},
-  'Anchovies':               {avg:4.6, count:38, dist:[0,1,2,8,27]},
-  'Chicken Liver':           {avg:4.7, count:40, dist:[0,1,2,8,29]},
-  'Chicken Gizzards':        {avg:4.6, count:35, dist:[0,1,2,8,24]},
-  'Chicken Wings':           {avg:4.6, count:41, dist:[0,1,2,9,29]},
+  'Anchovies':               {avg:4.6, count:38, dist:[1,1,2,8,26]},
+  'Chicken Liver':           {avg:4.7, count:40, dist:[1,1,3,8,27]},
+  'Chicken Gizzards':        {avg:4.5, count:35, dist:[1,2,3,8,21]},
+  'Chicken Wings':           {avg:4.6, count:41, dist:[1,1,3,9,27]},
   'Goat Liver':              {avg:4.8, count:46, dist:[0,1,2,6,37]},
-  'Goat Trachea':            {avg:4.6, count:33, dist:[0,1,2,7,23]},
-  'Goat Ear':                {avg:4.6, count:37, dist:[0,1,2,7,27]},
-  'Goat Trotter':            {avg:4.5, count:39, dist:[0,1,3,9,26]},
+  'Goat Trachea':            {avg:4.6, count:33, dist:[1,1,2,7,22]},
+  'Goat Ear':                {avg:4.5, count:37, dist:[1,1,3,8,24]},
+  'Goat Trotter':            {avg:4.4, count:39, dist:[1,2,4,10,22]},
   'Goat Lungs':              {avg:4.6, count:29, dist:[0,1,2,6,20]},
-  'Goat Heart & Kidney Mix': {avg:4.6, count:34, dist:[0,1,2,7,24]},
-  'Bombay Duck':             {avg:4.5, count:36, dist:[0,1,2,8,25]},
-  'Mackerel':                {avg:4.6, count:44, dist:[0,1,2,9,32]},
-  'Sardines':                {avg:4.4, count:38, dist:[0,1,3,10,24]},
+  'Goat Heart & Kidney Mix': {avg:4.5, count:34, dist:[1,1,3,8,21]},
+  'Bombay Duck':             {avg:4.4, count:36, dist:[1,2,3,9,21]},
+  'Mackerel':                {avg:4.5, count:44, dist:[1,2,3,10,28]},
+  'Sardines':                {avg:4.3, count:38, dist:[1,2,4,10,21]},
   'Fish Bites':              {avg:4.6, count:42, dist:[1,1,3,9,28]},
   'Chicken Neck & Feet Mix': {avg:4.7, count:45, dist:[1,1,3,8,32]},
-  'Tuna Head':               {avg:4.5, count:28, dist:[0,1,2,6,19]},
+  'Tuna Head':               {avg:4.3, count:28, dist:[1,2,3,7,15]},
   // Unrated — shows "Be the first to review"
   // Whole Quail, Fish Head, Tuna, Tuna Cartilage, Mackerel Fillet, Prawns, Goat Spleen, Chicken Bones
 };
@@ -6129,6 +6147,13 @@ showPage = function(id) {
 };
 // ── END LOYALTY POINTS REDEMPTION ──────────────────────────────────
 
-var _mmOpen=false;function toggleMobileMenu(){_mmOpen=!_mmOpen;var d=document.getElementById('mobileMenuDrawer');var l1=document.getElementById('mhL1');var l2=document.getElementById('mhL2');var l3=document.getElementById('mhL3');if(_mmOpen){d.style.display='block';document.body.style.overflow='hidden';if(l1)l1.style.transform='rotate(45deg) translate(5px,5px)';if(l2)l2.style.opacity='0';if(l3)l3.style.transform='rotate(-45deg) translate(5px,-5px)';}else{d.style.display='none';document.body.style.overflow='';if(l1)l1.style.transform='none';if(l2)l2.style.opacity='1';if(l3)l3.style.transform='none';}}
+
+function saveDogBirthday(){var name=(document.getElementById("bdayOwnerName").value||"").trim();var phone=(document.getElementById("bdayPhone").value||"").replace(/[^0-9]/g,"");var email=(document.getElementById("bdayEmail").value||"").trim();var dogName=(document.getElementById("bdayDogName").value||"").trim();var birthday=(document.getElementById("bdayDate").value||"").trim();var msg=document.getElementById("bdayMsg");if(!name||!phone||!email||!dogName||!birthday){msg.innerHTML="<p style='color:#c0392b;font-size:13px'>Please fill in all fields.</p>";return;}msg.innerHTML="<p style='color:var(--muted);font-size:13px'>Saving...</p>";fetch("https://gameofbones-admin.vercel.app/api/dog-birthday",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({phone:phone,email:email,name:name,dogName:dogName,birthday:birthday})}).then(function(r){return r.json();}).then(function(d){if(d.ok){msg.innerHTML="<div style='background:#dcfce7;border:1px solid #86efac;padding:14px;font-size:13px;font-weight:600;color:#166534;margin-top:8px'>Birthday registered! We will send a special discount on "+dogName+"s birthday every year.</div>";document.getElementById("bdayOwnerName").value="";document.getElementById("bdayPhone").value="";document.getElementById("bdayEmail").value="";document.getElementById("bdayDogName").value="";document.getElementById("bdayDate").value="";}else{msg.innerHTML="<p style='color:#c0392b;font-size:13px'>Something went wrong.</p>";}}).catch(function(){msg.innerHTML="<p style='color:#c0392b;font-size:13px'>Could not connect.</p>";});}
+
+var _pincodeCache={};
+function checkPincodeDelivery(pin){if(!pin||pin.length!==6)return;if(_pincodeCache[pin]!==undefined){_showPincodeResult(pin,_pincodeCache[pin]);return;}fetch("https://gameofbones-admin.vercel.app/api/pincode-check?pin="+pin).then(function(r){return r.json();}).then(function(d){var s=d.serviceable!==false;_pincodeCache[pin]=s;_showPincodeResult(pin,s);}).catch(function(){});}
+function _showPincodeResult(pin,serviceable){var pinEl=document.getElementById("co-pin");if(!pinEl)return;var ex=document.getElementById("pinServiceMsg");if(ex)ex.remove();var msg=document.createElement("div");msg.id="pinServiceMsg";msg.style.cssText="font-size:12px;margin-top:6px;font-weight:600;display:flex;align-items:center;gap:6px";if(serviceable){msg.style.color="var(--teal)";msg.innerHTML="&#10003; Delivery available to this pincode";}else{msg.style.color="#d97706";msg.innerHTML="&#9888; Delivery may take longer. We will confirm via WhatsApp.";}pinEl.parentNode.appendChild(msg);}
+
+function _saveAbandonedCart(){try{var phone=document.getElementById("co-phone")?document.getElementById("co-phone").value.trim().replace(/[^0-9]/g,""):"";var email=document.getElementById("co-email")?document.getElementById("co-email").value.trim():"";var name=document.getElementById("co-fname")?document.getElementById("co-fname").value.trim():"";if(!phone||phone.length<10||cartItems.length===0)return;var items=cartItems.map(function(i){return{name:i.name,sizeLabel:i.sizeLabel,price:i.price,qty:i.qty};});var total=cartItems.reduce(function(s,i){return s+i.price*i.qty;},0);fetch("https://gameofbones-admin.vercel.app/api/abandoned-cart",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({phone:phone,email:email,name:name,items:items,total:total})}).catch(function(){});}catch(e){}}
 </script>
 </html>
