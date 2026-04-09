@@ -448,7 +448,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
     <ul class="nav-links">
       <li><a id="nav-home" class="active" onclick="showPage('home')">Home</a></li>
       <li><a id="nav-shop" onclick="showPage('shop')">Shop</a></li>
-      <li><a id="nav-about" onclick="showPage('about')">Our Story</a></li>
+      <li><a id="nav-rewards" onclick="showPage('rewards')">My Rewards</a></li>
       <li><a id="nav-blog" onclick="showPage('blog')">Learn</a></li>
       <li><a id="nav-faq" onclick="showPage('faq')">FAQ</a></li>
       <li><a id="nav-contact" onclick="showPage('contact')">Contact</a></li>
@@ -6159,5 +6159,6 @@ function _showPincodeResult(pin,serviceable){var pinEl=document.getElementById("
 function _saveAbandonedCart(){try{var phone=document.getElementById("co-phone")?document.getElementById("co-phone").value.trim().replace(/[^0-9]/g,""):"";var email=document.getElementById("co-email")?document.getElementById("co-email").value.trim():"";var name=document.getElementById("co-fname")?document.getElementById("co-fname").value.trim():"";if(!phone||phone.length<10||cartItems.length===0)return;var items=cartItems.map(function(i){return{name:i.name,sizeLabel:i.sizeLabel,price:i.price,qty:i.qty};});var total=cartItems.reduce(function(s,i){return s+i.price*i.qty;},0);fetch("https://gameofbones-admin.vercel.app/api/abandoned-cart",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({phone:phone,email:email,name:name,items:items,total:total})}).catch(function(){});}catch(e){}}
 </script>
 </html>
+
 
 
