@@ -3834,7 +3834,7 @@ function placeOrder() {
   _currentOrderTotal = grandTotal;
 
   // COD: skip Razorpay, go straight to success
-  if (selectedPayment === 'cod') {
+  if (document.querySelector('input[name="payment"]:checked') && document.querySelector('input[name="payment"]:checked').value === 'cod') {
     _finaliseOrder(ref, phoneVal, orderItems);
     return;
   }
