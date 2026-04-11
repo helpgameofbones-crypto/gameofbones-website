@@ -3756,6 +3756,18 @@ var RAZORPAY_KEY_ID = 'rzp_live_Sc4Adu52rXhZQ6'; // Replace with your live key f
 function _finaliseOrder(ref, phoneVal, orderItems) {
   // Save order locally
   try {
+    // Send to backend
+fetch('https://gameofbones-admin.vercel.app/api/save-order', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+        ref: ref,
+        customer_phone: phoneVal,
+        items: orderItems,
+        grand_total: _currentOrderTotal,
+        payment_method: document.querySelector('input[name="payment"]:checked') ? document.querySelector('input[name="payment"]:checked').value : 'unknown'
+    })
+}).catch(function(e) { console.log('Order save failed:', e); });
     var orders = JSON.parse(localStorage.getItem('gobOrders') || '[]');
     orders.push({ ref: ref, phone: phoneVal, items: orderItems, total: _currentOrderTotal, date: new Date().toISOString(), status: 'placed' });
     localStorage.setItem('gobOrders', JSON.stringify(orders));
