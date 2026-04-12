@@ -3762,8 +3762,17 @@ function _finaliseOrder(ref, phoneVal, orderItems) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 ref: ref,
+                customer_name: (document.getElementById('co-fname') ? document.getElementById('co-fname').value.trim() : '') + ' ' + (document.getElementById('co-lname') ? document.getElementById('co-lname').value.trim() : ''),
                 customer_phone: phoneVal,
-                items: orderItems,
+                customer_email: document.getElementById('co-email') ? document.getElementById('co-email').value.trim() : '',
+                shipping_address: {
+                    line1: document.getElementById('co-addr1') ? document.getElementById('co-addr1').value.trim() : '',
+                    line2: document.getElementById('co-addr2') ? document.getElementById('co-addr2').value.trim() : '',
+                    city: document.getElementById('co-city') ? document.getElementById('co-city').value.trim() : '',
+                    state: document.getElementById('co-state') ? document.getElementById('co-state').value : '',
+                    pincode: document.getElementById('co-pin') ? document.getElementById('co-pin').value.trim() : ''
+                },
+                items: cartItems.map(function(i) { return { name: i.name, size: i.sizeLabel, qty: i.qty, price: i.price }; }),
                 grand_total: _currentOrderTotal,
                 payment_method: document.querySelector('input[name="payment"]:checked') ? document.querySelector('input[name="payment"]:checked').value : 'unknown'
             })
