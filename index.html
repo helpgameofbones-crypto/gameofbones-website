@@ -3753,7 +3753,7 @@ function toggleBillingAddr(cb) {
 // ── YOUR RAZORPAY KEY ────────────────────────────────────────────────
 var RAZORPAY_KEY_ID = 'rzp_live_Sc4Adu52rXhZQ6'; // Replace with your live key from Razorpay dashboard
 
-function _finaliseOrder(ref, phoneVal, orderItems) {
+function _finaliseOrder(ref, phoneVal, orderItems, orderData) {
     var _capFname = document.getElementById('co-fname') ? document.getElementById('co-fname').value.trim() : '';
     var _capLname = document.getElementById('co-lname') ? document.getElementById('co-lname').value.trim() : '';
     var _capEmail = document.getElementById('co-email') ? document.getElementById('co-email').value.trim() : '';
@@ -3770,17 +3770,7 @@ function _finaliseOrder(ref, phoneVal, orderItems) {
         fetch('https://gameofbones-admin.vercel.app/api/save-order', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                body: JSON.stringify({
-                ref: ref,
-                customer_name: _capFname + ' ' + _capLname,
-                customer_phone: phoneVal,
-                customer_email: _capEmail,
-                shipping_address: { line1: _capAddr1, line2: _capAddr2, city: _capCity, state: _capState, pincode: _capPin },
-                items: _capItems,
-                grand_total: _currentOrderTotal,
-                payment_method: _capPayment
-            })
+            body: JSON.stringify(Object.assign({ ref: ref, customer_phone: phoneVal, grand_total: _currentOrderTotal }, orderData || {}))
         }).catch(function(e) { console.log('Order save failed:', e); });
                 },
                 items: cartItems.map(function(i) { return { name: i.name, size: i.sizeLabel, qty: i.qty, price: i.price }; }),
@@ -3867,7 +3857,8 @@ function placeOrder() {
 
   // COD: skip Razorpay, go straight to success
   if (document.querySelector('input[name="payment"]:checked') && document.querySelector('input[name="payment"]:checked').value === 'cod') {
-    _finaliseOrder(ref, phoneVal, orderItems);
+        var _orderData = { customer_name: fname + ' ' + lname, customer_email: email, shipping_address: { line1: document.getElementById('co-addr1').value.trim(), line2: (document.getElementById('co-addr2')?document.getElementById('co-addr2').value.trim():''), city: document.getElementById('co-city').value.trim(), state: document.getElementById('co-state').value, pincode: pinEl.value.trim() }, items: cartItems.map(function(i){ return {name:i.name, size:i.sizeLabel, qty:i.qty, price:i.price}; }), payment_method: 'cod' };
+        _finaliseOrder(ref, phoneVal, orderItems, _orderData);
     return;
   }
 
@@ -3902,8 +3893,8 @@ function placeOrder() {
       }
     },
     handler: function(response) {
-      // Payment successful
-      _finaliseOrder(ref, phoneVal, orderItems);
+      var _orderData = { customer_name: fname + ' ' + lname, customer_email: email, shipping_address: { line1: document.getElementById('co-addr1').value.trim(), line2: (document.getElementById('co-addr2')?document.getElementById('co-addr2').value.trim():''), city: document.getElementById('co-city').value.trim(), state: document.getElementById('co-state').value, pincode: pinEl.value.trim() }, items: cartItems.map(function(i){ return {name:i.name, size:i.sizeLabel, qty:i.qty, price:i.price}; }), payment_method: 'prepaid' };
+      _finaliseOrder(ref, phoneVal, orderItems, _orderData);
     }
   };
 
