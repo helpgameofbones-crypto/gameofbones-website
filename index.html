@@ -3771,16 +3771,17 @@ function _finaliseOrder(ref, phoneVal, orderItems) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
+                body: JSON.stringify({
                 ref: ref,
-                customer_name: (document.getElementById('co-fname') ? document.getElementById('co-fname').value.trim() : '') + ' ' + (document.getElementById('co-lname') ? document.getElementById('co-lname').value.trim() : ''),
+                customer_name: _capFname + ' ' + _capLname,
                 customer_phone: phoneVal,
-                customer_email: document.getElementById('co-email') ? document.getElementById('co-email').value.trim() : '',
-                shipping_address: {
-                    line1: document.getElementById('co-addr1') ? document.getElementById('co-addr1').value.trim() : '',
-                    line2: document.getElementById('co-addr2') ? document.getElementById('co-addr2').value.trim() : '',
-                    city: document.getElementById('co-city') ? document.getElementById('co-city').value.trim() : '',
-                    state: document.getElementById('co-state') ? document.getElementById('co-state').value : '',
-                    pincode: document.getElementById('co-pin') ? document.getElementById('co-pin').value.trim() : ''
+                customer_email: _capEmail,
+                shipping_address: { line1: _capAddr1, line2: _capAddr2, city: _capCity, state: _capState, pincode: _capPin },
+                items: _capItems,
+                grand_total: _currentOrderTotal,
+                payment_method: _capPayment
+            })
+        }).catch(function(e) { console.log('Order save failed:', e); });
                 },
                 items: cartItems.map(function(i) { return { name: i.name, size: i.sizeLabel, qty: i.qty, price: i.price }; }),
                 grand_total: _currentOrderTotal,
