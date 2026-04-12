@@ -3754,7 +3754,17 @@ function toggleBillingAddr(cb) {
 var RAZORPAY_KEY_ID = 'rzp_live_Sc4Adu52rXhZQ6'; // Replace with your live key from Razorpay dashboard
 
 function _finaliseOrder(ref, phoneVal, orderItems) {
-  // Save order locally
+    var _capFname = document.getElementById('co-fname') ? document.getElementById('co-fname').value.trim() : '';
+    var _capLname = document.getElementById('co-lname') ? document.getElementById('co-lname').value.trim() : '';
+    var _capEmail = document.getElementById('co-email') ? document.getElementById('co-email').value.trim() : '';
+    var _capAddr1 = document.getElementById('co-addr1') ? document.getElementById('co-addr1').value.trim() : '';
+    var _capAddr2 = document.getElementById('co-addr2') ? document.getElementById('co-addr2').value.trim() : '';
+    var _capCity = document.getElementById('co-city') ? document.getElementById('co-city').value.trim() : '';
+    var _capState = document.getElementById('co-state') ? document.getElementById('co-state').value : '';
+    var _capPin = document.getElementById('co-pin') ? document.getElementById('co-pin').value.trim() : '';
+    var _capPayment = document.querySelector('input[name="payment"]:checked') ? document.querySelector('input[name="payment"]:checked').value : 'unknown';
+    var _capItems = cartItems.map(function(i) { return { name: i.name, size: i.sizeLabel, qty: i.qty, price: i.price }; });
+    // Save order locally
     try {
         // Send to backend
         fetch('https://gameofbones-admin.vercel.app/api/save-order', {
