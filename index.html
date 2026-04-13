@@ -201,7 +201,7 @@ section{padding:90px 6%}
 .pmodal-overlay.open{opacity:1;pointer-events:all}
 .pmodal{background:var(--white);max-width:900px;width:100%;max-height:90vh;overflow-y:auto;display:grid;grid-template-columns:1fr 1fr;position:relative}
 .pmodal-img{background:var(--cream);aspect-ratio:1;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.pmodal-img img{width:100%;height:100%;object-fit:cover}
+.pmodal-img img{width:100%;height:100%;object-fit:cover;display:block}
 .pmodal-img-placeholder{font-size:80px;opacity:.35}
 .pmodal-body{padding:36px 32px;overflow-y:auto}
 .pmodal-close{position:absolute;top:12px;right:12px;background:var(--dark);color:var(--white);border:none;width:32px;height:32px;border-radius:50%;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:1}
@@ -1418,8 +1418,8 @@ body:has(#page-login.active) #mainNav { display: none !important; }
   <div class="pmodal">
     <button class="pmodal-close" onclick="closePModal()">&#10005;</button>
     <div class="pmodal-img" style="position:relative">
-      <img id="pmodal-img" src="" alt="" onerror="this.style.display='none';document.getElementById('pmodal-placeholder').style.display='flex'">
-      <button id="pmodal-upload-btn" onclick="openImageUpload(currentModalProduct&&currentModalProduct.name,event)" style="position:absolute;bottom:10px;right:10px;background:rgba(26,16,8,.75);color:var(--gold-pale);border:1px solid var(--gold);padding:7px 12px;font-family:'Jost',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(4px);display:flex;align-items:center;gap:5px">&#128247; Add Photo</button>
+      <img id="pmodal-img" src="" alt="" style="width:100%;height:100%;object-fit:cover;display:none">
+      <button id="pmodal-upload-btn" style="display:none"></button>
       <div class="pmodal-img-placeholder" id="pmodal-placeholder" style="display:none">&#127831;</div>
     </div>
     <!-- Bundle image header — shown instead of product img for bundle products -->
@@ -6188,3 +6188,5 @@ function _saveAbandonedCart(){try{var phone=document.getElementById("co-phone")?
 
 
 <!-- deployed 2026-04-11 11:46:20 -->
+
+<!-- cache-bust-20260413110329 -->
