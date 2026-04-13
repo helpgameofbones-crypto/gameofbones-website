@@ -85,7 +85,7 @@ section{padding:90px 6%}
 .prod-badge{position:absolute;top:12px;left:12px;background:var(--gold);color:var(--dark);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px}
 .prod-badge.teal{background:var(--teal);color:var(--white)}
 .prod-badge.brown{background:var(--brown);color:var(--white)}
-.prod-img-wrap:hover .prod-upload-btn{opacity:1!important}
+.prod-img-wrap:hover .prod-upload-btn{opacity:0!important;display:none!important}
 .prod-fav{position:absolute;top:10px;right:10px;background:var(--white);border:none;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;opacity:0;transition:opacity .2s;box-shadow:0 2px 8px rgba(0,0,0,.1)}
 .prod-card:hover .prod-fav{opacity:1}
 .prod-body{padding:16px}
@@ -4643,7 +4643,7 @@ function renderProducts(items, containerId) {
         <img src="${p.img}" alt="${p.name}" loading="lazy">
         <span class="prod-badge ${p.badgeCls}">${p.badge}</span>
         <button class="prod-fav" onclick="event.stopPropagation();toggleWishlist(this,${globalIdx})">${isWishlisted(globalIdx)?'♥':'♡'}</button>
-        <button class="prod-upload-btn" onclick="event.stopPropagation();openImageUpload('${p.name}',event)" title="Add product photo" style="position:absolute;bottom:8px;left:8px;background:rgba(26,16,8,.7);color:var(--gold-pale);border:1px solid rgba(200,151,58,.5);padding:5px 9px;font-size:9px;font-weight:700;letter-spacing:.08em;font-family:'Jost',sans-serif;text-transform:uppercase;cursor:pointer;opacity:0;transition:opacity .2s;border-radius:2px">&#128247;</button>
+        
       </div>
       <div class="prod-body">
         <div class="prod-cat">${p.cat}</div>
