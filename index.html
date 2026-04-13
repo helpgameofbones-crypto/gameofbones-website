@@ -97,7 +97,7 @@ section{padding:90px 6%}
 .size-select{width:100%;padding:7px 10px;border:1px solid var(--cream-mid);background:var(--cream);font-family:'Jost',sans-serif;font-size:12px;color:var(--dark);cursor:pointer;outline:none;margin:8px 0}
 .prod-footer{display:flex;align-items:center;justify-content:space-between;margin-top:8px}
 .prod-price{font-size:20px;font-weight:700;color:var(--dark);font-family:'Cormorant Garamond',serif}
-.add-btn{width:36px;height:36px;border-radius:50%;background:var(--dark);color:var(--white);border:none;font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;flex-shrink:0;padding:0;padding-bottom:2px}
+.add-btn{width:36px;height:36px;border-radius:50%;background:var(--dark);color:var(--white);border:none;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;flex-shrink:0}
 .add-btn:hover{background:var(--brown)}
 /* SHOP FILTERS */
 .shop-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px}
@@ -201,7 +201,7 @@ section{padding:90px 6%}
 .pmodal-overlay.open{opacity:1;pointer-events:all}
 .pmodal{background:var(--white);max-width:900px;width:100%;max-height:90vh;overflow-y:auto;display:grid;grid-template-columns:1fr 1fr;position:relative}
 .pmodal-img{background:var(--cream);aspect-ratio:1;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.pmodal-img img{width:100%;height:100%;object-fit:cover;display:block!important}#pmodal-upload-btn{display:none!important}
+.pmodal-img img{width:100%;height:100%;object-fit:cover}
 .pmodal-img-placeholder{font-size:80px;opacity:.35}
 .pmodal-body{padding:36px 32px;overflow-y:auto}
 .pmodal-close{position:absolute;top:12px;right:12px;background:var(--dark);color:var(--white);border:none;width:32px;height:32px;border-radius:50%;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:1}
@@ -351,7 +351,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.6);padding:56px 6% 28px;ma
   .hero { padding: 60px 6% !important; }
 
   .pmodal{grid-template-columns:1fr}
-
+  .pmodal-img{display:none}
   .process-steps,.testi-grid,.contact-grid,.ingr-grid,.process-page-step{grid-template-columns:1fr}
   .process-page-step:nth-child(even){direction:ltr}
   .art-grid{grid-template-columns:1fr}
@@ -1418,8 +1418,8 @@ body:has(#page-login.active) #mainNav { display: none !important; }
   <div class="pmodal">
     <button class="pmodal-close" onclick="closePModal()">&#10005;</button>
     <div class="pmodal-img" style="position:relative">
-      <img id="pmodal-img" src="" alt="">
-      <button id="pmodal-upload-btn" style="display:none"></button>
+      <img id="pmodal-img" src="" alt="" onerror="this.style.display='none';document.getElementById('pmodal-placeholder').style.display='flex'">
+      <button id="pmodal-upload-btn" onclick="openImageUpload(currentModalProduct&&currentModalProduct.name,event)" style="position:absolute;bottom:10px;right:10px;background:rgba(26,16,8,.75);color:var(--gold-pale);border:1px solid var(--gold);padding:7px 12px;font-family:'Jost',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(4px);display:flex;align-items:center;gap:5px">&#128247; Add Photo</button>
       <div class="pmodal-img-placeholder" id="pmodal-placeholder" style="display:none">&#127831;</div>
     </div>
     <!-- Bundle image header — shown instead of product img for bundle products -->
@@ -1911,7 +1911,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
         <div id="cartUpsellName" style="font-size:12px;font-weight:600;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
         <div id="cartUpsellPrice" style="font-size:11px;color:var(--muted)"></div>
       </div>
-      <button onclick="addCartUpsell()" style="background:var(--dark);color:var(--white);border:none;border-radius:50%;width:32px;height:32px;font-size:18px;line-height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0;padding-bottom:2px">+</button>
+      <button onclick="addCartUpsell()" style="background:var(--dark);color:var(--white);border:none;border-radius:50%;width:30px;height:30px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">+</button>
     </div>
   </div>
   <div id="cartFooter" style="display:none;border-top:1px solid var(--cream-mid);padding:16px 22px 22px;background:var(--white)">
@@ -2553,16 +2553,16 @@ const products = [
     feeding:'Organ meats should make up no more than 10–15% of the diet. Feed 2–3 times per week. Small dogs: 30–40g per serving. Medium dogs: 60–80g. Large dogs: 100–120g.',
     storage:{tiles:[{icon:'🫙',val:'6 Months',label:'Unopened'},{icon:'❄️',val:'3 Weeks',label:'After Opening'},{icon:'🌡️',val:'Cool & Dry',label:'Store At'}],note:'Organ treats have higher moisture sensitivity than jerky. Store in a cool, dry location in the sealed pouch. After opening, reseal tightly and keep in a cool spot — or refrigerate for maximum freshness. Use within 3 weeks of opening. Discard if you detect any unusual smell.'},
   },
-  {img:'Chicken_Gizzards_pouch_fornt.png', name:'Chicken Liver', cat:'Organ Treats', badge:'Superfood', badgeCls:'brown', desc:'Rich in Vitamin A, B12 and iron. One of the most nutrient-dense organ meats available.', tags:['Vitamin A','B12','Organ Meat'], sizes:[{label:'60g',price:359},{label:'120g',price:699},{label:'180g',price:1049},{label:'240g',price:1249}], filter:'organ',
-    tagline:'Liver is the most nutrient-dense food on the planet — for humans and dogs alike. A small amount delivers an extraordinary range of vitamins and minerals.',
+  {img:'Chicken_Gizzards_pouch_fornt.png', name:'Chicken Liver & Heart', cat:'Organ Treats', badge:'Superfood', badgeCls:'brown', desc:'Chicken liver and heart — packed with Vitamin A, B12, iron and taurine. A powerhouse organ mix for dogs.', tags:['Vitamin A','B12','Taurine'], sizes:[{label:'60g',price:359},{label:'120g',price:699},{label:'180g',price:1049},{label:'240g',price:1249}], filter:'organ',
+    tagline:'The liver and heart together deliver an extraordinary nutritional combination — Vitamin A and B12 from liver, taurine and CoQ10 from heart. Two organs, one pack.',
     benefits:[
       {icon:'👁️',title:'Vitamin A for Vision',text:'Liver is the richest natural source of Vitamin A, essential for eye health, immune function and skin maintenance.'},
-      {icon:'⚡',title:'Instant Energy Boost',text:'Dense in B vitamins (B1, B2, B6, B12, folate) that support energy metabolism and nervous system health.'},
+      {icon:'❤️',title:'Taurine for Heart Health',text:'Chicken heart is one of the best natural sources of taurine — essential for cardiac function and eye health in dogs.'},
       {icon:'🩸',title:'Combats Anaemia',text:'Extremely high in heme iron and folate — liver is one of the best natural treatments for iron-deficiency in dogs.'},
-      {icon:'🧠',title:'Brain & Cognitive Support',text:'Choline in liver supports brain development in puppies and cognitive function in older dogs.'},
+      {icon:'⚡',title:'Instant Energy Boost',text:'Dense in B vitamins and CoQ10 that support energy metabolism, nervous system health and cellular energy production.'},
     ],
-    nutrients:[{val:'Very High',label:'Vitamin A'},{val:'Very High',label:'B12'},{val:'High',label:'Iron'}],
-    feeding:'Liver is very rich — feed in moderation. 2–3 times per week maximum. Small dogs: 20–30g per serving. Medium: 50–60g. Large: 80–100g. Excessive liver can cause Vitamin A toxicity — do not overfeed.',
+    nutrients:[{val:'Very High',label:'Vitamin A'},{val:'Very High',label:'B12'},{val:'High',label:'Taurine'}],
+    feeding:'Organ mix is very rich — feed in moderation. 2–3 times per week maximum. Small dogs: 20–30g per serving. Medium: 50–60g. Large: 80–100g. Excessive liver can cause Vitamin A toxicity — do not overfeed.',
     storage:{tiles:[{icon:'🫙',val:'6 Months',label:'Unopened'},{icon:'❄️',val:'3 Weeks',label:'After Opening'},{icon:'🌡️',val:'Cool & Dry',label:'Store At'}],note:'Organ treats have higher moisture sensitivity than jerky. Store in a cool, dry location in the sealed pouch. After opening, reseal tightly and keep in a cool spot — or refrigerate for maximum freshness. Use within 3 weeks of opening. Discard if you detect any unusual smell.'},
   },
   {img:'Chicken_Gizzards_pouch_fornt.png', name:'Goat Liver', cat:'Organ Treats', badge:'Premium Organ', badgeCls:'brown', desc:'Goat liver — richer and more intense than chicken. Exceptional source of Vitamin A, copper and folate.', tags:['Vitamin A','Copper','Rich Flavour'], sizes:[{label:'60g',price:549},{label:'120g',price:1049},{label:'180g',price:1549},{label:'240g',price:2049}], filter:'organ',
@@ -4112,7 +4112,6 @@ function openPModal(idx) {
   currentModalProduct = p;
   currentModalPrice = p.sizes[0].price;
   document.getElementById('pmodal-img').src = p.img;
-  document.getElementById('pmodal-img').style.setProperty('display','block','important');
   document.getElementById('pmodal-img').alt = p.name;
   // Image area: for bundles show upload section; for products show product image
   var imgWrap = document.querySelector('.pmodal-img');
@@ -4518,7 +4517,7 @@ var PRODUCT_RATINGS = {
   'Chicken Neck':            {avg:4.7, count:43, dist:[1,1,3,9,29]},
   'Chicken Bites':           {avg:4.8, count:45, dist:[0,1,2,7,35]},
   'Anchovies':               {avg:4.6, count:38, dist:[1,1,2,8,26]},
-  'Chicken Liver':           {avg:4.7, count:40, dist:[1,1,3,8,27]},
+  'Chicken Liver & Heart':   {avg:4.8, count:40, dist:[0,0,3,9,28]},
   'Chicken Gizzards':        {avg:4.5, count:35, dist:[1,2,3,8,21]},
   'Chicken Wings':           {avg:4.6, count:41, dist:[1,1,3,9,27]},
   'Goat Liver':              {avg:4.8, count:46, dist:[0,1,2,6,37]},
@@ -4643,7 +4642,7 @@ function renderProducts(items, containerId) {
         <img src="${p.img}" alt="${p.name}" loading="lazy">
         <span class="prod-badge ${p.badgeCls}">${p.badge}</span>
         <button class="prod-fav" onclick="event.stopPropagation();toggleWishlist(this,${globalIdx})">${isWishlisted(globalIdx)?'♥':'♡'}</button>
-        
+        <button class="prod-upload-btn" onclick="event.stopPropagation();openImageUpload('${p.name}',event)" title="Add product photo" style="position:absolute;bottom:8px;left:8px;background:rgba(26,16,8,.7);color:var(--gold-pale);border:1px solid rgba(200,151,58,.5);padding:5px 9px;font-size:9px;font-weight:700;letter-spacing:.08em;font-family:'Jost',sans-serif;text-transform:uppercase;cursor:pointer;opacity:0;transition:opacity .2s;border-radius:2px">&#128247;</button>
       </div>
       <div class="prod-body">
         <div class="prod-cat">${p.cat}</div>
@@ -4862,8 +4861,7 @@ var productReviews = {
     {author:'Sunita V.',dog:'Golu',city:'Nagpur',rating:4,text:'Good quality, single ingredient as promised. Golu is a 4-year-old Indian Pariah and this is perfect for his training sessions. Slightly wish the pieces were smaller for tiny mouths but overall excellent.',date:'January 2025',verified:true},
     {author:'Neha P.',dog:'Biscuit',city:'Pune',rating:4,text:'Biscuit is on a raw-adjacent diet and this fits perfectly as a training reward. She focuses like a laser when I have this in my hand. Clean smell, no dusty residue. Very happy with the quality.',date:'February 2025',verified:true},
     {author:'Tanvi R.',dog:'Coco',city:'Pune',rating:3,text:'Product quality is genuinely good \u2014 single ingredient, clean smell. My only gripe is the pouch size. The 60g finishes in 4-5 days with a medium dog. Wish there was a bigger bulk option. Will keep buying.',date:'January 2025',verified:true},
-    {author:'Abhay G.',dog:'Tommy',city:'Nashik',rating:2,text:'Tommy has a chicken sensitivity that I didn\'t realise until he started itching after a few days. Not the brand\'s fault at all \u2014 the product is clean. Just flagging for others: if your dog reacts to chicken, this will trigger it. The single ingredient makes it easy to identify the culprit. Switching to Buff Jerky.',date:'December 2024',verified:true},
-    {author:'Sumeeta B.',dog:'Pinky',city:'Nagpur',rating:1,text:'Pinky is a 3kg Pomeranian and the pieces are too large for her mouth. She couldn\'t chew them at all \u2014 just sat looking confused. I had to crumble them by hand which was very tedious. The quality itself seems fine but there should be a toy breed size option. Very frustrating for small dog parents.',date:'November 2024',verified:true},
+
   ],
   'Buff Jerky': [
     {author:'Rohan M.',dog:'Bruno',city:'Pune',rating:5,text:'My vet actually asked me what I was feeding Bruno because his blood work came back so clean. Novel protein was the change \u2014 his suspected chicken allergy completely calmed down on the Buff Jerky. Genuinely grateful.',date:'February 2025',verified:true},
@@ -4871,14 +4869,12 @@ var productReviews = {
     {author:'Parveen A.',dog:'Zara',city:'Hyderabad',rating:5,text:'Zara has a full chicken sensitivity and finding quality treats for her has been a nightmare. Buff Jerky solved everything \u2014 she goes absolutely mad for it. Clean ingredient, rich smell, no reaction at all.',date:'March 2025',verified:true},
     {author:'Aditya S.',dog:'Sheru',city:'Solapur',rating:4,text:'Very good quality. Sheru was suspicious the first day but by day 2 he was waiting at the bag. Rich beefy smell \u2014 you can tell it\'s real.',date:'December 2024',verified:true},
     {author:'Nilesh P.',dog:'Max',city:'Nagpur',rating:3,text:'Decent treat, no complaints on ingredients. Pieces were a bit smaller than I expected from the photos. Dog likes it fine, just not as excited as he is with chicken. Average experience overall but quality is honest.',date:'November 2024',verified:true},
-    {author:'Prerna K.',dog:'Duster',city:'Amravati',rating:2,text:'Duster is a Labrador with a beef sensitivity \u2014 he developed loose stools within 2 days. Not a quality issue, the product is clearly clean. But buffalo is closely related to beef and some dogs react similarly. Would have been nice to have a warning for beef-sensitive dogs.',date:'October 2024',verified:true},
   ],
   'Chicken Neck': [
     {author:'Anita K.',dog:'Cookie',city:'Thane',rating:5,text:'Cookie is a Beagle with terrible teeth \u2014 tartar buildup was a constant issue. Since I started giving her chicken necks 3x a week her vet commented that her teeth look noticeably cleaner. The chewing action really does something.',date:'March 2025',verified:true},
     {author:'Vijay P.',dog:'Laila',city:'Vasai',rating:5,text:'Laila is a Rajapalayam and needs substantial chews. Chicken neck gives her a good 20-30 minute engagement session. I love that I know exactly what\'s in it \u2014 just chicken.',date:'February 2025',verified:true},
     {author:'Rekha B.',dog:'Moti',city:'Dombivali',rating:4,text:'Moti is a 6-month-old Indian Spitz puppy and the chicken necks are perfect sized for him. He gets very calm while chewing \u2014 the mental stimulation is real. Will keep ordering.',date:'January 2025',verified:true},
     {author:'Farhan Q.',dog:'Rocket',city:'Mumbai',rating:3,text:'Rocket is a large GSD and these get demolished in under 3 minutes. I know it\'s a size issue and not a quality issue \u2014 the chew is genuinely good. Just wish there was a large-dog variant.',date:'February 2025',verified:true},
-    {author:'Kaveri S.',dog:'Buddy',city:'Thane',rating:2,text:'Buddy gulped the neck down in one piece without chewing which gave me a huge scare. He\'s fine \u2014 greedy Labrador \u2014 but I had to hold it while he chewed the next ones. Perhaps mention that supervision is required for fast eaters.',date:'January 2025',verified:true},
   ],
   'Chicken Feet': [
     {author:'Anamika P.',dog:'Tuffy',city:'Navi Mumbai',rating:5,text:'Tuffy is 9 years old and has had joint issues for 2 years. I started him on chicken feet 2 months ago and the vet says his mobility has visibly improved. The natural glucosamine is obviously doing something. This product is incredible.',date:'March 2025',verified:true},
@@ -4886,13 +4882,11 @@ var productReviews = {
     {author:'Shalini M.',dog:'Chotu',city:'Mumbai',rating:5,text:'Chotu is an INDog rescue and extremely cautious about food. These were the first natural chews he accepted without sniffing for 10 minutes. Pure simple ingredients \u2014 he trusts them.',date:'January 2025',verified:true},
     {author:'Nidhi R.',dog:'Pogo',city:'Navi Mumbai',rating:4,text:'Pogo is a 5-year-old Labrador and these keep him busy for about 20 minutes. He\'s calmer after the chew session. The glucosamine for joints is an added bonus at his age. Solid product.',date:'March 2025',verified:true},
     {author:'Sandeep V.',dog:'Bhooter',city:'Kolhapur',rating:3,text:'The quality is fine. My issue is that Bhooter eats them too fast \u2014 maybe 4-5 minutes each \u2014 and then comes back looking for more. Not great value for large dogs. Would be better if the pieces were bigger.',date:'December 2024',verified:true},
-    {author:'Meenakshi R.',dog:'Chikki',city:'Mumbai',rating:2,text:'Chikki is a small breed and the toes of the chicken feet were a bit sharp \u2014 she grazed her gum on one. Nothing serious but she bled a little which alarmed me. I\'d suggest checking the tips before giving to smaller dogs.',date:'November 2024',verified:true},
   ],
   'Chicken Wings': [
     {author:'Preethi R.',dog:'Simba',city:'Bangalore',rating:5,text:'Simba\'s coat was dull and patchy. After 6 weeks of chicken wings twice a week, his fur is soft and shiny. The collagen content is genuinely making a difference.',date:'February 2025',verified:true},
     {author:'Kunal B.',dog:'Tommy',city:'Hyderabad',rating:4,text:'Tommy absolutely destroyed these in 3 minutes \u2014 he\'s a powerful Lab mix. I wish they were a bit thicker for more chewing time but the flavour he is completely obsessed with.',date:'January 2025',verified:true},
     {author:'Smita G.',dog:'Brownie',city:'Kolhapur',rating:3,text:'Fine product \u2014 genuinely single ingredient, no funny smell. But Brownie took about a week to really get excited about them. Wing tips were a bit hard for her smaller jaw. Better suited for bigger dogs perhaps.',date:'December 2024',verified:true},
-    {author:'Laxmi D.',dog:'Hero',city:'Satara',rating:2,text:'Hero had soft stools for 3 days after I introduced chicken wings. I gave them too quickly \u2014 2 per day from day 1 \u2014 without doing a proper introduction. Probably my mistake but worth flagging: introduce slowly especially for dogs not used to raw-adjacent treats.',date:'November 2024',verified:true},
   ],
   'Chicken Bites': [
     {author:'Deepak R.',dog:'Raja',city:'Nashik',rating:5,text:'Raja is in obedience class and the trainer said to bring the highest-value treat we have. Chicken bites were perfect \u2014 small size, incredible smell, and he\'ll do absolutely anything for one piece.',date:'February 2025',verified:true},
@@ -4905,15 +4899,13 @@ var productReviews = {
     {author:'Suresh G.',dog:'Kutta',city:'Nashik',rating:5,text:'Kutta is very easy to please but gizzards made him particularly excited. The texture is different from jerky \u2014 he chews more which is better for his teeth.',date:'January 2025',verified:true},
     {author:'Nisha B.',dog:'Brownie',city:'Nanded',rating:4,text:'Brownie is a rescue with a sensitive stomach. She\'s been on gizzards for 3 weeks with zero issues \u2014 no gas, no loose stools. The single ingredient makes it safe for sensitive dogs.',date:'March 2025',verified:true},
     {author:'Divya K.',dog:'Mango',city:'Pune',rating:3,text:'Good product, my concern is consistency \u2014 one batch seemed drier than the previous one. Mango ate both fine but the texture difference was noticeable. Hoping quality control stays tight.',date:'December 2024',verified:true},
-    {author:'Tarini M.',dog:'Pepper',city:'Aurangabad',rating:2,text:'Pepper is a Persian cat and I bought these on a whim thinking she might like chicken gizzards. She completely ignored them. The smell wasn\'t appealing enough for her. Not a product problem \u2014 just the wrong choice for a cat. Keep this in mind if you\'re not buying for a dog.',date:'November 2024',verified:true},
   ],
-  'Chicken Liver': [
+  'Chicken Liver & Heart': [
     {author:'Kavita M.',dog:'Teddy',city:'Sangli',rating:5,text:'Teddy has iron-deficiency anaemia and the vet recommended chicken liver as a supplemental food source. I break them into tiny pieces for training and his last blood test showed improved iron levels.',date:'March 2025',verified:true},
     {author:'Anita K.',dog:'Cookie',city:'Thane',rating:5,text:'Cookie absolutely goes crazy for chicken liver. I use it only for the most difficult commands \u2014 recall training \u2014 and it works 100% of the time. Nothing motivates her like this.',date:'February 2025',verified:true},
     {author:'Vishal T.',dog:'Champ',city:'Pune',rating:5,text:'Champ was underweight when we rescued him and had little appetite. Started using small pieces of chicken liver as a topper on his meals \u2014 he now finishes his bowl completely.',date:'January 2025',verified:true},
     {author:'Supriya N.',dog:'Lola',city:'Mumbai',rating:4,text:'Lola is a tiny Chihuahua mix and I break these into crumb-sized pieces for her. They last well after opening if stored in an airtight container. Great training treat for small breeds.',date:'February 2025',verified:true},
     {author:'Ranjit H.',dog:'Bhola',city:'Nashik',rating:3,text:'The organ smell is very strong \u2014 stronger than I expected. Bhola is obsessed with it but I have to open the windows. Quality seems good \u2014 genuinely single ingredient. Just not prepared for how pungent dried liver is.',date:'January 2025',verified:true},
-    {author:'Kaveri P.',dog:'Kittu',city:'Pune',rating:2,text:'Kittu is a cat and unlike most cats she usually takes to meat well. But she sniffed the dried liver and walked away. Perhaps the dehydration changes the smell profile enough that cats don\'t recognise it. Would not buy again for a cat.',date:'December 2024',verified:true},
   ],
   'Goat Liver': [
     {author:'Rohan M.',dog:'Bruno',city:'Pune',rating:5,text:'Bruno is on a rotation and goat liver is his absolute favourite. I use it exclusively for new command training \u2014 the focus he gives me with this in my hand is completely unmatched.',date:'January 2025',verified:true},
@@ -4921,14 +4913,12 @@ var productReviews = {
     {author:'Shweta D.',dog:'Coco',city:'Mumbai',rating:5,text:'Coco is allergic to chicken so finding organ treats was a challenge. Goat liver is her absolute weakness \u2014 she can smell the pouch from another room. Great alternative protein.',date:'March 2025',verified:true},
     {author:'Ramesh K.',dog:'Bhim',city:'Solapur',rating:4,text:'Bhim is a working dog and high-iron treats are important for his stamina. Goat liver does the job and he seems genuinely happy during training sessions when this is the reward.',date:'February 2025',verified:true},
     {author:'Fatima K.',dog:'Luna',city:'Hyderabad',rating:3,text:'Luna is a senior dog and accepted these fine. My concern is the size of pieces \u2014 they are quite thick and I need to cut them down for her. A finer slice for senior/small dog option would be really helpful.',date:'January 2025',verified:true},
-    {author:'Sujata P.',dog:'Mochi',city:'Nashik',rating:2,text:'Mochi is a Pug with a compressed snout and picking up these thicker liver pieces was difficult for him. He kept dropping and losing them. Wish I\'d known before buying \u2014 flat-faced breeds really struggle with thicker cuts.',date:'December 2024',verified:true},
   ],
   'Goat Heart & Kidney Mix': [
     {author:'Dr. Pallavi S.',dog:'Arya',city:'Mumbai',rating:5,text:'As a vet, I appreciate treats that are nutritionally sound. Heart and kidney together give an excellent amino acid and CoQ10 profile. I recommend Game of Bones to my clients specifically for this mix.',date:'March 2025',verified:true},
     {author:'Vikas T.',dog:'Sultan',city:'Pune',rating:5,text:'Sultan is a 7-year-old German Shepherd and I\'ve been adding organ treats on my vet\'s advice. He goes absolutely mad for the heart and kidney mix \u2014 more than any other treat I\'ve tried.',date:'February 2025',verified:true},
     {author:'Pooja R.',dog:'Muffin',city:'Thane',rating:4,text:'Muffin is a picky eater but accepted these without hesitation. Strong smell but that\'s what dogs love. I use them as high-value rewards and they work better than anything else for focused training.',date:'January 2025',verified:true},
     {author:'Arjun S.',dog:'Rocket',city:'Pune',rating:3,text:'Quality is good but the pouch quantity seems less than expected for the price. Rocket finished it in 3 days as part of his rotation. A 100g option at a reasonable price point would make this a regular buy.',date:'February 2025',verified:true},
-    {author:'Priyanka N.',dog:'Diya',city:'Nashik',rating:2,text:'Diya had an upset stomach after day 2 \u2014 I think I gave too much too fast. Organ meats are rich and you really need to introduce them slowly. Would have appreciated a feeding guide on the packaging.',date:'January 2025',verified:true},
   ],
   'Goat Lungs': [
     {author:'Sanjay M.',dog:'Rex',city:'Pune',rating:5,text:'Rex has a fish allergy and we\'ve been hunting for a light, airy treat he can have in large quantities. Goat lungs are perfect \u2014 very low fat, very low calorie, and he goes crazy for them.',date:'March 2025',verified:true},
@@ -4941,22 +4931,19 @@ var productReviews = {
     {author:'Meghna L.',dog:'Bingo',city:'Vadodara',rating:5,text:'Bingo is 8 years old and his vet said natural cartilage treats are better than chondroitin supplements. He chews it slowly and methodically and seems to genuinely feel better. Great for senior dogs.',date:'March 2025',verified:true},
     {author:'Harsh V.',dog:'Pepper',city:'Surat',rating:4,text:'Pepper is a medium-sized Indie and this lasts her about 25 minutes \u2014 perfect for distraction during fireworks or thunderstorms. Long chew, clean ingredient, she loves it.',date:'February 2025',verified:true},
     {author:'Pooja M.',dog:'Biscuit',city:'Surat',rating:3,text:'Biscuit chewed through it quickly \u2014 maybe 8 minutes for a 22kg dog. Quality is fine and she clearly enjoyed it, but for the price I expected a longer session. Maybe better suited for smaller dogs.',date:'January 2025',verified:true},
-    {author:'Deepa V.',dog:'Monty',city:'Pune',rating:2,text:'Monty is a very aggressive chewer and broke through the trachea too fast \u2014 under 5 minutes. For the price, I expected at least 20 minutes of engagement. The quality is clearly good, just not the right density for a large powerful dog.',date:'December 2024',verified:true},
   ],
   'Goat Ear': [
     {author:'Arvind B.',dog:'Cheenu',city:'Aurangabad',rating:5,text:'Cheenu is a small Indie and most chews are just too big for her. Goat ear is the right size and right hardness. She engages with it for a good 15 minutes. Excellent gentle chew.',date:'February 2025',verified:true},
     {author:'Sunita V.',dog:'Golu',city:'Nagpur',rating:4,text:'Golu is a senior Spitz (11 years) with worn teeth and I was looking for a light chew he could actually handle. Goat ears are perfect \u2014 crunchy without being dangerously hard. His breath is better.',date:'March 2025',verified:true},
     {author:'Dhruv M.',dog:'Ninja',city:'Nashik',rating:4,text:'Ninja is a young energetic Indie mix and the ear gives him a good 15\u201320 minute session. He loves the crunchy texture and stays calm throughout. Perfect weekday treat.',date:'January 2025',verified:true},
     {author:'Farouk M.',dog:'Tiger',city:'Solapur',rating:3,text:'Tiger finished these very fast \u2014 almost too fast for it to count as a real chew session. Quality is fine, single ingredient, no complaints there. Would rate higher if they lasted longer for large dogs.',date:'January 2025',verified:true},
-    {author:'Vimala S.',dog:'Sona',city:'Pune',rating:2,text:'Sona is a Dalmatian with a known protein sensitivity and I didn\'t realise goat would be a problem until she broke out in hives. Obviously not a product issue \u2014 her reaction is unusual. But buyers with dogs on elimination diets should confirm goat is safe first.',date:'December 2024',verified:true},
   ],
   'Goat Trotter': [
     {author:'Kavya N.',dog:'Bruto',city:'Bangalore',rating:5,text:'Bruto is a Rottweiler and needs a serious chew that can hold up to his jaw. The goat trotter is the only natural chew that gives him a real workout \u2014 over an hour of engagement. His teeth have never looked better.',date:'March 2025',verified:true},
     {author:'Harish P.',dog:'Shera',city:'Hyderabad',rating:5,text:'Shera is a Great Dane mix and most chews are a joke for him. The trotter kept him engaged for 90 minutes on the first try. Completely natural, no additives. Highly recommended for big-breed owners.',date:'February 2025',verified:true},
     {author:'Surbhi J.',dog:'Cheddar',city:'Pune',rating:4,text:'Cheddar is a medium Lab and this lasted him about 40 minutes. He was very focused and calm throughout. The marrow inside is what he really goes after. Great enrichment treat for the weekend.',date:'January 2025',verified:true},
     {author:'Vivek S.',dog:'Bruno',city:'Nashik',rating:3,text:'Good quality bone but Bruno finished the meat and then lost interest in the harder structural part. Got about 25 minutes of chewing out of it. Would buy again for the price \u2014 just managing expectations on duration.',date:'December 2024',verified:true},
-    {author:'Hina P.',dog:'Loki',city:'Mumbai',rating:2,text:'Loki is a 3-year-old Indie mix with a sensitive stomach. The bone marrow was too rich for him and he had runny stools for 2 days. I should have introduced it more gradually. Rich marrow-filled chews need slow introduction for dogs not used to them.',date:'November 2024',verified:true},
-    {author:'Amar T.',dog:'Mack',city:'Nashik',rating:1,text:'Mack lost a small tooth chip on this bone \u2014 the structural end near the knuckle is quite hard. He\'s a medium-sized dog and was chewing aggressively. Vet said it can happen with any hard bone. Please supervise carefully especially for medium and smaller dogs.',date:'October 2024',verified:true},
+
   ],
   'Anchovies': [
     {author:'Deepika R.',dog:'Bubble',city:'Goa',rating:5,text:'Bubble is a beach dog and LIVES for fish. She goes absolutely insane for anchovies. Her coat is the shiniest it\'s ever been and her skin issues from processed treats have completely gone away.',date:'March 2025',verified:true},
@@ -4964,28 +4951,24 @@ var productReviews = {
     {author:'Tanuja B.',dog:'Pixie',city:'Mangalore',rating:5,text:'Pixie has seasonal skin allergies and my vet suggested adding omega-3-rich treats. The anchovies have genuinely made a difference \u2014 less scratching, much better coat condition.',date:'March 2025',verified:true},
     {author:'Veena R.',dog:'Coco',city:'Pune',rating:4,text:'Coco is fish-obsessed and these are the treat she goes most insane for. The smell is strong but dogs love it and the omega-3 benefits are real. Her coat is visibly shinier after just a month.',date:'February 2025',verified:true},
     {author:'Manisha T.',dog:'Fluffy',city:'Nagpur',rating:3,text:'The fish smell is VERY strong. My dog loves it but I basically have to hold my breath while handling them. The product itself is clean \u2014 just not pleasant for sensitive human noses. Store in a sealed box.',date:'January 2025',verified:true},
-    {author:'Sameer L.',dog:'Kiwi',city:'Hyderabad',rating:2,text:'Kiwi is a Labrador who generally loves fish but completely refused these. She sniffed once and walked away every single time I offered them. I tried warming them up slightly, mixing with her food, everything. No luck. Some dogs just don\'t respond to anchovies. Frustrating.',date:'December 2024',verified:true},
   ],
   'Mackerel': [
     {author:'Deepika R.',dog:'Bubble',city:'Goa',rating:5,text:'After the anchovies, I tried mackerel and Bubble actually prefers it. More meaty, rich smell. Her coat is ridiculously shiny now. I alternate between the two fish treats every week.',date:'February 2025',verified:true},
     {author:'Pradeep N.',dog:'Storm',city:'Kochi',rating:5,text:'Storm has always had dry, flaky skin despite good food. Added mackerel three times a week and within a month his skin improved visibly. The natural fats in real fish do what supplements can\'t replicate.',date:'March 2025',verified:true},
     {author:'Seema V.',dog:'Oreo',city:'Nashik',rating:4,text:'Oreo is normally indifferent to treats but mackerel made him animated for the first time. The smell is intense (keep it sealed) but the quality is clearly there. His coat has noticeably improved in 6 weeks.',date:'January 2025',verified:true},
     {author:'Ganesh B.',dog:'Rocky',city:'Belgaum',rating:3,text:'Rocky took to it well but giving 3 stars because my last order packaging wasn\'t sealed properly \u2014 the zipper didn\'t close cleanly and I only realised after a few days. Please double-check seals.',date:'January 2025',verified:true},
-    {author:'Alka P.',dog:'Shiny',city:'Nagpur',rating:2,text:'Shiny is a Cocker Spaniel with a fish intolerance. The itching started on day 3. It\'s not a product problem \u2014 it\'s clean, single ingredient, exactly as described. Just be aware that fish allergies in dogs are more common than people think.',date:'November 2024',verified:true},
   ],
   'Sardines': [
     {author:'Leena C.',dog:'Dumpling',city:'Chennai',rating:5,text:'Dumpling is a Shih Tzu with a permanent dry coat issue. After 5 weeks of sardines twice a week, her coat has transformed \u2014 softer, shinier, and she\'s stopped scratching. My vet was genuinely impressed.',date:'March 2025',verified:true},
     {author:'Ajay V.',dog:'Diesel',city:'Bangalore',rating:5,text:'Diesel is allergic to chicken and beef so fish is his main protein for treats. Sardines are an absolute winner \u2014 he can smell the bag through a closed cupboard. Very clean single ingredient.',date:'February 2025',verified:true},
     {author:'Hema T.',dog:'Moti',city:'Coimbatore',rating:4,text:'Moti loves these but I\'ll warn you \u2014 the smell is intense. I keep them in a double-sealed bag. Dog is happy, coat looks great, but I open the windows when giving them.',date:'January 2025',verified:true},
     {author:'Girish N.',dog:'Bhim',city:'Solapur',rating:3,text:'The sardines are on the small side. For a large breed like my Rottweiler, one sardine barely registers. I end up giving 5\u20136 per session which makes the pouch run out quickly. Not great value for big dogs.',date:'December 2024',verified:true},
-    {author:'Ritesh M.',dog:'Fluffy',city:'Pune',rating:2,text:'Fluffy got explosive diarrhea after the second day. Too much fish oil too quickly for a dog not used to it. In hindsight I should have started with just one sardine every other day. The packaging doesn\'t include an introduction guide which would really help.',date:'November 2024',verified:true},
   ],
   'Bombay Duck': [
     {author:'Preeti N.',dog:'Chikki',city:'Bandra, Mumbai',rating:5,text:'Chikki is an overweight Beagle and the vet said to restrict treats. Bombay Duck is so low calorie I can reward her generously during training without guilt. Very uniquely Indian \u2014 love the concept.',date:'January 2025',verified:true},
     {author:'Milind T.',dog:'Dodo',city:'Ratnagiri',rating:4,text:'Being from coastal Maharashtra, I grew up with Bombil. That my dog now gets a dehydrated version is very nostalgic. Dodo loves it and the iodine is great for his thyroid health.',date:'December 2024',verified:true},
     {author:'Prashant V.',dog:'Koda',city:'Mumbai',rating:4,text:'Koda is a fish obsessive and Bombay Duck has become his Friday evening reward. Super light, great iodine source, and the nostalgia of seeing dehydrated Bombil for dogs is lovely.',date:'January 2025',verified:true},
     {author:'Reena S.',dog:'Peanut',city:'Mumbai',rating:3,text:'The fish smell is very strong \u2014 be prepared. My husband nearly banned it from the house. Peanut loves it which is what matters but keep it in a sealed container. On quality it\'s genuinely good.',date:'October 2024',verified:true},
-    {author:'Anindita D.',dog:'Cheeto',city:'Kolkata',rating:2,text:'Cheeto is a Bengal cat who I was hoping might enjoy fish treats. He was completely uninterested in Bombay Duck despite loving fresh fish. The dehydrated smell seems to not appeal to cats the same way fresh does. Works for dogs clearly but cats seem indifferent.',date:'September 2024',verified:true},
   ],
   'Fish Bites': [
     {author:'Nandita K.',dog:'Coco',city:'Mumbai',rating:5,text:'Coco has sensitive skin and my dermatologist vet said to add more marine-based omega-3. Fish bites are perfect \u2014 easy to dose, she loves them, and her itching has reduced significantly in 6 weeks.',date:'March 2025',verified:true},
@@ -4998,7 +4981,6 @@ var productReviews = {
     {author:'Snehal D.',dog:'Bhavra',city:'Pune',rating:4,text:'Bhavra had never eaten fish before this. She was curious, sniffed it for 5 minutes, then went to town. Took her about 45 minutes. The natural collagen from the head cartilage is a bonus for her joints.',date:'February 2025',verified:true},
     {author:'Kapil S.',dog:'Titan',city:'Nashik',rating:4,text:'Titan is a large breed and I needed something that would last longer than 10 minutes. Tuna head delivered \u2014 about an hour of chewing. The fish smell is powerful but he was completely engrossed.',date:'January 2025',verified:true},
     {author:'Chandrika B.',dog:'Mishti',city:'Kolkata',rating:3,text:'Mishti found the head a bit intimidating at first \u2014 she circled it for 20 minutes before engaging. Maybe slice or break it for hesitant dogs. Once she started she loved it but the initial approach took patience.',date:'December 2024',verified:true},
-    {author:'Rajesh A.',dog:'Coco',city:'Hyderabad',rating:2,text:'Coco is a medium-sized dog and the tuna head was quite large \u2014 she couldn\'t get a proper grip on it. I had to break it into pieces which was not easy with my bare hands. Would have been nice to have a smaller-portioned version or a tip on breaking it before giving.',date:'November 2024',verified:true},
   ],
   'Tuna': [
     {author:'Lalitha S.',dog:'Pebbles',city:'Chennai',rating:5,text:'Pebbles has the driest coat I\'ve ever seen despite a good diet. Added tuna treats three times a week and within a month she looked like a different dog \u2014 glossy, soft, no more flaking.',date:'March 2025',verified:true},
@@ -5017,7 +4999,6 @@ var productReviews = {
     {author:'Amol N.',dog:'Oreo',city:'Mumbai',rating:5,text:'Oreo is a coastal dog who connects with prawn treats on a very deep level. His tail starts going the moment I open the bag. Great quality, single ingredient, no nasty smell.',date:'February 2025',verified:true},
     {author:'Sumitra B.',dog:'Ladoo',city:'Ratnagiri',rating:4,text:'We\'re from a fishing family and dehydrated prawns for dogs felt very natural to us. Ladoo eats them like a local. The iodine content is great for his thyroid. Will keep buying.',date:'January 2025',verified:true},
     {author:'Neesha J.',dog:'Mochi',city:'Mumbai',rating:3,text:'Mochi loves these but they vanish in seconds. The prawns are quite small and for a 25kg dog the pouch is gone in 2-3 days at a reasonable serving. Better value if there was a 200g option.',date:'December 2024',verified:true},
-    {author:'Gaurav D.',dog:'Rex',city:'Pune',rating:2,text:'Rex developed mild hives after trying prawns \u2014 took 2 days to figure out the cause. He has no known seafood allergy but prawns triggered a reaction. If your dog hasn\'t had shellfish before, start with a single prawn and wait 24 hours before giving more.',date:'November 2024',verified:true},
   ],
   'Chicken Neck & Feet Mix': [
     {author:'Rekha V.',dog:'Chewy',city:'Navi Mumbai',rating:5,text:'Chewy is a 6-year-old Indie mix with early joint stiffness. The combination of glucosamine from feet and dental benefit from necks in one pack is exactly what she needs. 4 months in and her vet is pleased.',date:'March 2025',verified:true},
