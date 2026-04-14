@@ -5927,11 +5927,12 @@ function renderReviews() {
 }
 
 function submitReview() {
-  var name = (document.getElementById("reviewName").value || "").trim();
-  var product = document.getElementById("reviewProduct").value;
-  var text = (document.getElementById("reviewText").value || "").trim();
+  var name = (document.getElementById("reviewName") && document.getElementById("reviewName").value || "").trim();
+  var product = document.getElementById("reviewProduct") ? document.getElementById("reviewProduct").value : "";
+  var text = (document.getElementById("reviewText") && document.getElementById("reviewText").value || "").trim();
   var msg = document.getElementById("reviewSubmitMsg");
-  if (!name || !text || reviewRating === 0) {
+  if (!msg) return;
+  if (!name || !text || !reviewRating || reviewRating === 0) {
     msg.innerHTML = "<p style='color:#c0392b;font-size:13px;margin-top:8px'>Please fill in your name, rating and review.</p>";
     return;
   }
