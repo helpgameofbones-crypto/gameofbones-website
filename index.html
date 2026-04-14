@@ -431,6 +431,8 @@ footer{background:var(--dark);color:rgba(255,255,255,.6);padding:56px 6% 28px;ma
 #page-checkout.active ~ footer,
 #page-checkout.active + footer,
 body:has(#page-checkout.active) footer { display: none !important; }
+body:has(#page-faq.active) footer { display: none !important; }
+body:has(#page-faq.active) #mainNav ~ footer { display: none !important; }
 body:has(#page-login.active) footer { display: none !important; }
 body:has(#page-login.active) #mainNav { display: none !important; }
 </style>
