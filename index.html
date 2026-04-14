@@ -203,7 +203,7 @@ section{padding:90px 6%}
 .pmodal-img{background:var(--cream);aspect-ratio:1;display:flex;align-items:center;justify-content:center;overflow:hidden}
 .pmodal-img img{width:100%;height:100%;object-fit:cover;display:block!important}#pmodal-upload-btn{display:none!important}
 .pmodal-img-placeholder{font-size:80px;opacity:.35}
-.pmodal-body{padding:36px 32px;overflow-y:auto}
+.pmodal-body{padding:36px 32px}
 .pmodal-close{position:absolute;top:12px;right:12px;background:var(--dark);color:var(--white);border:none;width:32px;height:32px;border-radius:50%;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:1}
 .pmodal-cat{font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
 .pmodal-name{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:700;color:var(--dark);margin-bottom:10px;line-height:1.1}
@@ -350,9 +350,13 @@ footer{background:var(--dark);color:rgba(255,255,255,.6);padding:56px 6% 28px;ma
   /* Announcement banner font */
   .ann-text { font-size: 11px !important; }
   /* Hero padding */
-  .hero { padding: 60px 6% !important; }
+  .hero { padding: 60px 6% 60px 6% !important; overflow-x: hidden !important; }
+  .hero-content { padding: 40px 6% !important; box-sizing: border-box !important; width: 100% !important; }
+  .hero h1, .hero-title { padding-left: 0 !important; }
 
-  .pmodal{grid-template-columns:1fr}
+  .pmodal{grid-template-columns:1fr;overflow-y:auto!important}
+  .pmodal-img{aspect-ratio:unset!important;height:260px!important;position:relative!important}
+  .pmodal-body{overflow-y:visible!important;padding:24px 20px!important}
 
   .process-steps,.testi-grid,.contact-grid,.ingr-grid,.process-page-step{grid-template-columns:1fr}
   .process-page-step:nth-child(even){direction:ltr}
