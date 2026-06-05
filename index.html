@@ -80,12 +80,12 @@ section{padding:90px 6%}
 .prod-card:hover{transform:translateY(-4px);box-shadow:0 20px 40px rgba(26,16,8,.12)}
 /* Product card — matches renderProducts() JS */
 .prod-img-wrap{aspect-ratio:1;background:var(--cream);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
-.prod-img-wrap img{width:100%;height:100%;object-fit:contain;transition:transform .4s;padding:8px;box-sizing:border-box}
+.prod-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
 .prod-card:hover .prod-img-wrap img{transform:scale(1.04)}
 .prod-badge{position:absolute;top:12px;left:12px;background:var(--gold);color:var(--dark);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px}
 .prod-badge.teal{background:var(--teal);color:var(--white)}
 .prod-badge.brown{background:var(--brown);color:var(--white)}
-.prod-img-wrap:hover .prod-upload-btn{opacity:0!important;display:none!important}
+.prod-upload-btn{display:none!important}
 .prod-fav{position:absolute;top:10px;right:10px;background:var(--white);border:none;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;opacity:0;transition:opacity .2s;box-shadow:0 2px 8px rgba(0,0,0,.1)}
 .prod-card:hover .prod-fav{opacity:1}
 .prod-body{padding:16px}
@@ -191,7 +191,7 @@ section{padding:90px 6%}
 .art-body ul li::before{content:"→";position:absolute;left:0;color:var(--gold);font-weight:700}
 .art-body strong{color:var(--dark);font-weight:600}
 .art-callout{border-left:4px solid var(--gold);padding:16px 20px;background:var(--cream);margin:24px 0;font-size:13px;color:var(--dark);line-height:1.7}
-.art-tip{background:var(--dark);color:var(--gold-pale);padding:20px 24px;margin:24px 0;font-size:13px;line-height:1.7}.art-tip strong{color:var(--gold)!important}
+.art-tip{background:var(--dark);color:var(--gold-pale);padding:20px 24px;margin:24px 0;font-size:13px;line-height:1.7}
 .art-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
 .art-grid-item{background:var(--cream);padding:18px;font-size:13px;color:var(--muted);line-height:1.6}
 .art-grid-item strong{display:block;color:var(--dark);font-size:14px;margin-bottom:6px}
@@ -201,7 +201,7 @@ section{padding:90px 6%}
 .pmodal-overlay.open{opacity:1;pointer-events:all}
 .pmodal{background:var(--white);max-width:900px;width:100%;max-height:90vh;overflow-y:auto;display:grid;grid-template-columns:1fr 1fr;position:relative}
 .pmodal-img{background:var(--cream);aspect-ratio:1;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.pmodal-img img{width:100%;height:100%;object-fit:cover;display:block!important}#pmodal-upload-btn{display:none!important}
+.pmodal-img img{width:100%;height:100%;object-fit:cover}
 .pmodal-img-placeholder{font-size:80px;opacity:.35}
 .pmodal-body{padding:36px 32px;overflow-y:auto}
 .pmodal-close{position:absolute;top:12px;right:12px;background:var(--dark);color:var(--white);border:none;width:32px;height:32px;border-radius:50%;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:1}
@@ -272,8 +272,8 @@ section{padding:90px 6%}
 .process-page-step:nth-child(even) > *{direction:ltr}
 .process-step-num{font-family:'Cormorant Garamond',serif;font-size:72px;font-weight:700;color:rgba(200,151,58,.2);line-height:1;margin-bottom:4px}
 .process-step-tag{font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
-.process-step-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--dark);margin-bottom:10px}
-.process-step-body{font-size:13px;color:var(--muted);line-height:1.8;font-weight:300}
+.process-step-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--white);margin-bottom:10px}
+.process-step-body{font-size:13px;color:rgba(255,255,255,.55);line-height:1.8;font-weight:300}
 .process-step-visual{background:rgba(255,255,255,.05);border:1px solid rgba(200,151,58,.18);aspect-ratio:3/2;display:flex;align-items:center;justify-content:center;font-size:52px;margin-bottom:18px;border-radius:2px;transition:background .2s}
 .process-step:hover .process-step-visual{background:rgba(255,255,255,.09)}
 /* SHIPPING/RETURNS/TRACK */
@@ -351,7 +351,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.6);padding:56px 6% 28px;ma
   .hero { padding: 60px 6% !important; }
 
   .pmodal{grid-template-columns:1fr}
-
+  .pmodal-img{display:none}
   .process-steps,.testi-grid,.contact-grid,.ingr-grid,.process-page-step{grid-template-columns:1fr}
   .process-page-step:nth-child(even){direction:ltr}
   .art-grid{grid-template-columns:1fr}
@@ -431,8 +431,6 @@ footer{background:var(--dark);color:rgba(255,255,255,.6);padding:56px 6% 28px;ma
 #page-checkout.active ~ footer,
 #page-checkout.active + footer,
 body:has(#page-checkout.active) footer { display: none !important; }
-body:has(#page-faq.active) footer { display: none !important; }
-body:has(#page-faq.active) #mainNav ~ footer { display: none !important; }
 body:has(#page-login.active) footer { display: none !important; }
 body:has(#page-login.active) #mainNav { display: none !important; }
 </style>
@@ -668,6 +666,13 @@ body:has(#page-login.active) #mainNav { display: none !important; }
         <button class="filter-btn sz-btn" data-size="small" onclick="filterBySize('small')" style="padding:6px 14px;font-size:10px">Small Breed</button>
         <button class="filter-btn sz-btn" data-size="large" onclick="filterBySize('large')" style="padding:6px 14px;font-size:10px">Large Breed</button>
         <button class="filter-btn sz-btn" data-size="senior" onclick="filterBySize('senior')" style="padding:6px 14px;font-size:10px">Senior</button>
+      </div>
+      <!-- TREAT FINDER BUTTON -->
+      <div style="background:#e8f5f2;border:2px solid #2a7c6f;border-radius:8px;padding:24px;text-align:center;margin-bottom:48px;">
+        <div style="font-size:36px;margin-bottom:12px;">🎯</div>
+        <h3 style="font-size:20px;color:#1a1008;margin-bottom:8px;font-family:'Cormorant Garamond',serif;">Not Sure Where to Start?</h3>
+        <p style="color:#7a6a5a;margin-bottom:20px;font-size:14px;">Our 3-question quiz recommends the perfect treats based on your dog's needs.</p>
+        <button onclick="showTreatFinderQuiz()" style="background:#2a7c6f;color:white;border:none;padding:14px 36px;border-radius:4px;cursor:pointer;font-family:'Jost',sans-serif;font-weight:600;font-size:14px;">Take the Quiz →</button>
       </div>
       <div class="prod-grid" id="shopProd"></div>
     </div>
@@ -1015,9 +1020,6 @@ body:has(#page-login.active) #mainNav { display: none !important; }
         <div class="blog-card" data-article="2" onclick="window.openArt(2)" style="cursor:pointer"><div class="blog-card-img"><div class="blog-card-img-inner bci-3">&#128197;</div><span class="blog-tag">Feeding Guide</span></div><div class="blog-card-body"><h2 class="blog-title">The 7-Day Transition Plan: How to Switch Your Dog to Dehydrated Treats</h2><p class="blog-excerpt">Switching too fast causes digestive upset. This step-by-step guide from Day 1 to Week 2 makes the transition smooth, safe and positive for every dog.</p><div class="blog-meta"><span class="blog-date">January 2025 &middot; 5 min read</span><button class="blog-read" onclick="event.stopPropagation();window.openArt(2)">Read Article &rarr;</button></div></div></div>
         <div class="blog-card" data-article="6" onclick="window.openArt(6)" style="cursor:pointer"><div class="blog-card-img"><div class="blog-card-img-inner bci-1">&#128054;</div><span class="blog-tag">Puppy Guide</span></div><div class="blog-card-body"><h2 class="blog-title">The New Dog Parent&rsquo;s Complete Guide to Treats</h2><p class="blog-excerpt">What to give, when to give it, and exactly how much &mdash; for puppies, adults, seniors and overweight dogs. Includes a 7-day rotation strategy.</p><div class="blog-meta"><span class="blog-date">September 2024 &middot; 4 min read</span><button class="blog-read" onclick="event.stopPropagation();window.openArt(6)">Read Article &rarr;</button></div></div></div>
         <div class="blog-card" data-article="7" onclick="window.openArt(7)" style="cursor:pointer"><div class="blog-card-img"><div class="blog-card-img-inner bci-2">&#127754;</div><span class="blog-tag">Ingredients</span></div><div class="blog-card-body"><h2 class="blog-title">Why Fish Treats Are the Most Underrated Thing You Can Feed Your Dog</h2><p class="blog-excerpt">Most Indian dog parents skip fish treats. This is a mistake. A full comparison of our fish range with omega-3 benefits and coat results.</p><div class="blog-meta"><span class="blog-date">August 2024 &middot; 4 min read</span><button class="blog-read" onclick="event.stopPropagation();window.openArt(7)">Read Article &rarr;</button></div></div></div>
-        <div class="blog-card" data-article="10" onclick="window.openArt(10)" style="cursor:pointer"><div class="blog-card-img"><div class="blog-card-img-inner bci-1">&#128642;</div><span class="blog-tag">Travel</span></div><div class="blog-card-body"><h2 class="blog-title">How to Travel With Your Dog on Indian Railways &mdash; The Complete &amp; Correct 2026 Guide</h2><p class="blog-excerpt">The fully researched, accurate guide: which classes allow pets, how to book correctly, dog box vs cabin, all documents needed, and the mistakes that get people fined.</p><div class="blog-meta"><span class="blog-date">April 2026 &middot; 10 min read</span><button class="blog-read" onclick="event.stopPropagation();window.openArt(10)">Read Article &rarr;</button></div></div></div>
-        <div class="blog-card" data-article="11" onclick="window.openArt(11)" style="cursor:pointer"><div class="blog-card-img"><div class="blog-card-img-inner bci-2">&#128021;</div><span class="blog-tag">Adoption</span></div><div class="blog-card-body"><h2 class="blog-title">Why the Indian Pariah Dog Is the Best Dog You Can Adopt &mdash; And the Myths That Stop People</h2><p class="blog-excerpt">4,500 years of natural selection produced a dog perfectly built for India. Here is why most Indians overlook it &mdash; and the myths that need to end.</p><div class="blog-meta"><span class="blog-date">April 2026 &middot; 7 min read</span><button class="blog-read" onclick="event.stopPropagation();window.openArt(11)">Read Article &rarr;</button></div></div></div>
-        <div class="blog-card" data-article="12" onclick="window.openArt(12)" style="cursor:pointer"><div class="blog-card-img"><div class="blog-card-img-inner bci-3">&#128049;</div><span class="blog-tag">Cats</span></div><div class="blog-card-body"><h2 class="blog-title">Dehydrated Treats for Cats &mdash; What to Give, What to Avoid, and Why Real Food Matters</h2><p class="blog-excerpt">Cats are obligate carnivores. Most Indian cat treats are grain-based. A complete guide to feeding your cat real single-ingredient treats correctly.</p><div class="blog-meta"><span class="blog-date">April 2026 &middot; 6 min read</span><button class="blog-read" onclick="event.stopPropagation();window.openArt(12)">Read Article &rarr;</button></div></div></div>
         <div class="blog-card" data-article="8" onclick="window.openArt(8)" style="cursor:pointer"><div class="blog-card-img"><div class="blog-card-img-inner bci-3">&#127968;</div><span class="blog-tag">Storage</span></div><div class="blog-card-body"><h2 class="blog-title">How to Store Dehydrated Treats in Indian Humidity</h2><p class="blog-excerpt">Mumbai, Thane, Chennai &mdash; humidity is the enemy of shelf life. A complete storage guide by treat type with special monsoon rules.</p><div class="blog-meta"><span class="blog-date">July 2024 &middot; 3 min read</span><button class="blog-read" onclick="event.stopPropagation();window.openArt(8)">Read Article &rarr;</button></div></div></div>
       </div>
       <aside class="blog-aside">
@@ -1082,12 +1084,44 @@ body:has(#page-login.active) #mainNav { display: none !important; }
       <p class="sec-sub" style="color:rgba(255,255,255,.6)">Every step visible. No secrets. No shortcuts.</p>
     </div>
   </section>
-  <section style="background:var(--dark);padding:40px 6% 80px">
-    <div style="max-width:1320px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:2px">
-      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(200,151,58,.15);padding:32px 24px"><div style="font-size:52px;background:rgba(255,255,255,.06);aspect-ratio:1;display:flex;align-items:center;justify-content:center;margin-bottom:24px;border:1px solid rgba(200,151,58,.12)">&#127807;</div><div style="font-family:'Cormorant Garamond',serif;font-size:56px;font-weight:700;color:rgba(200,151,58,.25);line-height:1;margin-bottom:4px">01</div><div style="font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px">Sourcing</div><div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--white);margin-bottom:10px">Human-Grade Ingredients Only</div><div style="font-size:13px;color:rgba(255,255,255,.55);line-height:1.8">We source exclusively from FSSAI-certified suppliers. Every ingredient meets human consumption standards &mdash; the same quality you&rsquo;d find at your butcher or fish market. Single origin, traceable, fresh. We visit suppliers personally.</div></div>
-      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(200,151,58,.15);padding:32px 24px"><div style="font-size:52px;background:rgba(255,255,255,.06);aspect-ratio:1;display:flex;align-items:center;justify-content:center;margin-bottom:24px;border:1px solid rgba(200,151,58,.12)">&#9999;&#65039;</div><div style="font-family:'Cormorant Garamond',serif;font-size:56px;font-weight:700;color:rgba(200,151,58,.25);line-height:1;margin-bottom:4px">02</div><div style="font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px">Preparation</div><div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--white);margin-bottom:10px">Hand-Prepared, Zero Chemicals</div><div style="font-size:13px;color:rgba(255,255,255,.55);line-height:1.8">Every piece cleaned and prepared by hand. No bleach wash. No chemical treatment. No preservative spray. We prepare each batch fresh on the day it goes into the dehydrator.</div></div>
-      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(200,151,58,.15);padding:32px 24px"><div style="font-size:52px;background:rgba(255,255,255,.06);aspect-ratio:1;display:flex;align-items:center;justify-content:center;margin-bottom:24px;border:1px solid rgba(200,151,58,.12)">&#127777;&#65039;</div><div style="font-family:'Cormorant Garamond',serif;font-size:56px;font-weight:700;color:rgba(200,151,58,.25);line-height:1;margin-bottom:4px">03</div><div style="font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px">Dehydration</div><div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--white);margin-bottom:10px">Slow-Dried at 55&ndash;70&deg;C</div><div style="font-size:13px;color:rgba(255,255,255,.55);line-height:1.8">Dehydration runs at 55&ndash;70&deg;C for 12&ndash;24 hours. This low, slow temperature preserves enzymes, amino acids and micronutrients that high-heat baking destroys. Up to 95% nutrient retention vs 50% for baked treats.</div></div>
-      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(200,151,58,.15);padding:32px 24px"><div style="font-size:52px;background:rgba(255,255,255,.06);aspect-ratio:1;display:flex;align-items:center;justify-content:center;margin-bottom:24px;border:1px solid rgba(200,151,58,.12)">&#128230;</div><div style="font-family:'Cormorant Garamond',serif;font-size:56px;font-weight:700;color:rgba(200,151,58,.25);line-height:1;margin-bottom:4px">04</div><div style="font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px">Quality &amp; Packing</div><div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--white);margin-bottom:10px">Tested, Weighed, Sealed</div><div style="font-size:13px;color:rgba(255,255,255,.55);line-height:1.8">Every batch visually inspected before packing. Packed in resealable, humidity-resistant zip-lock pouches designed for India&rsquo;s monsoon climate. Each pouch carries a production and best-before date.</div></div>
+  <section style="background:var(--cream);padding:60px 6% 90px">
+    <div class="process-page-steps">
+      <div class="process-page-step">
+        <div>
+          <div class="process-step-num">01</div>
+          <div class="process-step-tag">Sourcing</div>
+          <div class="process-step-title">Human-Grade Ingredients Only</div>
+          <div class="process-step-body">We source exclusively from FSSAI-certified suppliers. Every ingredient meets human consumption standards &mdash; the same quality you&rsquo;d find at your butcher or fish market. Single origin, traceable, fresh. We visit suppliers personally and will not compromise on source quality regardless of cost.</div>
+        </div>
+        <div class="process-step-visual">&#127822;</div>
+      </div>
+      <div class="process-page-step">
+        <div>
+          <div class="process-step-num">02</div>
+          <div class="process-step-tag">Preparation</div>
+          <div class="process-step-title">Hand-Prepared, Zero Chemicals</div>
+          <div class="process-step-body">Every piece is cleaned and prepared by hand. No bleach wash. No chemical treatment. No preservative spray. We clean with plain water and prepare each batch fresh on the day it goes into the dehydrator. For fish, we debone where required. For organs, we trim excess fat for ideal texture after dehydration.</div>
+        </div>
+        <div class="process-step-visual">&#9999;&#65039;</div>
+      </div>
+      <div class="process-page-step">
+        <div>
+          <div class="process-step-num">03</div>
+          <div class="process-step-tag">Dehydration</div>
+          <div class="process-step-title">Slow-Dried at 55&ndash;70&deg;C</div>
+          <div class="process-step-body">This is where we differ from most commercial treats. Our dehydration runs at 55&ndash;70&deg;C for 12&ndash;24 hours depending on the ingredient. This low, slow temperature removes moisture completely while preserving enzymes, amino acids, and micronutrients that high-heat baking destroys. The result is up to 95% nutrient retention versus around 50% for baked treats.</div>
+        </div>
+        <div class="process-step-visual">&#127777;&#65039;</div>
+      </div>
+      <div class="process-page-step">
+        <div>
+          <div class="process-step-num">04</div>
+          <div class="process-step-tag">Quality &amp; Packing</div>
+          <div class="process-step-title">Tested, Weighed, Sealed</div>
+          <div class="process-step-body">Every batch is visually inspected before packing. We check for texture, colour consistency, and complete moisture removal. Treats are weighed accurately for each size. Packed in resealable, humidity-resistant zip-lock pouches designed for India&rsquo;s monsoon climate. Each pouch carries a production date and best-before date.</div>
+        </div>
+        <div class="process-step-visual">&#128230;</div>
+      </div>
     </div>
   </section>
   <div class="cta-banner" style="background:var(--brown)">
@@ -1112,20 +1146,12 @@ body:has(#page-login.active) #mainNav { display: none !important; }
     <div class="ingr-grid">
       <div class="ingr-card"><div class="ingr-emoji">&#127831;</div><div class="ingr-name">Chicken</div><p style="font-size:13px;color:var(--muted);line-height:1.6">Lean muscle meat, high-protein, easy to digest. The most versatile ingredient in our range and ideal for everyday feeding and training.</p><div class="ingr-tags"><span class="ingr-tag">High Protein</span><span class="ingr-tag">Low Fat</span><span class="ingr-tag">Digestive</span></div><div class="ingr-stats"><div class="ingr-stat"><div class="ingr-stat-val">31g</div><div class="ingr-stat-lab">Protein/100g</div></div><div class="ingr-stat"><div class="ingr-stat-val">3.6g</div><div class="ingr-stat-lab">Fat/100g</div></div></div></div>
       <div class="ingr-card"><div class="ingr-emoji">&#128003;</div><div class="ingr-name">Buffalo (Buff)</div><p style="font-size:13px;color:var(--muted);line-height:1.6">A novel protein for most Indian dogs. Higher iron and zinc than chicken. Ideal for dogs with suspected chicken sensitivities and for nutritional variety.</p><div class="ingr-tags"><span class="ingr-tag">Novel Protein</span><span class="ingr-tag">High Iron</span><span class="ingr-tag">Allergy Safe</span></div><div class="ingr-stats"><div class="ingr-stat"><div class="ingr-stat-val">26g</div><div class="ingr-stat-lab">Protein/100g</div></div><div class="ingr-stat"><div class="ingr-stat-val">3.3mg</div><div class="ingr-stat-lab">Iron/100g</div></div></div></div>
-      <div class="ingr-card"><div class="ingr-emoji">&#128016;</div><div class="ingr-name">Goat</div><p style="font-size:13px;color:var(--muted);line-height:1.6">Used in organs, trachea and ears. Goat organs are among the most nutrient-dense foods in any dog&rsquo;s diet &mdash; liver, lungs and trachea all offer different benefits.</p><div class="ingr-tags"><span class="ingr-tag">Organ Rich</span><span class="ingr-tag">Vitamin A</span><span class="ingr-tag">Collagen</span></div><div class="ingr-stats"><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">Vitamin A</div></div><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">B12</div></div></div></div>
+      <div class="ingr-card"><div class="ingr-emoji">&#128031;</div><div class="ingr-name">Goat</div><p style="font-size:13px;color:var(--muted);line-height:1.6">Used in organs, trachea and ears. Goat organs are among the most nutrient-dense foods in any dog&rsquo;s diet &mdash; liver, lungs and trachea all offer different benefits.</p><div class="ingr-tags"><span class="ingr-tag">Organ Rich</span><span class="ingr-tag">Vitamin A</span><span class="ingr-tag">Collagen</span></div><div class="ingr-stats"><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">Vitamin A</div></div><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">B12</div></div></div></div>
       <div class="ingr-card"><div class="ingr-emoji">&#128031;</div><div class="ingr-name">Fish</div><p style="font-size:13px;color:var(--muted);line-height:1.6">We use 9 different fish varieties. All are wild-caught from Indian waters. Rich in omega-3 fatty acids EPA and DHA &mdash; essential for brain, coat and joint health.</p><div class="ingr-tags"><span class="ingr-tag">Omega-3</span><span class="ingr-tag">Coat Health</span><span class="ingr-tag">Brain Health</span></div><div class="ingr-stats"><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">EPA+DHA</div></div><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">Selenium</div></div></div></div>
-      <div class="ingr-card"><div class="ingr-emoji">&#128038;</div><div class="ingr-name">Quail (Whole Prey)</div><p style="font-size:13px;color:var(--muted);line-height:1.6">Whole quail with bones, organs and meat intact. The most complete single-ingredient treat we offer &mdash; muscle, bone, organ nutrition in one natural package.</p><div class="ingr-tags"><span class="ingr-tag">Whole Prey</span><span class="ingr-tag">Bone-In</span><span class="ingr-tag">Complete</span></div><div class="ingr-stats"><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">Calcium</div></div><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">Minerals</div></div></div></div>
+      <div class="ingr-card"><div class="ingr-emoji">&#128028;</div><div class="ingr-name">Quail (Whole Prey)</div><p style="font-size:13px;color:var(--muted);line-height:1.6">Whole quail with bones, organs and meat intact. The most complete single-ingredient treat we offer &mdash; muscle, bone, organ nutrition in one natural package.</p><div class="ingr-tags"><span class="ingr-tag">Whole Prey</span><span class="ingr-tag">Bone-In</span><span class="ingr-tag">Complete</span></div><div class="ingr-stats"><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">Calcium</div></div><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">Minerals</div></div></div></div>
       <div class="ingr-card"><div class="ingr-emoji">&#129459;</div><div class="ingr-name">Chicken Feet</div><p style="font-size:13px;color:var(--muted);line-height:1.6">One of the best natural sources of glucosamine and chondroitin. Excellent for joint health and as a natural dental chew. The cartilage provides prolonged chewing satisfaction.</p><div class="ingr-tags"><span class="ingr-tag">Glucosamine</span><span class="ingr-tag">Dental</span><span class="ingr-tag">Joint Health</span></div><div class="ingr-stats"><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">Glucosamine</div></div><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">Collagen</div></div></div></div>
-      <div class="ingr-card"><div class="ingr-emoji">&#127831;</div><div class="ingr-name">Chicken Liver</div><p style="font-size:13px;color:var(--muted);line-height:1.6">Called nature&rsquo;s multivitamin. Extremely high in vitamin A, B12 and iron. Small amounts provide dramatic nutritional impact. Used as a high-value training reward.</p><div class="ingr-tags"><span class="ingr-tag">Vitamin A</span><span class="ingr-tag">Iron Rich</span><span class="ingr-tag">B12</span></div><div class="ingr-stats"><div class="ingr-stat"><div class="ingr-stat-val">31mg</div><div class="ingr-stat-lab">B12/100g</div></div><div class="ingr-stat"><div class="ingr-stat-val">Very High</div><div class="ingr-stat-lab">Vitamin A</div></div></div></div>
-      <div class="ingr-card"><div class="ingr-emoji">&#128016;</div><div class="ingr-name">Goat Trachea</div><p style="font-size:13px;color:var(--muted);line-height:1.6">Cartilage-based chew naturally rich in chondroitin. Provides extended chewing time for dental benefits and mental enrichment. Suitable for medium and large breeds.</p><div class="ingr-tags"><span class="ingr-tag">Chondroitin</span><span class="ingr-tag">Dental</span><span class="ingr-tag">Long Lasting</span></div><div class="ingr-stats"><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">Chondroitin</div></div><div class="ingr-stat"><div class="ingr-stat-val">Medium</div><div class="ingr-stat-lab">Difficulty</div></div></div>      <div class="ingr-card"><div class="ingr-emoji">&#128016;</div><div class="ingr-name">Goat Liver</div><p style="font-size:13px;color:var(--muted);line-height:1.6">Even richer than chicken liver in copper, folate and Vitamin A. One of the most nutrient-dense organ meats available. Essential for dogs needing a nutritional boost.</p><div class="ingr-tags"><span class="ingr-tag">Vitamin A</span><span class="ingr-tag">Copper Rich</span><span class="ingr-tag">Folate</span></div><div class="ingr-stats"><div class="ingr-stat"><div class="ingr-stat-val">Very High</div><div class="ingr-stat-lab">Vitamin A</div></div><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">Copper</div></div></div></div>
-      <div class="ingr-card"><div class="ingr-emoji">&#128016;</div><div class="ingr-name">Goat Lungs</div><p style="font-size:13px;color:var(--muted);line-height:1.6">One of the rare organ treats that is genuinely very low in fat. High protein, very low calorie. Perfect for overweight dogs or breeds prone to pancreatitis.</p><div class="ingr-tags"><span class="ingr-tag">Low Fat</span><span class="ingr-tag">High Protein</span><span class="ingr-tag">Weight Safe</span></div><div class="ingr-stats"><div class="ingr-stat"><div class="ingr-stat-val">Very Low</div><div class="ingr-stat-lab">Fat</div></div><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">Protein</div></div></div></div>
-      <div class="ingr-card"><div class="ingr-emoji">&#128016;</div><div class="ingr-name">Goat Heart &amp; Kidney</div><p style="font-size:13px;color:var(--muted);line-height:1.6">Heart is the richest natural source of taurine and CoQ10. Kidney provides B vitamins and detox support. Together they support cardiovascular health and energy.</p><div class="ingr-tags"><span class="ingr-tag">Taurine</span><span class="ingr-tag">CoQ10</span><span class="ingr-tag">Heart Health</span></div><div class="ingr-stats"><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">Taurine</div></div><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">B Vitamins</div></div></div></div>
-      <div class="ingr-card"><div class="ingr-emoji">&#127843;</div><div class="ingr-name">Anchovies</div><p style="font-size:13px;color:var(--muted);line-height:1.6">Wild-caught whole anchovies &mdash; one of the best natural sources of EPA &amp; DHA omega-3. Coat and brain health benefits visible within 3&ndash;4 weeks of regular feeding.</p><div class="ingr-tags"><span class="ingr-tag">Omega-3</span><span class="ingr-tag">DHA</span><span class="ingr-tag">Wild Caught</span></div><div class="ingr-stats"><div class="ingr-stat"><div class="ingr-stat-val">Very High</div><div class="ingr-stat-lab">Omega-3</div></div><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">Selenium</div></div></div></div>
-      <div class="ingr-card"><div class="ingr-emoji">&#129459;</div><div class="ingr-name">Chicken Neck</div><p style="font-size:13px;color:var(--muted);line-height:1.6">Natural calcium from digestible bone. Excellent dental treat through mechanical scrubbing. Wings add collagen for coat and joint support. Suitable for all breeds.</p><div class="ingr-tags"><span class="ingr-tag">Calcium</span><span class="ingr-tag">Dental</span><span class="ingr-tag">Collagen</span></div><div class="ingr-stats"><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">Calcium</div></div><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">Collagen</div></div></div></div>
-      <div class="ingr-card"><div class="ingr-emoji">&#127831;</div><div class="ingr-name">Chicken Gizzards</div><p style="font-size:13px;color:var(--muted);line-height:1.6">Packed with B12, iron, zinc and phosphorus. Muscle meat from the digestive organ &mdash; highly concentrated in nutrients. Almost universally loved by dogs of all breeds.</p><div class="ingr-tags"><span class="ingr-tag">B12</span><span class="ingr-tag">Iron Rich</span><span class="ingr-tag">Zinc</span></div><div class="ingr-stats"><div class="ingr-stat"><div class="ingr-stat-val">Very High</div><div class="ingr-stat-lab">B12</div></div><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">Iron</div></div></div></div>
-      <div class="ingr-card"><div class="ingr-emoji">&#128031;</div><div class="ingr-name">Bombay Duck (Bombil)</div><p style="font-size:13px;color:var(--muted);line-height:1.6">Traditional Indian coastal fish. Very low fat and low calorie &mdash; ideal for weight-conscious dogs. Rich in iodine for thyroid health and selenium for antioxidant support.</p><div class="ingr-tags"><span class="ingr-tag">Low Calorie</span><span class="ingr-tag">Iodine</span><span class="ingr-tag">Made in India</span></div><div class="ingr-stats"><div class="ingr-stat"><div class="ingr-stat-val">Very Low</div><div class="ingr-stat-lab">Fat</div></div><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">Iodine</div></div></div></div>
-      <div class="ingr-card"><div class="ingr-emoji">&#128016;</div><div class="ingr-name">Goat Spleen</div><p style="font-size:13px;color:var(--muted);line-height:1.6">One of the richest natural iron sources available. Excellent for dogs with anaemia, low energy, or poor haemoglobin levels. A rare and highly nutritious organ meat.</p><div class="ingr-tags"><span class="ingr-tag">Iron Rich</span><span class="ingr-tag">Haemoglobin</span><span class="ingr-tag">Rare Organ</span></div><div class="ingr-stats"><div class="ingr-stat"><div class="ingr-stat-val">Very High</div><div class="ingr-stat-lab">Iron</div></div><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">Protein</div></div></div></div>
-</div>
+      <div class="ingr-card"><div class="ingr-emoji">&#128004;</div><div class="ingr-name">Chicken Liver</div><p style="font-size:13px;color:var(--muted);line-height:1.6">Called nature&rsquo;s multivitamin. Extremely high in vitamin A, B12 and iron. Small amounts provide dramatic nutritional impact. Used as a high-value training reward.</p><div class="ingr-tags"><span class="ingr-tag">Vitamin A</span><span class="ingr-tag">Iron Rich</span><span class="ingr-tag">B12</span></div><div class="ingr-stats"><div class="ingr-stat"><div class="ingr-stat-val">31mg</div><div class="ingr-stat-lab">B12/100g</div></div><div class="ingr-stat"><div class="ingr-stat-val">Very High</div><div class="ingr-stat-lab">Vitamin A</div></div></div></div>
+      <div class="ingr-card"><div class="ingr-emoji">&#129520;</div><div class="ingr-name">Goat Trachea</div><p style="font-size:13px;color:var(--muted);line-height:1.6">Cartilage-based chew naturally rich in chondroitin. Provides extended chewing time for dental benefits and mental enrichment. Suitable for medium and large breeds.</p><div class="ingr-tags"><span class="ingr-tag">Chondroitin</span><span class="ingr-tag">Dental</span><span class="ingr-tag">Long Lasting</span></div><div class="ingr-stats"><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">Chondroitin</div></div><div class="ingr-stat"><div class="ingr-stat-val">Medium</div><div class="ingr-stat-lab">Difficulty</div></div></div></div>
     </div>
   </section>
 </div>
@@ -1381,9 +1407,9 @@ body:has(#page-login.active) #mainNav { display: none !important; }
       <div style="margin-top:40px;padding:24px;background:var(--white);border:1px solid var(--cream-mid)">
         <div style="font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--dark);margin-bottom:16px">Quick Links</div>
         <div style="display:flex;flex-direction:column;gap:10px">
-          <a href="https://www.delhivery.com/track-package/" target="_blank" style="font-size:13px;color:var(--teal);font-weight:600">Track on Delhivery &rarr;</a>
+          <a href="https://www.delhivery.com/track/" target="_blank" style="font-size:13px;color:var(--teal);font-weight:600">Track on Delhivery &rarr;</a>
           <a href="https://shiprocket.co/tracking/" target="_blank" style="font-size:13px;color:var(--teal);font-weight:600">Track on Shiprocket &rarr;</a>
-          <a href="https://tracking.indiapost.gov.in/TrackConsignment.aspx" target="_blank" style="font-size:13px;color:var(--teal);font-weight:600">Track on India Post &rarr;</a>
+          <a href="https://www.indiapost.gov.in/vas/pages/trackconsignment.aspx" target="_blank" style="font-size:13px;color:var(--teal);font-weight:600">Track on India Post &rarr;</a>
         </div>
         <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--cream-mid)">
           <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Not received tracking? WhatsApp us your order number.</p>
@@ -1399,8 +1425,8 @@ body:has(#page-login.active) #mainNav { display: none !important; }
   <div class="pmodal">
     <button class="pmodal-close" onclick="closePModal()">&#10005;</button>
     <div class="pmodal-img" style="position:relative">
-      <img id="pmodal-img" src="" alt="">
-      <button id="pmodal-upload-btn" style="display:none"></button>
+      <img id="pmodal-img" src="" alt="" onerror="this.style.display='none';document.getElementById('pmodal-placeholder').style.display='flex'">
+      <button id="pmodal-upload-btn" onclick="openImageUpload(currentModalProduct&&currentModalProduct.name,event)" style="position:absolute;bottom:10px;right:10px;background:rgba(26,16,8,.75);color:var(--gold-pale);border:1px solid var(--gold);padding:7px 12px;font-family:'Jost',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(4px);display:flex;align-items:center;gap:5px">&#128247; Add Photo</button>
       <div class="pmodal-img-placeholder" id="pmodal-placeholder" style="display:none">&#127831;</div>
     </div>
     <!-- Bundle image header — shown instead of product img for bundle products -->
@@ -1499,7 +1525,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
           <textarea id="reviewText" rows="3" placeholder="Share your dog's experience with this treat..." style="width:100%;padding:10px 12px;border:1.5px solid var(--cream-mid);background:var(--white);font-family:'Jost',sans-serif;font-size:13px;color:var(--dark);outline:none;box-sizing:border-box;resize:vertical;margin-bottom:10px"></textarea>
           <div id="reviewFormError" style="display:none;font-size:12px;color:#c0392b;margin-bottom:8px;font-weight:600"></div>
           <div id="reviewSuccess" style="display:none;font-size:12px;color:var(--teal);font-weight:700;margin-bottom:8px">&#10003; Review submitted! Thank you.</div>
-          <button onclick="submitModalReview()" style="background:var(--dark);color:var(--white);border:none;padding:11px 24px;font-family:'Jost',sans-serif;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer">Submit Review</button>
+          <button onclick="submitReview()" style="background:var(--dark);color:var(--white);border:none;padding:11px 24px;font-family:'Jost',sans-serif;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer">Submit Review</button>
         </div>
         </div>
 
@@ -2276,9 +2302,9 @@ function trackOrder() {
   var awbClean = awb.replace(/\s/g, '');
   var url = '';
   if (/^\d{10,12}$/.test(awbClean)) {
-    url = 'https://www.delhivery.com/track-package/package/' + awbClean;
+    url = 'https://www.delhivery.com/track/package/' + awbClean;
   } else if (/^[A-Z]{2}\d{8,}[A-Z]{2}$/.test(awbClean)) {
-    url = 'https://tracking.indiapost.gov.in/TrackConsignment.aspx';
+    url = 'https://www.indiapost.gov.in/vas/pages/trackconsignment.aspx';
   } else {
     url = 'https://shiprocket.co/tracking/' + awbClean;
   }
@@ -2336,10 +2362,6 @@ const articles = [
     title:'How to Store Dehydrated Treats Properly (Especially in Indian Humidity)',
     body:'<h3>The Humidity Problem Most Pet Parents Don\\\'t Know About</h3> <p>Dehydrated treats stay fresh by virtue of having very low moisture content. The enemy is humidity — reintroducing moisture softens the treat, creates conditions for mould, and significantly shortens shelf life. In cities like Mumbai, Thane, Chennai and Kolkata, where humidity regularly exceeds 80% in monsoon season, storage becomes critical.</p> <div style="background:var(--dark);padding:24px;margin:20px 0"> <div style="text-align:center;margin-bottom:18px"> <div style="font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:6px">STORAGE GUIDE BY TREAT TYPE</div> <div style="font-family:\'Cormorant Garamond\',serif;font-size:20px;color:var(--white);font-weight:700">How Long Each Treat Stays Fresh</div> </div> <div style="display:flex;flex-direction:column;gap:8px"> <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1.5fr;gap:0;background:rgba(255,255,255,.1);padding:8px 14px"> <div style="font-size:10px;font-weight:700;color:var(--gold-light);text-transform:uppercase;letter-spacing:.08em">Treat Type</div> <div style="font-size:10px;font-weight:700;color:var(--gold-light);text-transform:uppercase;letter-spacing:.08em;text-align:center">Unopened</div> <div style="font-size:10px;font-weight:700;color:var(--gold-light);text-transform:uppercase;letter-spacing:.08em;text-align:center">After Opening</div> <div style="font-size:10px;font-weight:700;color:var(--gold-light);text-transform:uppercase;letter-spacing:.08em">Storage Method</div> </div> <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1.5fr;background:rgba(255,255,255,.05);padding:10px 14px;align-items:center"> <div style="font-size:12px;color:white">Jerky (Chicken, Buff)</div> <div style="font-size:12px;color:rgba(255,255,255,.7);text-align:center">6 months</div> <div style="font-size:12px;color:rgba(255,255,255,.7);text-align:center">4 weeks</div> <div style="font-size:11px;color:rgba(255,255,255,.5)">Airtight container, cool &amp; dry</div> </div> <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1.5fr;background:rgba(255,255,255,.03);padding:10px 14px;align-items:center"> <div style="font-size:12px;color:white">Fish Treats</div> <div style="font-size:12px;color:rgba(255,255,255,.7);text-align:center">6 months</div> <div style="font-size:12px;color:rgba(255,255,255,.7);text-align:center">3 weeks</div> <div style="font-size:11px;color:rgba(255,255,255,.5)">Away from heat — fridge after opening in monsoon</div> </div> <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1.5fr;background:rgba(255,255,255,.05);padding:10px 14px;align-items:center"> <div style="font-size:12px;color:white">Organ Treats</div> <div style="font-size:12px;color:rgba(255,255,255,.7);text-align:center">6 months</div> <div style="font-size:12px;color:rgba(255,255,255,.7);text-align:center">3 weeks</div> <div style="font-size:11px;color:rgba(255,255,255,.5)">Refrigerate after opening always</div> </div> <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1.5fr;background:rgba(255,255,255,.03);padding:10px 14px;align-items:center"> <div style="font-size:12px;color:white">Chews &amp; Bones</div> <div style="font-size:12px;color:rgba(255,255,255,.7);text-align:center">12 months</div> <div style="font-size:12px;color:rgba(255,255,255,.7);text-align:center">2–3 months</div> <div style="font-size:11px;color:rgba(255,255,255,.5)">No refrigeration needed — cool dry shelf</div> </div> <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1.5fr;background:rgba(255,255,255,.05);padding:10px 14px;align-items:center"> <div style="font-size:12px;color:white">Whole Prey (Quail)</div> <div style="font-size:12px;color:rgba(255,255,255,.7);text-align:center">9 months</div> <div style="font-size:12px;color:rgba(255,255,255,.7);text-align:center">6 weeks</div> <div style="font-size:11px;color:rgba(255,255,255,.5)">Refrigerate after opening</div> </div> </div> </div> <h3>Mumbai and Thane: Special Monsoon Rules</h3> <p>From June to September, coastal Maharashtra sees humidity regularly above 75–85%. This is the most challenging storage period. During this time, follow these extra precautions.</p> <ul> <li><strong>All fish treats:</strong> Refrigerate immediately after first opening, regardless of how much is left.</li> <li><strong>All organ treats:</strong> Same — move to fridge after first opening, consume within 3 weeks.</li> <li><strong>Jerky and chews:</strong> Keep in an airtight container with a food-grade silica gel sachet inside to absorb ambient moisture.</li> <li><strong>Never store near windows:</strong> Direct sunlight and humidity together are the fastest way to spoil any dehydrated food.</li> </ul> <h3>Signs a Treat Has Gone Bad</h3> <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0"> <div style="background:var(--cream);padding:14px;border-left:3px solid #e05555"> <div style="font-size:11px;font-weight:700;color:#c0392b;margin-bottom:6px">DISCARD IF YOU SEE</div> <ul style="font-size:12px;color:var(--muted);margin:0;padding-left:16px;line-height:1.9"> <li>Any white, green or black spots (mould)</li> <li>Unusually soft or damp texture</li> <li>Rancid or off smell (different from normal fish smell)</li> <li>Oily or greasy surface residue</li> </ul> </div> <div style="background:var(--cream);padding:14px;border-left:3px solid #4a9e5c"> <div style="font-size:11px;font-weight:700;color:#4a9e5c;margin-bottom:6px">TOTALLY NORMAL</div> <ul style="font-size:12px;color:var(--muted);margin:0;padding-left:16px;line-height:1.9"> <li>Strong meat or fish smell (good sign)</li> <li>White powder on chews (dried protein, safe)</li> <li>Colour variation between batches</li> <li>Slight stickiness in fish treats (natural oils)</li> </ul> </div> </div> <div class="art-tip"><strong>Our packaging tip:</strong> Game of Bones treats come in resealable zip-lock pouches for exactly this reason. Always press all the air out before resealing. For best results in Mumbai\'s humidity, transfer to a small airtight glass or stainless container after opening.</div>'
   }
-,
-  {emoji:'\u{1F682}',tag:'Travel',date:'April 2026 \u00B7 10 min read',title:'How to Travel With Your Dog on Indian Railways \u2014 The Complete & Correct 2026 Guide',body:'<h3>The Truth About Travelling With Your Dog on Indian Trains</h3><p>Most online guides on this topic contain errors \u2014 the rules are more specific than most people realise. This is the fully researched, accurate guide based on current Indian Railways regulations. Read it before you book anything.</p><div style=\'background:var(--dark);padding:24px;margin:20px 0\'><div style=\'text-align:center;margin-bottom:16px\'><div style=\'font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:6px\'>THE FACTS AT A GLANCE</div><div style=\'font-family:\"Cormorant Garamond\",serif;font-size:20px;color:var(--white);font-weight:700\'>Indian Railways Pet Travel Rules 2026</div></div><div style=\'display:grid;grid-template-columns:1fr 1fr;gap:8px\'><div style=\'background:rgba(255,255,255,.07);padding:14px\'><div style=\'font-size:10px;font-weight:700;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px\'>Allowed Classes</div><div style=\'font-size:12px;color:rgba(255,255,255,.7);line-height:1.8\'>AC First Class (1A) and First Class (non-AC) only. NOT allowed in 2A, 3A, Sleeper, Chair Car or General.</div></div><div style=\'background:rgba(255,255,255,.07);padding:14px\'><div style=\'font-size:10px;font-weight:700;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px\'>Trains Permitted</div><div style=\'font-size:12px;color:rgba(255,255,255,.7);line-height:1.8\'>All Mail/Express trains with 1A or First Class coaches. NOT Shatabdi (no 1A/First Class). NOT in dog boxes in Rajdhani trains.</div></div><div style=\'background:rgba(255,255,255,.07);padding:14px\'><div style=\'font-size:10px;font-weight:700;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px\'>One Dog Per PNR</div><div style=\'font-size:12px;color:rgba(255,255,255,.7);line-height:1.8\'>Only one dog or cat is permitted per PNR (per booking reference). You cannot travel with two pets on one ticket.</div></div><div style=\'background:rgba(255,255,255,.07);padding:14px\'><div style=\'font-size:10px;font-weight:700;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px\'>Dog Box Availability</div><div style=\'font-size:12px;color:rgba(255,255,255,.7);line-height:1.8\'>Only one dog box per train. First come, first served. No advance booking \u2014 booked at the counter one hour before departure only.</div></div></div></div><h3>The Two Ways Your Dog Can Travel</h3><div style=\'display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0\'><div style=\'background:var(--cream);padding:18px;border-top:3px solid var(--gold)\'><div style=\'font-size:11px;font-weight:700;text-transform:uppercase;color:var(--gold);margin-bottom:8px\'>Option 1: With You in the Cabin (1A / First Class)</div><p style=\'font-size:12px;color:var(--muted);line-height:1.8;margin:0\'>Your dog travels in the same coupe or cabin as you. You must <strong>book the entire coupe (2-berth) or cabin (4-berth)</strong> \u2014 not just your own berth. This ensures no other passengers share the space with your pet. Charged at 6x Scale-L luggage rates for 60kg minimum weight. Your dog must be leashed and supervised at all times. If co-passengers in adjacent berths object, railway staff can relocate your dog to the brake van without a refund \u2014 which is why booking the full coupe is essential.</p></div><div style=\'background:var(--cream);padding:18px;border-top:3px solid var(--dark)\'><div style=\'font-size:11px;font-weight:700;text-transform:uppercase;color:var(--dark);margin-bottom:8px\'>Option 2: Dog Box in the SLR/Brake Van</div><p style=\'font-size:12px;color:var(--muted);line-height:1.8;margin:0\'>The dog box is a designated ventilated compartment in the Second Class Luggage and Brake Van (SLR). It has ventilation windows, a latching mechanism, and space for a crate. <strong>Only one dog box per train</strong>, booked one hour before departure at the parcel counter on a first-come-first-served basis. Charged at 30kg luggage rate. You are responsible for feeding your dog at stops. You can \u2014 and should \u2014 check on your dog during the journey. Not available on Rajdhani or Shatabdi trains.</p></div></div><h3>Step-by-Step: How to Book</h3><div style=\'display:flex;flex-direction:column;gap:10px;margin:16px 0\'><div style=\'background:var(--cream);padding:16px;border-left:4px solid var(--gold);display:flex;gap:14px;align-items:flex-start\'><div style=\'width:28px;height:28px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--dark);flex-shrink:0\'>1</div><div><strong style=\'color:var(--dark)\'>Get a fitness certificate from your vet</strong><p style=\'font-size:12px;color:var(--muted);margin:4px 0 0\'>Get this 24\u201348 hours before travel. The certificate should confirm your dog is fit to travel and include their current vaccination status (Rabies and Distemper/DHLPPi are essential).</p></div></div><div style=\'background:var(--cream);padding:16px;border-left:4px solid var(--gold);display:flex;gap:14px;align-items:flex-start\'><div style=\'width:28px;height:28px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--dark);flex-shrink:0\'>2</div><div><strong style=\'color:var(--dark)\'>Book your own ticket first \u2014 correctly</strong><p style=\'font-size:12px;color:var(--muted);margin:4px 0 0\'>If travelling with your dog in the cabin, book the <strong>entire coupe</strong> (select \u201cCoupe\u201d preference on IRCTC). A coupe is the 2-berth private cabin in 1A. If you are 1 or 2 people, book both berths. For 3\u20134 people, book the full 4-berth cabin. This is non-negotiable \u2014 you cannot bring a dog into a shared compartment.</p></div></div><div style=\'background:var(--cream);padding:16px;border-left:4px solid var(--gold);display:flex;gap:14px;align-items:flex-start\'><div style=\'width:28px;height:28px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--dark);flex-shrink:0\'>3</div><div><strong style=\'color:var(--dark)\'>Option A \u2014 Book via IRCTC online (for cabin travel)</strong><p style=\'font-size:12px;color:var(--muted);margin:4px 0 0\'>After confirming your own ticket on IRCTC, go to <strong>Trains \u2192 Dogs/Cats Booking</strong> on the IRCTC homepage. Log in with your phone and OTP, enter your PNR, and complete the pet booking. This online feature was launched in 2023.</p></div></div><div style=\'background:var(--cream);padding:16px;border-left:4px solid var(--gold);display:flex;gap:14px;align-items:flex-start\'><div style=\'width:28px;height:28px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--dark);flex-shrink:0\'>4</div><div><strong style=\'color:var(--dark)\'>Option B \u2014 Book at the Parcel Office (for dog box travel)</strong><p style=\'font-size:12px;color:var(--muted);margin:4px 0 0\'>Arrive at the station <strong>at least 90 minutes\u20132 hours before departure</strong>. Visit the luggage/parcel office. Submit your ticket copy, vaccination certificate, fitness certificate, and government ID. Fill in the parcel form declaring the value of your dog. Pay the charges and collect the Parcel Way Bill (PWB) \u2014 this is your dog\'s official travel document. Give one copy to the Train Manager (Guard).</p></div></div><div style=\'background:var(--cream);padding:16px;border-left:4px solid var(--gold);display:flex;gap:14px;align-items:flex-start\'><div style=\'width:28px;height:28px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--dark);flex-shrink:0\'>5</div><div><strong style=\'color:var(--dark)\'>Settle your dog before departure</strong><p style=\'font-size:12px;color:var(--muted);margin:4px 0 0\'>If using the dog box, introduce your dog to the space before the train departs. Ensure the crate is secured. Introduce yourself to the Guard \u2014 they are responsible for supervising the van and a friendly relationship means better care.</p></div></div></div><h3>What Documents You Need</h3><ul><li><strong>Your confirmed train ticket</strong> (PNR)</li><li><strong>Government-issued photo ID</strong> (Aadhaar, PAN, Passport)</li><li><strong>Veterinary fitness certificate</strong> dated 24\u201348 hours before travel</li><li><strong>Vaccination records</strong> including Rabies and DHLPPi (Distemper, Hepatitis, Leptospirosis, Parvovirus, Parainfluenza)</li><li><strong>Parcel Way Bill (PWB)</strong> issued at the station (keep your copy throughout the journey)</li></ul><div class=\'art-callout\'>Under Section 153 of the Indian Railway Act, Railways is <strong>not liable</strong> for loss, damage or injury to a pet arising from fright or restiveness. If you declare a monetary value for your dog in the station master\'s form, the railway may compensate up to that declared value in other cases of loss or damage. Always declare a realistic value.</div><h3>Charges (Approximate)</h3><ul><li><strong>Dog box (SLR/brake van):</strong> Charged at Scale-L luggage rate for 30kg minimum \u2014 typically Rs.100\u2013300 depending on distance and train type</li><li><strong>Cabin with you (1A/First Class):</strong> Charged at 6x Scale-L luggage rate for 60kg minimum \u2014 typically Rs.800\u20131,500+ depending on distance</li><li><strong>Travelling without booking:</strong> Penalty of 6x the luggage rate with a minimum of Rs.50 \u2014 and your dog will be moved to the brake van regardless</li></ul><h3>How to Prepare Your Dog</h3><ul><li><strong>Crate train well in advance</strong> \u2014 spend 2\u20134 weeks before travel making the crate or carrier a positive, familiar space. Feed meals inside it. Use treats to build positive association. A crate-comfortable dog is dramatically calmer in an unfamiliar environment.</li><li><strong>Visit the vet before travel</strong> \u2014 not just for the certificate. Discuss whether your dog is a suitable candidate for train travel. Very anxious dogs, very old dogs, and certain health conditions may make train travel inadvisable.</li><li><strong>Exercise thoroughly the evening before</strong> \u2014 a tired dog boards calmer and settles faster.</li><li><strong>Fast 4\u20136 hours before boarding</strong> \u2014 prevents motion sickness and nausea. Keep water available until 1 hour before departure.</li><li><strong>Pack a travel kit</strong> \u2014 foldable water bowl, water supply, waste bags, familiar blanket or worn T-shirt, leash and backup leash, any prescribed medication, vaccination documents, and high-value treats.</li><li><strong>Bring the right treats</strong> \u2014 on a train, you want treats that are compact, low-odour for the cabin, and single-ingredient so there is no upset stomach risk from stress eating. Dehydrated chicken jerky or fish bites are ideal. Avoid rich organ treats during travel.</li></ul><h3>During the Journey</h3><ul><li>If your dog is in the dog box \u2014 check on them at every major stop. Offer water. A treat reward for staying calm reinforces good behaviour.</li><li>If your dog is in the cabin \u2014 keep them leashed at all times. Do not allow barking or jumping. Other passengers outside your coupe should not be disturbed.</li><li>Do not feed a full meal during travel \u2014 small treat rewards are fine.</li><li>Never leave a dog unsupervised in the cabin.</li></ul><h3>On Arrival</h3><p>Submit your remaining PWB copy to the railway official at the destination station. Let your dog toilet immediately. Offer water first. Wait 20\u201330 minutes before feeding a full meal. Give your dog quiet decompression time before entering a busy or unfamiliar environment.</p><div style=\'background:var(--cream);padding:16px;border:1px solid var(--cream-mid);margin:16px 0\'><div style=\'font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:10px\'>Common Mistakes to Avoid</div><ul style=\'font-size:12px;color:var(--muted);line-height:2;margin:0;list-style:none;padding:0\'><li>\u274c Booking only your own berth in 1A \u2014 you must book the whole coupe</li><li>\u274c Trying to travel in 2A, 3A, Sleeper or Chair Car \u2014 not permitted, will result in fine</li><li>\u274c Relying on advance dog box booking \u2014 dog boxes cannot be booked in advance, only 1 hour before departure</li><li>\u274c Forgetting the fitness certificate \u2014 a vet vaccination card alone is not enough</li><li>\u274c Booking Shatabdi trains \u2014 pets are not permitted on Shatabdi at all</li><li>\u274c Sedating your dog without vet advice \u2014 sedation can cause dangerous respiratory depression</li></ul></div><div class=\'art-tip\'><strong>Best advice:</strong> If you can afford it, book the full 1A coupe and travel with your dog in the cabin. It is significantly less stressful for the dog \u2014 they can see you, hear you, and settle next to you throughout the journey. The dog box option works but leaving your dog alone in an unfamiliar dark van with the sounds of the train is considerably more anxiety-inducing for most dogs.</div>'},
-  {emoji:'\u{1F415}',tag:'Adoption',date:'April 2026 \u00B7 7 min read',title:'Why the Indian Pariah Dog Is the Best Dog You Can Adopt \u2014 And the Myths That Stop People',body:'<h3>India Has the World\'s Best Dog. Most Indians Don\'t Know It.</h3><p>The Indian Pariah Dog \u2014 the desi dog, the indie, the INDog \u2014 is one of the oldest dog breeds on earth. Archaeological evidence places them at the Indus Valley Civilisation, over 4,500 years ago. They have survived every climate, disease, famine, and human neglect that the subcontinent could throw at them. And yet, Indian families routinely spend Rs.50,000\u201380,000 on Huskies that cannot survive our heat, Bulldogs that cannot breathe our air, and German Shepherds that develop hip problems by age 5 \u2014 while tens of thousands of perfectly healthy, intelligent, completely adapted indie dogs wait in shelters and on streets.</p><p>This article is about why that choice makes no sense \u2014 and about the myths that perpetuate it.</p><div style=\'background:var(--dark);padding:24px;margin:20px 0\'><div style=\'text-align:center;margin-bottom:16px\'><div style=\'font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:6px\'>THE FACTS</div><div style=\'font-family:\"Cormorant Garamond\",serif;font-size:20px;color:var(--white);font-weight:700\'>What 4,500 Years of Natural Selection Actually Produces</div></div><div style=\'display:grid;grid-template-columns:repeat(3,1fr);gap:10px\'><div style=\'background:rgba(255,255,255,.07);padding:14px;text-align:center\'><div style=\'font-size:20px;font-weight:800;color:var(--gold)\'>11\u201315 yrs</div><div style=\'font-size:11px;color:rgba(255,255,255,.5);margin-top:6px\'>Average lifespan \u2014 longer than most pedigree breeds</div></div><div style=\'background:rgba(255,255,255,.07);padding:14px;text-align:center\'><div style=\'font-size:20px;font-weight:800;color:var(--gold)\'>Near Zero</div><div style=\'font-size:11px;color:rgba(255,255,255,.5);margin-top:6px\'>Risk of hip dysplasia, inherited cancers, and breed-specific diseases</div></div><div style=\'background:rgba(255,255,255,.07);padding:14px;text-align:center\'><div style=\'font-size:20px;font-weight:800;color:var(--gold)\'>-10\u00B0 to 50\u00B0C</div><div style=\'font-size:11px;color:rgba(255,255,255,.5);margin-top:6px\'>Temperature range they can thrive in \u2014 perfectly matched to India</div></div></div></div><h3>Why Indies Are Genuinely Superior for Indian Homes</h3><div style=\'display:flex;flex-direction:column;gap:12px;margin:16px 0\'><div style=\'background:var(--cream);padding:18px;border-left:4px solid var(--gold)\'><strong style=\'color:var(--dark);display:block;margin-bottom:6px\'>1. They Are Built for India</strong><p style=\'font-size:13px;color:var(--muted);line-height:1.7;margin:0\'>The Indie dog evolved on the Indian subcontinent over thousands of years without human intervention. Their bodies are perfectly calibrated to Indian heat, Indian humidity, Indian food sources, and Indian pathogens. A Husky brought to Mumbai is in a state of constant thermal stress. An indie dog in Mumbai is simply at home. This translates directly to health costs \u2014 the vet bills for a breed ill-suited to Indian climate are dramatically higher than for a dog that belongs here.</p></div><div style=\'background:var(--cream);padding:18px;border-left:4px solid var(--gold)\'><strong style=\'color:var(--dark);display:block;margin-bottom:6px\'>2. They Have Superior Genetic Health</strong><p style=\'font-size:13px;color:var(--muted);line-height:1.7;margin:0\'>Pedigree dogs are the product of inbreeding to fix certain visual traits. This inbreeding concentrates genetic diseases. Hip dysplasia in Labradors and German Shepherds. Brachycephalic syndrome in Pugs and Bulldogs. Heart conditions in Cavalier King Charles Spaniels. The Indian Pariah has no such legacy \u2014 natural selection ruthlessly eliminated any dog whose genetics made it vulnerable. The result is a genetically robust animal with excellent immunity, few hereditary diseases, and a natural resistance to the conditions that send pedigree dogs to expensive specialists.</p></div><div style=\'background:var(--cream);padding:18px;border-left:4px solid var(--gold)\'><strong style=\'color:var(--dark);display:block;margin-bottom:6px\'>3. They Are Highly Intelligent and Trainable</strong><p style=\'font-size:13px;color:var(--muted);line-height:1.7;margin:0\'>The Uttarakhand Police inducted an Indie alongside foreign breeds in their dog squad. The Indie was the top-performing member. This is not a surprise to anyone who has trained one. Indie dogs are problem solvers \u2014 they had to be, to survive on Indian streets. They learn commands quickly, respond well to positive reinforcement, and have a strong desire to please once they bond with their family. Dr. Premlata Choudhary, a veterinarian with decades of experience, has publicly stated that Indian desi dogs are more intelligent and hardier than most pedigree breeds.</p></div><div style=\'background:var(--cream);padding:18px;border-left:4px solid var(--gold)\'><strong style=\'color:var(--dark);display:block;margin-bottom:6px\'>4. They Are Extremely Low Maintenance</strong><p style=\'font-size:13px;color:var(--muted);line-height:1.7;margin:0\'>Short coat that requires only basic brushing. Fewer oil glands than most breeds \u2014 they do not smell like dogs the way many pedigrees do. Low shedding compared to double-coated breeds. They self-clean effectively. They are not fussy eaters and adapt to a wide variety of diets. The lifetime maintenance cost of an Indie is a fraction of what most pedigree owners spend.</p></div><div style=\'background:var(--cream);padding:18px;border-left:4px solid var(--gold)\'><strong style=\'color:var(--dark);display:block;margin-bottom:6px\'>5. They Are Incredibly Loyal</strong><p style=\'font-size:13px;color:var(--muted);line-height:1.7;margin:0\'>An Indie that bonds with you bonds completely. They have spent millennia reading human behaviour \u2014 they are extraordinarily attuned to their owners\' emotional states, routines, and signals. Owners consistently describe their Indie dogs as the most emotionally intelligent animals they have ever lived with. They form deep pack bonds and are deeply protective of their family.</p></div></div><h3>The Myths \u2014 Debunked One by One</h3><div style=\'display:flex;flex-direction:column;gap:1px;background:var(--cream-mid);border:1px solid var(--cream-mid);margin:16px 0\'><div style=\'background:var(--dark);padding:10px 14px;display:grid;grid-template-columns:1fr 1fr;gap:12px\'><div style=\'font-size:10px;font-weight:700;color:var(--gold);text-transform:uppercase\'>The Myth</div><div style=\'font-size:10px;font-weight:700;color:var(--gold);text-transform:uppercase\'>The Truth</div></div><div style=\'background:var(--white);padding:12px 14px;display:grid;grid-template-columns:1fr 1fr;gap:12px;border-bottom:1px solid var(--cream-mid)\'><div style=\'font-size:12px;color:var(--dark);font-weight:600\'>\"They can\'t be trained.\"</div><div style=\'font-size:12px;color:var(--muted)\'>Completely false. Indies are used as police dogs, guide dogs, and therapy animals in India. Their intelligence makes them highly responsive to positive reinforcement. The British Raj deliberately spread this myth to sell foreign breeds.</div></div><div style=\'background:var(--cream);padding:12px 14px;display:grid;grid-template-columns:1fr 1fr;gap:12px;border-bottom:1px solid var(--cream-mid)\'><div style=\'font-size:12px;color:var(--dark);font-weight:600\'>\"They are aggressive.\"</div><div style=\'font-size:12px;color:var(--muted)\'>Aggression in street dogs is almost always a response to human provocation \u2014 beating, stone throwing, territorial invasion. A socialised, loved Indie is gentle, family-oriented, and excellent with children.</div></div><div style=\'background:var(--white);padding:12px 14px;display:grid;grid-template-columns:1fr 1fr;gap:12px;border-bottom:1px solid var(--cream-mid)\'><div style=\'font-size:12px;color:var(--dark);font-weight:600\'>\"They are unhealthy and full of disease.\"</div><div style=\'font-size:12px;color:var(--muted)\'>The opposite is true. Rescued street dogs need initial treatment, but once healthy, Indies have significantly fewer chronic health problems than most pedigrees. Natural selection simply does not allow genetic weakness to persist.</div></div><div style=\'background:var(--cream);padding:12px 14px;display:grid;grid-template-columns:1fr 1fr;gap:12px;border-bottom:1px solid var(--cream-mid)\'><div style=\'font-size:12px;color:var(--dark);font-weight:600\'>\"They don\'t know how to live indoors.\"</div><div style=\'font-size:12px;color:var(--muted)\'>Indies adapt to indoor living quickly with a proper introduction. Their adaptability is actually one of their defining traits \u2014 they have lived alongside humans in every type of environment for thousands of years.</div></div><div style=\'background:var(--white);padding:12px 14px;display:grid;grid-template-columns:1fr 1fr;gap:12px;border-bottom:1px solid var(--cream-mid)\'><div style=\'font-size:12px;color:var(--dark);font-weight:600\'>\"They bark too much.\"</div><div style=\'font-size:12px;color:var(--muted)\'>Indies bark to communicate. Proper training and sufficient exercise dramatically reduces excessive barking. Many owners report their Indies are quieter than most pedigree breeds once settled in a home.</div></div><div style=\'background:var(--cream);padding:12px 14px;display:grid;grid-template-columns:1fr 1fr;gap:12px;border-bottom:1px solid var(--cream-mid)\'><div style=\'font-size:12px;color:var(--dark);font-weight:600\'>\"They won\'t bond with you as much as a pedigree.\"</div><div style=\'font-size:12px;color:var(--muted)\'>This is perhaps the most backwards myth of all. Many Indie owners describe a depth of loyalty and emotional attunement that they never experienced with pedigree dogs. A rescued Indie that has known human cruelty and is now experiencing love responds with a depth of gratitude that is genuinely moving.</div></div><div style=\'background:var(--white);padding:12px 14px;display:grid;grid-template-columns:1fr 1fr;gap:12px\'><div style=\'font-size:12px;color:var(--dark);font-weight:600\'>\"Foreign breeds are smarter.\"</div><div style=\'font-size:12px;color:var(--muted)\'>Intelligence in dogs is context-dependent. A Border Collie may outperform an Indie at herding sheep. An Indie will outperform almost any pedigree at reading social situations, self-preservation, and adapting to new environments \u2014 which are far more relevant skills for a family pet in India.</div></div></div><h3>What Owning an Indie Is Actually Like</h3><p>Indie owners consistently report a few universal experiences. The first is the adjustment period \u2014 usually 2\u20134 weeks of uncertainty as the dog settles, learns the house rules, and figures out that this is their home now. The second is the moment the bond clicks \u2014 and when it does, it is total. Indie owners do not tend to go back to pedigrees. The combination of intelligence, loyalty, low maintenance, and genuine health makes it a singularly rewarding relationship.</p><p>They do require training \u2014 all dogs do. An Indie\'s intelligence is a double-edged sword: a trained Indie is remarkable; an untrained one will use that intelligence to systematically test every boundary in your home. Invest in training early. It pays back many times over.</p><div class=\'art-callout\'>Where to adopt: <strong>CARE Animal Shelter (Mumbai), Welfare of Stray Dogs (WSD), Paws India, Charlie\'s Animal Rescue Centre (CARE)</strong> and hundreds of local rescue groups across India. Most shelters have puppies and adult dogs. An adult Indie aged 2\u20134 is often the best first dog \u2014 past the destructive phase, temperament established, and grateful beyond measure.</div><div class=\'art-tip\'><strong>From Game of Bones:</strong> Every product we make is built for the dog that evolved here \u2014 naturally, without shortcuts or fillers. We believe the Indian dog deserves Indian-made, single-ingredient real food. If you adopt an Indie, we will help you feed them the way they were built to eat.</div>'},
-  {emoji:'\u{1F431}',tag:'Cats',date:'April 2026 \u00B7 6 min read',title:'Dehydrated Treats for Cats \u2014 What to Give, What to Avoid, and Why Real Food Matters',body:'<h3>Cats Are Obligate Carnivores \u2014 More So Than Dogs</h3><p>If you have ever looked at a cat treat ingredient list and found corn starch, vegetable oil, and \u201cartificial seafood flavour\u201d, you have seen the fundamental problem with commercial pet treats in India. Cats are <strong>obligate carnivores</strong> \u2014 meaning they are biologically required to eat animal protein. Unlike dogs, who are omnivores and can derive some nutrition from plant sources, a cat\'s body literally cannot synthesise certain essential amino acids (taurine, arginine) from anything other than animal tissue. They must eat meat. And yet the Indian market is full of cat treats made primarily of grain, starch, and synthetic flavour. This guide is about what to actually feed your cat as a treat \u2014 and why it matters more than most cat owners realise.</p><div style=\'background:var(--dark);padding:20px;margin:16px 0\'><div style=\'text-align:center;margin-bottom:14px\'><div style=\'font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:6px\'>CAT NUTRITION ESSENTIALS</div><div style=\'font-family:\"Cormorant Garamond\",serif;font-size:18px;color:var(--white);font-weight:700\'>What Cats Must Get From Their Food</div></div><div style=\'display:grid;grid-template-columns:repeat(3,1fr);gap:8px\'><div style=\'background:rgba(255,255,255,.07);padding:12px;text-align:center\'><div style=\'font-size:16px;font-weight:800;color:var(--gold)\'>Taurine</div><div style=\'font-size:11px;color:rgba(255,255,255,.5);margin-top:4px\'>Essential for heart function and vision. Cats cannot synthesise it. Deficiency causes dilated cardiomyopathy and blindness.</div></div><div style=\'background:rgba(255,255,255,.07);padding:12px;text-align:center\'><div style=\'font-size:16px;font-weight:800;color:var(--gold)\'>Arginine</div><div style=\'font-size:11px;color:rgba(255,255,255,.5);margin-top:4px\'>Critical for the urea cycle. Deficiency causes ammonia toxicity. Only present in sufficient quantities in animal protein.</div></div><div style=\'background:rgba(255,255,255,.07);padding:12px;text-align:center\'><div style=\'font-size:16px;font-weight:800;color:var(--gold)\'>Arachidonic Acid</div><div style=\'font-size:11px;color:rgba(255,255,255,.5);margin-top:4px\'>Essential fatty acid that cats cannot produce from plant sources. Found only in animal fat.</div></div></div></div><h3>Why Dehydrated Single-Ingredient Treats Are Ideal for Cats</h3><p>Dehydrated meat treats are close to the ideal cat treat format. They are pure protein with no fillers, they have an intense smell that cats respond to strongly, they are low in carbohydrates (cats have very limited ability to metabolise carbs), and they are easy to portion control for weight management. The key word is <strong>single-ingredient</strong> \u2014 you know exactly what is in it, and you can be sure it is not displacing essential nutrients with starch padding.</p><h3>The Best Dehydrated Treats for Cats</h3><div style=\'display:flex;flex-direction:column;gap:1px;background:var(--cream-mid);border:1px solid var(--cream-mid);margin:16px 0\'><div style=\'background:var(--dark);padding:10px 14px;display:grid;grid-template-columns:1.5fr 1fr 1.5fr;gap:12px\'><div style=\'font-size:10px;font-weight:700;color:var(--gold);text-transform:uppercase\'>Treat</div><div style=\'font-size:10px;font-weight:700;color:var(--gold);text-transform:uppercase\'>Cat Rating</div><div style=\'font-size:10px;font-weight:700;color:var(--gold);text-transform:uppercase\'>Key Benefit</div></div><div style=\'background:var(--white);padding:12px 14px;display:grid;grid-template-columns:1.5fr 1fr 1.5fr;gap:12px;border-bottom:1px solid var(--cream-mid);align-items:center\'><div style=\'font-size:13px;font-weight:600;color:var(--dark)\'>Chicken Bites / Chicken Jerky</div><div style=\'font-size:11px\'>&#9733;&#9733;&#9733;&#9733;&#9733;</div><div style=\'font-size:12px;color:var(--muted)\'>Pure chicken protein, taurine-rich, familiar flavour most cats accept immediately</div></div><div style=\'background:var(--cream);padding:12px 14px;display:grid;grid-template-columns:1.5fr 1fr 1.5fr;gap:12px;border-bottom:1px solid var(--cream-mid);align-items:center\'><div style=\'font-size:13px;font-weight:600;color:var(--dark)\'>Anchovies</div><div style=\'font-size:11px\'>&#9733;&#9733;&#9733;&#9733;&#9733;</div><div style=\'font-size:12px;color:var(--muted)\'>Cats go absolutely wild for the smell. High omega-3, excellent for coat and skin. Small size is perfect for cats.</div></div><div style=\'background:var(--white);padding:12px 14px;display:grid;grid-template-columns:1.5fr 1fr 1.5fr;gap:12px;border-bottom:1px solid var(--cream-mid);align-items:center\'><div style=\'font-size:13px;font-weight:600;color:var(--dark)\'>Chicken Liver & Heart</div><div style=\'font-size:11px\'>&#9733;&#9733;&#9733;&#9733;&#9733;</div><div style=\'font-size:12px;color:var(--muted)\'>Extremely high taurine from heart, Vitamin A and iron from liver. Nutritionally exceptional for cats in small doses.</div></div><div style=\'background:var(--cream);padding:12px 14px;display:grid;grid-template-columns:1.5fr 1fr 1.5fr;gap:12px;border-bottom:1px solid var(--cream-mid);align-items:center\'><div style=\'font-size:13px;font-weight:600;color:var(--dark)\'>Bombay Duck (Bombil)</div><div style=\'font-size:11px\'>&#9733;&#9733;&#9733;&#9733;&#9734;</div><div style=\'font-size:12px;color:var(--muted)\'>Very low fat, high protein marine treat. Good for weight-conscious cats. The strong smell is a bonus for picky eaters.</div></div><div style=\'background:var(--white);padding:12px 14px;display:grid;grid-template-columns:1.5fr 1fr 1.5fr;gap:12px;align-items:center\'><div style=\'font-size:13px;font-weight:600;color:var(--dark)\'>Chicken Gizzards</div><div style=\'font-size:11px\'>&#9733;&#9733;&#9733;&#9733;&#9734;</div><div style=\'font-size:12px;color:var(--muted)\'>Rich in B12 and iron. Excellent muscle meat treat. Most cats accept it readily if introduced slowly.</div></div></div><h3>How to Feed Dehydrated Treats to Cats</h3><ul><li><strong>Start with tiny amounts</strong> \u2014 break pieces to thumbnail size for cats. A little goes a long way with dehydrated meat, which is nutritionally concentrated.</li><li><strong>Treats should not exceed 10% of daily calories</strong> \u2014 the same rule as for dogs. An average indoor cat needs ~200\u2013250 calories per day. Total treat calories should not exceed 20\u201325.</li><li><strong>Introduce new proteins one at a time</strong> \u2014 especially for cats with known sensitivities or those on prescription diets. Wait 3\u20134 days between introducing each new protein.</li><li><strong>Use for enrichment and training</strong> \u2014 cats are trainable with high-value treats. Positive reinforcement with a tiny piece of chicken liver can teach a cat to come when called, accept grooming, and enter a carrier willingly.</li><li><strong>Store carefully in a cool, dry place</strong> \u2014 once opened, reseal tightly. In humid climates, refrigerate organ treats after opening.</li></ul><h3>What to Avoid Giving Cats</h3><ul><li><strong>Onion, garlic and chives</strong> \u2014 all members of the allium family are toxic to cats, causing red blood cell destruction. Even small amounts regularly can cause anaemia.</li><li><strong>Grapes and raisins</strong> \u2014 toxic to cats as well as dogs. Mechanism not fully understood but kidney failure is documented.</li><li><strong>Raw fish regularly</strong> \u2014 raw fish contains an enzyme (thiaminase) that destroys Vitamin B1. Dehydrated fish is safe because heat neutralises this enzyme.</li><li><strong>Milk and dairy</strong> \u2014 contrary to popular belief, most adult cats are lactose intolerant. Milk causes digestive upset in the majority of cats.</li><li><strong>Treats high in carbohydrate</strong> \u2014 cats have minimal amylase activity and very limited ability to metabolise starch. Corn, wheat, and rice-based treats are nutritionally useless for cats and contribute to obesity.</li><li><strong>Dog chews and bone treats</strong> \u2014 chicken feet, necks, and bone-containing treats are designed for dogs. The chew force and digestive requirements are different. Stick to boneless meat and fish for cats.</li></ul><div class=\'art-callout\'>Liver is nutritionally exceptional for cats \u2014 but it must be fed in moderation. More than 5\u201310% of a cat\'s diet from liver can cause Vitamin A toxicity over time. A small piece 2\u20133 times per week as a treat is ideal.</div><h3>Signs Your Cat Is Reacting Poorly to a New Treat</h3><p>Even single-ingredient treats can cause reactions in some cats, particularly those with existing sensitivities. Watch for: loose stools or vomiting within 24 hours of introduction, increased scratching or skin redness, or lethargy and reduced appetite. If you see these signs, discontinue the treat and wait a week before trying a different protein.</p><div class=\'art-tip\'><strong>The best starting treat for cats:</strong> Anchovies. The smell is irresistible to almost every cat, the size is naturally appropriate for a cat\'s small mouth, and the omega-3 content starts showing in coat quality within 3\u20134 weeks. Break one anchovy into 3\u20134 small pieces per session. Most cat owners see their cats performing trained behaviours within a week.</div>'}
 ];
 
 var currentArtIdx = 0;
@@ -2696,7 +2718,7 @@ const products = [
     feeding:'Small dogs: 2–3 heads daily. Medium: 4–6. Large: 6–10. Can be fed daily. Fully digestible — the bones are small and safe.',
     storage:{tiles:[{icon:'🫙',val:'6 Months',label:'Unopened'},{icon:'🌬️',val:'3 Weeks',label:'After Opening'},{icon:'🚫',val:'Away from Heat',label:'Store Away'}],note:'Fish treats are moisture-sensitive. Store in a cool, dry location in the sealed pouch. After opening, press out air, reseal tightly and use within 3 weeks. Keep away from direct sunlight and heat sources. If you notice any off-smell or moisture, discard immediately.'},
   },
-  {img:'Anchovies_pouch_front.png', isActive:false, name:'Tuna Head', cat:'Fish Treats', noOrdersBadge:true, badge:'Jumbo Chew', badgeCls:'teal', desc:'Whole dehydrated tuna head — a large, mineral-dense chew rich in omega-3 and natural collagen.', tags:['Large Chew','Collagen','Omega-3'], sizes:[{label:'1 pc',price:449}], filter:'fish',
+  {img:'Anchovies_pouch_front.png', name:'Tuna Head', cat:'Fish Treats', noOrdersBadge:true, badge:'Jumbo Chew', badgeCls:'teal', desc:'Whole dehydrated tuna head — a large, mineral-dense chew rich in omega-3 and natural collagen.', tags:['Large Chew','Collagen','Omega-3'], sizes:[{label:'1 pc',price:449}], filter:'fish',
     tagline:'A tuna head is a substantial, mineral-dense chew that doubles as a brain and joint supplement — containing DHA-rich brain tissue, collagen from connective tissue and natural calcium from the skull.',
     benefits:[
       {icon:'🦁',title:'Substantial Chew for Big Dogs',text:'Large enough to engage medium and large dogs for 20–40 minutes of focused, satisfying chewing.'},
@@ -2708,7 +2730,7 @@ const products = [
     feeding:'Feed 1–2 times per week for medium/large dogs. Not recommended for dogs under 10kg. Always supervise. Best given outdoors or on an easy-clean surface.',
     storage:{tiles:[{icon:'🫙',val:'6 Months',label:'Unopened'},{icon:'🌬️',val:'3 Weeks',label:'After Opening'},{icon:'🚫',val:'Away from Heat',label:'Store Away'}],note:'Fish treats are moisture-sensitive. Store in a cool, dry location in the sealed pouch. After opening, press out air, reseal tightly and use within 3 weeks. Keep away from direct sunlight and heat sources. If you notice any off-smell or moisture, discard immediately.'},
   },
-  {img:'Anchovies_pouch_front.png', isActive:false, name:'Tuna Cartilage', cat:'Fish Treats', noOrdersBadge:true, badge:'Joint Support', badgeCls:'teal', desc:'Dehydrated tuna cartilage — an excellent natural source of chondroitin for joint health and mobility.', tags:['Chondroitin','Joint Support','Fish'], sizes:[{label:'60g',price:349}], filter:'fish',
+  {img:'Anchovies_pouch_front.png', name:'Tuna Cartilage', cat:'Fish Treats', noOrdersBadge:true, badge:'Joint Support', badgeCls:'teal', desc:'Dehydrated tuna cartilage — an excellent natural source of chondroitin for joint health and mobility.', tags:['Chondroitin','Joint Support','Fish'], sizes:[{label:'60g',price:349}], filter:'fish',
     tagline:'Tuna cartilage is a rare and highly effective source of marine-origin chondroitin — the compound shown to reduce joint degradation and improve mobility in dogs with arthritis.',
     benefits:[
       {icon:'🦴',title:'Marine Chondroitin',text:'Marine-sourced chondroitin from fish is considered highly bioavailable and is the form used in many human joint supplements.'},
@@ -4097,8 +4119,6 @@ function openPModal(idx) {
   currentModalProduct = p;
   currentModalPrice = p.sizes[0].price;
   document.getElementById('pmodal-img').src = p.img;
-  document.getElementById('pmodal-img').style.setProperty('display','block','important');
-  document.getElementById('pmodal-img').style.setProperty('display','block','important');
   document.getElementById('pmodal-img').alt = p.name;
   // Image area: for bundles show upload section; for products show product image
   var imgWrap = document.querySelector('.pmodal-img');
@@ -4629,7 +4649,7 @@ function renderProducts(items, containerId) {
         <img src="${p.img}" alt="${p.name}" loading="lazy">
         <span class="prod-badge ${p.badgeCls}">${p.badge}</span>
         <button class="prod-fav" onclick="event.stopPropagation();toggleWishlist(this,${globalIdx})">${isWishlisted(globalIdx)?'♥':'♡'}</button>
-        
+
       </div>
       <div class="prod-body">
         <div class="prod-cat">${p.cat}</div>
@@ -5029,7 +5049,7 @@ function pickStar(val) {
   });
 }
 
-function submitModalReview() {
+function submitReview() {
   if (!currentUser) { closePModal(); showPage('login'); return; }
   var text = document.getElementById('reviewText').value.trim();
   var errEl = document.getElementById('reviewFormError');
@@ -5641,9 +5661,9 @@ function checkPmPin() {
 // ── IMAGE UPLOAD ────────────────────────────────────────────────
 var productImages={};
 function loadSavedImages(){try{var s=JSON.parse(localStorage.getItem('gobProductImages')||'{}')||{};productImages=s;products.forEach(function(p){if(productImages[p.name])p.img=productImages[p.name];});}catch(e){}}
-function saveProductImage(n,d){productImages[n]=d;var p=products.find(function(x){return x.name===n;});if(p)p.img=d;try{localStorage.setItem('gobProductImages',JSON.stringify(productImages));}catch(e){}renderProducts(products.slice(0,4),'homeProd');renderProducts(products,'shopProd');restoreViewCartBtns();showCartToast('Image saved','success');}
-function openImageUpload(n,e){return;}
-function removeProductImage(n,e){if(e)e.stopPropagation();delete productImages[n];var p=products.find(function(x){return x.name===n;});if(p)p.img='';try{localStorage.setItem('gobProductImages',JSON.stringify(productImages));}catch(e){}renderProducts(products.slice(0,4),'homeProd');renderProducts(products,'shopProd');restoreViewCartBtns();showCartToast('Image removed');}
+function saveProductImage(n,d){/* Disabled */}
+function openImageUpload(n,e){return;/* Frontend image uploads disabled */}
+function removeProductImage(n,e){/* Disabled */}
 
 // ── SELF-HEAL ────────────────────────────────────────────────────
 function annShowCopied(code){
@@ -5655,9 +5675,9 @@ function annShowCopied(code){
 }
 var productImages={};
 function loadSavedImages(){try{var s=JSON.parse(localStorage.getItem('gobProductImages')||'{}')||{};productImages=s;products.forEach(function(p){if(productImages[p.name])p.img=productImages[p.name];});}catch(e){}}
-function saveProductImage(n,d){productImages[n]=d;var p=products.find(function(x){return x.name===n;});if(p)p.img=d;try{localStorage.setItem('gobProductImages',JSON.stringify(productImages));}catch(e){}renderProducts(products.slice(0,4),'homeProd');renderProducts(products,'shopProd');restoreViewCartBtns();showCartToast('Image saved','success');}
-function openImageUpload(n,e){return;}
-function removeProductImage(n,e){if(e)e.stopPropagation();delete productImages[n];var p=products.find(function(x){return x.name===n;});if(p)p.img='';try{localStorage.setItem('gobProductImages',JSON.stringify(productImages));}catch(e){}renderProducts(products.slice(0,4),'homeProd');renderProducts(products,'shopProd');restoreViewCartBtns();showCartToast('Image removed');}
+function saveProductImage(n,d){/* Disabled */}
+function openImageUpload(n,e){return;/* Frontend image uploads disabled */}
+function removeProductImage(n,e){/* Disabled */}
 function handleLoginClick(){
   // Close any open overlays first
   var pmO=document.getElementById('pmodalOverlay');
@@ -5929,12 +5949,11 @@ function renderReviews() {
 }
 
 function submitReview() {
-  var name = (document.getElementById("reviewName") && document.getElementById("reviewName").value || "").trim();
-  var product = document.getElementById("reviewProduct") ? document.getElementById("reviewProduct").value : "";
-  var text = (document.getElementById("reviewText") && document.getElementById("reviewText").value || "").trim();
+  var name = (document.getElementById("reviewName").value || "").trim();
+  var product = document.getElementById("reviewProduct").value;
+  var text = (document.getElementById("reviewText").value || "").trim();
   var msg = document.getElementById("reviewSubmitMsg");
-  if (!msg) return;
-  if (!name || !text || !reviewRating || reviewRating === 0) {
+  if (!name || !text || reviewRating === 0) {
     msg.innerHTML = "<p style='color:#c0392b;font-size:13px;margin-top:8px'>Please fill in your name, rating and review.</p>";
     return;
   }
@@ -5982,9 +6001,7 @@ function syncProductsFromSupabase() {
     dbProducts.forEach(function(dbP) {
       // Find matching product in hardcoded array by name (case-insensitive)
       var match = products.find(function(p) {
-        var dbName = (dbP.name||'').toLowerCase().trim();
-        var pName = p.name.toLowerCase().trim();
-        return pName === dbName || (pName === 'mackerel' && dbName === 'mackerel whole') || (pName === 'goat trachea' && dbName === 'trachea chew');
+        return p.name.toLowerCase().trim() === (dbP.name||'').toLowerCase().trim();
       });
       if (match) {
         // Update image from Supabase if available
@@ -6139,3 +6156,437 @@ showPage = function(id) {
 
 </script>
 </html>
+<!-- GAME OF BONES TREAT FINDER QUIZ - COMPREHENSIVE V2 -->
+<script>
+var quizState = {};
+var currentQuestion = 1;
+const totalQuestions = 16;
+
+function showTreatFinderQuiz() {
+  var quizHTML = `
+    <div style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:9000;display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto;" id="quizOverlay" onclick="if(event.target.id==='quizOverlay') closeTreatFinderQuiz()">
+      <div style="background:white;padding:40px;border-radius:8px;max-width:700px;box-shadow:0 20px 60px rgba(0,0,0,0.3);width:100%;max-height:90vh;overflow-y:auto;" onclick="event.stopPropagation()">
+        
+        <!-- Progress Bar -->
+        <div style="margin-bottom:24px;">
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+            <span style="font-size:12px;font-weight:600;color:#7a6a5a;">Question <span id="qNum">1</span> of ${totalQuestions}</span>
+            <button onclick="closeTreatFinderQuiz()" style="background:none;border:none;font-size:20px;cursor:pointer;color:#7a6a5a;">✕</button>
+          </div>
+          <div style="width:100%;height:4px;background:#ede5d8;border-radius:2px;overflow:hidden;">
+            <div id="progressBar" style="height:100%;background:#2a7c6f;width:6.25%;transition:width .3s;"></div>
+          </div>
+        </div>
+
+        <!-- Q1: Dog Name -->
+        <div class="quiz-q" id="q1" style="display:block;">
+          <h3 style="font-size:20px;color:#1a1008;margin-bottom:16px;font-family:'Cormorant Garamond',serif;">What's your dog's name? 🐕</h3>
+          <input type="text" id="dogName" placeholder="e.g., Max, Bella, Charlie" style="width:100%;padding:12px;border:1px solid #ede5d8;border-radius:4px;font-size:14px;margin-bottom:16px;">
+          <button onclick="goNext(1, document.getElementById('dogName').value || 'your dog')" style="background:#2a7c6f;color:white;border:none;padding:12px 24px;border-radius:4px;cursor:pointer;font-weight:600;width:100%;">Continue →</button>
+        </div>
+
+        <!-- Q2: Breed -->
+        <div class="quiz-q" id="q2" style="display:none;">
+          <h3 style="font-size:20px;color:#1a1008;margin-bottom:16px;font-family:'Cormorant Garamond',serif;">What breed (or mix) is ${quizState.dogName || 'your dog'}?</h3>
+          <input type="text" id="breed" placeholder="e.g., Labrador, German Shepherd, Indie mix, Pug" style="width:100%;padding:12px;border:1px solid #ede5d8;border-radius:4px;font-size:14px;margin-bottom:16px;">
+          <p style="font-size:12px;color:#7a6a5a;margin-bottom:16px;">Helps us understand breed-specific health needs</p>
+          <button onclick="goNext(2, document.getElementById('breed').value || 'mixed breed')" style="background:#2a7c6f;color:white;border:none;padding:12px 24px;border-radius:4px;cursor:pointer;font-weight:600;width:100%;">Continue →</button>
+        </div>
+
+        <!-- Q3: Age -->
+        <div class="quiz-q" id="q3" style="display:none;">
+          <h3 style="font-size:20px;color:#1a1008;margin-bottom:16px;font-family:'Cormorant Garamond',serif;">How old is ${quizState.dogName || 'your dog'}?</h3>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <button onclick="goNext(3, 'puppy')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">👶 Puppy (0–6 months)</button>
+            <button onclick="goNext(3, 'young')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">🏃 Young (6 months–3 years)</button>
+            <button onclick="goNext(3, 'adult')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">⭐ Adult (3–8 years)</button>
+            <button onclick="goNext(3, 'senior')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">👴 Senior (8+ years)</button>
+          </div>
+        </div>
+
+        <!-- Q4: Size -->
+        <div class="quiz-q" id="q4" style="display:none;">
+          <h3 style="font-size:20px;color:#1a1008;margin-bottom:16px;font-family:'Cormorant Garamond',serif;">What's ${quizState.dogName || 'your dog'}'s size?</h3>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <button onclick="goNext(4, 'toy')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">🤏 Toy/Small (< 5 kg)</button>
+            <button onclick="goNext(4, 'small')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">🐕 Small-Medium (5–15 kg)</button>
+            <button onclick="goNext(4, 'medium')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">🐕 Medium (15–30 kg)</button>
+            <button onclick="goNext(4, 'large')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">🦁 Large (30–50 kg)</button>
+            <button onclick="goNext(4, 'giant')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">🦏 Giant (50+ kg)</button>
+          </div>
+        </div>
+
+        <!-- Q5: Allergies -->
+        <div class="quiz-q" id="q5" style="display:none;">
+          <h3 style="font-size:20px;color:#1a1008;margin-bottom:16px;font-family:'Cormorant Garamond',serif;">Does ${quizState.dogName || 'your dog'} have allergies? (Select all)</h3>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <label style="display:flex;align-items:center;gap:10px;padding:12px;background:#f5e8c8;border-radius:4px;cursor:pointer;"><input type="checkbox" class="allergy-cb" value="none" style="width:18px;height:18px;cursor:pointer;"> ✅ No allergies</label>
+            <label style="display:flex;align-items:center;gap:10px;padding:12px;background:#f5e8c8;border-radius:4px;cursor:pointer;"><input type="checkbox" class="allergy-cb" value="chicken" style="width:18px;height:18px;cursor:pointer;"> 🚫 Chicken</label>
+            <label style="display:flex;align-items:center;gap:10px;padding:12px;background:#f5e8c8;border-radius:4px;cursor:pointer;"><input type="checkbox" class="allergy-cb" value="beef" style="width:18px;height:18px;cursor:pointer;"> 🚫 Beef/Buffalo</label>
+            <label style="display:flex;align-items:center;gap:10px;padding:12px;background:#f5e8c8;border-radius:4px;cursor:pointer;"><input type="checkbox" class="allergy-cb" value="fish" style="width:18px;height:18px;cursor:pointer;"> 🚫 Fish</label>
+            <label style="display:flex;align-items:center;gap:10px;padding:12px;background:#f5e8c8;border-radius:4px;cursor:pointer;"><input type="checkbox" class="allergy-cb" value="goat" style="width:18px;height:18px;cursor:pointer;"> 🚫 Goat</label>
+            <label style="display:flex;align-items:center;gap:10px;padding:12px;background:#f5e8c8;border-radius:4px;cursor:pointer;"><input type="checkbox" class="allergy-cb" value="multiprotein" style="width:18px;height:18px;cursor:pointer;"> ⚠️ Multiple (only fish/goat safe)</label>
+            <label style="display:flex;align-items:center;gap:10px;padding:12px;background:#f5e8c8;border-radius:4px;cursor:pointer;"><input type="checkbox" class="allergy-cb" value="digestive" style="width:18px;height:18px;cursor:pointer;"> 🤢 Digestive issues</label>
+            <label style="display:flex;align-items:center;gap:10px;padding:12px;background:#f5e8c8;border-radius:4px;cursor:pointer;"><input type="checkbox" class="allergy-cb" value="notsure" style="width:18px;height:18px;cursor:pointer;"> ❓ Not sure</label>
+          </div>
+          <button onclick="proceedAllergies()" style="background:#2a7c6f;color:white;border:none;padding:12px 24px;border-radius:4px;cursor:pointer;font-weight:600;width:100%;margin-top:16px;">Continue →</button>
+        </div>
+
+        <!-- Q6: Activity Level -->
+        <div class="quiz-q" id="q6" style="display:none;">
+          <h3 style="font-size:20px;color:#1a1008;margin-bottom:16px;font-family:'Cormorant Garamond',serif;">How active is ${quizState.dogName || 'your dog'}?</h3>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <button onclick="goNext(6, 'couch')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">🛋️ Couch Potato (1–2 walks/week)</button>
+            <button onclick="goNext(6, 'moderate')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">🚶 Moderate (daily walks)</button>
+            <button onclick="goNext(6, 'active')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">🏃 Very Active (multiple runs daily)</button>
+            <button onclick="goNext(6, 'athletic')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">⚡ Super Athletic (agility, working dog)</button>
+          </div>
+        </div>
+
+        <!-- Q7: Feeding Frequency -->
+        <div class="quiz-q" id="q7" style="display:none;">
+          <h3 style="font-size:20px;color:#1a1008;margin-bottom:16px;font-family:'Cormorant Garamond',serif;">How often do you give treats?</h3>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <button onclick="goNext(7, 'daily')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">🎁 Daily (multiple treats)</button>
+            <button onclick="goNext(7, 'frequent')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">🐕 4-5 times per week</button>
+            <button onclick="goNext(7, 'moderate')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">📅 2-3 times per week</button>
+            <button onclick="goNext(7, 'occasional')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">✨ Occasionally (special treats)</button>
+          </div>
+        </div>
+
+        <!-- Q8: Feeding Philosophy -->
+        <div class="quiz-q" id="q8" style="display:none;">
+          <h3 style="font-size:20px;color:#1a1008;margin-bottom:16px;font-family:'Cormorant Garamond',serif;">What's your feeding philosophy?</h3>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <button onclick="goNext(8, 'kibble')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">🥣 Kibble diet</button>
+            <button onclick="goNext(8, 'raw')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">🥩 Raw/whole food diet</button>
+            <button onclick="goNext(8, 'mixed')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">🍲 Mixed (kibble + raw)</button>
+            <button onclick="goNext(8, 'homemade')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">👨‍🍳 Homemade cooked food</button>
+          </div>
+        </div>
+
+        <!-- Q9: Vet Recommendations -->
+        <div class="quiz-q" id="q9" style="display:none;">
+          <h3 style="font-size:20px;color:#1a1008;margin-bottom:16px;font-family:'Cormorant Garamond',serif;">Has your vet recommended any nutrients? (Optional)</h3>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <label style="display:flex;align-items:center;gap:10px;padding:10px;background:#f5e8c8;border-radius:4px;cursor:pointer;"><input type="checkbox" class="vet-cb" value="omega3" style="width:18px;height:18px;cursor:pointer;"> Omega-3 (joint, coat health)</label>
+            <label style="display:flex;align-items:center;gap:10px;padding:10px;background:#f5e8c8;border-radius:4px;cursor:pointer;"><input type="checkbox" class="vet-cb" value="iron" style="width:18px;height:18px;cursor:pointer;"> Iron (energy, immune)</label>
+            <label style="display:flex;align-items:center;gap:10px;padding:10px;background:#f5e8c8;border-radius:4px;cursor:pointer;"><input type="checkbox" class="vet-cb" value="glucosamine" style="width:18px;height:18px;cursor:pointer;"> Glucosamine (joints)</label>
+            <label style="display:flex;align-items:center;gap:10px;padding:10px;background:#f5e8c8;border-radius:4px;cursor:pointer;"><input type="checkbox" class="vet-cb" value="probiotics" style="width:18px;height:18px;cursor:pointer;"> Probiotics (digestion)</label>
+            <label style="display:flex;align-items:center;gap:10px;padding:10px;background:#f5e8c8;border-radius:4px;cursor:pointer;"><input type="checkbox" class="vet-cb" value="none" style="width:18px;height:18px;cursor:pointer;"> No specific recommendations</label>
+          </div>
+          <button onclick="proceedVet()" style="background:#2a7c6f;color:white;border:none;padding:12px 24px;border-radius:4px;cursor:pointer;font-weight:600;width:100%;margin-top:16px;">Continue →</button>
+        </div>
+
+        <!-- Q10: Multi-Dog Household -->
+        <div class="quiz-q" id="q10" style="display:none;">
+          <h3 style="font-size:20px;color:#1a1008;margin-bottom:16px;font-family:'Cormorant Garamond',serif;">Is this for one dog or multiple?</h3>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <button onclick="goNext(10, 'single')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">🐕 One dog</button>
+            <button onclick="goNext(10, 'multi')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">🐕🐕 Multiple dogs</button>
+          </div>
+        </div>
+
+        <!-- Q11: Texture Preference -->
+        <div class="quiz-q" id="q11" style="display:none;">
+          <h3 style="font-size:20px;color:#1a1008;margin-bottom:16px;font-family:'Cormorant Garamond',serif;">Does ${quizState.dogName || 'your dog'} prefer soft or hard treats?</h3>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <button onclick="goNext(11, 'soft')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">🌸 Soft & Chewy (jerky, organs)</button>
+            <button onclick="goNext(11, 'hard')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">🔥 Hard & Crunchy (bones, trachea)</button>
+            <button onclick="goNext(11, 'mixed')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">🎯 Doesn't matter / Mix it up</button>
+          </div>
+        </div>
+
+        <!-- Q12: Picky Eater -->
+        <div class="quiz-q" id="q12" style="display:none;">
+          <h3 style="font-size:20px;color:#1a1008;margin-bottom:16px;font-family:'Cormorant Garamond',serif;">How picky is ${quizState.dogName || 'your dog'} with food?</h3>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <button onclick="goNext(12, 'picky')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">🤨 Very picky (loves specific flavors)</button>
+            <button onclick="goNext(12, 'moderate')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">👃 Moderate (some preferences)</button>
+            <button onclick="goNext(12, 'voracious')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">🍴 Not picky (eats everything!)</button>
+          </div>
+        </div>
+
+        <!-- Q13: Primary Goal -->
+        <div class="quiz-q" id="q13" style="display:none;">
+          <h3 style="font-size:20px;color:#1a1008;margin-bottom:16px;font-family:'Cormorant Garamond',serif;">What's your main goal?</h3>
+          <div style="display:flex;flex-direction:column;gap:10px;max-height:300px;overflow-y:auto;">
+            <button onclick="goNext(13, 'general')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">🎁 General Rewards</button>
+            <button onclick="goNext(13, 'training')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">🏆 Training Rewards</button>
+            <button onclick="goNext(13, 'dental')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">🦷 Dental Health</button>
+            <button onclick="goNext(13, 'joint')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">💪 Joint Support</button>
+            <button onclick="goNext(13, 'coat')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">✨ Coat Health</button>
+            <button onclick="goNext(13, 'digestion')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">🤢 Digestion Support</button>
+            <button onclick="goNext(13, 'weight')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">⚖️ Weight Management</button>
+            <button onclick="goNext(13, 'energy')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">⚡ Energy Boost</button>
+          </div>
+        </div>
+
+        <!-- Q14: Health Concerns -->
+        <div class="quiz-q" id="q14" style="display:none;">
+          <h3 style="font-size:20px;color:#1a1008;margin-bottom:16px;font-family:'Cormorant Garamond',serif;">Health concerns? (Select all)</h3>
+          <div style="display:flex;flex-direction:column;gap:8px;max-height:300px;overflow-y:auto;">
+            <label style="display:flex;align-items:center;gap:10px;padding:10px;background:#f5e8c8;border-radius:4px;cursor:pointer;"><input type="checkbox" class="health-cb" value="none" style="width:18px;height:18px;cursor:pointer;"> No concerns</label>
+            <label style="display:flex;align-items:center;gap:10px;padding:10px;background:#f5e8c8;border-radius:4px;cursor:pointer;"><input type="checkbox" class="health-cb" value="itchy" style="width:18px;height:18px;cursor:pointer;"> Itchy/dry skin</label>
+            <label style="display:flex;align-items:center;gap:10px;padding:10px;background:#f5e8c8;border-radius:4px;cursor:pointer;"><input type="checkbox" class="health-cb" value="loose" style="width:18px;height:18px;cursor:pointer;"> Loose stools</label>
+            <label style="display:flex;align-items:center;gap:10px;padding:10px;background:#f5e8c8;border-radius:4px;cursor:pointer;"><input type="checkbox" class="health-cb" value="constipation" style="width:18px;height:18px;cursor:pointer;"> Constipation</label>
+            <label style="display:flex;align-items:center;gap:10px;padding:10px;background:#f5e8c8;border-radius:4px;cursor:pointer;"><input type="checkbox" class="health-cb" value="joint" style="width:18px;height:18px;cursor:pointer;"> Joint pain/arthritis</label>
+            <label style="display:flex;align-items:center;gap:10px;padding:10px;background:#f5e8c8;border-radius:4px;cursor:pointer;"><input type="checkbox" class="health-cb" value="dull" style="width:18px;height:18px;cursor:pointer;"> Dull coat</label>
+            <label style="display:flex;align-items:center;gap:10px;padding:10px;background:#f5e8c8;border-radius:4px;cursor:pointer;"><input type="checkbox" class="health-cb" value="underweight" style="width:18px;height:18px;cursor:pointer;"> Underweight</label>
+            <label style="display:flex;align-items:center;gap:10px;padding:10px;background:#f5e8c8;border-radius:4px;cursor:pointer;"><input type="checkbox" class="health-cb" value="overweight" style="width:18px;height:18px;cursor:pointer;"> Overweight</label>
+            <label style="display:flex;align-items:center;gap:10px;padding:10px;background:#f5e8c8;border-radius:4px;cursor:pointer;"><input type="checkbox" class="health-cb" value="dental" style="width:18px;height:18px;cursor:pointer;"> Dental plaque</label>
+            <label style="display:flex;align-items:center;gap:10px;padding:10px;background:#f5e8c8;border-radius:4px;cursor:pointer;"><input type="checkbox" class="health-cb" value="energy" style="width:18px;height:18px;cursor:pointer;"> Low energy</label>
+            <label style="display:flex;align-items:center;gap:10px;padding:10px;background:#f5e8c8;border-radius:4px;cursor:pointer;"><input type="checkbox" class="health-cb" value="breath" style="width:18px;height:18px;cursor:pointer;"> Bad breath</label>
+          </div>
+          <button onclick="proceedHealth()" style="background:#2a7c6f;color:white;border:none;padding:12px 24px;border-radius:4px;cursor:pointer;font-weight:600;width:100%;margin-top:16px;">Continue →</button>
+        </div>
+
+        <!-- Q15: Chewing Style -->
+        <div class="quiz-q" id="q15" style="display:none;">
+          <h3 style="font-size:20px;color:#1a1008;margin-bottom:16px;font-family:'Cormorant Garamond',serif;">What's ${quizState.dogName || 'your dog'}'s chewing style?</h3>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <button onclick="goNext(15, 'gentle')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">🌸 Gentle chewer (soft bites)</button>
+            <button onclick="goNext(15, 'moderate')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">🐕 Moderate chewer (normal)</button>
+            <button onclick="goNext(15, 'aggressive')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">🔥 Aggressive chewer (destroys toys)</button>
+            <button onclick="goNext(15, 'nonchewer')" style="padding:14px;text-align:left;background:#f5e8c8;border:none;border-radius:4px;cursor:pointer;color:#1a1008;font-weight:600;">👴 Non-chewer (swallows whole)</button>
+          </div>
+        </div>
+
+        <!-- Q16: Quick vs Detailed / Email Capture -->
+        <div class="quiz-q" id="q16" style="display:none;">
+          <h3 style="font-size:20px;color:#1a1008;margin-bottom:16px;font-family:'Cormorant Garamond',serif;">Want personalized guidance?</h3>
+          <p style="color:#7a6a5a;font-size:14px;margin-bottom:16px;">Get a feeding guide + 15% off your first order emailed to you</p>
+          <input type="email" id="userEmail" placeholder="your@email.com" style="width:100%;padding:12px;border:1px solid #ede5d8;border-radius:4px;font-size:14px;margin-bottom:16px;">
+          <button onclick="finishQuiz()" style="background:#2a7c6f;color:white;border:none;padding:12px 24px;border-radius:4px;cursor:pointer;font-weight:600;width:100%;">Get My Recommendations →</button>
+          <button onclick="finishQuiz()" style="background:none;color:#2a7c6f;border:1px solid #2a7c6f;padding:12px 24px;border-radius:4px;cursor:pointer;font-weight:600;width:100%;margin-top:8px;">Skip, show results</button>
+        </div>
+
+        <!-- Results -->
+        <div class="quiz-q" id="results" style="display:none;">
+          <h2 style="font-size:24px;color:#1a1008;margin-bottom:24px;font-family:'Cormorant Garamond',serif;text-align:center;">Perfect Treats for ${quizState.dogName || 'your dog'}! 🎉</h2>
+          <div id="resultsHTML" style="margin-bottom:24px;"></div>
+          <button onclick="closeTreatFinderQuiz(); showPage('shop');" style="background:#2a7c6f;color:white;border:none;padding:14px 36px;border-radius:4px;cursor:pointer;font-weight:600;width:100%;">View All Treats in Shop</button>
+        </div>
+
+      </div>
+    </div>
+  `;
+  
+  document.body.insertAdjacentHTML('beforeend', quizHTML);
+}
+
+function closeTreatFinderQuiz() {
+  var el = document.getElementById('quizOverlay');
+  if (el) el.remove();
+}
+
+function goNext(q, answer) {
+  quizState['q' + q] = answer;
+  if (q === 1) quizState.dogName = answer;
+  if (q === 2) quizState.breed = answer;
+  if (q === 3) quizState.age = answer;
+  if (q === 4) quizState.size = answer;
+  if (q === 6) quizState.activity = answer;
+  if (q === 7) quizState.feedFreq = answer;
+  if (q === 8) quizState.feedPhilo = answer;
+  if (q === 10) quizState.multiDog = answer;
+  if (q === 11) quizState.texture = answer;
+  if (q === 12) quizState.picky = answer;
+  if (q === 13) quizState.goal = answer;
+  if (q === 15) quizState.chewing = answer;
+  nextQ(q);
+}
+
+function proceedAllergies() {
+  var checked = Array.from(document.querySelectorAll('.allergy-cb:checked')).map(e => e.value);
+  quizState.allergies = checked;
+  nextQ(5);
+}
+
+function proceedVet() {
+  var checked = Array.from(document.querySelectorAll('.vet-cb:checked')).map(e => e.value);
+  quizState.vetRecs = checked;
+  nextQ(9);
+}
+
+function proceedHealth() {
+  var checked = Array.from(document.querySelectorAll('.health-cb:checked')).map(e => e.value);
+  quizState.health = checked;
+  nextQ(14);
+}
+
+function nextQ(current) {
+  document.querySelectorAll('.quiz-q').forEach(q => q.style.display = 'none');
+  var next = current + 1;
+  if (next <= totalQuestions) {
+    var el = document.getElementById('q' + next);
+    if (el) {
+      el.style.display = 'block';
+      document.getElementById('qNum').textContent = next;
+      document.getElementById('progressBar').style.width = (next / totalQuestions * 100) + '%';
+      window.scrollTo(0, 0);
+    }
+  }
+}
+
+function finishQuiz() {
+  var email = document.getElementById('userEmail').value;
+  if (email) {
+    quizState.email = email;
+    // Could send to your email service here
+  }
+  showResults();
+}
+
+function showResults() {
+  var recs = getRecommendations();
+  var html = '<div>';
+  recs.forEach(function(rec, idx) {
+    var bgColor = idx === 0 ? '#fff8e6' : idx === 1 ? '#f5e8c8' : '#ede5d8';
+    var borderColor = idx === 0 ? '#c8973a' : idx === 1 ? '#2a7c6f' : '#7a6a5a';
+    html += '<div style="background:' + bgColor + ';padding:16px;border-radius:4px;margin-bottom:12px;border-left:4px solid ' + borderColor + ';">';
+    html += '<div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">';
+    html += '<h4 style="font-size:16px;color:#1a1008;font-weight:700;">' + (idx + 1) + '. ' + rec.emoji + ' ' + rec.name + '</h4>';
+    html += '<span style="background:' + borderColor + ';color:white;padding:4px 12px;border-radius:4px;font-size:11px;font-weight:700;white-space:nowrap;">' + rec.badge + '</span>';
+    html += '</div>';
+    html += '<p style="font-size:13px;color:#7a6a5a;margin-bottom:8px;">' + rec.reason + '</p>';
+    html += '<p style="font-size:12px;color:#2a7c6f;font-weight:600;">💡 ' + rec.tip + '</p>';
+    html += '</div>';
+  });
+  html += '</div>';
+  document.getElementById('resultsHTML').innerHTML = html;
+  document.querySelectorAll('.quiz-q').forEach(q => q.style.display = 'none');
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('progressBar').style.width = '100%';
+  window.scrollTo(0, 0);
+}
+
+function getRecommendations() {
+  var products = {
+    'jerky_chicken': {name: 'Chicken Jerky', emoji: '🍗', proteins: ['chicken'], traits: {soft: true, training: 10, general: 10, energy: 10, weight: 5, dental: 3, joint: 5, coat: 6, digestion: 6}},
+    'jerky_buff': {name: 'Buffalo Jerky', emoji: '🐂', proteins: ['beef'], traits: {soft: true, training: 7, general: 9, energy: 10, weight: 5, dental: 3, joint: 7, coat: 6, digestion: 6}},
+    'liver': {name: 'Chicken Liver', emoji: '💛', proteins: ['chicken'], traits: {soft: true, training: 12, general: 7, energy: 9, weight: 7, dental: 2, joint: 5, coat: 8, digestion: 10, immune: 10}},
+    'gizzards': {name: 'Chicken Gizzards', emoji: '💛', proteins: ['chicken'], traits: {soft: true, training: 9, general: 8, energy: 6, weight: 10, dental: 2, joint: 5, coat: 8, digestion: 10, immune: 10}},
+    'fish': {name: 'Wild Fish Treats', emoji: '🐟', proteins: ['fish'], traits: {soft: true, training: 8, general: 9, energy: 7, weight: 9, dental: 4, joint: 12, coat: 10, digestion: 8, immune: 10}},
+    'sardines': {name: 'Sardines', emoji: '🐠', proteins: ['fish'], traits: {soft: true, training: 8, general: 9, energy: 7, weight: 9, dental: 4, joint: 12, coat: 10, digestion: 8, immune: 10}},
+    'trachea': {name: 'Goat Trachea', emoji: '🧢', proteins: ['goat'], traits: {hard: true, soft: false, training: 5, general: 7, energy: 6, weight: 6, dental: 10, joint: 8, coat: 5, digestion: 5}},
+    'feet': {name: 'Chicken Feet', emoji: '🐔', proteins: ['chicken'], traits: {hard: true, training: 3, general: 7, energy: 6, weight: 6, dental: 10, joint: 9, coat: 5, digestion: 3}},
+    'neck': {name: 'Chicken Neck', emoji: '🦴', proteins: ['chicken'], traits: {hard: true, training: 4, general: 8, energy: 7, weight: 6, dental: 9, joint: 9, coat: 5, digestion: 4}},
+    'goat': {name: 'Goat Meat', emoji: '🐐', proteins: ['goat'], traits: {soft: true, training: 7, general: 8, energy: 8, weight: 7, dental: 2, joint: 7, coat: 6, digestion: 9, immune: 9}}
+  };
+  
+  var allergyList = quizState.allergies || [];
+  var healthList = quizState.health || [];
+  var vetRecs = quizState.vetRecs || [];
+  var chewingStyle = quizState.chewing || 'moderate';
+  var goal = quizState.goal || 'general';
+  
+  // FILTER BY ALLERGIES
+  var safe = {};
+  for (var key in products) {
+    var prod = products[key];
+    var isSafe = true;
+    if (allergyList.includes('chicken') && prod.proteins.includes('chicken')) isSafe = false;
+    if (allergyList.includes('beef') && prod.proteins.includes('beef')) isSafe = false;
+    if (allergyList.includes('fish') && prod.proteins.includes('fish')) isSafe = false;
+    if (allergyList.includes('goat') && prod.proteins.includes('goat')) isSafe = false;
+    if (allergyList.includes('multiprotein') && (prod.proteins.includes('chicken') || prod.proteins.includes('beef'))) isSafe = false;
+    if (isSafe) safe[key] = prod;
+  }
+  
+  // FILTER BY CHEWING STYLE
+  var filteredSafe = {};
+  for (var key in safe) {
+    var prod = safe[key];
+    var isValid = true;
+    
+    if (chewingStyle === 'gentle' && prod.traits.hard) isValid = false;
+    if (chewingStyle === 'aggressive' && prod.traits.soft) isValid = false;
+    if (chewingStyle === 'nonchewer' && prod.traits.hard) isValid = false;
+    
+    if (isValid) filteredSafe[key] = prod;
+  }
+  safe = filteredSafe;
+  
+  // SCORE BY GOAL
+  var scores = {};
+  for (var key in safe) {
+    scores[key] = safe[key].traits[goal] || 5;
+  }
+  
+  // APPLY VET RECOMMENDATIONS
+  if (vetRecs.includes('omega3')) {
+    if (scores['fish'] !== undefined) scores['fish'] += 3;
+    if (scores['sardines'] !== undefined) scores['sardines'] += 3;
+  }
+  if (vetRecs.includes('iron')) {
+    if (scores['liver'] !== undefined) scores['liver'] += 3;
+    if (scores['gizzards'] !== undefined) scores['gizzards'] += 3;
+  }
+  if (vetRecs.includes('glucosamine')) {
+    if (scores['trachea'] !== undefined) scores['trachea'] += 3;
+    if (scores['feet'] !== undefined) scores['feet'] += 3;
+    if (scores['neck'] !== undefined) scores['neck'] += 3;
+  }
+  if (vetRecs.includes('probiotics')) {
+    if (scores['liver'] !== undefined) scores['liver'] += 2;
+    if (scores['gizzards'] !== undefined) scores['gizzards'] += 2;
+    if (scores['goat'] !== undefined) scores['goat'] += 2;
+  }
+  
+  // APPLY HEALTH CONCERNS
+  if (healthList.includes('itchy')) {
+    if (scores['fish'] !== undefined) scores['fish'] += 2;
+    if (scores['sardines'] !== undefined) scores['sardines'] += 2;
+  }
+  if (healthList.includes('loose')) {
+    if (scores['liver'] !== undefined) scores['liver'] += 2;
+    if (scores['gizzards'] !== undefined) scores['gizzards'] += 2;
+  }
+  if (healthList.includes('joint')) {
+    if (scores['fish'] !== undefined) scores['fish'] += 3;
+    if (scores['sardines'] !== undefined) scores['sardines'] += 3;
+  }
+  if (healthList.includes('dull')) {
+    if (scores['fish'] !== undefined) scores['fish'] += 2;
+    if (scores['sardines'] !== undefined) scores['sardines'] += 2;
+  }
+  if (healthList.includes('overweight')) {
+    if (scores['gizzards'] !== undefined) scores['gizzards'] += 3;
+    if (scores['fish'] !== undefined) scores['fish'] += 2;
+  }
+  if (healthList.includes('dental')) {
+    if (scores['trachea'] !== undefined) scores['trachea'] += 3;
+    if (scores['feet'] !== undefined) scores['feet'] += 3;
+  }
+  
+  // GET TOP 5-6 RECOMMENDATIONS
+  var sorted = Object.keys(scores).sort((a, b) => scores[b] - scores[a]);
+  var recs = [];
+  var maxRecs = 6; // Show up to 6 options
+  
+  for (var i = 0; i < Math.min(maxRecs, sorted.length); i++) {
+    var key = sorted[i];
+    var prod = products[key];
+    var duration = quizState.feedFreq === 'daily' ? '1-2 weeks' : '2-4 weeks';
+    var scoreValue = scores[key];
+    
+    // Add ranking badge
+    var badge = '';
+    if (i === 0) badge = '🏆 TOP PICK';
+    else if (i === 1) badge = '⭐ GREAT CHOICE';
+    else if (i === 2) badge = '✅ GOOD OPTION';
+    else badge = '👍 ALSO GOOD';
+    
+    recs.push({
+      name: prod.name,
+      emoji: prod.emoji,
+      badge: badge,
+      reason: 'Perfect for ' + quizState.dogName + '. Matches your ' + goal + ' needs.',
+      tip: 'Feed 3-5 treats daily. Will last about ' + duration + '.'
+    });
+  }
+  
+  return recs.length > 0 ? recs : [{name: 'Fish Treats', emoji: '🐟', badge: '🏆 TOP PICK', reason: 'Safest option for your pup', tip: 'Hypoallergenic & nutritious'}];
+}
+</script>
