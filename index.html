@@ -488,6 +488,22 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
 @media (max-width: 1023px) { #footer { position: static; margin-top: 40px; } body { padding-bottom: 0; } }
 #pmodal-upload-btn { display: none !important; }
 .prod-upload-btn { display: none !important; }
+/* TRACKING PAGE */
+.track-search{background:var(--cream);padding:32px;border-radius:2px;margin-bottom:40px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.order-status{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em}
+.order-status.placed{background:#fff3cd;color:#856404}
+.order-status.confirmed{background:#d1ecf1;color:#0c5460}
+.order-status.dispatched{background:#cfe2ff;color:#084298}
+.order-status.delivered{background:#d1e7dd;color:#0f5132}
+.order-status.cancelled{background:#f8d7da;color:#842029}
+.timeline-item{display:flex;gap:16px;margin-bottom:20px;position:relative}
+.timeline-item:not(:last-child)::after{content:'';position:absolute;left:6px;top:32px;height:24px;width:2px;background:var(--cream-mid)}
+.timeline-item.completed:not(:last-child)::after{background:var(--teal)}
+.timeline-dot{width:14px;height:14px;border-radius:50%;background:var(--cream-mid);border:2px solid var(--white);flex-shrink:0;margin-top:6px}
+.timeline-item.completed .timeline-dot{background:var(--teal);box-shadow:0 0 0 4px rgba(42,124,111,0.1)}
+.timeline-event{font-size:14px;font-weight:700;color:var(--dark);margin-bottom:4px}
+.timeline-details{font-size:12px;color:var(--muted);line-height:1.6}
 </style>
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
@@ -511,6 +527,7 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
       <li><a id="nav-about" onclick="showPage('about')">Our Story</a></li>
       <li><a id="nav-blog" onclick="showPage('blog')">Learn</a></li>
       <li><a id="nav-faq" onclick="showPage('faq')">FAQ</a></li>
+      <li><a id="nav-track" onclick="showPage('track')">Track Order</a></li>
       <li><a id="nav-contact" onclick="showPage('contact')">Contact</a></li>
     </ul>
     <div class="nav-actions">
@@ -1126,6 +1143,42 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
       <button class="btn-gold-outline" onclick="openWA()">Ask Us Anything &#128172;</button>
     </div>
   </div>
+</div>
+
+<!-- ── ORDER TRACKING ──────────────────────────────────────────────────── -->
+<div id="page-track" class="page">
+  <section style="background:var(--dark);padding:80px 6% 60px">
+    <div class="sec-inner">
+      <div class="sec-eyebrow" style="color:var(--gold)">Real-Time Updates</div>
+      <h2 class="sec-title" style="color:var(--white)">Track Your <em style="color:var(--gold-light)">Order</em></h2>
+      <p class="sec-sub" style="color:rgba(255,255,255,.6)">Enter your Order Reference and Phone to see shipping updates in real-time.</p>
+    </div>
+  </section>
+  <section style="background:var(--cream);padding:60px 6%;min-height:80vh">
+    <div style="max-width:800px;margin:0 auto">
+      <!-- SEARCH FORM -->
+      <div class="track-search">
+        <div style="display:flex;flex-direction:column;gap:20px">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <label style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--dark)">Order Reference</label>
+            <input id="track-ref" type="text" placeholder="e.g., GOB-A1B2C3" autocomplete="off" style="padding:12px 14px;border:1px solid var(--cream-mid);background:var(--white);font-size:15px;border-radius:2px;font-family:'Jost',sans-serif">
+            <small style="font-size:12px;color:var(--muted)">Find it in your confirmation email</small>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <label style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--dark)">Phone Number</label>
+            <input id="track-phone" type="tel" placeholder="9876543210" autocomplete="off" style="padding:12px 14px;border:1px solid var(--cream-mid);background:var(--white);font-size:15px;border-radius:2px;font-family:'Jost',sans-serif">
+          </div>
+          <button class="btn-gold" onclick="searchOrder()" style="width:100%;margin-top:8px">Find Order</button>
+        </div>
+      </div>
+      <!-- ERROR -->
+      <div id="track-error" style="display:none;background:#fdeaea;border-left:4px solid #c0392b;padding:16px;border-radius:2px;margin-bottom:24px;color:#c0392b;font-size:14px"><span id="track-error-msg"></span></div>
+      <!-- LOADING -->
+      <div id="track-loading" style="display:none;text-align:center;padding:40px"><div style="width:40px;height:40px;border:3px solid var(--cream-mid);border-top:3px solid var(--gold);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px"></div><p style="color:var(--muted);font-size:15px">Searching for your order...</p></div>
+      <!-- RESULTS -->
+      <div id="track-results" style="display:none;background:var(--white);border:1px solid var(--cream-mid);padding:32px;border-radius:2px"></div>
+    </div>
+  </section>
 </div>
 
 <!-- ── OUR PROCESS ─────────────────────────────────────────────────────── -->
@@ -6296,7 +6349,7 @@ showPage = function(id) {
   }
 };
 // ── END LOYALTY POINTS REDEMPTION ──────────────────────────────────
-// ===== PHASE 2: MOBILE FUNCTIONS =====
-function toggleMobileMenu(){const e=document.getElementById('mobileNavMenu'),t=document.querySelector('.hamburger-btn');e&&t&&(e.classList.toggle('mobile-open'),t.classList.toggle('open'))}document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('#mobileNavMenu a').forEach(function(e){e.addEventListener('click',function(){const t=document.getElementById('mobileNavMenu'),o=document.querySelector('.hamburger-btn');t&&t.classList.remove('mobile-open'),o&&o.classList.remove('open')})});let e=0;const t=document.getElementById('cartDrawer');t&&(t.addEventListener('touchstart',function(t){e=t.touches[0].clientX}),t.addEventListener('touchmove',function(t){const o=t.touches[0].clientX;100<e-o&&toggleCart()})),'IntersectionObserver'in window&&document.querySelectorAll('img[data-src]').length>0&&new IntersectionObserver(function(e,t){e.forEach(function(e){if(e.isIntersecting){const o=e.target;o.dataset.src&&(o.src=o.dataset.src,o.removeAttribute('data-src')),t.unobserve(o)}})}).observe(document.querySelectorAll('img[data-src]')[0])});
+// ===== ORDER TRACKING =====
+async function searchOrder(){const e=document.getElementById('track-ref').value.toUpperCase().trim(),r=document.getElementById('track-phone').value.replace(/[^0-9]/g,'');if(!e||r.length<10){document.getElementById('track-error').style.display='block',document.getElementById('track-error-msg').textContent='Please enter Order Reference and Phone Number';return}document.getElementById('track-error').style.display='none',document.getElementById('track-loading').style.display='block',document.getElementById('track-results').style.display='none';try{const t=await fetch(`https://syuostlqzzinigqwjzap.supabase.co/rest/v1/orders?phone=eq.${r}&order_id=eq.${e}&select=*`,{headers:{'apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5dW9zdGxxenpppbmlnaXF3anphcCIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNjczNDcwODAwLCJleHAiOjE5OTIwODY0MDB9.BqvVSk8c4jzP-p0KZ2V8xg9K9YkB0m7Zq3lPqQ8R3t0','Content-Type':'application/json'}});if(!t.ok)throw new Error('Network error');const o=await t.json();document.getElementById('track-loading').style.display='none',o.length>0?displayOrderTracking(o[0]):(document.getElementById('track-error').style.display='block',document.getElementById('track-error-msg').textContent='Order not found. Please check Reference and Phone number.')}catch(e){document.getElementById('track-loading').style.display='none',document.getElementById('track-error').style.display='block',document.getElementById('track-error-msg').textContent='Error searching order. Try again.'}}function displayOrderTracking(e){const r={placed:'Placed',confirmed:'Confirmed',dispatched:'Dispatched',delivered:'Delivered',cancelled:'Cancelled'},t=new Date(e.created_at).toLocaleDateString('en-IN'),o=e.status||'placed',s=['placed','confirmed','dispatched','delivered'],a=s.slice(0,s.indexOf(o)+1);let c=`<div style="border-bottom:2px solid var(--cream-mid);padding-bottom:24px;margin-bottom:24px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><div style="font-size:18px;font-weight:700;color:var(--dark)">${e.order_id}</div><span class="order-status ${o}">${r[o]}</span></div><div style="display:flex;gap:24px;flex-wrap:wrap;font-size:13px;color:var(--muted)"><div style="display:flex;flex-direction:column;gap:4px"><div style="font-weight:600;color:var(--dark)">Order Date</div>${t}</div><div style="display:flex;flex-direction:column;gap:4px"><div style="font-weight:600;color:var(--dark)">Total</div>₹${e.total}</div></div></div><div style="margin:32px 0"><div style="font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:20px;color:var(--dark)">Order Progress</div>`;['placed','confirmed','dispatched','delivered'].forEach((e,r)=>{const t=a.includes(e);c+=`<div class="timeline-item ${t?'completed':''}"><div class="timeline-dot"></div><div class="timeline-content"><div class="timeline-event">${{placed:'Order Placed',confirmed:'Order Confirmed',dispatched:'Dispatched',delivered:'Delivered'}[e]}</div><div class="timeline-details">${t?'✓ Completed':'Pending'}</div></div></div>`}),c+=`</div><div style="border-top:2px solid var(--cream-mid);padding-top:24px;margin-top:24px"><div style="font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:16px;color:var(--dark)">Order Items</div>`;const i=e.items||[];i.forEach(e=>{c+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--cream-mid)"><div><div style="font-size:14px;font-weight:600;color:var(--dark)">${e.name||'Product'}</div><div style="font-size:12px;color:var(--muted)">Qty: ${e.qty||1}</div></div><div style="font-size:15px;font-weight:600;color:var(--dark)">₹${e.price||0}</div></div>`}),c+=`</div>`,document.getElementById('track-results').innerHTML=c,document.getElementById('track-results').style.display='block'}
 </script>
 </html>
