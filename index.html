@@ -6725,11 +6725,18 @@ window.addEventListener('load', function() {
   setTimeout(function() {
     if (typeof renderProducts === 'function' && typeof products !== 'undefined') {
       try {
+        console.log('🔍 Rendering products...');
+        console.log('Products array length:', products.length);
+        console.log('getProductRating function:', typeof getProductRating);
+        console.log('First product:', products[0]);
+        console.log('First product rating:', getProductRating(products[0].name));
+        
         renderProducts(products.slice(0,4), 'homeProd');
         renderProducts(products, 'shopProd');
         console.log('✓ Products rendered successfully');
       } catch(e) {
-        console.error('Error rendering products:', e);
+        console.error('❌ Error rendering products:', e);
+        console.error('Stack:', e.stack);
       }
     }
   }, 500);
