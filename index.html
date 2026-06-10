@@ -9,13 +9,25 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.0/dist/module.deno.js"></script>
+
 <!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YOUR_MEASUREMENT_ID"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N0KE06DGPV"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', 'G-YOUR_MEASUREMENT_ID');
+  gtag('config', 'G-N0KE06DGPV');
+</script>
+
+<!-- Initialize Supabase -->
+<script>
+  const { createClient } = window.supabase;
+  const supabase = createClient(
+    'https://syuostlqzzinigqwjzap.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5dW9zdGxxenppamlncWp6YXAiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTcxNzc1NjA1MCwiZXhwIjoxNzc5MzI4MDUwfQ.qScMO1g8YZNf2y0wqV5eZ0eFvNqf0V7FqvPpTY5e9kU'
+  );
 </script>
 
 <style>
