@@ -506,7 +506,7 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
 <nav id="mainNav">
   <div class="nav-inner">
     <div class="logo" onclick="showPage('home')">
-      <img src="logo.jpeg" alt="Game of Bones" onerror="this.style.display='none'">
+      <img src="https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/logo.jpeg" alt="Game of Bones" onerror="this.style.display='none'">
       <span class="logo-text">Game of Bones</span>
     </div>
     <button class="hamburger-btn" onclick="toggleMobileMenu()">
@@ -685,7 +685,7 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
         <div style="margin-top:32px"><a class="btn-outline-light" onclick="showPage('about')" style="display:inline-flex">Read Our Full Story &rarr;</a></div>
       </div>
       <div class="about-strip-visual">
-        <img src="logo.jpeg" alt="Game of Bones" onerror="this.style.display='none'">
+        <img src="https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/logo.jpeg" alt="Game of Bones" onerror="this.style.display='none'">
         <p class="about-quote">&ldquo;If you wouldn&rsquo;t eat it yourself, your dog shouldn&rsquo;t have to.&rdquo;</p>
       </div>
     </div>
@@ -1835,7 +1835,7 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
   <div class="f-inner">
     <div class="f-top">
       <div class="f-brand">
-        <img src="logo.jpeg" alt="Game of Bones" style="height:36px;margin-bottom:12px" onerror="this.style.display='none'">
+        <img src="https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/logo.jpeg" alt="Game of Bones" style="height:36px;margin-bottom:12px" onerror="this.style.display='none'">
         <h3>Game of Bones</h3>
         <p>Dehydrated dog treats made in Kalyan, Maharashtra. Single ingredient. No preservatives. Real food for real dogs.</p>
         <div style="margin-top:20px">
@@ -5015,11 +5015,11 @@ function autoRotateTestimonials() {
 // Start rotation when page loads
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
-    loadTestimonials();
+    try { loadTestimonials(); } catch(e) { console.log('Testimonials skipped'); }
     setInterval(autoRotateTestimonials, 8000);
   });
 } else {
-  loadTestimonials();
+  try { loadTestimonials(); } catch(e) { console.log('Testimonials skipped'); }
   setInterval(autoRotateTestimonials, 8000);
 }
 
