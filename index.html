@@ -523,8 +523,16 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
 </style>
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.43.4/dist/umd/supabase.min.js"></script>
 </head>
 <body>
+
+<script>
+// Initialize Supabase client
+const SUPABASE_URL = 'https://syuostlqzzinigqwjzap.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5dW9zdGxxenpppuaXrqazFQIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODAwMDAwMDAsImV4cCI6MTk5OTk5OTk5OX0.dummytoken';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+</script>
 
 <nav id="mainNav">
   <div class="nav-inner">
