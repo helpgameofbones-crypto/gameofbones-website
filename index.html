@@ -37,7 +37,7 @@ button{font-family:'Jost',sans-serif;cursor:pointer;border:none;background:none}
 .nav-icon{background:none;border:none;font-size:18px;cursor:pointer;padding:6px;position:relative;color:var(--dark)}
 .cart-badge{position:absolute;top:0;right:0;background:var(--gold);color:var(--dark);font-size:9px;font-weight:700;min-width:16px;height:16px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 3px}
 /* PAGES */
-.page{display:none}.page.active{display:block}
+.page{position:absolute;top:0;left:0;right:0;width:100%;display:none;min-height:100vh}.page.active{position:static;display:block}
 /* BUTTONS */
 .btn-gold{display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:var(--dark);padding:14px 36px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border:none;cursor:pointer;transition:all .25s;font-family:'Jost',sans-serif;text-decoration:none}
 .btn-gold:hover{background:var(--gold-light)}
@@ -470,6 +470,9 @@ body:has(#page-login.active) #mainNav { display: none !important; }
     </div>
   </div>
 </nav>
+
+<!-- PAGE CONTAINER -->
+<div style="position: relative; width: 100%; min-height: 100vh;">
 
 <!-- ── HOME ───────────────────────────────────────────────────────────── -->
 <div id="page-home" class="page active">
@@ -1747,7 +1750,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
   </div>
 </footer>
 
-
+</div><!-- /PAGE CONTAINER -->
 
 <!-- ── SPIN WHEEL OVERLAY ──────────────────────────────────────────────── -->
 <div id="spinWheelOverlay" onclick="if(event.target===this)spinWheelClose()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:1500;align-items:center;justify-content:center;padding:16px">
