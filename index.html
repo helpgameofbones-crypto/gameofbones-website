@@ -739,7 +739,35 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
   </div>
 </div>
 
-<!-- ── ABOUT ──────────────────────────────────────────────────────────── -->
+<!-- ── PRODUCT DETAIL PAGE ────────────────────────────────────────── -->
+<div id="page-product" class="page">
+  <section style="background:var(--dark);padding:40px 6%">
+    <div class="sec-inner" style="max-width:1200px">
+      <button onclick="showPage('shop')" style="background:none;border:none;color:var(--gold);font-size:13px;font-weight:600;cursor:pointer;margin-bottom:20px">← Back to Shop</button>
+    </div>
+  </section>
+  <section style="background:var(--cream);padding:60px 6%;min-height:auto">
+    <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start">
+      <div style="display:flex;flex-direction:column">
+        <div style="aspect-ratio:1;background:var(--white);border:1px solid var(--cream-mid);overflow:hidden;margin-bottom:20px;display:flex;align-items:center;justify-content:center">
+          <img id="product-detail-img" src="" alt="" style="width:100%;height:100%;object-fit:cover">
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="prod-fav" id="detail-fav" onclick="toggleWishlist(this,currentProductIdx)" style="border:1px solid var(--cream-mid);background:var(--white);padding:10px 12px;font-size:16px;cursor:pointer;border-radius:2px">♡</button>
+          <button class="add-btn" onclick="addCart(this,currentProductIdx,currentProductSize)" style="flex:1;padding:12px">Add to Cart +</button>
+        </div>
+      </div>
+      <div>
+        <div id="product-detail-content"></div>
+      </div>
+    </div>
+  </section>
+  <div class="cta-banner" style="background:var(--brown)">
+    <h2>Have Questions About This Product?</h2>
+    <p>Our team is on WhatsApp and ready to help you find the perfect fit.</p>
+    <div class="cta-btns"><button class="btn-gold-outline" onclick="openWA()">Ask on WhatsApp &#128172;</button></div>
+  </div>
+</div>
 <div id="page-about" class="page">
 
   <!-- HERO -->
@@ -2232,7 +2260,7 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
       <h2 class="sec-title" style="color:var(--white)">Frequently Asked <em style="color:var(--gold-light)">Questions</em></h2>
     </div>
   </section>
-  <section style="background:var(--cream);padding:60px 6% 120px;min-height:calc(100vh - 140px)">
+  <section style="background:var(--cream);padding:60px 6%;min-height:auto">
     <div style="max-width:760px;margin:0 auto">
       <!-- Search -->
       <div style="position:relative;margin-bottom:32px">
@@ -2268,6 +2296,13 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
       <div id="faqNoResults" style="display:none;text-align:center;padding:40px 0;font-size:14px;color:var(--muted)">No questions match your search. <a onclick="filterFaq('')" style="color:var(--teal);cursor:pointer;font-weight:600">Clear</a></div>
     </div>
   </section>
+  <div class="cta-banner">
+    <h2>Still Have Questions?</h2>
+    <p>Our team is on WhatsApp from 9 AM to 7 PM, every day.</p>
+    <div class="cta-btns">
+      <button class="btn-gold-outline" onclick="openWA()">Ask Us Anything &#128172;</button>
+    </div>
+  </div>
 </div>
 <script>
 
@@ -4960,26 +4995,27 @@ if (document.readyState === 'loading') {
 function renderProducts(items, containerId) {
   const g = document.getElementById(containerId);
   if (!g) return;
+  const SUPABASE_IMG_URL = 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/';
   g.innerHTML = items.map((p) => {
     const globalIdx = products.indexOf(p);
     // Special rendering for bundle cards
     if (p.isBundle) return renderBundleCard(p, globalIdx);
     const firstSize = p.sizes[0];
     const sizeOpts = p.sizes.map((s,i) => `<option value="${i}" ${i===0?'selected':''}>${s.label} — ₹${s.price}</option>`).join('');
+    const imgUrl = SUPABASE_IMG_URL + p.img;
     return `
-    <div class="prod-card" onclick="openPModal(${globalIdx})">
+    <div class="prod-card" onclick="openProductPage(${globalIdx})">
       <div class="prod-img-wrap">
-        <img src="${p.img}" alt="${p.name}" loading="lazy">
+        <img src="${imgUrl}" alt="${p.name}" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23f0e6d2%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2224%22%3E🐾%3C/text%3E%3C/svg%3E'">
         <span class="prod-badge ${p.badgeCls}">${p.badge}</span>
         <button class="prod-fav" onclick="event.stopPropagation();toggleWishlist(this,${globalIdx})">${isWishlisted(globalIdx)?'♥':'♡'}</button>
-        <button class="prod-upload-btn" onclick="event.stopPropagation();openImageUpload('${p.name}',event)" title="Add product photo" style="position:absolute;bottom:8px;left:8px;background:rgba(26,16,8,.7);color:var(--gold-pale);border:1px solid rgba(200,151,58,.5);padding:5px 9px;font-size:9px;font-weight:700;letter-spacing:.08em;font-family:'Jost',sans-serif;text-transform:uppercase;cursor:pointer;opacity:0;transition:opacity .2s;border-radius:2px">&#128247;</button>
       </div>
       <div class="prod-body">
         <div class="prod-cat">${p.cat}</div>
         <h3 class="prod-name">${p.name}</h3>
         <p class="prod-desc">${p.desc}</p>
         <div class="prod-tags">${p.tags.map(t=>`<span class="p-tag">${t}</span>`).join('')}</div>
-        <div class="prod-card-rating" onclick="event.stopPropagation();openPModal(${globalIdx})" title="See all reviews">
+        <div class="prod-card-rating" onclick="event.stopPropagation();openProductPage(${globalIdx})" title="See all reviews">
           ${(()=>{const r=getProductRating(p.name);return r?renderStarBar(r.avg)+' <span style="font-size:11px;color:var(--muted);margin-left:4px">'+r.avg.toFixed(1)+' ('+r.count+')</span>':'<span style="font-size:11px;color:var(--muted);letter-spacing:.04em">Be first to review ✨</span>'})()}
         </div>
         ${p.noOrdersBadge ? '' : `<div class="orders-badge"><span class="ob-dot"></span>${getOrdersThisWeek(globalIdx)} orders this week</div>`}
@@ -4991,7 +5027,7 @@ function renderProducts(items, containerId) {
             <button class="add-btn" id="ab-${globalIdx}" onclick="event.stopPropagation();addCart(this,${globalIdx},document.getElementById('sel-${globalIdx}')?+document.getElementById('sel-${globalIdx}').value:0)">+</button>
           </div>
         </div>
-        <button onclick="event.stopPropagation();openPModal(${globalIdx});setTimeout(function(){var rv=document.getElementById('reviewFormSection');if(rv)rv.scrollIntoView({behavior:'smooth'});},400)" style="width:100%;margin-top:8px;background:none;border:1px solid var(--cream-mid);color:var(--muted);padding:7px;font-family:'Jost',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--brown)'" onmouseout="this.style.borderColor='var(--cream-mid)';this.style.color='var(--muted)'">&#9998; Write a Review</button>
+        <button onclick="event.stopPropagation();openProductPage(${globalIdx})" style="width:100%;margin-top:8px;background:none;border:1px solid var(--cream-mid);color:var(--muted);padding:7px;font-family:'Jost',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--brown)'" onmouseout="this.style.borderColor='var(--cream-mid)';this.style.color='var(--muted)'">View Details →</button>
       </div>
     </div>`;
   }).join('');
@@ -5023,11 +5059,89 @@ function setHeroProduct(i) {
   const img = document.getElementById('heroProductImg');
   const name = document.getElementById('heroProductName');
   const sub = document.querySelector('.hero-prod-label-sub');
-  if (img) { img.style.opacity='0'; setTimeout(()=>{img.src=heroProducts[i].img;img.style.opacity='1'},200); }
+  if (img) { img.style.opacity='0'; setTimeout(()=>{img.src=SUPABASE_IMG_URL+heroProducts[i].img;img.style.opacity='1'},200); }
   if (name) name.textContent = heroProducts[i].name;
   if (sub) sub.textContent = heroProducts[i].sub;
   document.querySelectorAll('.h-dot').forEach((d,j)=>d.classList.toggle('active',j===i));
 }
+
+let currentProductIdx = 0;
+let currentProductSize = 0;
+const SUPABASE_IMG_URL = 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/';
+
+function openProductPage(idx) {
+  currentProductIdx = idx;
+  currentProductSize = 0;
+  const p = products[idx];
+  
+  // Update image
+  const imgEl = document.getElementById('product-detail-img');
+  if (imgEl) imgEl.src = SUPABASE_IMG_URL + p.img;
+  
+  // Update wishlist button
+  const favBtn = document.getElementById('detail-fav');
+  if (favBtn) favBtn.textContent = isWishlisted(idx) ? '♥' : '♡';
+  
+  // Build product details HTML
+  const sizeOpts = p.sizes.map((s,i) => `<div style="padding:10px 16px;border:1px solid var(--cream-mid);background:var(--white);cursor:pointer;border-radius:2px;transition:all .2s;text-align:center" onclick="currentProductSize=${i};this.parentElement.querySelector('.active')?.classList.remove('active');this.classList.add('active')" class="${i===0?'active':''}" data-size="${i}"><div style="font-size:13px;font-weight:600;color:var(--dark)">${s.label}</div><div style="font-size:15px;font-weight:700;color:var(--gold);margin-top:4px">₹${s.price}</div></div>`).join('');
+  
+  const benefitsHtml = (p.benefits || []).map(b => `
+    <div style="display:flex;gap:12px;margin-bottom:16px">
+      <div style="font-size:28px;flex-shrink:0">${b.icon}</div>
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--dark);margin-bottom:4px">${b.title}</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6">${b.text}</div>
+      </div>
+    </div>
+  `).join('');
+  
+  const storageInfo = p.storage ? `
+    <div style="margin-top:24px">
+      <div style="font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--dark);margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--cream-mid)">Storage & Shelf Life</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px">
+        ${p.storage.tiles.map(t => `<div style="background:var(--white);padding:16px;text-align:center;border:1px solid var(--cream-mid)"><div style="font-size:24px;margin-bottom:8px">${t.icon}</div><div style="font-size:12px;font-weight:700;color:var(--dark)">${t.val}</div><div style="font-size:9px;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.06em">${t.label}</div></div>`).join('')}
+      </div>
+      <p style="font-size:12px;color:var(--muted);line-height:1.7">${p.storage.note}</p>
+    </div>
+  ` : '';
+  
+  const contentHtml = `
+    <div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">${p.cat}</div>
+      <h1 style="font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:700;color:var(--dark);margin-bottom:12px;line-height:1.1">${p.name}</h1>
+      <div style="display:inline-block;background:var(--gold);color:var(--dark);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;margin-bottom:16px;border-radius:2px">${p.badge}</div>
+      
+      ${p.tagline ? `<p style="font-size:13px;color:var(--muted);line-height:1.7;font-style:italic;margin-bottom:20px;padding:14px 16px;border-left:3px solid var(--gold);background:var(--white)">${p.tagline}</p>` : ''}
+      
+      <p style="font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:24px">${p.desc}</p>
+      
+      <div style="margin-bottom:24px">
+        <div style="font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--dark);margin-bottom:12px">Choose Size</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          ${sizeOpts}
+        </div>
+      </div>
+      
+      <div style="margin-bottom:24px">
+        <div style="font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--dark);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--cream-mid)">Key Benefits</div>
+        ${benefitsHtml}
+      </div>
+      
+      ${p.feeding ? `<div style="margin-bottom:24px"><div style="font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--dark);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--cream-mid)">Feeding Guide</div><p style="font-size:13px;color:var(--muted);line-height:1.8">${p.feeding}</p></div>` : ''}
+      
+      ${storageInfo}
+      
+      ${(p.tags && p.tags.length > 0) ? `<div style="margin-top:24px;display:flex;gap:8px;flex-wrap:wrap">${p.tags.map(t => `<span style="background:var(--cream);padding:6px 12px;font-size:11px;color:var(--muted);border-radius:2px">${t}</span>`).join('')}</div>` : ''}
+    </div>
+  `;
+  
+  const contentEl = document.getElementById('product-detail-content');
+  if (contentEl) contentEl.innerHTML = contentHtml;
+  
+  showPage('product');
+  window.scrollTo(0, 0);
+}
+
 function initReveal() {
   setTimeout(function() {
     document.querySelectorAll('.page.active .sr').forEach(function(el) { el.classList.add('in'); });
