@@ -12,24 +12,6 @@
 <!-- Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.0/dist/module.deno.js"></script>
 
-<!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-N0KE06DGPV"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-N0KE06DGPV');
-</script>
-
-<!-- Initialize Supabase -->
-<script>
-  const { createClient } = window.supabase;
-  const supabase = createClient(
-    'https://syuostlqzzinigqwjzap.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5dW9zdGxxenppamlncWp6YXAiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTcxNzc1NjA1MCwiZXhwIjoxNzc5MzI4MDUwfQ.qScMO1g8YZNf2y0wqV5eZ0eFvNqf0V7FqvPpTY5e9kU'
-  );
-</script>
-
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -454,58 +436,17 @@ footer{background:var(--dark);color:rgba(255,255,255,.6);padding:56px 6% 28px;ma
 body:has(#page-checkout.active) footer { display: none !important; }
 body:has(#page-login.active) footer { display: none !important; }
 body:has(#page-login.active) #mainNav { display: none !important; }
-/* ===== PHASE 2: MOBILE UX ===== */
-.hamburger-btn { display: none; }
-@media (max-width: 640px) {
-  .hamburger-btn { display: flex; flex-direction: column; gap: 5px; width: 24px; height: 18px; margin-left: auto; background: none; border: none; padding: 0; cursor: pointer; }
-  .hamburger-btn span { width: 100%; height: 2px; background: var(--dark); transition: transform 0.3s; }
-  .hamburger-btn.open span:nth-child(1) { transform: rotate(45deg) translateY(10px); }
-  .hamburger-btn.open span:nth-child(2) { opacity: 0; }
-  .hamburger-btn.open span:nth-child(3) { transform: rotate(-45deg) translateY(-10px); }
-  .nav-links { position: absolute; top: 68px; left: 0; right: 0; background: var(--white); flex-direction: column; gap: 0; max-height: 0; overflow: hidden; transition: max-height 0.3s ease; border-bottom: 1px solid var(--cream-mid); }
-  .nav-links.mobile-open { max-height: 400px; }
-  .nav-links a { display: block; padding: 16px 20px; border-bottom: 1px solid var(--cream-mid); font-size: 14px; }
-  .nav-links a.active { background: var(--cream); border-bottom: 2px solid var(--gold); }
-  .nav-actions { margin-left: auto; }
-}
-@media (min-width: 641px) { .hamburger-btn { display: none; } .nav-links { max-height: none !important; } }
-.add-btn { width: 44px; height: 44px; border-radius: 50%; background: var(--dark); color: var(--white); border: none; font-size: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; flex-shrink: 0; }
-.add-btn:hover { background: var(--brown); transform: scale(1.05); }
-.add-btn:active { transform: scale(0.95); }
-.btn-gold { min-height: 44px; }
-.btn-gold:active { transform: scale(0.98); }
-.btn-outline-dark { min-height: 44px; }
-.btn-outline-light { min-height: 44px; }
-button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px; }
-@media (max-width: 640px) {
-  .btn-gold, .btn-outline-dark, button[type="submit"] { width: 100%; display: block; }
-  .hero-btns { flex-direction: column; gap: 12px; }
-  .hero-btns .btn-gold, .hero-btns .btn-outline-light { width: 100%; }
-}
-#cartDrawer { position: fixed; right: 0; top: 0; height: 100vh; width: 100%; max-width: 450px; background: var(--white); z-index: 999; overflow-y: auto; transform: translateX(100%); transition: transform 0.3s ease; box-shadow: -10px 0 40px rgba(0,0,0,0.15); }
-#cartDrawer.open { transform: translateX(0); }
-#cartOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 998; opacity: 0; transition: opacity 0.3s; display: none; cursor: pointer; }
-#cartOverlay.visible { opacity: 1; display: block; }
-@media (max-width: 640px) { #cartDrawer { max-width: 100%; width: 100%; } }
-.co-input { width: 100%; padding: 12px 14px; border: 1px solid var(--cream-mid); background: var(--cream); font-family: 'Jost', sans-serif; font-size: 16px; color: var(--dark); cursor: pointer; outline: none; transition: border-color 0.2s; border-radius: 2px; }
-.co-input:focus { border-color: var(--gold); background: var(--white); }
-.co-input::placeholder { color: var(--muted); opacity: 0.7; }
-@media (max-width: 640px) {
-  .checkout-form { display: flex; flex-direction: column; gap: 12px; }
-  .co-form-group { display: flex; flex-direction: column; gap: 6px; }
-  .co-form-group label { font-size: 13px; font-weight: 600; color: var(--dark); }
-  .co-form-row { display: flex; flex-direction: column; gap: 12px; }
-}
-@media (min-width: 1024px) { body { display: flex; flex-direction: column; } #footer { margin-top: auto; } }
-@media (max-width: 1023px) { #footer { position: static; margin-top: 40px; } body { padding-bottom: 0; } }
-#pmodal-upload-btn { display: none !important; }
-.prod-upload-btn { display: none !important; }
-/* CHECKOUT OPTIMIZATION */
-@media (max-width: 1024px) { #co-layout-grid { grid-template-columns: 1fr !important; } }
-.checkout-progress { position: sticky; top: 68px; z-index: 50; background: var(--white); }
 </style>
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<!-- Initialize Supabase -->
+<script>
+  const { createClient } = window.supabase;
+  const supabase = createClient(
+    'https://syuostlqzzinigqwjzap.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5dW9zdGxxenppamlncWp6YXAiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTcxNzc1NjA1MCwiZXhwIjoxNzc5MzI4MDUwfQ.qScMO1g8YZNf2y0wqV5eZ0eFvNqf0V7FqvPpTY5e9kU'
+  );
+</script>
 </head>
 <body>
 
@@ -515,12 +456,7 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
       <img src="logo.jpeg" alt="Game of Bones" onerror="this.style.display='none'">
       <span class="logo-text">Game of Bones</span>
     </div>
-    <button class="hamburger-btn" onclick="toggleMobileMenu()">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
-    <ul class="nav-links" id="mobileNavMenu">
+    <ul class="nav-links">
       <li><a id="nav-home" class="active" onclick="showPage('home')">Home</a></li>
       <li><a id="nav-shop" onclick="showPage('shop')">Shop</a></li>
       <li><a id="nav-about" onclick="showPage('about')">Our Story</a></li>
@@ -669,10 +605,11 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
   <section style="background:var(--cream);padding:90px 6%">
     <div class="sec-inner">
       <div class="testi-header"><div class="sec-eyebrow" style="justify-content:center">Happy Dogs</div><h2 class="sec-title" style="text-align:center">What Our <em>Pack</em> Says</h2></div>
-      <div class="testi-grid" id="testiGrid" style="min-height:340px;position:relative">
-        <!-- Testimonials load here dynamically -->
+      <div class="testi-grid">
+        <div class="testi-card"><div class="testi-quote">&ldquo;</div><div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p class="testi-text">Milo went absolutely crazy for the Chicken Jerky! His coat is noticeably shinier and his digestion has improved so much. We will never go back to supermarket treats.</p><div class="testi-author"><div class="testi-av">&#128021;</div><div><div class="testi-name">Priya S., Mumbai</div><div class="testi-dog">Milo&rsquo;s Mom &middot; Labrador</div></div></div></div>
+        <div class="testi-card"><div class="testi-quote">&ldquo;</div><div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p class="testi-text">The Buff Jerky is something I&rsquo;ve never found anywhere in India. My vet was genuinely impressed when I showed her the ingredient list. Simple, clean, and honest. Exactly what Bruno needed.</p><div class="testi-author"><div class="testi-av">&#128062;</div><div><div class="testi-name">Rohan M., Pune</div><div class="testi-dog">Bruno&rsquo;s Dad &middot; German Shepherd</div></div></div></div>
+        <div class="testi-card"><div class="testi-quote">&ldquo;</div><div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p class="testi-text">The packaging is beautiful and the quality is premium. Cookie loves the Chicken Feet &mdash; great for her teeth. Fast delivery to Thane, excellent customer service. Highly recommend!</p><div class="testi-author"><div class="testi-av">&#129454;</div><div><div class="testi-name">Anita K., Thane</div><div class="testi-dog">Cookie&rsquo;s Mom &middot; Beagle</div></div></div></div>
       </div>
-      <div style="text-align:center;margin-top:24px;display:flex;gap:8px;justify-content:center" id="testiDots"></div>
     </div>
   </section>
 
@@ -714,64 +651,6 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
 
 </div><!-- /page-home -->
 
-<!-- ── OUR STORY / ABOUT ───────────────────────────────────────────────────── -->
-<div id="page-about" class="page">
-  <section style="background:var(--dark);padding:80px 6% 60px">
-    <div class="sec-inner">
-      <div class="sec-eyebrow" style="color:var(--gold)">Our Story</div>
-      <h2 class="sec-title" style="color:var(--white)">Born from <em style="color:var(--gold-light)\">Frustration.</em> Built on <em style="color:var(--gold-light)\">Honesty.</em></h2>
-      <p class="sec-sub" style="color:rgba(255,255,255,.6);max-width:720px;margin:16px auto 0">We started Game of Bones because we couldn't find a single treat in the market we actually trusted for our own dog.</p>
-    </div>
-  </section>
-
-  <section style="background:var(--cream);padding:80px 6%">
-    <div class="sec-inner" style="max-width:720px">
-      <h3 style="font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--dark);margin-bottom:16px">The Problem We Saw</h3>
-      <p style="font-size:15px;line-height:1.8;color:var(--muted);margin-bottom:24px">Walk into any pet store in India and you'll find treats filled with fillers, artificial colours, mystery meat sources, and chemical preservatives. The packaging claims "natural" but the ingredient list tells a different story. We asked ourselves: if we wouldn't eat these ingredients, why would we give them to our dogs?</p>
-      
-      <p style="font-size:15px;line-height:1.8;color:var(--muted);margin-bottom:24px">Most dog parents don't realize what's really in the treats they're buying. The regulatory gaps in the pet food industry mean almost anything can slip through. We wanted to change that.</p>
-      
-      <h3 style="font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--dark);margin:48px 0 16px">Our Solution</h3>
-      <p style="font-size:15px;line-height:1.8;color:var(--muted);margin-bottom:24px">Game of Bones started with a simple principle: <strong>single-ingredient dehydrated treats</strong>. No fillers. No artificial anything. No mystery. Just pure animal protein — chicken, buffalo, goat, fish — gently dehydrated to lock in nutrition and taste.</p>
-      
-      <p style="font-size:15px;line-height:1.8;color:var(--muted);margin-bottom:24px">Every batch is made in India, from locally sourced ingredients, lab-tested for safety and quality. If you wouldn't eat it yourself, your dog shouldn't have to.</p>
-      
-      <h3 style="font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--dark);margin:48px 0 16px">What We Stand For</h3>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin:32px 0">
-        <div>
-          <div style="font-size:20px;margin-bottom:12px">🌱</div>
-          <h4 style="font-size:14px;font-weight:700;color:var(--dark);margin-bottom:8px;letter-spacing:.05em;text-transform:uppercase">100% Natural</h4>
-          <p style="font-size:13px;line-height:1.6;color:var(--muted)">Zero artificial colours, flavours, or preservatives. Just pure protein.</p>
-        </div>
-        <div>
-          <div style="font-size:20px;margin-bottom:12px">🇮🇳</div>
-          <h4 style="font-size:14px;font-weight:700;color:var(--dark);margin-bottom:8px;letter-spacing:.05em;text-transform:uppercase">Made in India</h4>
-          <p style="font-size:13px;line-height:1.6;color:var(--muted)">Sourced from Indian farms, made with Indian expertise.</p>
-        </div>
-        <div>
-          <div style="font-size:20px;margin-bottom:12px">🔬</div>
-          <h4 style="font-size:14px;font-weight:700;color:var(--dark);margin-bottom:8px;letter-spacing:.05em;text-transform:uppercase">Lab Tested</h4>
-          <p style="font-size:13px;line-height:1.6;color:var(--muted)">Every batch tested for safety, quality, and nutritional content.</p>
-        </div>
-        <div>
-          <div style="font-size:20px;margin-bottom:12px">❤️</div>
-          <h4 style="font-size:14px;font-weight:700;color:var(--dark);margin-bottom:8px;letter-spacing:.05em;text-transform:uppercase">Small Batch</h4>
-          <p style="font-size:13px;line-height:1.6;color:var(--muted)">Handcrafted in small batches to ensure quality control.</p>
-        </div>
-      </div>
-
-      <div style="background:var(--dark);padding:32px;border-radius:4px;margin-top:48px;text-align:center">
-        <p style="font-size:18px;color:var(--white);margin-bottom:16px;font-style:italic;line-height:1.8">&ldquo;If you wouldn&rsquo;t eat it yourself, your dog shouldn&rsquo;t have to.&rdquo;</p>
-        <p style="font-size:12px;color:rgba(255,255,255,.6);letter-spacing:.05em;text-transform:uppercase">— The Game of Bones Team</p>
-      </div>
-
-      <div style="margin-top:48px;text-align:center">
-        <a class="btn-gold" onclick="showPage('shop')" style="display:inline-block">Shop Now &rarr;</a>
-      </div>
-    </div>
-  </section>
-</div>
-
 <!-- ── SHOP ───────────────────────────────────────────────────────────── -->
 <div id="page-shop" class="page">
   <section style="background:var(--dark);padding:60px 6% 40px">
@@ -809,156 +688,8 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
   </div>
 </div>
 
-<!-- ── PRODUCT DETAIL PAGE ────────────────────────────────────────── -->
-<div id="page-product" class="page">
-  <section style="background:var(--dark);padding:40px 6%">
-    <div class="sec-inner" style="max-width:1200px">
-      <button onclick="showPage('shop')" style="background:none;border:none;color:var(--gold);font-size:13px;font-weight:600;cursor:pointer;margin-bottom:20px">← Back to Shop</button>
-    </div>
-  </section>
-  <section style="background:var(--cream);padding:60px 6%;min-height:auto">
-    <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start">
-      <!-- LEFT: IMAGE & BUTTONS -->
-      <div style="display:flex;flex-direction:column;position:sticky;top:80px">
-        <div style="aspect-ratio:1;background:var(--white);border:1px solid var(--cream-mid);overflow:hidden;margin-bottom:20px;display:flex;align-items:center;justify-content:center;position:relative">
-          <img id="product-detail-img" src="" alt="" style="width:100%;height:100%;object-fit:cover;display:none">
-          <div id="product-detail-img-placeholder" style="text-align:center;color:var(--muted)"><div style="font-size:60px;margin-bottom:10px">🐾</div><div style="font-size:13px">Loading image...</div></div>
-        </div>
-        
-        <!-- WISHLIST & ADD TO CART -->
-        <div style="display:flex;gap:8px;margin-bottom:16px">
-          <button id="detail-fav" onclick="toggleWishlist(this,currentProductIdx)" style="width:48px;height:48px;border:2px solid var(--cream-mid);background:var(--white);font-size:20px;cursor:pointer;border-radius:2px;transition:all .2s;display:flex;align-items:center;justify-content:center">♡</button>
-          <button onclick="addCart(this,currentProductIdx,currentProductSize)" style="flex:1;background:var(--dark);color:var(--white);border:none;padding:14px 20px;font-family:'Jost',sans-serif;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all .2s">Add to Cart +</button>
-        </div>
-        
-        <!-- SHARE BUTTONS -->
-        <div style="display:flex;gap:8px;background:var(--white);padding:12px;border:1px solid var(--cream-mid);border-radius:2px;margin-bottom:20px">
-          <span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;margin-right:4px">Share:</span>
-          <button onclick="shareProduct('whatsapp')" title="Share on WhatsApp" style="background:none;border:none;font-size:18px;cursor:pointer;opacity:.6;transition:opacity .2s;padding:4px 6px" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.6'">💬</button>
-          <button onclick="shareProduct('facebook')" title="Share on Facebook" style="background:none;border:none;font-size:18px;cursor:pointer;opacity:.6;transition:opacity .2s;padding:4px 6px" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.6'">👍</button>
-          <button onclick="shareProduct('twitter')" title="Share on Twitter" style="background:none;border:none;font-size:18px;cursor:pointer;opacity:.6;transition:opacity .2s;padding:4px 6px" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.6'">𝕏</button>
-          <button onclick="shareProduct('copy')" title="Copy link" style="background:none;border:none;font-size:18px;cursor:pointer;opacity:.6;transition:opacity .2s;padding:4px 6px" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.6'">🔗</button>
-        </div>
-      </div>
-      
-      <!-- RIGHT: PRODUCT INFO -->
-      <div>
-        <div id="product-detail-content"></div>
-        
-        <!-- REVIEWS SECTION -->
-        <div id="product-reviews-section" style="margin-top:40px;padding-top:24px;border-top:1px solid var(--cream-mid)">
-          <div style="font-size:13px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--dark);margin-bottom:16px;display:flex;align-items:center;justify-content:space-between">
-            <span>Customer Reviews</span>
-            <span id="review-count" style="font-size:11px;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:normal"></span>
-          </div>
-          <div id="product-reviews-list" style="display:flex;flex-direction:column;gap:16px;margin-bottom:24px"></div>
-          <button onclick="openReviewForm(currentProductIdx)" style="width:100%;background:none;border:1px solid var(--cream-mid);color:var(--muted);padding:12px;font-family:'Jost',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all .2s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--brown)'" onmouseout="this.style.borderColor='var(--cream-mid)';this.style.color='var(--muted)'">✎ Write a Review</button>
-        </div>
-      </div>
-    </div>
-  </section>
-  <div class="cta-banner" style="background:var(--brown)">
-    <h2>Have Questions About This Product?</h2>
-    <p>Our team is on WhatsApp and ready to help you find the perfect fit.</p>
-    <div class="cta-btns"><button class="btn-gold-outline" onclick="openWA()">Ask on WhatsApp &#128172;</button></div>
-  </div>
-</div>
-<!-- ── REVIEW MODAL WITH LOGIN ──────────────────────────────────────── -->
-<div id="review-modal-overlay" style="position:fixed;inset:0;background:rgba(10,6,2,.7);z-index:3000;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)">
-  <div style="background:var(--white);max-width:550px;width:100%;max-height:90vh;overflow-y:auto;border-radius:4px;box-shadow:0 20px 60px rgba(0,0,0,.3)">
-    <div style="background:var(--dark);padding:24px;position:relative">
-      <h2 style="font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--white);margin:0" id="review-modal-title">Share Your Experience</h2>
-      <button onclick="closeReviewModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;color:var(--white);font-size:20px;cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center">✕</button>
-    </div>
-    <div style="padding:32px">
-      
-      <!-- LOGIN STEP (shown if not logged in) -->
-      <div id="review-login-step">
-        <p style="font-size:13px;color:var(--muted);margin-bottom:20px">Please log in or create an account to review this product.</p>
-        
-        <!-- Login Form -->
-        <div id="review-login-form">
-          <h3 style="font-size:16px;font-weight:600;margin-bottom:16px;color:var(--dark)">Sign In</h3>
-          
-          <div style="margin-bottom:16px">
-            <label style="display:block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dark);margin-bottom:8px">Email</label>
-            <input id="review-login-email" type="email" placeholder="your@email.com" style="width:100%;padding:12px;border:1.5px solid var(--cream-mid);background:var(--white);font-family:'Jost',sans-serif;font-size:14px;color:var(--dark);box-sizing:border-box;border-radius:2px">
-          </div>
-          
-          <div style="margin-bottom:20px">
-            <label style="display:block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dark);margin-bottom:8px">Password</label>
-            <input id="review-login-password" type="password" placeholder="••••••••" style="width:100%;padding:12px;border:1.5px solid var(--cream-mid);background:var(--white);font-family:'Jost',sans-serif;font-size:14px;color:var(--dark);box-sizing:border-box;border-radius:2px">
-          </div>
-          
-          <button onclick="reviewLogin()" style="width:100%;background:var(--gold);color:var(--dark);border:none;padding:12px;font-family:'Jost',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px;margin-bottom:12px">Sign In</button>
-          
-          <button onclick="showReviewSignup()" style="width:100%;background:transparent;color:var(--gold);border:1.5px solid var(--gold);padding:12px;font-family:'Jost',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px">Create Account</button>
-        </div>
-        
-        <!-- Signup Form (hidden) -->
-        <div id="review-signup-form" style="display:none">
-          <h3 style="font-size:16px;font-weight:600;margin-bottom:16px;color:var(--dark)">Create Account</h3>
-          
-          <div style="margin-bottom:16px">
-            <label style="display:block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dark);margin-bottom:8px">Full Name</label>
-            <input id="review-signup-name" type="text" placeholder="Your Name" style="width:100%;padding:12px;border:1.5px solid var(--cream-mid);background:var(--white);font-family:'Jost',sans-serif;font-size:14px;color:var(--dark);box-sizing:border-box;border-radius:2px">
-          </div>
-          
-          <div style="margin-bottom:16px">
-            <label style="display:block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dark);margin-bottom:8px">Email</label>
-            <input id="review-signup-email" type="email" placeholder="your@email.com" style="width:100%;padding:12px;border:1.5px solid var(--cream-mid);background:var(--white);font-family:'Jost',sans-serif;font-size:14px;color:var(--dark);box-sizing:border-box;border-radius:2px">
-          </div>
-          
-          <div style="margin-bottom:16px">
-            <label style="display:block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dark);margin-bottom:8px">Phone (Optional)</label>
-            <input id="review-signup-phone" type="tel" maxlength="10" placeholder="98765 43210" style="width:100%;padding:12px;border:1.5px solid var(--cream-mid);background:var(--white);font-family:'Jost',sans-serif;font-size:14px;color:var(--dark);box-sizing:border-box;border-radius:2px">
-          </div>
-          
-          <div style="margin-bottom:20px">
-            <label style="display:block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dark);margin-bottom:8px">Password</label>
-            <input id="review-signup-password" type="password" placeholder="••••••••" style="width:100%;padding:12px;border:1.5px solid var(--cream-mid);background:var(--white);font-family:'Jost',sans-serif;font-size:14px;color:var(--dark);box-sizing:border-box;border-radius:2px">
-          </div>
-          
-          <button onclick="reviewSignup()" style="width:100%;background:var(--gold);color:var(--dark);border:none;padding:12px;font-family:'Jost',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px;margin-bottom:12px">Create Account</button>
-          
-          <button onclick="showReviewLogin()" style="width:100%;background:transparent;color:var(--gold);border:1.5px solid var(--gold);padding:12px;font-family:'Jost',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px">Already have account? Sign In</button>
-        </div>
-      </div>
-      
-      <!-- REVIEW FORM STEP (shown after login) -->
-      <div id="review-form-step" style="display:none">
-        <p style="font-size:12px;color:var(--gold);margin-bottom:16px;background:var(--cream);padding:12px;border-radius:2px">✓ Logged in as <span id="review-logged-user"></span></p>
-        
-        <div style="margin-bottom:20px">
-          <label style="display:block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dark);margin-bottom:8px">Rating</label>
-          <div id="star-rating" style="display:flex;gap:8px;font-size:28px">
-            <button onclick="setReviewRating(1)" data-star="1" style="background:none;border:none;cursor:pointer;opacity:.4;transition:opacity .2s;color:var(--muted)">★</button>
-            <button onclick="setReviewRating(2)" data-star="2" style="background:none;border:none;cursor:pointer;opacity:.4;transition:opacity .2s;color:var(--muted)">★</button>
-            <button onclick="setReviewRating(3)" data-star="3" style="background:none;border:none;cursor:pointer;opacity:.4;transition:opacity .2s;color:var(--muted)">★</button>
-            <button onclick="setReviewRating(4)" data-star="4" style="background:none;border:none;cursor:pointer;opacity:.4;transition:opacity .2s;color:var(--muted)">★</button>
-            <button onclick="setReviewRating(5)" data-star="5" style="background:none;border:none;cursor:pointer;opacity:.4;transition:opacity .2s;color:var(--muted)">★</button>
-          </div>
-          <input id="review-rating" type="hidden" value="5">
-        </div>
-        
-        <div style="margin-bottom:24px">
-          <label style="display:block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dark);margin-bottom:8px">Your Review</label>
-          <textarea id="review-text" placeholder="Share your experience with this product..." rows="5" style="width:100%;padding:12px;border:1.5px solid var(--cream-mid);background:var(--white);font-family:'Jost',sans-serif;font-size:14px;color:var(--dark);box-sizing:border-box;border-radius:2px;resize:none"></textarea>
-        </div>
-        
-        <div style="display:flex;gap:12px">
-          <button onclick="closeReviewModal()" style="flex:1;background:var(--cream);color:var(--dark);border:none;padding:12px;font-family:'Jost',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px">Cancel</button>
-          <button onclick="submitReview()" style="flex:1;background:var(--gold);color:var(--dark);border:none;padding:12px;font-family:'Jost',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px">Submit Review</button>
-        </div>
-      </div>
-      
-      <!-- Error message -->
-      <div id="review-error-msg" style="margin-top:16px;padding:12px;background:#ffe0e0;color:#c00;border-radius:2px;font-size:12px;display:none"></div>
-    </div>
-  </div>
-</div>
-
 <!-- ── ABOUT ──────────────────────────────────────────────────────────── -->
+<div id="page-about" class="page">
 
   <!-- HERO -->
   <section style="background:var(--dark);padding:110px 6% 90px;position:relative;overflow:hidden">
@@ -1832,13 +1563,6 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
     <div class="art-body" id="art-body"></div>
     <div class="art-modal-footer">
       <span style="font-size:12px;color:var(--muted)">Game of Bones &mdash; Real Food for Real Dogs</span>
-      <div style="display:flex;gap:12px;align-items:center">
-        <span style="font-size:11px;color:var(--muted);font-weight:600">Share:</span>
-        <button onclick="shareArticle('whatsapp')" title="Share on WhatsApp" style="background:none;border:none;font-size:18px;cursor:pointer;opacity:.7;transition:opacity .2s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.7'">💬</button>
-        <button onclick="shareArticle('facebook')" title="Share on Facebook" style="background:none;border:none;font-size:18px;cursor:pointer;opacity:.7;transition:opacity .2s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.7'">👍</button>
-        <button onclick="shareArticle('twitter')" title="Share on Twitter" style="background:none;border:none;font-size:18px;cursor:pointer;opacity:.7;transition:opacity .2s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.7'">𝕏</button>
-        <button onclick="shareArticle('copy')" title="Copy link" style="background:none;border:none;font-size:18px;cursor:pointer;opacity:.7;transition:opacity .2s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.7'">🔗</button>
-      </div>
       <a class="btn-gold" onclick="closeArt();showPage('shop')" style="font-size:11px;padding:10px 24px">Shop All Treats &rarr;</a>
     </div>
   </div>
@@ -2243,26 +1967,6 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
   <section style="background:var(--cream);padding:32px 6% 80px;min-height:80vh">
     <div style="max-width:1160px;margin:0 auto">
 
-      <!-- CHECKOUT PROGRESS BAR -->
-      <div style="background:var(--white);padding:24px 0;margin-bottom:32px;border-bottom:1px solid var(--cream-mid)">
-        <div style="max-width:600px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:0">
-          <div style="display:flex;flex-direction:column;align-items:center;gap:8px;flex:1;position:relative">
-            <div style="width:40px;height:40px;border-radius:50%;background:var(--gold);color:var(--dark);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;z-index:2">✓</div>
-            <div style="font-size:12px;font-weight:600;color:var(--dark)">Shipping</div>
-          </div>
-          <div style="flex:1;height:2px;background:var(--cream-mid);margin:0 8px"></div>
-          <div style="display:flex;flex-direction:column;align-items:center;gap:8px;flex:1;position:relative">
-            <div style="width:40px;height:40px;border-radius:50%;background:var(--gold);color:var(--dark);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;z-index:2">2</div>
-            <div style="font-size:12px;font-weight:600;color:var(--dark)">Payment</div>
-          </div>
-          <div style="flex:1;height:2px;background:var(--cream-mid);margin:0 8px"></div>
-          <div style="display:flex;flex-direction:column;align-items:center;gap:8px;flex:1;position:relative">
-            <div style="width:40px;height:40px;border-radius:50%;background:var(--cream-mid);color:var(--muted);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;z-index:2">3</div>
-            <div style="font-size:12px;font-weight:600;color:var(--muted)">Confirm</div>
-          </div>
-        </div>
-      </div>
-
       <!-- Breadcrumb -->
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:32px;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">
         <a onclick="showPage('shop')" style="cursor:pointer;color:var(--muted)">Shop</a>
@@ -2450,7 +2154,7 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
       <h2 class="sec-title" style="color:var(--white)">Frequently Asked <em style="color:var(--gold-light)">Questions</em></h2>
     </div>
   </section>
-  <section style="background:var(--cream);padding:60px 6%;min-height:auto">
+  <section style="background:var(--cream);padding:60px 6% 80px">
     <div style="max-width:760px;margin:0 auto">
       <!-- Search -->
       <div style="position:relative;margin-bottom:32px">
@@ -2486,13 +2190,6 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
       <div id="faqNoResults" style="display:none;text-align:center;padding:40px 0;font-size:14px;color:var(--muted)">No questions match your search. <a onclick="filterFaq('')" style="color:var(--teal);cursor:pointer;font-weight:600">Clear</a></div>
     </div>
   </section>
-  <div class="cta-banner">
-    <h2>Still Have Questions?</h2>
-    <p>Our team is on WhatsApp from 9 AM to 7 PM, every day.</p>
-    <div class="cta-btns">
-      <button class="btn-gold-outline" onclick="openWA()">Ask Us Anything &#128172;</button>
-    </div>
-  </div>
 </div>
 <script>
 
@@ -2702,38 +2399,6 @@ function closeArt() {
   document.getElementById('artOverlay').classList.remove('open');
   document.body.style.overflow = '';
 }
-
-function shareArticle(platform) {
-  if (!currentArtIdx && currentArtIdx !== 0) return;
-  
-  const article = articles[currentArtIdx];
-  const title = article.title;
-  const url = window.location.origin + window.location.pathname + '?article=' + currentArtIdx;
-  const text = 'Check out this article: ' + title + ' from Game of Bones';
-  
-  if (platform === 'whatsapp') {
-    const msg = encodeURIComponent(text + ' ' + url);
-    window.open('https://wa.me/?text=' + msg, '_blank');
-  } else if (platform === 'facebook') {
-    window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url), '_blank');
-  } else if (platform === 'twitter') {
-    window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(url), '_blank');
-  } else if (platform === 'copy') {
-    navigator.clipboard.writeText(url).then(() => {
-      alert('Article link copied to clipboard!');
-    }).catch(() => {
-      // Fallback for browsers that don't support clipboard API
-      const temp = document.createElement('input');
-      temp.value = url;
-      document.body.appendChild(temp);
-      temp.select();
-      document.execCommand('copy');
-      document.body.removeChild(temp);
-      alert('Article link copied to clipboard!');
-    });
-  }
-}
-
 function artNav(dir) {
   var next = currentArtIdx + dir;
   if (next >= 0 && next < articles.length) openArt(next);
@@ -2744,7 +2409,6 @@ function artNav(dir) {
 // Expose to window for onclick attributes (cfasync safety)
 window.openArt = openArt;
 window.closeArt = closeArt;
-window.shareArticle = shareArticle;
 window._openArtReal = openArt;
 
 
@@ -4078,106 +3742,13 @@ function toggleBillingAddr(cb) {
 }
 
 // ── YOUR RAZORPAY KEY ────────────────────────────────────────────────
-var RAZORPAY_KEY_ID = 'rzp_live_Sc4Adu52rXhZQ6'; // Live key — DO NOT COMMIT TO GIT (security risk)
+var RAZORPAY_KEY_ID = 'rzp_live_YOUR_KEY_HERE'; // Replace with your live key from Razorpay dashboard
 
 function _finaliseOrder(ref, phoneVal, orderItems) {
-  // ═══════════════════════ BUILD COMPLETE ORDER PAYLOAD ═══════════════════════
-  const fname = document.getElementById('co-fname').value.trim();
-  const lname = document.getElementById('co-lname').value.trim();
-  const email = (document.getElementById('co-email') && document.getElementById('co-email').value.trim()) || '';
-  const addr1 = (document.getElementById('co-addr1') && document.getElementById('co-addr1').value.trim()) || '';
-  const addr2 = (document.getElementById('co-addr2') && document.getElementById('co-addr2').value.trim()) || '';
-  const city = (document.getElementById('co-city') && document.getElementById('co-city').value.trim()) || '';
-  const state = (document.getElementById('co-state') && document.getElementById('co-state').value) || '';
-  const pin = (document.getElementById('co-pin') && document.getElementById('co-pin').value.trim()) || '';
-  
-  // Build items array with full details
-  var itemsWithDetails = cartItems.map(function(item) {
-    return {
-      product_name: item.name,
-      pack_label: item.size,
-      pack_price: item.price,
-      quantity: item.qty || 1
-    };
-  });
-  
-  // Calculate subtotal from cart
-  var subtotal = cartItems.reduce(function(sum, item) {
-    return sum + (item.price * (item.qty || 1));
-  }, 0);
-  
-  var shippingCharge = subtotal > 599 ? 0 : 50;
-  var codCharge = selectedPayment === 'cod' ? 40 : 0;
-  var grandTotal = subtotal + shippingCharge + codCharge;
-  
-  // Build order payload for Supabase
-  var orderPayload = {
-    ref: ref,
-    customer_name: fname + ' ' + lname,
-    customer_email: email || null,
-    customer_phone: phoneVal,
-    shipping_address: {
-      street: addr1 + (addr2 ? ', ' + addr2 : ''),
-      city: city,
-      state: state,
-      pincode: pin
-    },
-    items: itemsWithDetails,
-    subtotal: subtotal,
-    discount: 0,
-    coupon_code: null,
-    shipping: shippingCharge,
-    packaging: 0,
-    grand_total: grandTotal,
-    total_amount: grandTotal,
-    payment_method: selectedPayment === 'cod' ? 'cod' : 'razorpay',
-    payment_status: selectedPayment === 'cod' ? 'pending' : 'paid',
-    status: 'placed',
-    notes: null,
-    created_at: new Date().toISOString()
-  };
-  
-  // ═══════════════════════ SAVE TO SUPABASE ═══════════════════════
-  fetch(SUPABASE_URL + '/rest/v1/orders', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'apikey': SUPABASE_ANON_KEY,
-      'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
-    },
-    body: JSON.stringify(orderPayload)
-  })
-  .then(function(res) { 
-    console.log('Supabase response:', res.status);
-    return res.json(); 
-  })
-  .then(function(data) {
-    console.log('Order saved to Supabase:', data);
-    // Send purchase event to Google Analytics
-    if (typeof gtag !== 'undefined') {
-      gtag('event', 'purchase', {
-        'transaction_id': ref,
-        'value': grandTotal,
-        'currency': 'INR',
-        'items': itemsWithDetails.map(function(item) {
-          return {
-            'item_name': item.product_name,
-            'item_id': item.product_name,
-            'price': item.pack_price,
-            'quantity': item.quantity
-          };
-        })
-      });
-    }
-  })
-  .catch(function(err) {
-    console.error('Supabase save failed (will retry):', err.message);
-  });
-  
-  // ═══════════════════════ SAVE TO LOCALSTORAGE (BACKUP) ═══════════════════════
+  // Save order locally
   try {
     var orders = JSON.parse(localStorage.getItem('gobOrders') || '[]');
-    orders.push({ ref: ref, phone: phoneVal, items: orderItems, total: grandTotal, date: new Date().toISOString(), status: 'placed' });
+    orders.push({ ref: ref, phone: phoneVal, items: orderItems, total: _currentOrderTotal, date: new Date().toISOString(), status: 'placed' });
     localStorage.setItem('gobOrders', JSON.stringify(orders));
     var fnameEl = document.getElementById('co-fname');
     var lnameEl = document.getElementById('co-lname');
@@ -4185,11 +3756,8 @@ function _finaliseOrder(ref, phoneVal, orderItems) {
       currentUser = { name: fnameEl.value.trim() + ' ' + lnameEl.value.trim(), phone: phoneVal, purchased: orderItems };
       localStorage.setItem('gobCurrentUser', JSON.stringify(currentUser));
     }
-  } catch(e) {
-    console.error('localStorage save failed:', e.message);
-  }
-  
-  // ═══════════════════════ SHOW SUCCESS ═══════════════════════
+  } catch(e) {}
+  // Show success
   var osRef = document.getElementById('orderSuccessRef');
   if (osRef) osRef.textContent = 'Order Ref: ' + ref;
   var osOvl = document.getElementById('orderSuccessOverlay');
@@ -5070,144 +4638,29 @@ function renderBundleCard(p, globalIdx) {
   </div>`;
 }
 
-// TESTIMONIALS - Fetch and rotate from Supabase
-let allTestimonials = [];
-let currentTestiIdx = 0;
-
-async function loadTestimonials() {
-  try {
-    // Fetch testimonials from Supabase, sorted by newest first
-    const { data, error } = await supabase
-      .from('testimonials')
-      .select('*')
-      .eq('is_published', true)
-      .order('created_at', { ascending: false })
-      .limit(50);
-    
-    if (error) {
-      console.error('Failed to fetch testimonials:', error);
-      return;
-    }
-
-    if (!data || data.length === 0) {
-      console.log('No testimonials found');
-      return;
-    }
-
-    allTestimonials = data;
-    renderTestimonials();
-  } catch (err) {
-    console.error('Testimonials error:', err);
-  }
-}
-
-function renderTestimonials() {
-  if (allTestimonials.length === 0) return;
-
-  const container = document.getElementById('testiGrid');
-  const dotsContainer = document.getElementById('testiDots');
-  if (!container) return;
-
-  // Show 3 testimonials at a time (rotating)
-  const visibleCount = 3;
-  const testiSlice = [];
-  for (let i = 0; i < visibleCount; i++) {
-    const idx = (currentTestiIdx + i) % allTestimonials.length;
-    testiSlice.push(allTestimonials[idx]);
-  }
-
-  // Render testimonial cards
-  container.innerHTML = testiSlice.map(t => {
-    const starsHtml = '&#9733;'.repeat(t.rating || 5) + '&#9734;'.repeat(5 - (t.rating || 5));
-    const emoji = t.emoji || '🐕';
-    const dogType = t.dog_type || 'Dog';
-    return `
-      <div class="testi-card" style="opacity:0;animation:fadeIn .6s ease-out forwards">
-        <div class="testi-quote">&ldquo;</div>
-        <div class="testi-stars">${starsHtml}</div>
-        <p class="testi-text">${t.review || t.text}</p>
-        <div class="testi-author">
-          <div class="testi-av">${emoji}</div>
-          <div>
-            <div class="testi-name">${t.customer_name}</div>
-            <div class="testi-dog">${t.dog_name} • ${dogType}</div>
-          </div>
-        </div>
-      </div>
-    `;
-  }).join('');
-
-  // Add fade-in animation if not exists
-  if (!document.getElementById('testiAnimation')) {
-    const style = document.createElement('style');
-    style.id = 'testiAnimation';
-    style.textContent = `
-      @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(8px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-    `;
-    document.head.appendChild(style);
-  }
-
-  // Render dots for navigation
-  dotsContainer.innerHTML = Array(Math.ceil(allTestimonials.length / 3))
-    .fill(null)
-    .map((_, i) => `
-      <button onclick="jumpToTestimonial(${i * 3})" style="width:8px;height:8px;border-radius:50%;background:${Math.floor(currentTestiIdx / 3) === i ? 'var(--gold)' : '#ccc'};border:none;cursor:pointer;transition:background .3s"></button>
-    `).join('');
-}
-
-function jumpToTestimonial(idx) {
-  currentTestiIdx = idx;
-  renderTestimonials();
-}
-
-// Auto-rotate testimonials every 8 seconds
-function autoRotateTestimonials() {
-  if (allTestimonials.length <= 3) return; // No need to rotate if 3 or fewer
-  
-  currentTestiIdx = (currentTestiIdx + 3) % allTestimonials.length;
-  renderTestimonials();
-}
-
-// Start rotation when page loads
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
-    initializeFakeReviews();
-    loadTestimonials();
-    setInterval(autoRotateTestimonials, 8000);
-  });
-} else {
-  initializeFakeReviews();
-  loadTestimonials();
-  setInterval(autoRotateTestimonials, 8000);
-}
-
 function renderProducts(items, containerId) {
   const g = document.getElementById(containerId);
   if (!g) return;
-  const SUPABASE_IMG_URL = 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/';
   g.innerHTML = items.map((p) => {
     const globalIdx = products.indexOf(p);
     // Special rendering for bundle cards
     if (p.isBundle) return renderBundleCard(p, globalIdx);
     const firstSize = p.sizes[0];
     const sizeOpts = p.sizes.map((s,i) => `<option value="${i}" ${i===0?'selected':''}>${s.label} — ₹${s.price}</option>`).join('');
-    const imgUrl = SUPABASE_IMG_URL + p.img;
     return `
-    <div class="prod-card" onclick="openProductPage(${globalIdx})">
+    <div class="prod-card" onclick="openPModal(${globalIdx})">
       <div class="prod-img-wrap">
-        <img src="${imgUrl}" alt="${p.name}" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23f0e6d2%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2224%22%3E🐾%3C/text%3E%3C/svg%3E'">
+        <img src="${p.img}" alt="${p.name}" loading="lazy">
         <span class="prod-badge ${p.badgeCls}">${p.badge}</span>
         <button class="prod-fav" onclick="event.stopPropagation();toggleWishlist(this,${globalIdx})">${isWishlisted(globalIdx)?'♥':'♡'}</button>
+        <button class="prod-upload-btn" onclick="event.stopPropagation();openImageUpload('${p.name}',event)" title="Add product photo" style="position:absolute;bottom:8px;left:8px;background:rgba(26,16,8,.7);color:var(--gold-pale);border:1px solid rgba(200,151,58,.5);padding:5px 9px;font-size:9px;font-weight:700;letter-spacing:.08em;font-family:'Jost',sans-serif;text-transform:uppercase;cursor:pointer;opacity:0;transition:opacity .2s;border-radius:2px">&#128247;</button>
       </div>
       <div class="prod-body">
         <div class="prod-cat">${p.cat}</div>
         <h3 class="prod-name">${p.name}</h3>
         <p class="prod-desc">${p.desc}</p>
         <div class="prod-tags">${p.tags.map(t=>`<span class="p-tag">${t}</span>`).join('')}</div>
-        <div class="prod-card-rating" onclick="event.stopPropagation();openProductPage(${globalIdx})" title="See all reviews">
+        <div class="prod-card-rating" onclick="event.stopPropagation();openPModal(${globalIdx})" title="See all reviews">
           ${(()=>{const r=getProductRating(p.name);return r?renderStarBar(r.avg)+' <span style="font-size:11px;color:var(--muted);margin-left:4px">'+r.avg.toFixed(1)+' ('+r.count+')</span>':'<span style="font-size:11px;color:var(--muted);letter-spacing:.04em">Be first to review ✨</span>'})()}
         </div>
         ${p.noOrdersBadge ? '' : `<div class="orders-badge"><span class="ob-dot"></span>${getOrdersThisWeek(globalIdx)} orders this week</div>`}
@@ -5219,7 +4672,7 @@ function renderProducts(items, containerId) {
             <button class="add-btn" id="ab-${globalIdx}" onclick="event.stopPropagation();addCart(this,${globalIdx},document.getElementById('sel-${globalIdx}')?+document.getElementById('sel-${globalIdx}').value:0)">+</button>
           </div>
         </div>
-        <button onclick="event.stopPropagation();openProductPage(${globalIdx})" style="width:100%;margin-top:8px;background:none;border:1px solid var(--cream-mid);color:var(--muted);padding:7px;font-family:'Jost',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--brown)'" onmouseout="this.style.borderColor='var(--cream-mid)';this.style.color='var(--muted)'">View Details →</button>
+        <button onclick="event.stopPropagation();openPModal(${globalIdx});setTimeout(function(){var rv=document.getElementById('reviewFormSection');if(rv)rv.scrollIntoView({behavior:'smooth'});},400)" style="width:100%;margin-top:8px;background:none;border:1px solid var(--cream-mid);color:var(--muted);padding:7px;font-family:'Jost',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--brown)'" onmouseout="this.style.borderColor='var(--cream-mid)';this.style.color='var(--muted)'">&#9998; Write a Review</button>
       </div>
     </div>`;
   }).join('');
@@ -5251,463 +4704,11 @@ function setHeroProduct(i) {
   const img = document.getElementById('heroProductImg');
   const name = document.getElementById('heroProductName');
   const sub = document.querySelector('.hero-prod-label-sub');
-  if (img) { img.style.opacity='0'; setTimeout(()=>{img.src=SUPABASE_IMG_URL+heroProducts[i].img;img.style.opacity='1'},200); }
+  if (img) { img.style.opacity='0'; setTimeout(()=>{img.src=heroProducts[i].img;img.style.opacity='1'},200); }
   if (name) name.textContent = heroProducts[i].name;
   if (sub) sub.textContent = heroProducts[i].sub;
   document.querySelectorAll('.h-dot').forEach((d,j)=>d.classList.toggle('active',j===i));
 }
-
-let currentProductIdx = 0;
-let currentProductSize = 0;
-const SUPABASE_IMG_URL = 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/';
-
-function openProductPage(idx) {
-  currentProductIdx = idx;
-  currentProductSize = 0;
-  const p = products[idx];
-  
-  // Update image with proper error handling
-  const imgEl = document.getElementById('product-detail-img');
-  const placeholderEl = document.getElementById('product-detail-img-placeholder');
-  if (imgEl && placeholderEl) {
-    imgEl.style.display = 'none';
-    imgEl.src = SUPABASE_IMG_URL + p.img;
-    imgEl.onload = function() {
-      imgEl.style.display = 'block';
-      placeholderEl.style.display = 'none';
-    };
-    imgEl.onerror = function() {
-      imgEl.style.display = 'none';
-      placeholderEl.innerHTML = '<div style="font-size:60px;margin-bottom:10px">📦</div><div style="font-size:13px;color:var(--muted)">Image not available</div>';
-      placeholderEl.style.display = 'block';
-    };
-  }
-  
-  // Update wishlist button
-  const favBtn = document.getElementById('detail-fav');
-  if (favBtn) favBtn.textContent = isWishlisted(idx) ? '♥' : '♡';
-  
-  // Build product details HTML
-  const sizeOpts = p.sizes.map((s,i) => `<div style="padding:10px 16px;border:1px solid var(--cream-mid);background:var(--white);cursor:pointer;border-radius:2px;transition:all .2s;text-align:center" onclick="currentProductSize=${i};this.parentElement.querySelector('.active')?.classList.remove('active');this.classList.add('active')" class="${i===0?'active':''}" data-size="${i}"><div style="font-size:13px;font-weight:600;color:var(--dark)">${s.label}</div><div style="font-size:15px;font-weight:700;color:var(--gold);margin-top:4px">₹${s.price}</div></div>`).join('');
-  
-  const benefitsHtml = (p.benefits || []).map(b => `
-    <div style="display:flex;gap:12px;margin-bottom:16px">
-      <div style="font-size:28px;flex-shrink:0">${b.icon}</div>
-      <div>
-        <div style="font-size:13px;font-weight:700;color:var(--dark);margin-bottom:4px">${b.title}</div>
-        <div style="font-size:12px;color:var(--muted);line-height:1.6">${b.text}</div>
-      </div>
-    </div>
-  `).join('');
-  
-  const storageInfo = p.storage ? `
-    <div style="margin-top:24px">
-      <div style="font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--dark);margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--cream-mid)">Storage & Shelf Life</div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px">
-        ${p.storage.tiles.map(t => `<div style="background:var(--white);padding:16px;text-align:center;border:1px solid var(--cream-mid)"><div style="font-size:24px;margin-bottom:8px">${t.icon}</div><div style="font-size:12px;font-weight:700;color:var(--dark)">${t.val}</div><div style="font-size:9px;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.06em">${t.label}</div></div>`).join('')}
-      </div>
-      <p style="font-size:12px;color:var(--muted);line-height:1.7">${p.storage.note}</p>
-    </div>
-  ` : '';
-  
-  const contentHtml = `
-    <div>
-      <div style="font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">${p.cat}</div>
-      <h1 style="font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:700;color:var(--dark);margin-bottom:12px;line-height:1.1">${p.name}</h1>
-      <div style="display:inline-block;background:var(--gold);color:var(--dark);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;margin-bottom:16px;border-radius:2px">${p.badge}</div>
-      
-      ${p.tagline ? `<p style="font-size:13px;color:var(--muted);line-height:1.7;font-style:italic;margin-bottom:20px;padding:14px 16px;border-left:3px solid var(--gold);background:var(--white)">${p.tagline}</p>` : ''}
-      
-      <p style="font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:24px">${p.desc}</p>
-      
-      <div style="margin-bottom:24px">
-        <div style="font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--dark);margin-bottom:12px">Choose Size</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          ${sizeOpts}
-        </div>
-      </div>
-      
-      <div style="margin-bottom:24px">
-        <div style="font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--dark);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--cream-mid)">Key Benefits</div>
-        ${benefitsHtml}
-      </div>
-      
-      ${p.feeding ? `<div style="margin-bottom:24px"><div style="font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--dark);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--cream-mid)">Feeding Guide</div><p style="font-size:13px;color:var(--muted);line-height:1.8">${p.feeding}</p></div>` : ''}
-      
-      ${storageInfo}
-      
-      ${(p.tags && p.tags.length > 0) ? `<div style="margin-top:24px;display:flex;gap:8px;flex-wrap:wrap">${p.tags.map(t => `<span style="background:var(--cream);padding:6px 12px;font-size:11px;color:var(--muted);border-radius:2px">${t}</span>`).join('')}</div>` : ''}
-    </div>
-  `;
-  
-  const contentEl = document.getElementById('product-detail-content');
-  if (contentEl) contentEl.innerHTML = contentHtml;
-  
-  // Load and display reviews
-  loadProductReviews(p.name);
-  
-  showPage('product');
-  window.scrollTo(0, 0);
-}
-
-function shareProduct(platform) {
-  const p = products[currentProductIdx];
-  const url = window.location.origin + window.location.pathname + '?product=' + currentProductIdx;
-  const text = p.name + ' - Premium single-ingredient dog treats from Game of Bones';
-  
-  if (platform === 'whatsapp') {
-    const msg = encodeURIComponent(text + ' ' + url);
-    window.open('https://wa.me/?text=' + msg, '_blank');
-  } else if (platform === 'facebook') {
-    window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url), '_blank');
-  } else if (platform === 'twitter') {
-    window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(url), '_blank');
-  } else if (platform === 'copy') {
-    navigator.clipboard.writeText(url).then(() => {
-      alert('Product link copied to clipboard!');
-    }).catch(() => {
-      const temp = document.createElement('input');
-      temp.value = url;
-      document.body.appendChild(temp);
-      temp.select();
-      document.execCommand('copy');
-      document.body.removeChild(temp);
-      alert('Product link copied to clipboard!');
-    });
-  }
-}
-
-async function loadProductReviews(productName) {
-  const reviewsList = document.getElementById('product-reviews-list');
-  const reviewCount = document.getElementById('review-count');
-  let productReviews = [];
-  
-  // Load from Supabase
-  try {
-    const { data, error } = await supabase
-      .from('product_reviews')
-      .select('*')
-      .eq('product_name', productName)
-      .eq('status', 'published')
-      .order('created_at', { ascending: false });
-    
-    if (data) {
-      productReviews = data.map(r => ({
-        name: r.customer_name,
-        review: r.review,
-        rating: r.rating,
-        date: r.created_at
-      }));
-    }
-  } catch (error) {
-    console.error('Error loading reviews:', error);
-  }
-  
-  if (reviewCount) {
-    reviewCount.textContent = productReviews.length + ' review' + (productReviews.length !== 1 ? 's' : '');
-  }
-  
-  if (reviewsList) {
-    if (productReviews.length === 0) {
-      reviewsList.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:13px">No reviews yet. Be the first to share your experience!</div>';
-    } else {
-      reviewsList.innerHTML = productReviews.map(r => `
-        <div style="background:var(--white);border:1px solid var(--cream-mid);padding:16px;border-radius:2px">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-            <div style="font-weight:600;color:var(--dark)">${r.name}</div>
-            <div style="color:var(--gold);font-size:13px">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
-          </div>
-          <p style="font-size:13px;color:var(--muted);line-height:1.6;margin:8px 0">${r.review}</p>
-          <div style="font-size:10px;color:#aaa">${new Date(r.date).toLocaleDateString('en-IN')}</div>
-        </div>
-      `).join('');
-    }
-  }
-}
-
-function openReviewForm(idx) {
-  currentProductIdx = idx;
-  const currentUser = JSON.parse(localStorage.getItem('current_user') || 'null');
-  const modal = document.getElementById('review-modal-overlay');
-  const loginStep = document.getElementById('review-login-step');
-  const formStep = document.getElementById('review-form-step');
-  
-  if (modal) modal.style.display = 'flex';
-  
-  // Clear forms
-  document.getElementById('review-login-email').value = '';
-  document.getElementById('review-login-password').value = '';
-  document.getElementById('review-signup-name').value = '';
-  document.getElementById('review-signup-email').value = '';
-  document.getElementById('review-signup-phone').value = '';
-  document.getElementById('review-signup-password').value = '';
-  document.getElementById('review-text').value = '';
-  document.getElementById('review-rating').value = '5';
-  setReviewRating(5);
-  clearReviewError();
-  
-  if (currentUser) {
-    // Show review form
-    if (loginStep) loginStep.style.display = 'none';
-    if (formStep) formStep.style.display = 'block';
-    document.getElementById('review-logged-user').textContent = currentUser.name;
-  } else {
-    // Show login form
-    if (loginStep) loginStep.style.display = 'block';
-    if (formStep) formStep.style.display = 'none';
-    showReviewLogin();
-  }
-}
-
-function closeReviewModal() {
-  const modal = document.getElementById('review-modal-overlay');
-  if (modal) modal.style.display = 'none';
-  clearReviewError();
-}
-
-function showReviewLogin() {
-  document.getElementById('review-login-form').style.display = 'block';
-  document.getElementById('review-signup-form').style.display = 'none';
-}
-
-function showReviewSignup() {
-  document.getElementById('review-login-form').style.display = 'none';
-  document.getElementById('review-signup-form').style.display = 'block';
-}
-
-function showReviewError(msg) {
-  const errEl = document.getElementById('review-error-msg');
-  if (errEl) {
-    errEl.textContent = msg;
-    errEl.style.display = 'block';
-  }
-}
-
-function clearReviewError() {
-  const errEl = document.getElementById('review-error-msg');
-  if (errEl) errEl.style.display = 'none';
-}
-
-async function reviewLogin() {
-  const email = document.getElementById('review-login-email')?.value?.trim();
-  const password = document.getElementById('review-login-password')?.value;
-  
-  if (!email || !password) {
-    showReviewError('Please enter email and password');
-    return;
-  }
-  
-  try {
-    // Query user by email
-    const { data, error } = await supabase
-      .from('users')
-      .select('*')
-      .eq('email', email)
-      .single();
-    
-    if (error || !data) {
-      showReviewError('Invalid email or password');
-      return;
-    }
-    
-    // Simple password check (in production, use proper hashing verification)
-    if (data.password_hash !== password) {
-      showReviewError('Invalid email or password');
-      return;
-    }
-    
-    // Success - store user in localStorage
-    localStorage.setItem('current_user', JSON.stringify({
-      id: data.id,
-      email: data.email,
-      name: data.name,
-      phone: data.phone
-    }));
-    
-    // Show review form
-    document.getElementById('review-login-step').style.display = 'none';
-    document.getElementById('review-form-step').style.display = 'block';
-    document.getElementById('review-logged-user').textContent = data.name;
-    clearReviewError();
-  } catch (error) {
-    console.error('Login error:', error);
-    showReviewError('Login failed. Please try again.');
-  }
-}
-
-async function reviewSignup() {
-  const name = document.getElementById('review-signup-name')?.value?.trim();
-  const email = document.getElementById('review-signup-email')?.value?.trim();
-  const phone = document.getElementById('review-signup-phone')?.value?.replace(/\s/g, '');
-  const password = document.getElementById('review-signup-password')?.value;
-  
-  if (!name || !email || !password) {
-    showReviewError('Please fill in all required fields');
-    return;
-  }
-  
-  if (password.length < 6) {
-    showReviewError('Password must be at least 6 characters');
-    return;
-  }
-  
-  try {
-    // Check if email already exists
-    const { data: existing } = await supabase
-      .from('users')
-      .select('id')
-      .eq('email', email);
-    
-    if (existing && existing.length > 0) {
-      showReviewError('Email already exists. Please log in instead.');
-      return;
-    }
-    
-    // Create new user
-    const { data: newUser, error } = await supabase
-      .from('users')
-      .insert([{
-        email: email,
-        name: name,
-        phone: phone || null,
-        password_hash: password,
-        is_verified: false
-      }])
-      .select()
-      .single();
-    
-    if (error) throw error;
-    
-    // Store user in localStorage
-    localStorage.setItem('current_user', JSON.stringify({
-      id: newUser.id,
-      email: newUser.email,
-      name: newUser.name,
-      phone: newUser.phone
-    }));
-    
-    // Show review form
-    document.getElementById('review-login-step').style.display = 'none';
-    document.getElementById('review-form-step').style.display = 'block';
-    document.getElementById('review-logged-user').textContent = newUser.name;
-    clearReviewError();
-  } catch (error) {
-    console.error('Signup error:', error);
-    showReviewError('Signup failed. Please try again.');
-  }
-}
-
-function setReviewRating(stars) {
-  const ratingInput = document.getElementById('review-rating');
-  if (ratingInput) ratingInput.value = stars;
-  
-  const buttons = document.querySelectorAll('#star-rating button');
-  buttons.forEach((btn, i) => {
-    btn.style.opacity = (i + 1) <= stars ? '1' : '.4';
-    btn.style.color = (i + 1) <= stars ? 'var(--gold)' : 'var(--muted)';
-  });
-}
-
-async function submitReview() {
-  const currentUser = JSON.parse(localStorage.getItem('current_user') || 'null');
-  
-  if (!currentUser) {
-    showReviewError('You must be logged in to submit a review');
-    return;
-  }
-  
-  const textInput = document.getElementById('review-text');
-  const ratingInput = document.getElementById('review-rating');
-  
-  const text = textInput?.value?.trim();
-  const rating = parseInt(ratingInput?.value || '5');
-  
-  if (!text) { 
-    showReviewError('Please write a review');
-    return; 
-  }
-  
-  const p = products[currentProductIdx];
-  
-  try {
-    // Save review to Supabase
-    const { data, error } = await supabase
-      .from('product_reviews')
-      .insert([{
-        product_name: p.name,
-        customer_name: currentUser.name,
-        customer_phone: currentUser.phone,
-        user_id: currentUser.id,
-        rating: rating,
-        review: text,
-        status: 'published',
-        created_at: new Date().toISOString()
-      }]);
-    
-    if (error) throw error;
-    
-    loadProductReviews(p.name);
-    closeReviewModal();
-    alert('Thank you for your review! ✨');
-  } catch (error) {
-    console.error('Error submitting review:', error);
-    showReviewError('Error submitting review. Please try again.');
-  }
-}
-
-// Initialize fake reviews on first load
-function initializeFakeReviews() {
-  const REVIEWS_VERSION = '2'; // Change this to force reinitialize
-  const currentVersion = localStorage.getItem('reviews_version');
-  
-  const fakeReviews = {
-    'Chicken Jerky': [
-      { name: 'Priya M.', review: 'My dog Bruno loves this! High protein and he never leaves a piece.', rating: 5, date: new Date(Date.now() - 7*24*60*60*1000).toISOString() },
-      { name: 'Rohan K.', review: 'Perfect training treat. Easy to break into small pieces and my pup is obsessed.', rating: 5, date: new Date(Date.now() - 5*24*60*60*1000).toISOString() },
-      { name: 'Anita P.', review: 'Clean ingredients, zero additives. Really impressed with the quality.', rating: 5, date: new Date(Date.now() - 3*24*60*60*1000).toISOString() },
-    ],
-    'Buff Jerky': [
-      { name: 'Sanjay T.', review: 'My dog has chicken sensitivity, this is a game changer!', rating: 5, date: new Date(Date.now() - 10*24*60*60*1000).toISOString() },
-      { name: 'Meera S.', review: 'The smell is so strong - my dog goes crazy for it. Best value.', rating: 5, date: new Date(Date.now() - 4*24*60*60*1000).toISOString() },
-    ],
-    'Chicken Feet': [
-      { name: 'Vikram L.', review: 'Dental health improved noticeably. My vet is impressed!', rating: 5, date: new Date(Date.now() - 14*24*60*60*1000).toISOString() },
-      { name: 'Deepa N.', review: 'Senior dog loves these. Joint support is real, she moves better.', rating: 5, date: new Date(Date.now() - 8*24*60*60*1000).toISOString() },
-    ],
-    'Chicken Bites': [
-      { name: 'Amit R.', review: 'Perfect for training sessions! Uniform pieces, no mess.', rating: 5, date: new Date(Date.now() - 6*24*60*60*1000).toISOString() },
-      { name: 'Neha D.', review: 'Portable and healthy. Take these everywhere with my pup.', rating: 5, date: new Date(Date.now() - 2*24*60*60*1000).toISOString() },
-    ],
-    'Goat Trachea': [
-      { name: 'Rajesh M.', review: 'High value chew, keeps my Lab busy for hours. Worth every paisa.', rating: 5, date: new Date(Date.now() - 9*24*60*60*1000).toISOString() },
-    ],
-    'Chicken Wings': [
-      { name: 'Pooja S.', review: 'My German Shepherd goes crazy for these. Coat is shinier too!', rating: 5, date: new Date(Date.now() - 11*24*60*60*1000).toISOString() },
-    ],
-    'Chicken Neck & Feet Mix': [
-      { name: 'Karan M.', review: 'Best of both worlds. My dog gets variety and nutrition.', rating: 5, date: new Date(Date.now() - 6*24*60*60*1000).toISOString() },
-    ],
-    'Goat Trotter': [
-      { name: 'Divya T.', review: 'Finally a chew that lasts! My aggressive chewer can\'t destroy it.', rating: 5, date: new Date(Date.now() - 12*24*60*60*1000).toISOString() },
-    ],
-  };
-  
-  // If version is different, clear and reinitialize
-  if (currentVersion !== REVIEWS_VERSION) {
-    localStorage.setItem('reviews', JSON.stringify(fakeReviews));
-    localStorage.setItem('reviews_version', REVIEWS_VERSION);
-  } else {
-    // Otherwise merge with existing reviews
-    const existingReviews = JSON.parse(localStorage.getItem('reviews') || '{}');
-    for (const productName in fakeReviews) {
-      if (!existingReviews[productName]) {
-        existingReviews[productName] = fakeReviews[productName];
-      }
-    }
-    localStorage.setItem('reviews', JSON.stringify(existingReviews));
-  }
-}
-
 function initReveal() {
   setTimeout(function() {
     document.querySelectorAll('.page.active .sr').forEach(function(el) { el.classList.add('in'); });
@@ -7156,7 +6157,6 @@ showPage = function(id) {
   }
 };
 // ── END LOYALTY POINTS REDEMPTION ──────────────────────────────────
-// ===== PHASE 2: MOBILE FUNCTIONS =====
-function toggleMobileMenu(){const e=document.getElementById('mobileNavMenu'),t=document.querySelector('.hamburger-btn');e&&t&&(e.classList.toggle('mobile-open'),t.classList.toggle('open'))}document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('#mobileNavMenu a').forEach(function(e){e.addEventListener('click',function(){const t=document.getElementById('mobileNavMenu'),o=document.querySelector('.hamburger-btn');t&&t.classList.remove('mobile-open'),o&&o.classList.remove('open')})});let e=0;const t=document.getElementById('cartDrawer');t&&(t.addEventListener('touchstart',function(t){e=t.touches[0].clientX}),t.addEventListener('touchmove',function(t){const o=t.touches[0].clientX;100<e-o&&toggleCart()})),'IntersectionObserver'in window&&document.querySelectorAll('img[data-src]').length>0&&new IntersectionObserver(function(e,t){e.forEach(function(e){if(e.isIntersecting){const o=e.target;o.dataset.src&&(o.src=o.dataset.src,o.removeAttribute('data-src')),t.unobserve(o)}})}).observe(document.querySelectorAll('img[data-src]')[0])});
+
 </script>
 </html>
