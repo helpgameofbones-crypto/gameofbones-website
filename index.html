@@ -793,7 +793,45 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
     <div class="cta-btns"><button class="btn-gold-outline" onclick="openWA()">Ask on WhatsApp &#128172;</button></div>
   </div>
 </div>
-<div id="page-about" class="page">
+<!-- ── REVIEW MODAL ──────────────────────────────────────── -->
+<div id="review-modal-overlay" style="position:fixed;inset:0;background:rgba(10,6,2,.7);z-index:3000;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)">
+  <div style="background:var(--white);max-width:500px;width:100%;max-height:90vh;overflow-y:auto;border-radius:4px;box-shadow:0 20px 60px rgba(0,0,0,.3)">
+    <div style="background:var(--dark);padding:24px;position:relative">
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--white);margin:0">Share Your Experience</h2>
+      <button onclick="closeReviewModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;color:var(--white);font-size:20px;cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center">✕</button>
+    </div>
+    <div style="padding:32px">
+      <div style="margin-bottom:20px">
+        <label style="display:block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dark);margin-bottom:8px">Your Name</label>
+        <input id="review-name" type="text" placeholder="Your name" style="width:100%;padding:12px;border:1.5px solid var(--cream-mid);background:var(--white);font-family:'Jost',sans-serif;font-size:14px;color:var(--dark);box-sizing:border-box;border-radius:2px">
+      </div>
+      
+      <div style="margin-bottom:20px">
+        <label style="display:block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dark);margin-bottom:8px">Rating</label>
+        <div id="star-rating" style="display:flex;gap:8px;font-size:28px">
+          <button onclick="setRating(1)" data-star="1" style="background:none;border:none;cursor:pointer;opacity:.4;transition:opacity .2s">★</button>
+          <button onclick="setRating(2)" data-star="2" style="background:none;border:none;cursor:pointer;opacity:.4;transition:opacity .2s">★</button>
+          <button onclick="setRating(3)" data-star="3" style="background:none;border:none;cursor:pointer;opacity:.4;transition:opacity .2s">★</button>
+          <button onclick="setRating(4)" data-star="4" style="background:none;border:none;cursor:pointer;opacity:.4;transition:opacity .2s">★</button>
+          <button onclick="setRating(5)" data-star="5" style="background:none;border:none;cursor:pointer;opacity:.4;transition:opacity .2s">★</button>
+        </div>
+        <input id="review-rating" type="hidden" value="5">
+      </div>
+      
+      <div style="margin-bottom:24px">
+        <label style="display:block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dark);margin-bottom:8px">Your Review</label>
+        <textarea id="review-text" placeholder="Share your experience with this product..." rows="5" style="width:100%;padding:12px;border:1.5px solid var(--cream-mid);background:var(--white);font-family:'Jost',sans-serif;font-size:14px;color:var(--dark);box-sizing:border-box;border-radius:2px;resize:none"></textarea>
+      </div>
+      
+      <div style="display:flex;gap:12px">
+        <button onclick="closeReviewModal()" style="flex:1;background:var(--cream);color:var(--dark);border:none;padding:12px;font-family:'Jost',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px">Cancel</button>
+        <button onclick="submitReview()" style="flex:1;background:var(--gold);color:var(--dark);border:none;padding:12px;font-family:'Jost',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px">Submit Review</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── ABOUT ──────────────────────────────────────────────────────────── -->
 
   <!-- HERO -->
   <section style="background:var(--dark);padding:110px 6% 90px;position:relative;overflow:hidden">
@@ -5009,10 +5047,12 @@ function autoRotateTestimonials() {
 // Start rotation when page loads
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
+    initializeFakeReviews();
     loadTestimonials();
     setInterval(autoRotateTestimonials, 8000);
   });
 } else {
+  initializeFakeReviews();
   loadTestimonials();
   setInterval(autoRotateTestimonials, 8000);
 }
@@ -5239,29 +5279,116 @@ function loadProductReviews(productName) {
 }
 
 function openReviewForm(idx) {
-  const p = products[idx];
-  const name = prompt('Your name:');
-  if (!name) return;
+  currentProductIdx = idx;
+  const modal = document.getElementById('review-modal-overlay');
+  const nameInput = document.getElementById('review-name');
+  const textInput = document.getElementById('review-text');
+  const ratingInput = document.getElementById('review-rating');
   
-  const review = prompt('Your review:');
-  if (!review) return;
+  if (nameInput) nameInput.value = '';
+  if (textInput) textInput.value = '';
+  if (ratingInput) ratingInput.value = '5';
+  setRating(5);
   
-  const ratingStr = prompt('Rating (1-5 stars):', '5');
-  const rating = Math.max(1, Math.min(5, parseInt(ratingStr) || 5));
+  if (modal) modal.style.display = 'flex';
+}
+
+function closeReviewModal() {
+  const modal = document.getElementById('review-modal-overlay');
+  if (modal) modal.style.display = 'none';
+}
+
+function setRating(stars) {
+  const ratingInput = document.getElementById('review-rating');
+  if (ratingInput) ratingInput.value = stars;
   
+  const buttons = document.querySelectorAll('#star-rating button');
+  buttons.forEach((btn, i) => {
+    btn.style.opacity = (i + 1) <= stars ? '1' : '.4';
+    btn.style.color = (i + 1) <= stars ? 'var(--gold)' : 'var(--muted)';
+  });
+}
+
+function submitReview() {
+  const nameInput = document.getElementById('review-name');
+  const textInput = document.getElementById('review-text');
+  const ratingInput = document.getElementById('review-rating');
+  
+  const name = nameInput?.value?.trim();
+  const text = textInput?.value?.trim();
+  const rating = parseInt(ratingInput?.value || '5');
+  
+  if (!name) { alert('Please enter your name'); return; }
+  if (!text) { alert('Please write a review'); return; }
+  
+  const p = products[currentProductIdx];
   const reviewsData = JSON.parse(localStorage.getItem('reviews') || '{}');
   if (!reviewsData[p.name]) reviewsData[p.name] = [];
   
   reviewsData[p.name].push({
     name: name,
-    review: review,
+    review: text,
     rating: rating,
     date: new Date().toISOString()
   });
   
   localStorage.setItem('reviews', JSON.stringify(reviewsData));
   loadProductReviews(p.name);
-  alert('Thank you for your review!');
+  closeReviewModal();
+  alert('Thank you for your review! ✨');
+}
+
+// Initialize fake reviews on first load
+function initializeFakeReviews() {
+  const REVIEWS_VERSION = '2'; // Change this to force reinitialize
+  const currentVersion = localStorage.getItem('reviews_version');
+  
+  const fakeReviews = {
+    'Chicken Jerky': [
+      { name: 'Priya M.', review: 'My dog Bruno loves this! High protein and he never leaves a piece.', rating: 5, date: new Date(Date.now() - 7*24*60*60*1000).toISOString() },
+      { name: 'Rohan K.', review: 'Perfect training treat. Easy to break into small pieces and my pup is obsessed.', rating: 5, date: new Date(Date.now() - 5*24*60*60*1000).toISOString() },
+      { name: 'Anita P.', review: 'Clean ingredients, zero additives. Really impressed with the quality.', rating: 5, date: new Date(Date.now() - 3*24*60*60*1000).toISOString() },
+    ],
+    'Buff Jerky': [
+      { name: 'Sanjay T.', review: 'My dog has chicken sensitivity, this is a game changer!', rating: 5, date: new Date(Date.now() - 10*24*60*60*1000).toISOString() },
+      { name: 'Meera S.', review: 'The smell is so strong - my dog goes crazy for it. Best value.', rating: 5, date: new Date(Date.now() - 4*24*60*60*1000).toISOString() },
+    ],
+    'Chicken Feet': [
+      { name: 'Vikram L.', review: 'Dental health improved noticeably. My vet is impressed!', rating: 5, date: new Date(Date.now() - 14*24*60*60*1000).toISOString() },
+      { name: 'Deepa N.', review: 'Senior dog loves these. Joint support is real, she moves better.', rating: 5, date: new Date(Date.now() - 8*24*60*60*1000).toISOString() },
+    ],
+    'Chicken Bites': [
+      { name: 'Amit R.', review: 'Perfect for training sessions! Uniform pieces, no mess.', rating: 5, date: new Date(Date.now() - 6*24*60*60*1000).toISOString() },
+      { name: 'Neha D.', review: 'Portable and healthy. Take these everywhere with my pup.', rating: 5, date: new Date(Date.now() - 2*24*60*60*1000).toISOString() },
+    ],
+    'Goat Trachea': [
+      { name: 'Rajesh M.', review: 'High value chew, keeps my Lab busy for hours. Worth every paisa.', rating: 5, date: new Date(Date.now() - 9*24*60*60*1000).toISOString() },
+    ],
+    'Chicken Wings': [
+      { name: 'Pooja S.', review: 'My German Shepherd goes crazy for these. Coat is shinier too!', rating: 5, date: new Date(Date.now() - 11*24*60*60*1000).toISOString() },
+    ],
+    'Chicken Neck & Feet Mix': [
+      { name: 'Karan M.', review: 'Best of both worlds. My dog gets variety and nutrition.', rating: 5, date: new Date(Date.now() - 6*24*60*60*1000).toISOString() },
+    ],
+    'Goat Trotter': [
+      { name: 'Divya T.', review: 'Finally a chew that lasts! My aggressive chewer can\'t destroy it.', rating: 5, date: new Date(Date.now() - 12*24*60*60*1000).toISOString() },
+    ],
+  };
+  
+  // If version is different, clear and reinitialize
+  if (currentVersion !== REVIEWS_VERSION) {
+    localStorage.setItem('reviews', JSON.stringify(fakeReviews));
+    localStorage.setItem('reviews_version', REVIEWS_VERSION);
+  } else {
+    // Otherwise merge with existing reviews
+    const existingReviews = JSON.parse(localStorage.getItem('reviews') || '{}');
+    for (const productName in fakeReviews) {
+      if (!existingReviews[productName]) {
+        existingReviews[productName] = fakeReviews[productName];
+      }
+    }
+    localStorage.setItem('reviews', JSON.stringify(existingReviews));
+  }
 }
 
 function initReveal() {
