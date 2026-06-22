@@ -506,6 +506,48 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5dW9zdGxxenppbmlncXdqemFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NTA3MzIsImV4cCI6MjA4OTQyNjczMn0.BKf4EF2QhNcW_u1SVVbtiGdlnzdthiptlVcNk3gP2KU';
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   console.log('✓ Supabase initialized');
+  
+  // Load product images from admin database
+  window.loadProductsFromDatabase = async function() {
+    try {
+      console.log('📦 Loading product images from database...');
+      
+      const { data: dbProducts, error } = await supabase
+        .from('products')
+        .select('name, image_url')
+        .eq('is_active', true);
+      
+      if (error || !dbProducts) {
+        console.log('Database unavailable, using storage images');
+        return;
+      }
+      
+      // Update hardcoded products with database images
+      let updated = 0;
+      dbProducts.forEach(dbProd => {
+        const idx = window.products?.findIndex(p => 
+          p.name.toLowerCase() === dbProd.name.toLowerCase()
+        );
+        if (idx >= 0 && dbProd.image_url) {
+          window.products[idx].img = dbProd.image_url;
+          updated++;
+          console.log(`✓ ${dbProd.name} using admin image`);
+        }
+      });
+      
+      console.log(`✓ Updated ${updated} product images from database`);
+      
+      // Re-render if products were already displayed
+      if (document.getElementById('homeProd')?.innerHTML) {
+        window.renderProducts?.call(window, window.products?.slice(0, 4), 'homeProd');
+        window.renderProducts?.call(window, window.products, 'shopProd');
+      }
+      
+    } catch (e) {
+      console.log('Database load failed:', e.message);
+    }
+  };
+
 </script>
 </head>
 <body>
@@ -2434,8 +2476,24 @@ function showPage(id) {
   if(mainNav) mainNav.style.display = id === 'login' ? 'none' : '';
   if (typeof initReveal === 'function') initReveal();
   if (typeof initReveal === 'function') setTimeout(initReveal, 80);
-  if (id === 'home' && typeof renderProducts === 'function') { renderProducts(products.slice(0,4),'homeProd'); }
-  if (id === 'shop' && typeof renderProducts === 'function') { renderProducts(products,'shopProd'); }
+  if (id === 'home' && typeof renderProducts === 'function') { 
+    if (window.loadProductsFromDatabase) {
+      window.loadProductsFromDatabase().then(function() {
+        renderProducts(products.slice(0,4),'homeProd');
+      });
+    } else {
+      renderProducts(products.slice(0,4),'homeProd');
+    }
+  }
+  if (id === 'shop' && typeof renderProducts === 'function') { 
+    if (window.loadProductsFromDatabase) {
+      window.loadProductsFromDatabase().then(function() {
+        renderProducts(products,'shopProd');
+      });
+    } else {
+      renderProducts(products,'shopProd');
+    }
+  }
   if (id === 'reviews' && typeof renderReviews === 'function') { setTimeout(renderReviews, 50); }
 }
 function showShopCategory(filter) {
@@ -5166,8 +5224,20 @@ const SUPABASE_IMG_URL = 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/ob
 function openProductPage(idx) {
   currentProductIdx = idx;
   currentProductSize = 0;
-  const p = products[idx];
   
+  // Refresh images from database (includes admin-uploaded images)
+  if (window.loadProductsFromDatabase) {
+    window.loadProductsFromDatabase().then(() => {
+      const p = products[idx];
+      updateProductImage(idx, p);
+    });
+  } else {
+    const p = products[idx];
+    updateProductImage(idx, p);
+  }
+}
+
+function updateProductImage(idx, p) {
   // Update image with proper error handling
   const imgEl = document.getElementById('product-detail-img');
   const placeholderEl = document.getElementById('product-detail-img-placeholder');
@@ -6111,8 +6181,20 @@ function submitReview() {
   document.getElementById('reviewSuccess').style.display = 'block';
   setTimeout(function(){ document.getElementById('reviewSuccess').style.display='none'; }, 3000);
   loadProductReviews(currentReviewProductName);
-  renderProducts(products.slice(0,4), 'homeProd');
-  renderProducts(products, 'shopProd');
+  
+  // Load images from admin database first (non-blocking)
+  if (window.loadProductsFromDatabase) {
+    window.loadProductsFromDatabase().then(function() {
+      renderProducts(products.slice(0,4), 'homeProd');
+      renderProducts(products, 'shopProd');
+    }).catch(function() {
+      renderProducts(products.slice(0,4), 'homeProd');
+      renderProducts(products, 'shopProd');
+    });
+  } else {
+    renderProducts(products.slice(0,4), 'homeProd');
+    renderProducts(products, 'shopProd');
+  }
 }
 
 
