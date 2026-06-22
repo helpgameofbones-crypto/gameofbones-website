@@ -5234,11 +5234,19 @@ function openProductPage(idx) {
 }
 
 function renderRelatedProducts(currentIdx) {
+  console.log('🔵 renderRelatedProducts called for idx:', currentIdx);
   const p = products[currentIdx];
   const relatedGrid = document.getElementById('related-products-grid');
   
+  console.log('📍 relatedGrid element:', relatedGrid);
+  if (!relatedGrid) {
+    console.log('❌ related-products-grid element not found!');
+    return;
+  }
+  
   // Get products from same category, excluding current product
   const related = products.filter((prod, idx) => prod.cat === p.cat && idx !== currentIdx).slice(0, 4);
+  console.log('📦 Found', related.length, 'related products');
   
   if (related.length === 0) {
     relatedGrid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)">No other products in this category</div>';
@@ -5261,6 +5269,7 @@ function renderRelatedProducts(currentIdx) {
       </div>
     `;
   }).join('');
+  console.log('✓ Related products rendered');
 }
 
 const blogs = [
@@ -5287,7 +5296,14 @@ const blogs = [
 ];
 
 function renderBlogs() {
+  console.log('🔵 renderBlogs called');
   const blogsGrid = document.getElementById('blogs-grid');
+  console.log('📍 blogsGrid element:', blogsGrid);
+  
+  if (!blogsGrid) {
+    console.log('❌ blogs-grid element not found!');
+    return;
+  }
   blogsGrid.innerHTML = blogs.map(blog => `
     <div style="background:var(--cream);padding:0;border-radius:2px;overflow:hidden;transition:all .2s;cursor:pointer" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,.1)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
       <div style="aspect-ratio:16/9;background:linear-gradient(135deg,var(--gold) 0%,var(--brown) 100%);display:flex;align-items:center;justify-content:center;font-size:48px">
@@ -5299,6 +5315,7 @@ function renderBlogs() {
       </div>
     </div>
   `).join('');
+  console.log('✓ Blogs rendered');
 }
 
 function shareProduct(platform) {
