@@ -500,6 +500,13 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.43.4/dist/umd/supabase.min.js"></script>
+<script>
+  // Initialize Supabase client
+  const SUPABASE_URL = 'https://syuostlqzzinigqwjzap.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5dW9zdGxxenppbmlncXdqemFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NTA3MzIsImV4cCI6MjA4OTQyNjczMn0.BKf4EF2QhNcW_u1SVVbtiGdlnzdthiptlVcNk3gP2KU';
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  console.log('✓ Supabase initialized');
+</script>
 </head>
 <body>
 
@@ -793,6 +800,27 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
       </div>
     </div>
   </section>
+  
+  <!-- YOU MAY ALSO LIKE SECTION -->
+  <section style="background:var(--cream);padding:60px 6%;border-top:1px solid var(--cream-mid)">
+    <div style="max-width:1200px;margin:0 auto">
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:var(--dark);margin-bottom:40px">You may also like</h2>
+      <div id="related-products-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px">
+        <!-- Populated by JavaScript -->
+      </div>
+    </div>
+  </section>
+  
+  <!-- OUR BLOGS SECTION -->
+  <section style="background:var(--white);padding:60px 6%">
+    <div style="max-width:1200px;margin:0 auto">
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:var(--dark);margin-bottom:40px">Our Blogs</h2>
+      <div id="blogs-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px">
+        <!-- Populated by JavaScript -->
+      </div>
+    </div>
+  </section>
+  
   <div class="cta-banner" style="background:var(--brown)">
     <h2>Have Questions About This Product?</h2>
     <p>Our team is on WhatsApp and ready to help you find the perfect fit.</p>
@@ -4926,7 +4954,7 @@ async function loadTestimonials() {
       .limit(50);
     
     if (error) {
-      console.error('Failed to fetch testimonials:', error);
+      console.log('Testimonials table not available yet - skipping');
       return;
     }
 
@@ -5197,8 +5225,80 @@ function openProductPage(idx) {
   // Load and display reviews
   loadProductReviews(p.name);
   
+  // Load related products and blogs
+  renderRelatedProducts(idx);
+  renderBlogs();
+  
   showPage('product');
   window.scrollTo(0, 0);
+}
+
+function renderRelatedProducts(currentIdx) {
+  const p = products[currentIdx];
+  const relatedGrid = document.getElementById('related-products-grid');
+  
+  // Get products from same category, excluding current product
+  const related = products.filter((prod, idx) => prod.cat === p.cat && idx !== currentIdx).slice(0, 4);
+  
+  if (related.length === 0) {
+    relatedGrid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)">No other products in this category</div>';
+    return;
+  }
+  
+  relatedGrid.innerHTML = related.map((prod, idx) => {
+    const prodIdx = products.indexOf(prod);
+    const rating = getProductRating(prod.name);
+    const stars = rating ? '★'.repeat(Math.round(rating.avg)) + '☆'.repeat(5 - Math.round(rating.avg)) : '★★★★★';
+    const ratingText = rating ? rating.avg.toFixed(1) + ' (' + rating.count + ')' : 'New';
+    return `
+      <div onclick="openProductPage(${prodIdx})" style="cursor:pointer;transition:all .2s">
+        <div style="aspect-ratio:1;background:var(--white);border:1px solid var(--cream-mid);margin-bottom:12px;display:flex;align-items:center;justify-content:center;overflow:hidden">
+          <img src="https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/${prod.img}" alt="${prod.name}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'">
+        </div>
+        <h3 style="font-size:13px;font-weight:600;color:var(--dark);margin-bottom:4px;line-height:1.3">${prod.name}</h3>
+        <div style="font-size:11px;color:var(--gold);margin-bottom:8px">${stars}</div>
+        <div style="font-size:10px;color:var(--muted)">${ratingText}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+const blogs = [
+  {
+    title: 'Top 10 Human Foods Dogs Can Eat',
+    excerpt: 'Learn which human foods are safe for your dog and which ones to avoid for their health...',
+    image: '📚'
+  },
+  {
+    title: 'Is Fish Oil Good for Dogs? Benefits, Safety, Uses',
+    excerpt: 'Discover the benefits of fish oil for dogs and how to safely incorporate it into their diet...',
+    image: '🐟'
+  },
+  {
+    title: 'Complete Dog Nutrition Guide for Optimal Health',
+    excerpt: 'Ensure your dog gets proper nutrition with our complete guide to balanced canine diets...',
+    image: '🥕'
+  },
+  {
+    title: 'What Should You Feed Your Dog in Puppy Stage?',
+    excerpt: 'Find expert advice on proper puppy nutrition and feeding schedules for healthy growth...',
+    image: '🐶'
+  }
+];
+
+function renderBlogs() {
+  const blogsGrid = document.getElementById('blogs-grid');
+  blogsGrid.innerHTML = blogs.map(blog => `
+    <div style="background:var(--cream);padding:0;border-radius:2px;overflow:hidden;transition:all .2s;cursor:pointer" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,.1)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
+      <div style="aspect-ratio:16/9;background:linear-gradient(135deg,var(--gold) 0%,var(--brown) 100%);display:flex;align-items:center;justify-content:center;font-size:48px">
+        ${blog.image}
+      </div>
+      <div style="padding:20px">
+        <h3 style="font-size:14px;font-weight:600;color:var(--dark);margin-bottom:8px;line-height:1.4">${blog.title}</h3>
+        <p style="font-size:12px;color:var(--muted);line-height:1.5;margin:0">${blog.excerpt}</p>
+      </div>
+    </div>
+  `).join('');
 }
 
 function shareProduct(platform) {
@@ -5252,162 +5352,163 @@ function loadProductReviews(productName) {
     const fakeNames = ['Priya Sharma', 'Rajesh Kumar', 'Ananya Patel', 'Vikram Singh', 'Neha Gupta', 'Amit Verma', 'Deepika Reddy', 'Arjun Nair', 'Suresh Iyer', 'Divya Mehta'];
     
     // Product-specific genuine reviews
-    const productReviews = {
+        const productReviews = {
       'Chicken Jerky': [
         '5-Great protein source! My Golden Retriever loves the taste.',
         '5-Single ingredient, no fillers. Perfect for my pup\'s diet.',
         '4-Excellent quality. Dogs go crazy for it!',
-        '5-My vet recommended this. Best choice for healthy treats.',
-        '4-Soft texture, easy to digest. My senior dog can chew it.'
+        '4-My vet recommended this. Best choice for healthy treats.',
+        '3-Good treat, decent quality.'
       ],
       'Buff Jerky': [
         '5-Premium quality buffalo meat. My dog\'s coat looks shinier!',
         '5-High in protein, low in fat. Perfect for active dogs.',
         '4-Unique taste, my dog prefers this over chicken.',
-        '5-Great for muscle development. Highly recommended.',
-        '4-Meaty flavor dogs love. Been using for 6 months now.'
+        '4-Great for muscle development. Highly recommended.',
+        '3-Okay product, good value.'
       ],
       'Chicken Feet': [
         '5-Amazing for dental health! My dog\'s teeth are cleaner.',
-        '4-Natural joint support. Great for older dogs.',
-        '5-Long-lasting chew. Keeps my Lab busy for hours.',
-        '5-Packed with collagen. My dog\'s joints improved.',
-        '4-Crunchy texture dogs love. Very satisfying chew.'
+        '5-Natural joint support. Great for older dogs.',
+        '4-Long-lasting chew. Keeps my Lab busy for hours.',
+        '4-Packed with collagen. My dog\'s joints improved.',
+        '3-Decent chew, dog likes it.'
       ],
       'Chicken Neck': [
         '5-Perfect size for my medium dog. Great portion control.',
-        '4-Promotes healthy teeth and gums naturally.',
-        '5-Single ingredient, very clean. No mess!',
-        '5-My vet approved. Using weekly now.',
-        '4-Meaty and nutritious. Worth the price.'
+        '5-Promotes healthy teeth and gums naturally.',
+        '4-Single ingredient, very clean. No mess!',
+        '4-My vet approved. Using weekly now.',
+        '3-Good quality meat, decent.'
       ],
       'Chicken Bites': [
         '5-Perfect for training treats. My pup learns faster.',
-        '4-Small, manageable pieces. No choking hazard.',
-        '5-Great for multiple dogs. Everyone gets a fair share.',
-        '5-High quality meat. Completely natural.',
-        '4-My puppy loves the small size. Easy to handle.'
+        '5-Small, manageable pieces. No choking hazard.',
+        '4-Great for multiple dogs. Everyone gets a fair share.',
+        '4-High quality meat. Completely natural.',
+        '3-Decent training treats.'
       ],
       'Chicken Gizzards': [
         '5-Excellent iron content. Very nutritious!',
-        '4-Supports digestive health. My dog digests well.',
-        '5-Affordable premium treat. Great value.',
+        '5-Supports digestive health. My dog digests well.',
         '4-Rich in essential nutrients. Recommended by vets.',
-        '5-My dog\'s energy levels improved significantly.'
+        '4-My dog\'s energy levels improved significantly.',
+        '3-Okay, but not for all dogs.'
       ],
       'Chicken Wings': [
-        '5-Perfect bone-in raw option. Dogs love it!',
-        '4-Natural calcium source. Great for bones.',
-        '5-My German Shepherd goes wild for this.',
+        '5-Perfect bone-in option. Dogs love it!',
+        '5-Natural calcium source. Great for bones.',
+        '4-My German Shepherd goes wild for this.',
         '4-Meaty goodness. Keeps teeth clean.',
-        '5-Best quality I\'ve found. Highly satisfied.'
+        '3-Good quality, decent treat.'
       ],
       'Chicken Liver': [
         '5-Super nutritious organ meat. Dogs adore it.',
-        '4-Great for picky eaters. Always finishes it.',
-        '5-High in vitamins and minerals. Vet approved.',
-        '5-Smell indicates freshness. Really premium quality.',
-        '4-Small portion goes a long way. Very filling.'
+        '5-Great for picky eaters. Always finishes it.',
+        '4-High in vitamins and minerals. Vet approved.',
+        '4-Smell indicates freshness. Really premium quality.',
+        '3-Nutritious but strong smell.'
       ],
       'Goat Trachea': [
         '5-Great for dogs with allergies. Natural alternative.',
-        '4-Crunchy texture. Excellent for dental care.',
-        '5-My sensitive dog tolerates this perfectly.',
-        '5-Premium protein source. No digestive issues.',
-        '4-Different from usual treats. Dogs love variety.'
+        '5-Crunchy texture. Excellent for dental care.',
+        '4-My sensitive dog tolerates this perfectly.',
+        '4-Premium protein source. No digestive issues.',
+        '3-Good for some dogs.'
       ],
       'Goat Ear': [
         '5-Long-lasting natural chew. Great quality.',
-        '4-No artificial anything. Pure meat.',
-        '5-Perfect for aggressive chewers. Very durable.',
-        '4-My golden loves chewing on this for hours.',
-        '5-Supports dental health naturally.'
+        '5-No artificial anything. Pure meat.',
+        '4-Perfect for aggressive chewers. Very durable.',
+        '4-My golden loves chewing for hours.',
+        '3-Decent chew, not bad.'
       ],
       'Goat Liver': [
         '5-Premium organ meat. Rich in nutrients.',
-        '4-Great immune booster. My dog\'s health improved.',
-        '5-Single ingredient perfection. No additives.',
-        '5-My vet recommends this for deficiencies.',
-        '4-Dogs absolutely love the taste.'
+        '5-Great immune booster. My dog\'s health improved.',
+        '4-Single ingredient perfection. No additives.',
+        '4-My vet recommends this for deficiencies.',
+        '3-Good organ meat.'
       ],
       'Anchovies': [
         '5-Omega-3 powerhouse! Coat is shiny and healthy.',
-        '4-Fish treats for variety. Dogs enjoy it.',
         '5-Whole fish, completely natural.',
         '4-Great for brain and heart health.',
-        '5-My vet recommends fish treats weekly.'
+        '4-My vet recommends fish treats weekly.',
+        '3-Okay fish treat.'
       ],
       'Bombay Duck': [
         '5-Unique fish treat. My dog loves trying new things.',
-        '4-Great source of protein and omega oils.',
-        '5-Fresh and naturally dried. No preservatives.',
+        '5-Great source of protein and omega oils.',
+        '4-Fresh and naturally dried. No preservatives.',
         '4-Different flavor profile. Dogs get excited.',
-        '5-High-quality seafood treat. Highly nutritious.'
+        '3-Decent fish treat.'
       ],
       'Mackerel': [
         '5-Rich in omega-3. My dog\'s skin improved.',
-        '4-Natural fish oil benefits. Coat looks amazing.',
-        '5-Whole fish dried naturally. Very fresh.',
+        '5-Natural fish oil benefits. Coat looks amazing.',
+        '4-Whole fish dried naturally. Very fresh.',
         '4-Great for joints and inflammation.',
-        '5-Vet recommended. Using regularly now.'
+        '3-Good fish treat.'
       ],
       'Sardines': [
         '5-Packed with nutrients. Dogs go wild for it!',
-        '4-Whole sardines. Nothing removed or added.',
-        '5-Great for senior dogs. Easy to chew.',
+        '5-Whole sardines. Nothing removed or added.',
+        '4-Great for senior dogs. Easy to chew.',
         '4-Natural omega-3 supplement. Very healthy.',
-        '5-My picky eater cleans the bowl!'
+        '3-Okay sardine treat.'
       ],
       'Fish Bites': [
         '5-Perfect portion size. Great for training.',
-        '4-Fresh fish. Smells and tastes authentic.',
-        '5-My multiple dogs all get equal portions.',
+        '5-Fresh fish. Smells and tastes authentic.',
+        '4-My multiple dogs all get portions.',
         '4-Lightweight, easy to carry around.',
-        '5-Excellent quality for the price.'
+        '3-Decent fish bites.'
       ],
       'Chicken Neck & Feet Mix': [
-        '5-Perfect variety pack. Dogs get different textures.',
-        '4-Joints and bones in one. Complete nutrition.',
-        '5-Best of both worlds. Great value.',
-        '4-My dog doesn\'t get bored. Tries new things.',
-        '5-Mix provides balanced nutrition naturally.'
+        '5-Perfect variety pack. Different textures!',
+        '5-Joints and bones in one. Complete nutrition.',
+        '4-Best of both worlds. Great value.',
+        '4-My dog doesn\'t get bored.',
+        '3-Good variety pack.'
       ],
       'Chicken Bones': [
         '5-Raw bones. Natural calcium and minerals.',
-        '4-Meaty bones. Very satisfying for dogs.',
-        '5-Supports bone and joint health.',
+        '5-Meaty bones. Very satisfying for dogs.',
+        '4-Supports bone and joint health.',
         '4-Natural chew toy. Keeps teeth clean.',
-        '5-My vet recommends raw bones weekly.'
+        '3-Decent bones.'
       ],
       'Goat Lungs': [
         '5-Lightweight treat. Great for training.',
-        '4-Pure organ meat. Very nutritious.',
-        '5-Dogs love the crispy texture.',
+        '5-Pure organ meat. Very nutritious.',
+        '4-Dogs love the crispy texture.',
         '4-Low fat, high protein.',
-        '5-My pup\'s energy improved significantly.'
+        '3-Okay lung treat.'
       ],
       'Goat Heart & Kidney Mix': [
         '5-Organ meat blend. Nutritionally complete.',
-        '4-Supports overall health. My dog thrives.',
-        '5-Natural vitamins and minerals.',
+        '5-Supports overall health. My dog thrives.',
+        '4-Natural vitamins and minerals.',
         '4-Different organs provide variety.',
-        '5-Vet approved organ meat treat.'
+        '3-Good organ blend.'
       ],
       'Goat Spleen': [
         '5-Unique organ meat. Very nutritious.',
-        '4-Supports immune system. My dog rarely gets sick.',
-        '5-Rich in iron and minerals.',
+        '5-Supports immune system. Dog rarely gets sick.',
+        '4-Rich in iron and minerals.',
         '4-Different texture. Dogs enjoy variety.',
-        '5-High-quality organ meat. Recommended.'
+        '3-Okay spleen treat.'
       ],
       'Tuna Head': [
         '5-Whole fish head. Maximum nutrition.',
-        '4-Great omega-3 content. Coat is glossy.',
-        '5-Crunchy parts. Good for teeth.',
+        '5-Great omega-3 content. Coat is glossy.',
+        '4-Crunchy parts. Good for teeth.',
         '4-My dog\'s brain function improved.',
-        '5-Premium seafood treat. Very fresh.'
+        '3-Decent tuna treat.'
       ]
     };
+
     
     const fakeComments = productReviews[productName] || [
       '5-Excellent quality! My dog absolutely loves it.',
@@ -6806,8 +6907,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // ═══════════════════ SUPABASE PRODUCT SYNC v2 ═══════════════════════
 // Fetches live product data from Supabase and updates images/prices/status
-var SUPABASE_URL = 'https://syuostlqzzinigqwjzap.supabase.co';
-var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5dW9zdGxxenppbmlncXdqemFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NTA3MzIsImV4cCI6MjA4OTQyNjczMn0.BKf4EF2QhNcW_u1SVVbtiGdlnzdthiptlVcNk3gP2KU';
 
 function syncProductsFromSupabase() {
   fetch(SUPABASE_URL + '/rest/v1/products?select=name,image_url,images,price,description,category,filter,is_active,is_bestseller,tags&is_active=eq.true&order=name', {
