@@ -197,9 +197,9 @@ section{padding:90px 6%}
 .art-grid-item strong{display:block;color:var(--dark);font-size:14px;margin-bottom:6px}
 .art-modal-footer{background:var(--cream);padding:24px 40px;border-top:1px solid var(--cream-mid);display:flex;align-items:center;justify-content:space-between}
 /* PRODUCT MODAL */
-.pmodal-overlay{position:fixed;inset:0;background:rgba(10,6,2,.7);z-index:2000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(4px)}
+.pmodal-overlay{position:fixed;inset:0;background:var(--white);z-index:2000;display:flex;align-items:center;justify-content:center;padding:0;opacity:1;pointer-events:auto;transition:opacity .3s;backdrop-filter:none}
 .pmodal-overlay.open{opacity:1;pointer-events:all}
-.pmodal{background:var(--white);max-width:900px;width:100%;max-height:90vh;overflow-y:auto;display:grid;grid-template-columns:1fr 1fr;position:relative}
+.pmodal{background:var(--white);width:100%;height:100vh;overflow-y:auto;display:grid;grid-template-columns:1fr 1fr;position:relative}
 .pmodal-img{background:var(--cream);aspect-ratio:1;display:flex;align-items:center;justify-content:center;overflow:hidden}
 .pmodal-img img{width:100%;height:100%;object-fit:cover}
 .pmodal-img-placeholder{font-size:80px;opacity:.35}
@@ -1785,14 +1785,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
     </div>
   </div>
 </div>
-<style>@media(max-width:580px){#spinWheelBox{grid-template-columns:1fr!important}}
-/* Image carousel styles */
-.product-img-carousel { position: relative; }
-.carousel-nav { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 10; }
-.carousel-nav button { background: rgba(0,0,0,0.6); color: white; border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 16px; transition: all .2s; }
-.carousel-nav button:hover { background: rgba(0,0,0,0.9); }
-.carousel-counter { background: rgba(0,0,0,0.6); color: white; padding: 8px 12px; border-radius: 4px; font-size: 12px; }
-</style>
+<style>@media(max-width:580px){#spinWheelBox{grid-template-columns:1fr!important}}</style>
 <!-- ── TREAT FINDER QUIZ ───────────────────────────────────────────────── -->
 <div id="quizOverlay" onclick="if(event.target===this)closeQuiz()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1500;align-items:center;justify-content:center;padding:16px">
   <div style="background:var(--white);max-width:480px;width:100%;padding:36px 32px;position:relative;border-top:4px solid var(--gold);max-height:92vh;overflow-y:auto">
@@ -4235,10 +4228,6 @@ function openPModal(idx) {
   if(document.getElementById('reviewSuccess')) document.getElementById('reviewSuccess').style.display='none';
   if(document.getElementById('reviewFormError')) document.getElementById('reviewFormError').style.display='none';
   loadProductReviews(p.name);
-  
-  // Load images from database and setup carousel
-  if (window.loadProductsFromDatabase) window.loadProductsFromDatabase();
-  if (p.images && p.images.length > 1) window.setupImageCarousel(p.images);
   if(typeof trackRecentlyViewed==="function")trackRecentlyViewed(idx);
   renderFBT(idx);
   renderProductSourcing(p.filter || 'jerky');
@@ -4653,7 +4642,7 @@ function renderProducts(items, containerId) {
         <img src="${p.img}" alt="${p.name}" loading="lazy">
         <span class="prod-badge ${p.badgeCls}">${p.badge}</span>
         <button class="prod-fav" onclick="event.stopPropagation();toggleWishlist(this,${globalIdx})">${isWishlisted(globalIdx)?'♥':'♡'}</button>
-        <button class="prod-upload-btn" onclick="event.stopPropagation();openImageUpload('${p.name}',event)" title="Add product photo" style="position:absolute;bottom:8px;left:8px;background:rgba(26,16,8,.7);color:var(--gold-pale);border:1px solid rgba(200,151,58,.5);padding:5px 9px;font-size:9px;font-weight:700;letter-spacing:.08em;font-family:'Jost',sans-serif;text-transform:uppercase;cursor:pointer;opacity:0;transition:opacity .2s;border-radius:2px">&#128247;</button>
+        
       </div>
       <div class="prod-body">
         <div class="prod-cat">${p.cat}</div>
@@ -5077,7 +5066,6 @@ function submitReview() {
   document.getElementById('reviewSuccess').style.display = 'block';
   setTimeout(function(){ document.getElementById('reviewSuccess').style.display='none'; }, 3000);
   loadProductReviews(currentReviewProductName);
-  if (window.loadProductsFromDatabase) window.loadProductsFromDatabase();
   renderProducts(products.slice(0,4), 'homeProd');
   renderProducts(products, 'shopProd');
 }
