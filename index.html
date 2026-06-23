@@ -529,7 +529,9 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
           p.name.toLowerCase() === dbProd.name.toLowerCase()
         );
         if (idx >= 0 && dbProd.image_url) {
+          // Use the FULL image URL from database (already includes full path)
           window.products[idx].img = dbProd.image_url;
+          window.products[idx].fromDatabase = true;
           updated++;
           console.log(`✓ ${dbProd.name} using admin image`);
         }
@@ -5142,7 +5144,13 @@ function renderProducts(items, containerId) {
     if (p.isBundle) return renderBundleCard(p, globalIdx);
     const firstSize = p.sizes[0];
     const sizeOpts = p.sizes.map((s,i) => `<option value="${i}" ${i===0?'selected':''}>${s.label} — ₹${s.price}</option>`).join('');
-    const imgUrl = SUPABASE_IMG_URL + p.img;
+    
+    // Handle both full URLs (from database) and partial URLs (from storage)
+    let imgUrl = p.img;
+    if (!p.img.startsWith('http')) {
+      imgUrl = SUPABASE_IMG_URL + p.img;
+    }
+    
     return `
     <div class="prod-card" onclick="openProductPage(${globalIdx})">
       <div class="prod-img-wrap">
@@ -5243,7 +5251,16 @@ function updateProductImage(idx, p) {
   const placeholderEl = document.getElementById('product-detail-img-placeholder');
   if (imgEl && placeholderEl) {
     imgEl.style.display = 'none';
-    imgEl.src = SUPABASE_IMG_URL + p.img;
+    
+    // Check if URL is already full (from database) or needs prefix (from storage)
+    let imgUrl = p.img;
+    if (!p.img.startsWith('http')) {
+      imgUrl = SUPABASE_IMG_URL + p.img;
+    }
+    
+    imgEl.src = imgUrl;
+    console.log('Loading image:', imgUrl);
+    
     imgEl.onload = function() {
       imgEl.style.display = 'block';
       placeholderEl.style.display = 'none';
@@ -5252,6 +5269,7 @@ function updateProductImage(idx, p) {
       imgEl.style.display = 'none';
       placeholderEl.innerHTML = '<div style="font-size:60px;margin-bottom:10px">📦</div><div style="font-size:13px;color:var(--muted)">Image not available</div>';
       placeholderEl.style.display = 'block';
+      console.log('Image failed to load:', imgUrl);
     };
   }
   
@@ -5351,10 +5369,17 @@ function renderRelatedProducts(currentIdx) {
     const rating = getProductRating(prod.name);
     const stars = rating ? '★'.repeat(Math.round(rating.avg)) + '☆'.repeat(5 - Math.round(rating.avg)) : '★★★★★';
     const ratingText = rating ? rating.avg.toFixed(1) + ' (' + rating.count + ')' : 'New';
+    
+    // Handle both full URLs (from database) and partial URLs (from storage)
+    let imgUrl = prod.img;
+    if (!prod.img.startsWith('http')) {
+      imgUrl = 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/' + prod.img;
+    }
+    
     return `
       <div onclick="openProductPage(${prodIdx})" style="cursor:pointer;transition:all .2s">
         <div style="aspect-ratio:1;background:var(--white);border:1px solid var(--cream-mid);margin-bottom:12px;display:flex;align-items:center;justify-content:center;overflow:hidden">
-          <img src="https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/${prod.img}" alt="${prod.name}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'">
+          <img src="${imgUrl}" alt="${prod.name}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'">
         </div>
         <h3 style="font-size:13px;font-weight:600;color:var(--dark);margin-bottom:4px;line-height:1.3">${prod.name}</h3>
         <div style="font-size:11px;color:var(--gold);margin-bottom:8px">${stars}</div>
