@@ -537,16 +537,16 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
           // Use the FULL image URL from database (already includes full path)
           window.products[idx].img = dbProd.image_url;
           // Store all images array for carousel
-          if (dbProd.images && Array.isArray(dbProd.images)) {
+          if (dbProd.images && Array.isArray(dbProd.images) && dbProd.images.length > 0) {
             window.products[idx].images = dbProd.images;
+            console.log(`✓ ${dbProd.name} → ${dbProd.images.length} images for carousel:`, dbProd.images);
           }
           window.products[idx].fromDatabase = true;
           updated++;
-          console.log(`✓ ${dbProd.name} using admin image${dbProd.images ? ' + carousel' : ''}`);
         }
       });
       
-      console.log(`✓ Updated ${updated} product images from database`);
+      console.log(`✓ Updated ${updated} products from database`);
       
       // Re-render if products were already displayed
       if (document.getElementById('homeProd')?.innerHTML) {
@@ -4498,12 +4498,17 @@ var currentCarouselIdx = 0;
 var currentCarouselImages = [];
 
 function initCarousel(images) {
-  currentCarouselImages = images || [];
+  currentCarouselImages = images && Array.isArray(images) ? images.filter(img => img) : [];
   currentCarouselIdx = 0;
+  
+  console.log(`🎠 Carousel initialized with ${currentCarouselImages.length} images:`, currentCarouselImages);
+  
   if (currentCarouselImages.length > 1) {
     document.getElementById('pmodal-carousel-controls').style.display = 'flex';
+    console.log('🎠 Carousel controls shown');
   } else {
     document.getElementById('pmodal-carousel-controls').style.display = 'none';
+    console.log('🎠 Carousel controls hidden (single image)');
   }
   updateCarouselDisplay();
 }
@@ -4521,7 +4526,10 @@ function carouselNext() {
 }
 
 function updateCarouselDisplay() {
-  if (currentCarouselImages.length === 0) return;
+  if (currentCarouselImages.length === 0) {
+    console.log('⚠️ No carousel images available');
+    return;
+  }
   var imgEl = document.getElementById('pmodal-img');
   var img = currentCarouselImages[currentCarouselIdx];
   if (img) {
@@ -4530,7 +4538,7 @@ function updateCarouselDisplay() {
     document.getElementById('pmodal-placeholder').style.display = 'none';
     document.getElementById('pmodal-img-current').textContent = currentCarouselIdx + 1;
     document.getElementById('pmodal-img-total').textContent = currentCarouselImages.length;
-    console.log(`📷 Carousel: ${currentCarouselIdx + 1}/${currentCarouselImages.length}`);
+    console.log(`📷 Carousel: ${currentCarouselIdx + 1}/${currentCarouselImages.length} — ${img}`);
   }
 }
 
@@ -4543,8 +4551,14 @@ function openPModal(idx) {
   var allImages = [];
   if (p.img) allImages.push(p.img);
   if (p.images && Array.isArray(p.images)) {
-    allImages = allImages.concat(p.images.filter(img => img && img !== p.img));
+    p.images.forEach(img => {
+      if (img && img !== p.img && !allImages.includes(img)) {
+        allImages.push(img);
+      }
+    });
   }
+  
+  console.log(`🖼️ Opening modal for "${p.name}" with ${allImages.length} total images:`, allImages);
   initCarousel(allImages);
   
   document.getElementById('pmodal-img').alt = p.name;
