@@ -210,8 +210,13 @@ section{padding:90px 6%}
 .pmodal-overlay.open{opacity:1;pointer-events:all}
 .pmodal{background:var(--white);max-width:900px;width:100%;max-height:90vh;overflow-y:auto;display:grid;grid-template-columns:1fr 1fr;position:relative}
 .pmodal-img{background:var(--cream);aspect-ratio:1;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.pmodal-img img{width:100%;height:100%;object-fit:cover}
+.pmodal-img img{width:100%;height:100%;object-fit:cover;display:block!important}
 .pmodal-img-placeholder{font-size:80px;opacity:.35}
+/* Carousel controls */
+.pmodal-carousel-controls{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:8px;align-items:center;z-index:10}
+.pmodal-carousel-btn{background:rgba(26,16,8,.7);border:1px solid rgba(200,151,58,.5);color:var(--gold-pale);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:all .2s;font-family:'Jost',sans-serif;font-weight:700}
+.pmodal-carousel-btn:hover{background:rgba(26,16,8,.85);border-color:var(--gold);color:var(--gold)}
+.pmodal-carousel-counter{background:rgba(26,16,8,.7);border:1px solid rgba(200,151,58,.5);color:var(--gold-pale);padding:4px 10px;border-radius:12px;font-size:11px;font-weight:700;font-family:'Jost',sans-serif}
 .pmodal-body{padding:36px 32px;overflow-y:auto}
 .pmodal-close{position:absolute;top:12px;right:12px;background:var(--dark);color:var(--white);border:none;width:32px;height:32px;border-radius:50%;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:1}
 .pmodal-cat{font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
@@ -514,7 +519,7 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
       
       const { data: dbProducts, error } = await supabase
         .from('products')
-        .select('name, image_url')
+        .select('name, image_url, images')
         .eq('is_active', true);
       
       if (error || !dbProducts) {
@@ -531,9 +536,13 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
         if (idx >= 0 && dbProd.image_url) {
           // Use the FULL image URL from database (already includes full path)
           window.products[idx].img = dbProd.image_url;
+          // Store all images array for carousel
+          if (dbProd.images && Array.isArray(dbProd.images)) {
+            window.products[idx].images = dbProd.images;
+          }
           window.products[idx].fromDatabase = true;
           updated++;
-          console.log(`✓ ${dbProd.name} using admin image`);
+          console.log(`✓ ${dbProd.name} using admin image${dbProd.images ? ' + carousel' : ''}`);
         }
       });
       
@@ -1612,7 +1621,12 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
     <button class="pmodal-close" onclick="closePModal()">&#10005;</button>
     <div class="pmodal-img" style="position:relative">
       <img id="pmodal-img" src="" alt="" onerror="this.style.display='none';document.getElementById('pmodal-placeholder').style.display='flex'">
-      <button id="pmodal-upload-btn" onclick="openImageUpload(currentModalProduct&&currentModalProduct.name,event)" style="position:absolute;bottom:10px;right:10px;background:rgba(26,16,8,.75);color:var(--gold-pale);border:1px solid var(--gold);padding:7px 12px;font-family:'Jost',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(4px);display:flex;align-items:center;gap:5px">&#128247; Add Photo</button>
+      <div class="pmodal-carousel-controls" id="pmodal-carousel-controls" style="display:none">
+        <button class="pmodal-carousel-btn" onclick="carouselPrev()" title="Previous image">&#10094;</button>
+        <span class="pmodal-carousel-counter"><span id="pmodal-img-current">1</span>/<span id="pmodal-img-total">1</span></span>
+        <button class="pmodal-carousel-btn" onclick="carouselNext()" title="Next image">&#10095;</button>
+      </div>
+      <button id="pmodal-upload-btn" onclick="openImageUpload(currentModalProduct&&currentModalProduct.name,event)" style="position:absolute;bottom:10px;right:10px;background:rgba(26,16,8,.75);color:var(--gold-pale);border:1px solid var(--gold);padding:7px 12px;font-family:'Jost',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(4px);display:flex;align-items:center;gap:5px;display:none!important">&#128247; Add Photo</button>
       <div class="pmodal-img-placeholder" id="pmodal-placeholder" style="display:none">&#127831;</div>
     </div>
     <!-- Bundle image header — shown instead of product img for bundle products -->
@@ -4479,11 +4493,60 @@ function addUpsellToCart() {
   showCartToast(p.name + ' added! 🐾', 'success');
 }
 
+// ── PRODUCT CAROUSEL ──────────────────────────────────────────────────
+var currentCarouselIdx = 0;
+var currentCarouselImages = [];
+
+function initCarousel(images) {
+  currentCarouselImages = images || [];
+  currentCarouselIdx = 0;
+  if (currentCarouselImages.length > 1) {
+    document.getElementById('pmodal-carousel-controls').style.display = 'flex';
+  } else {
+    document.getElementById('pmodal-carousel-controls').style.display = 'none';
+  }
+  updateCarouselDisplay();
+}
+
+function carouselPrev() {
+  if (currentCarouselImages.length <= 1) return;
+  currentCarouselIdx = (currentCarouselIdx - 1 + currentCarouselImages.length) % currentCarouselImages.length;
+  updateCarouselDisplay();
+}
+
+function carouselNext() {
+  if (currentCarouselImages.length <= 1) return;
+  currentCarouselIdx = (currentCarouselIdx + 1) % currentCarouselImages.length;
+  updateCarouselDisplay();
+}
+
+function updateCarouselDisplay() {
+  if (currentCarouselImages.length === 0) return;
+  var imgEl = document.getElementById('pmodal-img');
+  var img = currentCarouselImages[currentCarouselIdx];
+  if (img) {
+    imgEl.src = img;
+    imgEl.style.display = 'block';
+    document.getElementById('pmodal-placeholder').style.display = 'none';
+    document.getElementById('pmodal-img-current').textContent = currentCarouselIdx + 1;
+    document.getElementById('pmodal-img-total').textContent = currentCarouselImages.length;
+    console.log(`📷 Carousel: ${currentCarouselIdx + 1}/${currentCarouselImages.length}`);
+  }
+}
+
 function openPModal(idx) {
   const p = products[idx];
   currentModalProduct = p;
   currentModalPrice = p.sizes[0].price;
-  document.getElementById('pmodal-img').src = p.img;
+  
+  // Initialize carousel with all images (primary + array)
+  var allImages = [];
+  if (p.img) allImages.push(p.img);
+  if (p.images && Array.isArray(p.images)) {
+    allImages = allImages.concat(p.images.filter(img => img && img !== p.img));
+  }
+  initCarousel(allImages);
+  
   document.getElementById('pmodal-img').alt = p.name;
   // Image area: for bundles show upload section; for products show product image
   var imgWrap = document.querySelector('.pmodal-img');
