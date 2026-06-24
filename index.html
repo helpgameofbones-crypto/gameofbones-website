@@ -4316,6 +4316,8 @@ function closePModal() {
   if (rel) rel.style.display = 'none';
   const blogs = document.getElementById('blogs-sec');
   if (blogs) blogs.style.display = 'none';
+  document.querySelector('nav').style.display = '';
+  document.querySelectorAll('.page').forEach(p => p.style.display = '');
 }
 
 // ── FREQUENTLY BOUGHT TOGETHER ────────────────────────────────────────
