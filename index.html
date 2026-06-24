@@ -539,30 +539,26 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
       
       // Update hardcoded products with database images
       let updated = 0;
-      dbProducts.forEach(dbProd => {
-        const idx = window.products?.findIndex(p => 
-          p.name.toLowerCase() === dbProd.name.toLowerCase()
-        );
-        if (idx >= 0 && dbProd.image_url) {
-          // Use the FULL image URL from database (already includes full path)
-          window.products[idx].img = dbProd.image_url;
-          // Store all images array for carousel
-          if (dbProd.images && Array.isArray(dbProd.images) && dbProd.images.length > 0) {
-            window.products[idx].images = dbProd.images;
-            console.log(`✓ ${dbProd.name} → ${dbProd.images.length} images for carousel:`, dbProd.images);
+      if (typeof products !== 'undefined' && Array.isArray(products)) {
+        dbProducts.forEach(dbProd => {
+          const idx = products.findIndex(p => 
+            p.name.toLowerCase() === dbProd.name.toLowerCase()
+          );
+          if (idx >= 0 && dbProd.image_url) {
+            // Use the FULL image URL from database (already includes full path)
+            products[idx].img = dbProd.image_url;
+            // Store all images array for carousel
+            if (dbProd.images && Array.isArray(dbProd.images) && dbProd.images.length > 0) {
+              products[idx].images = dbProd.images;
+              console.log(`✓ ${dbProd.name} → ${dbProd.images.length} images for carousel`);
+            }
+            products[idx].fromDatabase = true;
+            updated++;
           }
-          window.products[idx].fromDatabase = true;
-          updated++;
-        }
-      });
+        });
+      }
       
       console.log(`✓ Updated ${updated} products from database`);
-      
-      // Re-render if products were already displayed
-      if (document.getElementById('homeProd')?.innerHTML) {
-        window.renderProducts?.call(window, window.products?.slice(0, 4), 'homeProd');
-        window.renderProducts?.call(window, window.products, 'shopProd');
-      }
       
     } catch (e) {
       console.error('💥 Exception in loadProductsFromDatabase:', e);
