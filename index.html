@@ -4505,67 +4505,93 @@ var currentCarouselIdx = 0;
 var currentCarouselImages = [];
 
 function initCarousel(images) {
+  console.log(`initCarousel called with:`, images);
   currentCarouselImages = images && Array.isArray(images) ? images.filter(img => img) : [];
   currentCarouselIdx = 0;
   
-  console.log(`🎠 Carousel initialized with ${currentCarouselImages.length} images:`, currentCarouselImages);
+  console.log(`✓ currentCarouselImages set to ${currentCarouselImages.length} images`);
+  
+  var ctrlsEl = document.getElementById('pmodal-carousel-controls');
+  if (!ctrlsEl) {
+    console.error('❌ pmodal-carousel-controls element not found!');
+    return;
+  }
   
   if (currentCarouselImages.length > 1) {
-    document.getElementById('pmodal-carousel-controls').style.display = 'flex';
-    console.log('🎠 Carousel controls shown');
+    ctrlsEl.style.display = 'flex';
+    console.log(`✓ Carousel controls set to display:flex (${currentCarouselImages.length} images)`);
   } else {
-    document.getElementById('pmodal-carousel-controls').style.display = 'none';
-    console.log('🎠 Carousel controls hidden (single image)');
+    ctrlsEl.style.display = 'none';
+    console.log(`⏸ Carousel controls hidden (${currentCarouselImages.length} images)`);
   }
   updateCarouselDisplay();
 }
 
 function carouselPrev() {
+  console.log(`carouselPrev: current=${currentCarouselIdx}, total=${currentCarouselImages.length}`);
   if (currentCarouselImages.length <= 1) return;
   currentCarouselIdx = (currentCarouselIdx - 1 + currentCarouselImages.length) % currentCarouselImages.length;
   updateCarouselDisplay();
 }
 
 function carouselNext() {
+  console.log(`carouselNext: current=${currentCarouselIdx}, total=${currentCarouselImages.length}`);
   if (currentCarouselImages.length <= 1) return;
   currentCarouselIdx = (currentCarouselIdx + 1) % currentCarouselImages.length;
   updateCarouselDisplay();
 }
 
 function updateCarouselDisplay() {
+  console.log(`updateCarouselDisplay: idx=${currentCarouselIdx}, total=${currentCarouselImages.length}`);
   if (currentCarouselImages.length === 0) {
     console.log('⚠️ No carousel images available');
     return;
   }
   var imgEl = document.getElementById('pmodal-img');
+  if (!imgEl) {
+    console.error('❌ pmodal-img element not found!');
+    return;
+  }
   var img = currentCarouselImages[currentCarouselIdx];
+  console.log(`Setting image to: ${img}`);
   if (img) {
     imgEl.src = img;
     imgEl.style.display = 'block';
-    document.getElementById('pmodal-placeholder').style.display = 'none';
-    document.getElementById('pmodal-img-current').textContent = currentCarouselIdx + 1;
-    document.getElementById('pmodal-img-total').textContent = currentCarouselImages.length;
-    console.log(`📷 Carousel: ${currentCarouselIdx + 1}/${currentCarouselImages.length} — ${img}`);
+    var placeholder = document.getElementById('pmodal-placeholder');
+    if (placeholder) placeholder.style.display = 'none';
+    var currentEl = document.getElementById('pmodal-img-current');
+    var totalEl = document.getElementById('pmodal-img-total');
+    if (currentEl) currentEl.textContent = currentCarouselIdx + 1;
+    if (totalEl) totalEl.textContent = currentCarouselImages.length;
+    console.log(`✓ Display updated: ${currentCarouselIdx + 1}/${currentCarouselImages.length}`);
   }
 }
 
 function openPModal(idx) {
   const p = products[idx];
+  console.log(`🖼️ openPModal called for idx=${idx}, product="${p.name}"`);
+  console.log(`   Product has: img="${p.img ? 'yes' : 'no'}", images array="${p.images ? 'yes (' + p.images.length + ')' : 'no'}"`);
+  
   currentModalProduct = p;
   currentModalPrice = p.sizes[0].price;
   
   // Initialize carousel with all images (primary + array)
   var allImages = [];
-  if (p.img) allImages.push(p.img);
+  if (p.img) {
+    allImages.push(p.img);
+    console.log(`   Added primary img to carousel`);
+  }
   if (p.images && Array.isArray(p.images)) {
-    p.images.forEach(img => {
+    console.log(`   p.images is array with ${p.images.length} items`);
+    p.images.forEach((img, i) => {
       if (img && img !== p.img && !allImages.includes(img)) {
         allImages.push(img);
+        console.log(`   Added images[${i}] to carousel`);
       }
     });
   }
   
-  console.log(`🖼️ Opening modal for "${p.name}" with ${allImages.length} total images:`, allImages);
+  console.log(`🎠 Carousel: ${allImages.length} total images ready`);
   initCarousel(allImages);
   
   document.getElementById('pmodal-img').alt = p.name;
