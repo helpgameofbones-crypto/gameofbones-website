@@ -522,10 +522,20 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
         .select('name, image_url, images')
         .eq('is_active', true);
       
-      if (error || !dbProducts) {
-        console.log('Database unavailable, using storage images');
+      console.log('🔍 Supabase response:', { dbProducts, error });
+      
+      if (error) {
+        console.error('❌ Supabase error:', error);
         return;
       }
+      
+      if (!dbProducts || !Array.isArray(dbProducts)) {
+        console.log('⚠️ No products or invalid format, using storage images');
+        return;
+      }
+      
+      console.log(`✓ Got ${dbProducts.length} products from database`);
+      console.log('First product structure:', dbProducts[0]);
       
       // Update hardcoded products with database images
       let updated = 0;
@@ -555,7 +565,8 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
       }
       
     } catch (e) {
-      console.log('Database load failed:', e.message);
+      console.error('💥 Exception in loadProductsFromDatabase:', e);
+      console.error('Stack:', e.stack);
     }
   };
 
