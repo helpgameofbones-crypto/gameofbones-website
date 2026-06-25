@@ -572,7 +572,7 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
 
 <nav id="mainNav">
   <div class="nav-inner">
-    <div class="logo" onclick="navigateTo('home')">
+    <div class="logo" onclick="showPage('home')">
       <img src="https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/logo.jpeg" alt="Game of Bones" onerror="this.style.display='none'">
       <span class="logo-text">Game of Bones</span>
     </div>
@@ -582,12 +582,12 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
       <span></span>
     </button>
     <ul class="nav-links" id="mobileNavMenu">
-      <li><a id="nav-home" class="active" onclick="navigateTo('home')">Home</a></li>
-      <li><a id="nav-shop" onclick="navigateTo('shop')">Shop</a></li>
-      <li><a id="nav-about" onclick="navigateTo('about')">Our Story</a></li>
-      <li><a id="nav-blog" onclick="navigateTo('blog')">Learn</a></li>
-      <li><a id="nav-faq" onclick="navigateTo('faq')">FAQ</a></li>
-      <li><a id="nav-contact" onclick="navigateTo('contact')">Contact</a></li>
+      <li><a id="nav-home" class="active" onclick="showPage('home')">Home</a></li>
+      <li><a id="nav-shop" onclick="showPage('shop')">Shop</a></li>
+      <li><a id="nav-about" onclick="showPage('about')">Our Story</a></li>
+      <li><a id="nav-blog" onclick="showPage('blog')">Learn</a></li>
+      <li><a id="nav-faq" onclick="showPage('faq')">FAQ</a></li>
+      <li><a id="nav-contact" onclick="showPage('contact')">Contact</a></li>
     </ul>
     <div class="nav-actions">
       <button id="loginNavBtn" class="nav-icon" onclick="handleLoginClick()" title="Sign In / Account" style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;position:relative">&#128100;</button>
@@ -607,8 +607,8 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
         <h1 class="hero-title">Real Food.<br><em>Real Dogs.</em><br>Real Results.</h1>
         <p class="hero-sub">Single-ingredient dehydrated treats with zero preservatives, zero fillers, zero compromise. Your dog deserves the truth on the label.</p>
         <div class="hero-btns">
-          <a class="btn-gold" onclick="navigateTo('shop')">Shop All Treats &rarr;</a>
-          <a class="btn-outline-light" onclick="navigateTo('about')">Our Story</a>
+          <a class="btn-gold" onclick="showPage('shop')">Shop All Treats &rarr;</a>
+          <a class="btn-outline-light" onclick="showPage('about')">Our Story</a>
         </div>
         <div class="hero-trust">
           <div class="hero-trust-item">No Preservatives</div>
@@ -647,7 +647,7 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
       </div>
       <div class="prod-grid" id="homeProd" style="grid-template-columns:repeat(4,1fr)"></div>
       <div style="text-align:center;margin-top:40px">
-        <a class="btn-outline-dark" onclick="navigateTo('shop')">View All Products &rarr;</a>
+        <a class="btn-outline-dark" onclick="showPage('shop')">View All Products &rarr;</a>
       </div>
     </div>
   </section>
@@ -688,7 +688,7 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
         </div>
       </div>
       <div style="text-align:center;margin-top:40px">
-        <a onclick="navigateTo('process')" style="display:inline-flex;align-items:center;gap:8px;border:1.5px solid var(--gold);color:var(--brown);padding:12px 28px;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;font-family:'Jost',sans-serif;transition:all .25s;text-decoration:none;color:var(--gold-pale)" onmouseover="this.style.background='rgba(200,151,58,.15)'" onmouseout="this.style.background='transparent'">See the Full Process &rarr;</a>
+        <a onclick="showPage('process')" style="display:inline-flex;align-items:center;gap:8px;border:1.5px solid var(--gold);color:var(--brown);padding:12px 28px;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;font-family:'Jost',sans-serif;transition:all .25s;text-decoration:none;color:var(--gold-pale)" onmouseover="this.style.background='rgba(200,151,58,.15)'" onmouseout="this.style.background='transparent'">See the Full Process &rarr;</a>
       </div>
     </div>
   </section>
@@ -749,7 +749,7 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
           <div class="aval"><span class="aval-icon">&#129514;</span><div class="aval-title">Lab Tested</div></div>
           <div class="aval"><span class="aval-icon">&#128155;</span><div class="aval-title">Small Batch</div></div>
         </div>
-        <div style="margin-top:32px"><a class="btn-outline-light" onclick="navigateTo('about')" style="display:inline-flex">Read Our Full Story &rarr;</a></div>
+        <div style="margin-top:32px"><a class="btn-outline-light" onclick="showPage('about')" style="display:inline-flex">Read Our Full Story &rarr;</a></div>
       </div>
       <div class="about-strip-visual">
         <img src="https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/logo.jpeg" alt="Game of Bones" onerror="this.style.display='none'">
@@ -762,7 +762,7 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
     <h2>Ready to Make Your Dog&rsquo;s Day? <em>Order Today.</em></h2>
     <p>First order? Use code <strong style="color:var(--gold-light)">FIRSTBITE</strong> for 15% off. Free shipping above &#8377;599. COD available.</p>
     <div class="cta-btns">
-      <a class="btn-gold" onclick="navigateTo('shop')">Shop All Treats &rarr;</a>
+      <a class="btn-gold" onclick="showPage('shop')">Shop All Treats &rarr;</a>
       <button class="btn-gold-outline" onclick="openWA()">WhatsApp Us &#128172;</button>
     </div>
   </div>
@@ -816,7 +816,7 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
 <div id="page-product" class="page">
   <section style="background:var(--dark);padding:40px 6%">
     <div class="sec-inner" style="max-width:1200px">
-      <button onclick="navigateTo('shop')" style="background:none;border:none;color:var(--gold);font-size:13px;font-weight:600;cursor:pointer;margin-bottom:20px">← Back to Shop</button>
+      <button onclick="showPage('shop')" style="background:none;border:none;color:var(--gold);font-size:13px;font-weight:600;cursor:pointer;margin-bottom:20px">← Back to Shop</button>
     </div>
   </section>
   <section style="background:var(--cream);padding:60px 6%;min-height:auto">
@@ -905,7 +905,7 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
       <h1 style="font-family:'Cormorant Garamond',serif;font-size:clamp(40px,6vw,78px);font-weight:700;color:var(--white);line-height:1.05;letter-spacing:-.02em;margin-bottom:20px">We couldn&rsquo;t find a<br>treat we trusted.<br><em style="color:var(--gold-light)">So we made one.</em></h1>
       <p style="font-size:17px;color:rgba(255,255,255,.6);font-weight:300;line-height:1.75;max-width:520px;margin-bottom:36px">A dog parent in Kalyan. A kitchen dehydrator. One rule that has never changed: if we wouldn&rsquo;t eat it ourselves, our dog doesn&rsquo;t get it either.</p>
       <div style="display:flex;gap:14px;flex-wrap:wrap">
-        <a class="btn-gold" onclick="navigateTo('shop')">Shop Our Treats &rarr;</a>
+        <a class="btn-gold" onclick="showPage('shop')">Shop Our Treats &rarr;</a>
         <button class="btn-outline-light" onclick="openWA()">Ask Us Anything &#128172;</button>
       </div>
     </div>
@@ -1433,7 +1433,7 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
 
         <h3>Order Tracking</h3>
         <p>Once your order is dispatched, you will receive a <strong>tracking number and courier link</strong> via SMS and/or WhatsApp on your registered mobile number. You can use this to track your shipment directly on the courier&rsquo;s website.</p>
-        <p>You can also track your order using our <a onclick="navigateTo('track')" style="color:var(--teal);cursor:pointer;font-weight:600">Track Order tool &rarr;</a></p>
+        <p>You can also track your order using our <a onclick="showPage('track')" style="color:var(--teal);cursor:pointer;font-weight:600">Track Order tool &rarr;</a></p>
         <p>If you have not received a tracking update within <strong>3 business days</strong> of placing your order, please WhatsApp us at +91 90825 03295 with your order number.</p>
 
         <h3>Packaging &amp; Food Safety</h3>
@@ -1948,9 +1948,9 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
           </button>
         </div>
       </div>
-      <div class="f-col"><h4>Shop</h4><ul class="f-links"><li><a onclick="navigateTo('shop')">All Treats</a></li><li><a onclick="showShopCategory('jerky');showPage('shop')">Jerky</a></li><li><a onclick="showShopCategory('chew');showPage('shop')">Chews &amp; Bones</a></li><li><a onclick="showShopCategory('organ');showPage('shop')">Organ Treats</a></li><li><a onclick="showShopCategory('fish');showPage('shop')">Fish Treats</a></li></ul></div>
-      <div class="f-col"><h4>Learn</h4><ul class="f-links"><li><a onclick="navigateTo('blog')">All Articles</a></li><li><a onclick="navigateTo('ingredient')">Ingredient Guide</a></li><li><a onclick="navigateTo('process')">Our Process</a></li></ul></div>
-      <div class="f-col"><h4>Help</h4><ul class="f-links"><li><span onclick="openWA()">WhatsApp Support</span></li><li><a onclick="navigateTo('contact')">Contact Us</a></li><li><a onclick="navigateTo('shipping')">Shipping Policy</a></li><li><a onclick="navigateTo('returns')">Returns Policy</a></li><li><a onclick="navigateTo('track')">Track Your Order</a></li><li><a onclick="navigateTo('rewards')">My Rewards</a></li><li><a onclick="navigateTo('refer')">Refer a Friend</a></li><li><a onclick="navigateTo('reviews')">Reviews</a></li></ul></div>
+      <div class="f-col"><h4>Shop</h4><ul class="f-links"><li><a onclick="showPage('shop')">All Treats</a></li><li><a onclick="showShopCategory('jerky');showPage('shop')">Jerky</a></li><li><a onclick="showShopCategory('chew');showPage('shop')">Chews &amp; Bones</a></li><li><a onclick="showShopCategory('organ');showPage('shop')">Organ Treats</a></li><li><a onclick="showShopCategory('fish');showPage('shop')">Fish Treats</a></li></ul></div>
+      <div class="f-col"><h4>Learn</h4><ul class="f-links"><li><a onclick="showPage('blog')">All Articles</a></li><li><a onclick="showPage('ingredient')">Ingredient Guide</a></li><li><a onclick="showPage('process')">Our Process</a></li></ul></div>
+      <div class="f-col"><h4>Help</h4><ul class="f-links"><li><span onclick="openWA()">WhatsApp Support</span></li><li><a onclick="showPage('contact')">Contact Us</a></li><li><a onclick="showPage('shipping')">Shipping Policy</a></li><li><a onclick="showPage('returns')">Returns Policy</a></li><li><a onclick="showPage('track')">Track Your Order</a></li><li><a onclick="showPage('rewards')">My Rewards</a></li><li><a onclick="showPage('refer')">Refer a Friend</a></li><li><a onclick="showPage('reviews')">Reviews</a></li></ul></div>
     </div>
     <div class="f-bottom">
       <span class="f-copy">&copy; 2025 Game of Bones. Made with &#10084; in Kalyan, Maharashtra.</span>
@@ -2204,7 +2204,7 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
 
       <!-- Breadcrumb -->
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:32px;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">
-        <a onclick="navigateTo('shop')" style="cursor:pointer;color:var(--muted)">Shop</a>
+        <a onclick="showPage('shop')" style="cursor:pointer;color:var(--muted)">Shop</a>
         <span>›</span>
         <a onclick="toggleCart()" style="cursor:pointer;color:var(--muted)">Cart</a>
         <span>›</span>
@@ -2289,7 +2289,7 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
 
           <!-- Place order CTA -->
           <button class="btn-gold" onclick="placeOrder()" style="width:100%;padding:18px;font-size:14px;letter-spacing:.12em;margin-top:8px">Place Order →</button>
-          <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:12px;line-height:1.6">By placing your order you agree to our <a onclick="navigateTo('returns')" style="color:var(--teal);cursor:pointer">return policy</a>. We'll confirm via WhatsApp within 30 minutes.</p>
+          <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:12px;line-height:1.6">By placing your order you agree to our <a onclick="showPage('returns')" style="color:var(--teal);cursor:pointer">return policy</a>. We'll confirm via WhatsApp within 30 minutes.</p>
         </div>
 
         <!-- RIGHT: Order Summary -->
@@ -2484,80 +2484,8 @@ function sendCustomWA() {
     waInput.value = '';
   }
 }
-// ── URL ROUTING SYSTEM ──────────────────────────────────────────────────
-function navigateTo(page, productIdx = null) {
-  // Build URL
-  let url = window.location.pathname;
-  if (page === 'product' && productIdx !== null) {
-    const productName = products[productIdx]?.name || '';
-    const slug = productName.toLowerCase().replace(/[&\s]+/g, '-');
-    url += `?p=${slug}`;
-  } else if (page !== 'home') {
-    url += `?page=${page}`;
-  }
-  
-  // Update browser history (with safety check for preview environments)
-  try {
-    window.history.pushState({ page, productIdx }, '', url);
-  } catch (e) {
-    console.log('History API unavailable (preview mode):', e.message);
-  }
-  
-  // Show the page
-  showPage(page, productIdx);
-}
-
-function initRouting() {
-  // Handle back/forward button
-  window.addEventListener('popstate', function(event) {
-    if (event.state) {
-      showPage(event.state.page, event.state.productIdx);
-    } else {
-      showPage('home');
-    }
-  });
-  
-  // Handle initial page load from URL
-  const params = new URLSearchParams(window.location.search);
-  const pageParam = params.get('page');
-  const productParam = params.get('p');
-  
-  console.log('🔀 initRouting: pageParam=', pageParam, 'productParam=', productParam);
-  
-  if (productParam) {
-    // Find product by slug
-    const slug = productParam.toLowerCase();
-    console.log('🔍 Looking for product slug:', slug);
-    console.log('📊 Available products:', products.length);
-    
-    const idx = products.findIndex(p => {
-      const pslug = p.name.toLowerCase().replace(/[&\s]+/g, '-');
-      console.log('  Checking:', p.name, '→', pslug);
-      return pslug === slug;
-    });
-    
-    console.log('✓ Found product at index:', idx);
-    
-    if (idx >= 0) {
-      console.log('🎯 Loading product:', products[idx].name);
-      showPage('product', idx);
-      return;
-    }
-  }
-  
-  if (pageParam) {
-    console.log('📄 Loading page:', pageParam);
-    showPage(pageParam);
-  } else {
-    console.log('🏠 Loading home');
-    showPage('home');
-  }
-}
-
-// Update showPage to accept productIdx
-const originalShowPage = showPage;
-function showPage(id, productIdx = null) {
-  // Stop carousels when leaving product page
+function showPage(id) {
+  // Stop carousel auto-rotate when leaving product page
   if (id !== 'product' && typeof stopDetailCarouselAutoRotate === 'function') {
     stopDetailCarouselAutoRotate();
   }
@@ -2600,74 +2528,6 @@ function showPage(id, productIdx = null) {
       });
     } else {
       renderProducts(products,'shopProd');
-    }
-  }
-  if (id === 'product' && productIdx !== null) {
-    currentProductIdx = productIdx;
-    currentProductSize = 0;
-    console.log('Loading product page for:', productIdx, products[productIdx].name);
-    
-    // Ensure products are loaded first
-    if (window.loadProductsFromDatabase) {
-      window.loadProductsFromDatabase().then(() => {
-        const p = products[productIdx];
-        console.log('Product loaded:', p.name);
-        
-        // Update image
-        updateProductImage(productIdx, p);
-        
-        // Load all content after a small delay
-        setTimeout(() => {
-          console.log('Loading product content...');
-          
-          // Load reviews
-          if (typeof loadProductReviews === 'function') {
-            loadProductReviews(p.name);
-            console.log('Reviews loaded');
-          }
-          
-          // Load related products
-          if (typeof renderRelatedProducts === 'function') {
-            renderRelatedProducts(productIdx);
-            console.log('Related products loaded');
-          }
-          
-          // Load blogs
-          if (typeof renderBlogs === 'function') {
-            renderBlogs();
-            console.log('Blogs loaded');
-          }
-        }, 200);
-      });
-    } else {
-      const p = products[productIdx];
-      console.log('Product loaded:', p.name);
-      
-      // Update image
-      updateProductImage(productIdx, p);
-      
-      // Load all content after a small delay
-      setTimeout(() => {
-        console.log('Loading product content...');
-        
-        // Load reviews
-        if (typeof loadProductReviews === 'function') {
-          loadProductReviews(p.name);
-          console.log('Reviews loaded');
-        }
-        
-        // Load related products
-        if (typeof renderRelatedProducts === 'function') {
-          renderRelatedProducts(productIdx);
-          console.log('Related products loaded');
-        }
-        
-        // Load blogs
-        if (typeof renderBlogs === 'function') {
-          renderBlogs();
-          console.log('Blogs loaded');
-        }
-      }, 200);
     }
   }
   if (id === 'reviews' && typeof renderReviews === 'function') { setTimeout(renderReviews, 50); }
@@ -5501,7 +5361,7 @@ function renderProducts(items, containerId) {
     }
     
     return `
-    <div class="prod-card" onclick="navigateTo('product', ${globalIdx})">
+    <div class="prod-card" onclick="openProductPage(${globalIdx})">
       <div class="prod-img-wrap">
         <img src="${imgUrl}" alt="${p.name}" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23f0e6d2%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2224%22%3E🐾%3C/text%3E%3C/svg%3E'">
         <span class="prod-badge ${p.badgeCls}">${p.badge}</span>
@@ -5512,7 +5372,7 @@ function renderProducts(items, containerId) {
         <h3 class="prod-name">${p.name}</h3>
         <p class="prod-desc">${p.desc}</p>
         <div class="prod-tags">${p.tags.map(t=>`<span class="p-tag">${t}</span>`).join('')}</div>
-        <div class="prod-card-rating" onclick="event.stopPropagation();navigateTo('product', ${globalIdx})" title="See all reviews">
+        <div class="prod-card-rating" onclick="event.stopPropagation();openProductPage(${globalIdx})" title="See all reviews">
           ${(() => {
             try {
               const r = getProductRating(p.name);
@@ -5536,7 +5396,7 @@ function renderProducts(items, containerId) {
             <button class="add-btn" id="ab-${globalIdx}" onclick="event.stopPropagation();addCart(this,${globalIdx},document.getElementById('sel-${globalIdx}')?+document.getElementById('sel-${globalIdx}').value:0)">+</button>
           </div>
         </div>
-        <button onclick="event.stopPropagation();navigateTo('product', ${globalIdx})" style="width:100%;margin-top:8px;background:none;border:1px solid var(--cream-mid);color:var(--muted);padding:7px;font-family:'Jost',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--brown)'" onmouseout="this.style.borderColor='var(--cream-mid)';this.style.color='var(--muted)'">View Details →</button>
+        <button onclick="event.stopPropagation();openProductPage(${globalIdx})" style="width:100%;margin-top:8px;background:none;border:1px solid var(--cream-mid);color:var(--muted);padding:7px;font-family:'Jost',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--brown)'" onmouseout="this.style.borderColor='var(--cream-mid)';this.style.color='var(--muted)'">View Details →</button>
       </div>
     </div>`;
   }).join('');
@@ -5596,14 +5456,8 @@ function openProductPage(idx) {
 
 function updateProductImage(idx, p) {
   // Update image with proper error handling
-  console.log('🖼️ updateProductImage called for:', p.name, 'index:', idx);
-  
   const imgEl = document.getElementById('product-detail-img');
   const placeholderEl = document.getElementById('product-detail-img-placeholder');
-  
-  console.log('📍 Image element found:', !!imgEl);
-  console.log('📍 Placeholder element found:', !!placeholderEl);
-  
   if (imgEl && placeholderEl) {
     imgEl.style.display = 'none';
     
@@ -5612,8 +5466,6 @@ function updateProductImage(idx, p) {
     if (!p.img.startsWith('http')) {
       imgUrl = SUPABASE_IMG_URL + p.img;
     }
-    
-    console.log('🌐 Image URL:', imgUrl);
     
     // Initialize carousel with all product images
     var allImages = [];
@@ -5631,21 +5483,18 @@ function updateProductImage(idx, p) {
     }
     
     imgEl.src = imgUrl;
-    console.log('✓ Image src set');
+    console.log('Loading image:', imgUrl);
     
     imgEl.onload = function() {
-      console.log('✓ Image loaded successfully');
       imgEl.style.display = 'block';
       placeholderEl.style.display = 'none';
     };
     imgEl.onerror = function() {
-      console.log('❌ Image failed to load:', imgUrl);
       imgEl.style.display = 'none';
       placeholderEl.innerHTML = '<div style="font-size:60px;margin-bottom:10px">📦</div><div style="font-size:13px;color:var(--muted)">Image not available</div>';
       placeholderEl.style.display = 'block';
+      console.log('Image failed to load:', imgUrl);
     };
-  } else {
-    console.log('❌ Image or placeholder element not found!');
   }
   
   // Update wishlist button
@@ -5707,6 +5556,16 @@ function updateProductImage(idx, p) {
   
   const contentEl = document.getElementById('product-detail-content');
   if (contentEl) contentEl.innerHTML = contentHtml;
+  
+  // Load and display reviews
+  loadProductReviews(p.name);
+  
+  // Load related products and blogs
+  renderRelatedProducts(idx);
+  renderBlogs();
+  
+  showPage('product');
+  window.scrollTo(0, 0);
 }
 
 function renderRelatedProducts(currentIdx) {
@@ -5772,7 +5631,7 @@ function updateRelatedProductsDisplay() {
     }
     
     return `
-      <div onclick="navigateTo('product', ${prodIdx})" style="cursor:pointer;transition:all .2s">
+      <div onclick="openProductPage(${prodIdx})" style="cursor:pointer;transition:all .2s">
         <div style="aspect-ratio:1;background:var(--white);border:1px solid var(--cream-mid);margin-bottom:12px;display:flex;align-items:center;justify-content:center;overflow:hidden">
           <img src="${imgUrl}" alt="${prod.name}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'">
         </div>
@@ -7728,21 +7587,6 @@ window.addEventListener('load', function() {
       } catch(e) {
         console.error('❌ Error rendering products:', e);
         console.error('Stack:', e.stack);
-      }
-    }
-    
-    // Load database products first, then initialize routing
-    if (window.loadProductsFromDatabase) {
-      window.loadProductsFromDatabase().then(() => {
-        console.log('✓ Database products loaded');
-        if (typeof initRouting === 'function') {
-          setTimeout(initRouting, 100);
-        }
-      });
-    } else {
-      // If no database loader, initialize routing after a delay
-      if (typeof initRouting === 'function') {
-        setTimeout(initRouting, 100);
       }
     }
   }, 500);
