@@ -2489,6 +2489,9 @@ function showPage(id) {
   if (id !== 'product' && typeof stopDetailCarouselAutoRotate === 'function') {
     stopDetailCarouselAutoRotate();
   }
+  if (id !== 'product' && typeof stopRelatedCarouselAutoRotate === 'function') {
+    stopRelatedCarouselAutoRotate();
+  }
   
   document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
   document.querySelectorAll('.nav-links a[id]').forEach(function(a){ a.classList.remove('active'); });
@@ -5576,8 +5579,8 @@ function renderRelatedProducts(currentIdx) {
     return;
   }
   
-  // Get products from same category, excluding current product
-  const related = products.filter((prod, idx) => prod.cat === p.cat && idx !== currentIdx).slice(0, 4);
+  // Get products from same category, excluding current product (get ALL, not just 4)
+  const related = products.filter((prod, idx) => prod.cat === p.cat && idx !== currentIdx);
   console.log('📦 Found', related.length, 'related products');
   
   if (related.length === 0) {
@@ -5585,7 +5588,37 @@ function renderRelatedProducts(currentIdx) {
     return;
   }
   
-  relatedGrid.innerHTML = related.map((prod, idx) => {
+  // Store all related products for carousel rotation
+  window.currentRelatedProducts = related;
+  window.relatedCarouselIdx = 0;
+  window.relatedCarouselTimer = null;
+  
+  // Display initial set
+  updateRelatedProductsDisplay();
+  
+  // Start auto-rotate if more than 2 products
+  if (related.length > 2) {
+    startRelatedCarouselAutoRotate();
+  }
+  
+  console.log('✓ Related products rendered');
+}
+
+function updateRelatedProductsDisplay() {
+  const relatedGrid = document.getElementById('related-products-grid');
+  if (!relatedGrid || !window.currentRelatedProducts) return;
+  
+  const related = window.currentRelatedProducts;
+  const idx = window.relatedCarouselIdx || 0;
+  
+  // Show 2 products at a time, rotating through
+  const itemsPerPage = 2;
+  const displayProducts = [];
+  for (let i = 0; i < itemsPerPage; i++) {
+    displayProducts.push(related[(idx + i) % related.length]);
+  }
+  
+  relatedGrid.innerHTML = displayProducts.map((prod) => {
     const prodIdx = products.indexOf(prod);
     const rating = getProductRating(prod.name);
     const stars = rating ? '★'.repeat(Math.round(rating.avg)) + '☆'.repeat(5 - Math.round(rating.avg)) : '★★★★★';
@@ -5608,7 +5641,23 @@ function renderRelatedProducts(currentIdx) {
       </div>
     `;
   }).join('');
-  console.log('✓ Related products rendered');
+}
+
+function startRelatedCarouselAutoRotate() {
+  if (window.relatedCarouselTimer) clearInterval(window.relatedCarouselTimer);
+  if (!window.currentRelatedProducts || window.currentRelatedProducts.length <= 2) return;
+  
+  console.log('▶️ Related products auto-rotate started (6 sec)');
+  
+  window.relatedCarouselTimer = setInterval(() => {
+    window.relatedCarouselIdx = (window.relatedCarouselIdx + 1) % window.currentRelatedProducts.length;
+    updateRelatedProductsDisplay();
+  }, 6000);
+}
+
+function stopRelatedCarouselAutoRotate() {
+  if (window.relatedCarouselTimer) clearInterval(window.relatedCarouselTimer);
+  console.log('⏸ Related products auto-rotate stopped');
 }
 
 const blogs = [
@@ -5862,6 +5911,48 @@ function loadProductReviews(productName) {
         '4-Crunchy parts. Good for teeth.',
         '4-My dog\'s brain function improved.',
         '3-Decent tuna treat.'
+      ],
+      'Tuna': [
+        '5-Premium quality tuna. Dogs go crazy for it!',
+        '5-Pure protein. No additives whatsoever.',
+        '4-Great for shiny coat and healthy skin.',
+        '4-My vet recommends this for omega-3.',
+        '3-Good fish treat, decent quality.'
+      ],
+      'Mackerel Fillet': [
+        '5-Fillets only. No bones or waste.',
+        '5-Rich in omega fatty acids. My dog\'s coat improved.',
+        '4-Cleaner than whole fish. Easy to serve.',
+        '4-High quality fillet cuts. Worth the price.',
+        '3-Good fillet, decent portions.'
+      ],
+      'Goat Trotter': [
+        '5-Perfect size for medium dogs. Great chew.',
+        '5-Natural collagen source. Joint support.',
+        '4-Durable and long-lasting. Keeps dog occupied.',
+        '4-My vet approved for joint health.',
+        '3-Okay chew, decent quality.'
+      ],
+      'Prawns': [
+        '5-Whole prawns! Excellent for sensitive dogs.',
+        '5-Great for dogs with chicken allergies.',
+        '4-Unique protein source. Dog loves variety.',
+        '4-Premium quality shellfish. Very fresh.',
+        '3-Good protein, different option.'
+      ],
+      'Fish Head': [
+        '5-Complete whole fish head. Maximum nutrition.',
+        '5-Great for brain and eye health. Omega-3 rich.',
+        '4-Crunchy texture. Dogs love it.',
+        '4-My dog\'s skin improved significantly.',
+        '3-Decent fish treat option.'
+      ],
+      'Whole Quail': [
+        '5-Whole quail! Nutritionally complete.',
+        '5-Great for raw feeders. Single prey item.',
+        '4-My dog thrives on this. Perfect portions.',
+        '4-Natural complete meal for dogs.',
+        '3-Good whole quail option.'
       ]
     };
 
@@ -5882,22 +5973,57 @@ function loadProductReviews(productName) {
       
       // Create fake reviews from rating distribution
       displayReviews = [];
+      const usedNames = new Set();
+      const usedReviews = new Set();
+      
       rating.dist.forEach((count, idx) => {
         const stars = 5 - idx;
         for (let i = 0; i < Math.min(count, 2); i++) { // Show max 2 per rating
           // Pick a random comment for this rating level
           const commentsForRating = fakeComments.filter(c => c.startsWith(stars + '-'));
-          const randomComment = commentsForRating.length > 0 
-            ? commentsForRating[Math.floor(Math.random() * commentsForRating.length)].substring(2)
-            : fakeComments[0].substring(2);
+          let randomComment = '';
+          let attempts = 0;
           
-          displayReviews.push({
-            rating: stars,
-            customer_name: fakeNames[Math.floor(Math.random() * fakeNames.length)],
-            review_text: randomComment,
-            created_at: new Date(Date.now() - Math.random() * 90 * 24 * 60 * 60 * 1000).toISOString(),
-            is_sample: true
-          });
+          // Keep trying to find a unique review
+          while (attempts < 5) {
+            const tempComment = commentsForRating.length > 0 
+              ? commentsForRating[Math.floor(Math.random() * commentsForRating.length)].substring(2)
+              : fakeComments[0].substring(2);
+            
+            if (!usedReviews.has(tempComment)) {
+              randomComment = tempComment;
+              usedReviews.add(tempComment);
+              break;
+            }
+            attempts++;
+          }
+          
+          // If couldn't find unique review, use the first one
+          if (!randomComment && commentsForRating.length > 0) {
+            randomComment = commentsForRating[0].substring(2);
+          }
+          
+          // Get unique name
+          let uniqueName = '';
+          let nameAttempts = 0;
+          while (nameAttempts < 5) {
+            uniqueName = fakeNames[Math.floor(Math.random() * fakeNames.length)];
+            if (!usedNames.has(uniqueName)) {
+              usedNames.add(uniqueName);
+              break;
+            }
+            nameAttempts++;
+          }
+          
+          if (randomComment) {
+            displayReviews.push({
+              rating: stars,
+              customer_name: uniqueName || 'Dog Owner',
+              review_text: randomComment,
+              created_at: new Date(Date.now() - Math.random() * 90 * 24 * 60 * 60 * 1000).toISOString(),
+              is_sample: true
+            });
+          }
         }
       });
     } else if (reviews.length > 0) {
