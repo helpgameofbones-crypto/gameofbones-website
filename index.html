@@ -826,6 +826,11 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
         <div style="aspect-ratio:1;background:var(--white);border:1px solid var(--cream-mid);overflow:hidden;margin-bottom:20px;display:flex;align-items:center;justify-content:center;position:relative">
           <img id="product-detail-img" src="" alt="" style="width:100%;height:100%;object-fit:cover;display:none">
           <div id="product-detail-img-placeholder" style="text-align:center;color:var(--muted)"><div style="font-size:60px;margin-bottom:10px">🐾</div><div style="font-size:13px">Loading image...</div></div>
+          <div id="product-detail-carousel-controls" style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:none;flex;gap:8px;align-items:center;z-index:10">
+            <button class="pmodal-carousel-btn" onclick="detailCarouselPrev()" title="Previous image" style="background:rgba(26,16,8,.7);border:1px solid rgba(200,151,58,.5);color:var(--gold-pale);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:all .2s;font-family:'Jost',sans-serif;font-weight:700">&#10094;</button>
+            <span style="background:rgba(26,16,8,.7);border:1px solid rgba(200,151,58,.5);color:var(--gold-pale);padding:4px 10px;border-radius:12px;font-size:11px;font-weight:700;font-family:'Jost',sans-serif"><span id="product-detail-img-current">1</span>/<span id="product-detail-img-total">1</span></span>
+            <button class="pmodal-carousel-btn" onclick="detailCarouselNext()" title="Next image" style="background:rgba(26,16,8,.7);border:1px solid rgba(200,151,58,.5);color:var(--gold-pale);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:all .2s;font-family:'Jost',sans-serif;font-weight:700">&#10095;</button>
+          </div>
         </div>
         
         <!-- WISHLIST & ADD TO CART -->
@@ -4542,7 +4547,6 @@ function carouselNext() {
 }
 
 function updateCarouselDisplay() {
-  console.log(`updateCarouselDisplay: idx=${currentCarouselIdx}, total=${currentCarouselImages.length}`);
   if (currentCarouselImages.length === 0) {
     console.log('⚠️ No carousel images available');
     return;
@@ -4553,7 +4557,7 @@ function updateCarouselDisplay() {
     return;
   }
   var img = currentCarouselImages[currentCarouselIdx];
-  console.log(`Setting image to: ${img}`);
+  console.log(`updateCarouselDisplay: idx=${currentCarouselIdx}, total=${currentCarouselImages.length}`);
   if (img) {
     imgEl.src = img;
     imgEl.style.display = 'block';
@@ -4564,6 +4568,64 @@ function updateCarouselDisplay() {
     if (currentEl) currentEl.textContent = currentCarouselIdx + 1;
     if (totalEl) totalEl.textContent = currentCarouselImages.length;
     console.log(`✓ Display updated: ${currentCarouselIdx + 1}/${currentCarouselImages.length}`);
+  }
+}
+
+// ── PRODUCT DETAIL CAROUSEL ──────────────────────────────────────────────────
+var detailCarouselIdx = 0;
+var detailCarouselImages = [];
+
+function initDetailCarousel(images) {
+  detailCarouselImages = images && Array.isArray(images) ? images.filter(img => img) : [];
+  detailCarouselIdx = 0;
+  
+  console.log(`🎠 Detail Carousel initialized with ${detailCarouselImages.length} images`);
+  
+  var ctrlsEl = document.getElementById('product-detail-carousel-controls');
+  if (!ctrlsEl) {
+    console.log('ℹ️ Product detail carousel controls not found');
+    return;
+  }
+  
+  if (detailCarouselImages.length > 1) {
+    ctrlsEl.style.display = 'flex';
+    console.log('✓ Detail carousel controls shown');
+  } else {
+    ctrlsEl.style.display = 'none';
+  }
+  updateDetailCarouselDisplay();
+}
+
+function detailCarouselPrev() {
+  if (detailCarouselImages.length <= 1) return;
+  detailCarouselIdx = (detailCarouselIdx - 1 + detailCarouselImages.length) % detailCarouselImages.length;
+  updateDetailCarouselDisplay();
+}
+
+function detailCarouselNext() {
+  if (detailCarouselImages.length <= 1) return;
+  detailCarouselIdx = (detailCarouselIdx + 1) % detailCarouselImages.length;
+  updateDetailCarouselDisplay();
+}
+
+function updateDetailCarouselDisplay() {
+  if (detailCarouselImages.length === 0) return;
+  var imgEl = document.getElementById('product-detail-img');
+  if (!imgEl) return;
+  
+  var img = detailCarouselImages[detailCarouselIdx];
+  if (img) {
+    imgEl.src = img;
+    imgEl.style.display = 'block';
+    var placeholder = document.getElementById('product-detail-img-placeholder');
+    if (placeholder) placeholder.style.display = 'none';
+    
+    var currentEl = document.getElementById('product-detail-img-current');
+    var totalEl = document.getElementById('product-detail-img-total');
+    if (currentEl) currentEl.textContent = detailCarouselIdx + 1;
+    if (totalEl) totalEl.textContent = detailCarouselImages.length;
+    
+    console.log(`🎠 Detail carousel: ${detailCarouselIdx + 1}/${detailCarouselImages.length}`);
   }
 }
 
@@ -5262,7 +5324,7 @@ function renderProducts(items, containerId) {
     }
     
     return `
-    <div class="prod-card" onclick="openPModal(${globalIdx})">
+    <div class="prod-card" onclick="openProductPage(${globalIdx})">
       <div class="prod-img-wrap">
         <img src="${imgUrl}" alt="${p.name}" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23f0e6d2%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2224%22%3E🐾%3C/text%3E%3C/svg%3E'">
         <span class="prod-badge ${p.badgeCls}">${p.badge}</span>
@@ -5273,7 +5335,7 @@ function renderProducts(items, containerId) {
         <h3 class="prod-name">${p.name}</h3>
         <p class="prod-desc">${p.desc}</p>
         <div class="prod-tags">${p.tags.map(t=>`<span class="p-tag">${t}</span>`).join('')}</div>
-        <div class="prod-card-rating" onclick="event.stopPropagation();openPModal(${globalIdx})" title="See all reviews">
+        <div class="prod-card-rating" onclick="event.stopPropagation();openProductPage(${globalIdx})" title="See all reviews">
           ${(() => {
             try {
               const r = getProductRating(p.name);
@@ -5297,7 +5359,7 @@ function renderProducts(items, containerId) {
             <button class="add-btn" id="ab-${globalIdx}" onclick="event.stopPropagation();addCart(this,${globalIdx},document.getElementById('sel-${globalIdx}')?+document.getElementById('sel-${globalIdx}').value:0)">+</button>
           </div>
         </div>
-        <button onclick="event.stopPropagation();openPModal(${globalIdx})" style="width:100%;margin-top:8px;background:none;border:1px solid var(--cream-mid);color:var(--muted);padding:7px;font-family:'Jost',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--brown)'" onmouseout="this.style.borderColor='var(--cream-mid)';this.style.color='var(--muted)'">View Details →</button>
+        <button onclick="event.stopPropagation();openProductPage(${globalIdx})" style="width:100%;margin-top:8px;background:none;border:1px solid var(--cream-mid);color:var(--muted);padding:7px;font-family:'Jost',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--brown)'" onmouseout="this.style.borderColor='var(--cream-mid)';this.style.color='var(--muted)'">View Details →</button>
       </div>
     </div>`;
   }).join('');
@@ -5366,6 +5428,21 @@ function updateProductImage(idx, p) {
     let imgUrl = p.img;
     if (!p.img.startsWith('http')) {
       imgUrl = SUPABASE_IMG_URL + p.img;
+    }
+    
+    // Initialize carousel with all product images
+    var allImages = [];
+    if (p.img) allImages.push(p.img);
+    if (p.images && Array.isArray(p.images)) {
+      p.images.forEach(img => {
+        if (img && img !== p.img && !allImages.includes(img)) {
+          allImages.push(img);
+        }
+      });
+    }
+    if (allImages.length > 1) {
+      console.log(`🎠 Product detail carousel: ${allImages.length} images available`);
+      initDetailCarousel(allImages);
     }
     
     imgEl.src = imgUrl;
