@@ -2496,8 +2496,12 @@ function navigateTo(page, productIdx = null) {
     url += `?page=${page}`;
   }
   
-  // Update browser history
-  window.history.pushState({ page, productIdx }, '', url);
+  // Update browser history (with safety check for preview environments)
+  try {
+    window.history.pushState({ page, productIdx }, '', url);
+  } catch (e) {
+    console.log('History API unavailable (preview mode):', e.message);
+  }
   
   // Show the page
   showPage(page, productIdx);
@@ -2518,19 +2522,34 @@ function initRouting() {
   const pageParam = params.get('page');
   const productParam = params.get('p');
   
+  console.log('🔀 initRouting: pageParam=', pageParam, 'productParam=', productParam);
+  
   if (productParam) {
     // Find product by slug
     const slug = productParam.toLowerCase();
-    const idx = products.findIndex(p => p.name.toLowerCase().replace(/[&\s]+/g, '-') === slug);
+    console.log('🔍 Looking for product slug:', slug);
+    console.log('📊 Available products:', products.length);
+    
+    const idx = products.findIndex(p => {
+      const pslug = p.name.toLowerCase().replace(/[&\s]+/g, '-');
+      console.log('  Checking:', p.name, '→', pslug);
+      return pslug === slug;
+    });
+    
+    console.log('✓ Found product at index:', idx);
+    
     if (idx >= 0) {
+      console.log('🎯 Loading product:', products[idx].name);
       showPage('product', idx);
       return;
     }
   }
   
   if (pageParam) {
+    console.log('📄 Loading page:', pageParam);
     showPage(pageParam);
   } else {
+    console.log('🏠 Loading home');
     showPage('home');
   }
 }
@@ -2586,18 +2605,70 @@ function showPage(id, productIdx = null) {
   if (id === 'product' && productIdx !== null) {
     currentProductIdx = productIdx;
     currentProductSize = 0;
+    console.log('Loading product page for:', productIdx, products[productIdx].name);
+    
+    // Ensure products are loaded first
     if (window.loadProductsFromDatabase) {
       window.loadProductsFromDatabase().then(() => {
         const p = products[productIdx];
+        console.log('Product loaded:', p.name);
+        
+        // Update image
         updateProductImage(productIdx, p);
+        
+        // Load all content after a small delay
+        setTimeout(() => {
+          console.log('Loading product content...');
+          
+          // Load reviews
+          if (typeof loadProductReviews === 'function') {
+            loadProductReviews(p.name);
+            console.log('Reviews loaded');
+          }
+          
+          // Load related products
+          if (typeof renderRelatedProducts === 'function') {
+            renderRelatedProducts(productIdx);
+            console.log('Related products loaded');
+          }
+          
+          // Load blogs
+          if (typeof renderBlogs === 'function') {
+            renderBlogs();
+            console.log('Blogs loaded');
+          }
+        }, 200);
       });
     } else {
       const p = products[productIdx];
+      console.log('Product loaded:', p.name);
+      
+      // Update image
       updateProductImage(productIdx, p);
+      
+      // Load all content after a small delay
+      setTimeout(() => {
+        console.log('Loading product content...');
+        
+        // Load reviews
+        if (typeof loadProductReviews === 'function') {
+          loadProductReviews(p.name);
+          console.log('Reviews loaded');
+        }
+        
+        // Load related products
+        if (typeof renderRelatedProducts === 'function') {
+          renderRelatedProducts(productIdx);
+          console.log('Related products loaded');
+        }
+        
+        // Load blogs
+        if (typeof renderBlogs === 'function') {
+          renderBlogs();
+          console.log('Blogs loaded');
+        }
+      }, 200);
     }
-    if (typeof renderRelatedProducts === 'function') renderRelatedProducts(productIdx);
-    if (typeof loadProductReviews === 'function') loadProductReviews(products[productIdx].name);
-    if (typeof renderBlogs === 'function') renderBlogs();
   }
   if (id === 'reviews' && typeof renderReviews === 'function') { setTimeout(renderReviews, 50); }
 }
@@ -5525,8 +5596,14 @@ function openProductPage(idx) {
 
 function updateProductImage(idx, p) {
   // Update image with proper error handling
+  console.log('🖼️ updateProductImage called for:', p.name, 'index:', idx);
+  
   const imgEl = document.getElementById('product-detail-img');
   const placeholderEl = document.getElementById('product-detail-img-placeholder');
+  
+  console.log('📍 Image element found:', !!imgEl);
+  console.log('📍 Placeholder element found:', !!placeholderEl);
+  
   if (imgEl && placeholderEl) {
     imgEl.style.display = 'none';
     
@@ -5535,6 +5612,8 @@ function updateProductImage(idx, p) {
     if (!p.img.startsWith('http')) {
       imgUrl = SUPABASE_IMG_URL + p.img;
     }
+    
+    console.log('🌐 Image URL:', imgUrl);
     
     // Initialize carousel with all product images
     var allImages = [];
@@ -5552,18 +5631,21 @@ function updateProductImage(idx, p) {
     }
     
     imgEl.src = imgUrl;
-    console.log('Loading image:', imgUrl);
+    console.log('✓ Image src set');
     
     imgEl.onload = function() {
+      console.log('✓ Image loaded successfully');
       imgEl.style.display = 'block';
       placeholderEl.style.display = 'none';
     };
     imgEl.onerror = function() {
+      console.log('❌ Image failed to load:', imgUrl);
       imgEl.style.display = 'none';
       placeholderEl.innerHTML = '<div style="font-size:60px;margin-bottom:10px">📦</div><div style="font-size:13px;color:var(--muted)">Image not available</div>';
       placeholderEl.style.display = 'block';
-      console.log('Image failed to load:', imgUrl);
     };
+  } else {
+    console.log('❌ Image or placeholder element not found!');
   }
   
   // Update wishlist button
@@ -5625,16 +5707,6 @@ function updateProductImage(idx, p) {
   
   const contentEl = document.getElementById('product-detail-content');
   if (contentEl) contentEl.innerHTML = contentHtml;
-  
-  // Load and display reviews
-  loadProductReviews(p.name);
-  
-  // Load related products and blogs
-  renderRelatedProducts(idx);
-  renderBlogs();
-  
-  showPage('product');
-  window.scrollTo(0, 0);
 }
 
 function renderRelatedProducts(currentIdx) {
@@ -7659,9 +7731,19 @@ window.addEventListener('load', function() {
       }
     }
     
-    // Initialize URL routing
-    if (typeof initRouting === 'function') {
-      initRouting();
+    // Load database products first, then initialize routing
+    if (window.loadProductsFromDatabase) {
+      window.loadProductsFromDatabase().then(() => {
+        console.log('✓ Database products loaded');
+        if (typeof initRouting === 'function') {
+          setTimeout(initRouting, 100);
+        }
+      });
+    } else {
+      // If no database loader, initialize routing after a delay
+      if (typeof initRouting === 'function') {
+        setTimeout(initRouting, 100);
+      }
     }
   }, 500);
 });
