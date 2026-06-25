@@ -2485,6 +2485,11 @@ function sendCustomWA() {
   }
 }
 function showPage(id) {
+  // Stop carousel auto-rotate when leaving product page
+  if (id !== 'product' && typeof stopDetailCarouselAutoRotate === 'function') {
+    stopDetailCarouselAutoRotate();
+  }
+  
   document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
   document.querySelectorAll('.nav-links a[id]').forEach(function(a){ a.classList.remove('active'); });
   var pg = document.getElementById('page-' + id);
@@ -4574,6 +4579,8 @@ function updateCarouselDisplay() {
 // ── PRODUCT DETAIL CAROUSEL ──────────────────────────────────────────────────
 var detailCarouselIdx = 0;
 var detailCarouselImages = [];
+var detailCarouselTimer = null;
+var detailCarouselAutoRotate = true;
 
 function initDetailCarousel(images) {
   detailCarouselImages = images && Array.isArray(images) ? images.filter(img => img) : [];
@@ -4590,22 +4597,49 @@ function initDetailCarousel(images) {
   if (detailCarouselImages.length > 1) {
     ctrlsEl.style.display = 'flex';
     console.log('✓ Detail carousel controls shown');
+    // Start auto-rotate when multiple images
+    startDetailCarouselAutoRotate();
   } else {
     ctrlsEl.style.display = 'none';
   }
   updateDetailCarouselDisplay();
 }
 
+function startDetailCarouselAutoRotate() {
+  if (detailCarouselTimer) clearInterval(detailCarouselTimer);
+  if (detailCarouselImages.length <= 1) return;
+  
+  detailCarouselAutoRotate = true;
+  console.log('▶️ Detail carousel auto-rotate started (5 sec)');
+  
+  detailCarouselTimer = setInterval(() => {
+    detailCarouselIdx = (detailCarouselIdx + 1) % detailCarouselImages.length;
+    updateDetailCarouselDisplay();
+  }, 5000);
+}
+
+function stopDetailCarouselAutoRotate() {
+  if (detailCarouselTimer) clearInterval(detailCarouselTimer);
+  detailCarouselAutoRotate = false;
+  console.log('⏸ Detail carousel auto-rotate stopped');
+}
+
 function detailCarouselPrev() {
+  stopDetailCarouselAutoRotate();
   if (detailCarouselImages.length <= 1) return;
   detailCarouselIdx = (detailCarouselIdx - 1 + detailCarouselImages.length) % detailCarouselImages.length;
   updateDetailCarouselDisplay();
+  // Restart auto-rotate after 2 seconds of inactivity
+  setTimeout(startDetailCarouselAutoRotate, 2000);
 }
 
 function detailCarouselNext() {
+  stopDetailCarouselAutoRotate();
   if (detailCarouselImages.length <= 1) return;
   detailCarouselIdx = (detailCarouselIdx + 1) % detailCarouselImages.length;
   updateDetailCarouselDisplay();
+  // Restart auto-rotate after 2 seconds of inactivity
+  setTimeout(startDetailCarouselAutoRotate, 2000);
 }
 
 function updateDetailCarouselDisplay() {
