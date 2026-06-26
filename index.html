@@ -693,7 +693,7 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
       <li><a id="nav-about" onclick="navigateTo('about')">Our Story</a></li>
       <li><a id="nav-blog" onclick="navigateTo('blog')">Learn</a></li>
       <li><a id="nav-faq" onclick="navigateTo('faq')">FAQ</a></li>
-      <li><a id="nav-contact" onclick="navigateTo('contact')">Contact</a></li>
+      <li><a id="nav-rewards" onclick="navigateTo('rewards')">My Rewards</a></li>
     </ul>
     <div class="nav-actions">
       <button id="loginNavBtn" class="nav-icon" onclick="handleLoginClick()" title="Sign In / Account" style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;position:relative">&#128100;</button>
@@ -2619,7 +2619,7 @@ function showPage(id) {
   document.querySelectorAll('.nav-links a[id]').forEach(function(a){ a.classList.remove('active'); });
   var pg = document.getElementById('page-' + id);
   if (pg) pg.classList.add('active');
-  var navMap = {process:'nav-blog',ingredient:'nav-blog',shipping:'nav-shop',returns:'nav-shop',track:'nav-shop',faq:'nav-faq',about:'nav-about',contact:'nav-contact',login:'nav-home',checkout:'nav-shop',blog:'nav-blog'};
+  var navMap = {process:'nav-blog',ingredient:'nav-blog',shipping:'nav-shop',returns:'nav-shop',track:'nav-shop',faq:'nav-faq',about:'nav-about',login:'nav-home',checkout:'nav-shop',blog:'nav-blog'};
   var navId = navMap[id] || ('nav-' + id);
   var n = document.getElementById(navId);
   if (n) n.classList.add('active');
@@ -4034,23 +4034,55 @@ function renderCheckoutSummary() {
 
 function updateCheckoutTotals() {
   const subtotal = cartItems.reduce((s,i) => s+i.price*i.qty, 0);
-  let discount = 0;
+  let couponDiscount = 0;
+  let loyaltyDiscount = 0;
+
+  // Calculate coupon discount
   if (appliedDiscount) {
-    discount = appliedDiscount.type==='percent'
+    couponDiscount = appliedDiscount.type==='percent'
       ? Math.round(subtotal*appliedDiscount.value/100)
       : Math.min(appliedDiscount.value, subtotal);
   }
-  const after = subtotal - discount;
+
+  // Calculate loyalty discount
+  if (_loyaltyApplied && _loyaltyPoints > 0) {
+    var loyaltyRupees = Math.floor(_loyaltyPoints / 100) * 30; // 100 points = Rs.30
+    loyaltyDiscount = Math.min(loyaltyRupees, subtotal - couponDiscount); // Can't discount below 0
+  }
+
+  // Total discount = both stacked
+  const totalDiscount = couponDiscount + loyaltyDiscount;
+  const after = subtotal - totalDiscount;
   const shipping = after >= 599 ? 0 : 50;
   const cod = selectedPayment === 'cod' ? 40 : 0;
   const grand = after + shipping + cod;
+  
   const se = id => document.getElementById(id);
+  
   if(se('co-subtotal')) se('co-subtotal').textContent = '₹'+subtotal.toLocaleString('en-IN');
-  if(se('co-shipping-val')) { se('co-shipping-val').textContent = shipping===0?'FREE':'₹'+shipping; se('co-shipping-val').style.color = shipping===0?'var(--teal)':'var(--dark)'; }
+  if(se('co-shipping-val')) { 
+    se('co-shipping-val').textContent = shipping===0?'FREE':'₹'+shipping; 
+    se('co-shipping-val').style.color = shipping===0?'var(--teal)':'var(--dark)'; 
+  }
   if(se('co-grand-total')) se('co-grand-total').textContent = '₹'+grand.toLocaleString('en-IN');
-  if(se('co-discount-row')) se('co-discount-row').style.display = appliedDiscount ? 'flex' : 'none';
-  if(appliedDiscount && se('co-discount-label')) se('co-discount-label').textContent = appliedDiscount.label;
-  if(appliedDiscount && se('co-discount-val')) se('co-discount-val').textContent = '−₹'+discount.toLocaleString('en-IN');
+  
+  // Show discount row if ANY discount applied
+  const hasDiscount = (appliedDiscount || _loyaltyApplied);
+  if(se('co-discount-row')) se('co-discount-row').style.display = hasDiscount ? 'flex' : 'none';
+  
+  // Build combined discount label
+  if (hasDiscount && se('co-discount-label')) {
+    var labels = [];
+    if (appliedDiscount) labels.push(appliedDiscount.label);
+    if (_loyaltyApplied) labels.push('Loyalty Points (' + _loyaltyPoints + ' pts)');
+    se('co-discount-label').textContent = labels.join(' + ');
+  }
+  
+  // Show total discount
+  if (hasDiscount && se('co-discount-val')) {
+    se('co-discount-val').textContent = '−₹'+totalDiscount.toLocaleString('en-IN');
+  }
+  
   if(se('co-cod-row')) se('co-cod-row').style.display = selectedPayment==='cod' ? 'flex':'none';
 }
 
@@ -7606,7 +7638,7 @@ function checkLoyaltyAtCheckout() {
     if (!Array.isArray(orders) || orders.length === 0) return;
     var totalSpent = orders.reduce(function(s,o){ return s + (o.grand_total||o.total_amount||0); }, 0);
     _loyaltyPoints = Math.floor(totalSpent / 10);
-    var rupees = Math.floor(_loyaltyPoints / 100) * 10;
+    var rupees = Math.floor(_loyaltyPoints / 100) * 30;
     if (rupees > 0 && !_loyaltyApplied) {
       var section = document.getElementById('loyaltyPointsSection');
       var msg = document.getElementById('loyaltyPointsMsg');
@@ -7620,11 +7652,10 @@ function checkLoyaltyAtCheckout() {
 }
 
 function applyLoyaltyPoints() {
-  var rupees = Math.floor(_loyaltyPoints / 100) * 10;
+  var rupees = Math.floor(_loyaltyPoints / 100) * 30; // 100 points = Rs.30
   if (rupees <= 0) return;
 
-  // Apply as a fixed discount
-  appliedDiscount = { type: 'fixed', value: rupees, label: 'Loyalty Points (' + _loyaltyPoints + ' pts)' };
+  // Mark as applied (stacks with any existing coupon)
   _loyaltyApplied = true;
 
   // Update UI
@@ -7634,13 +7665,30 @@ function applyLoyaltyPoints() {
     section.style.background = 'rgba(42,124,111,.08)';
     section.style.borderColor = 'var(--teal)';
     var msg = document.getElementById('loyaltyPointsMsg');
-    if (msg) msg.textContent = 'Rs.' + rupees + ' off applied! Points will be deducted after order.';
-    if (btn) { btn.textContent = 'Applied ✓'; btn.disabled = true; btn.style.opacity = '0.6'; }
+    
+    // Show stacking message
+    if (appliedDiscount) {
+      if (msg) msg.textContent = 'Rs.' + rupees + ' off stacked with ' + appliedDiscount.label + '! Total savings shown below.';
+    } else {
+      if (msg) msg.textContent = 'Rs.' + rupees + ' off applied! Points will be deducted after order.';
+    }
+    
+    if (btn) { 
+      btn.textContent = 'Applied ✓'; 
+      btn.disabled = true; 
+      btn.style.opacity = '0.6'; 
+    }
   }
 
-  // Recalculate totals
-  updateOrderSummary();
-  showCartToast('Rs.' + rupees + ' loyalty discount applied!', 'success');
+  // Recalculate totals (now includes both coupon + loyalty)
+  updateCheckoutTotals();
+  
+  // Toast message
+  if (appliedDiscount) {
+    showCartToast('Rs.' + rupees + ' loyalty discount stacked with coupon!', 'success');
+  } else {
+    showCartToast('Rs.' + rupees + ' loyalty discount applied!', 'success');
+  }
 }
 
 // Hook into phone field - multiple triggers
