@@ -3119,22 +3119,22 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
           <div style="background:linear-gradient(135deg,rgba(200,151,58,.1),rgba(200,151,58,.05));padding:25px;border-radius:8px;border:1px solid rgba(200,151,58,.2)">
             <h3 style="color:var(--gold);font-weight:700;margin-bottom:12px;margin-top:0;font-size:14px">📋 Feeding & Health Log</h3>
             <p style="color:var(--dark);font-size:13px;line-height:1.6;margin-bottom:15px">Track dogs you feed, descriptions, health observations, vaccination dates, behavior changes.</p>
-            <button style="background:var(--gold);color:var(--dark);border:none;padding:10px 16px;font-size:12px;font-weight:600;cursor:pointer;border-radius:4px" onclick="generatePDF('feeding-health-log')">📥 Download Now</button>
+            <button style="background:var(--gold);color:var(--dark);border:none;padding:10px 16px;font-size:12px;font-weight:600;cursor:pointer;border-radius:4px" onclick="window.open('feeding-health-log.html', '_blank')">📥 Download Now</button>
           </div>
           <div style="background:linear-gradient(135deg,rgba(200,151,58,.1),rgba(200,151,58,.05));padding:25px;border-radius:8px;border:1px solid rgba(200,151,58,.2)">
             <h3 style="color:var(--gold);font-weight:700;margin-bottom:12px;margin-top:0;font-size:14px">💉 Vaccination Records</h3>
             <p style="color:var(--dark);font-size:13px;line-height:1.6;margin-bottom:15px">Track rabies, DHPP, deworming, and other vaccinations with dates and vet details.</p>
-            <button style="background:var(--gold);color:var(--dark);border:none;padding:10px 16px;font-size:12px;font-weight:600;cursor:pointer;border-radius:4px" onclick="generatePDF('vaccination-records')">📥 Download Now</button>
+            <button style="background:var(--gold);color:var(--dark);border:none;padding:10px 16px;font-size:12px;font-weight:600;cursor:pointer;border-radius:4px" onclick="window.open('vaccination-records.html', '_blank')">📥 Download Now</button>
           </div>
           <div style="background:linear-gradient(135deg,rgba(200,151,58,.1),rgba(200,151,58,.05));padding:25px;border-radius:8px;border:1px solid rgba(200,151,58,.2)">
             <h3 style="color:var(--gold);font-weight:700;margin-bottom:12px;margin-top:0;font-size:14px">🏥 Sterilization Records</h3>
             <p style="color:var(--dark);font-size:13px;line-height:1.6;margin-bottom:15px">Document sterilization surgery dates, vet details, recovery status, and post-op observations.</p>
-            <button style="background:var(--gold);color:var(--dark);border:none;padding:10px 16px;font-size:12px;font-weight:600;cursor:pointer;border-radius:4px" onclick="generatePDF('sterilization-records')">📥 Download Now</button>
+            <button style="background:var(--gold);color:var(--dark);border:none;padding:10px 16px;font-size:12px;font-weight:600;cursor:pointer;border-radius:4px" onclick="window.open('sterilization-records.html', '_blank')">📥 Download Now</button>
           </div>
           <div style="background:linear-gradient(135deg,rgba(200,151,58,.1),rgba(200,151,58,.05));padding:25px;border-radius:8px;border:1px solid rgba(200,151,58,.2)">
             <h3 style="color:var(--gold);font-weight:700;margin-bottom:12px;margin-top:0;font-size:14px">🚨 Emergency Contact Sheet</h3>
             <p style="color:var(--dark);font-size:13px;line-height:1.6;margin-bottom:15px">Quick reference for vet clinics, ABC cells, police numbers, and animal welfare NGOs in your city.</p>
-            <button style="background:var(--gold);color:var(--dark);border:none;padding:10px 16px;font-size:12px;font-weight:600;cursor:pointer;border-radius:4px" onclick="generatePDF('emergency-contacts')">📥 Download Now</button>
+            <button style="background:var(--gold);color:var(--dark);border:none;padding:10px 16px;font-size:12px;font-weight:600;cursor:pointer;border-radius:4px" onclick="window.open('emergency-contacts.html', '_blank')">📥 Download Now</button>
           </div>
         </div>
       </div>
@@ -9292,193 +9292,6 @@ window.addEventListener('load', function() {
 </footer>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<script>
-function generatePDF(docType) {
-  let htmlContent = '';
-  let filename = '';
-  
-  if (docType === 'feeding-health-log') {
-    filename = 'Feeding-Health-Log.pdf';
-    htmlContent = `
-      <div style="font-family: Arial, sans-serif; padding: 20px;">
-        <h1 style="color: #2A7C6F; text-align: center; margin-bottom: 30px;">🐾 Feeding & Health Log</h1>
-        <p style="text-align: center; margin-bottom: 20px;">Track each dog's feeding schedule, health status, and observations</p>
-        
-        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
-          <thead>
-            <tr style="background-color: #2A7C6F; color: white;">
-              <th style="border: 1px solid #ddd; padding: 8px;">Dog Name/Description</th>
-              <th style="border: 1px solid #ddd; padding: 8px;">Date</th>
-              <th style="border: 1px solid #ddd; padding: 8px;">Location</th>
-              <th style="border: 1px solid #ddd; padding: 8px;">Food Given</th>
-              <th style="border: 1px solid #ddd; padding: 8px;">Portion</th>
-              <th style="border: 1px solid #ddd; padding: 8px;">Health Status</th>
-              <th style="border: 1px solid #ddd; padding: 8px;">Notes</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${[...Array(10)].map(() => `
-              <tr>
-                <td style="border: 1px solid #ddd; padding: 8px; height: 30px;"></td>
-                <td style="border: 1px solid #ddd; padding: 8px; height: 30px;"></td>
-                <td style="border: 1px solid #ddd; padding: 8px; height: 30px;"></td>
-                <td style="border: 1px solid #ddd; padding: 8px; height: 30px;"></td>
-                <td style="border: 1px solid #ddd; padding: 8px; height: 30px;"></td>
-                <td style="border: 1px solid #ddd; padding: 8px; height: 30px;"></td>
-                <td style="border: 1px solid #ddd; padding: 8px; height: 30px;"></td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-        
-        <p style="margin-top: 20px; font-size: 12px;"><strong>Instructions:</strong> Update daily. Track dog descriptions, health changes, vaccination dates. Share with other feeders and vets.</p>
-      </div>
-    `;
-  } else if (docType === 'vaccination-records') {
-    filename = 'Vaccination-Records.pdf';
-    htmlContent = `
-      <div style="font-family: Arial, sans-serif; padding: 20px;">
-        <h1 style="color: #C89732; text-align: center; margin-bottom: 30px;">💉 Vaccination Records</h1>
-        <p style="text-align: center; margin-bottom: 20px;">Track rabies, DHPP, and deworming for each dog in your area</p>
-        
-        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
-          <thead>
-            <tr style="background-color: #C89732; color: black;">
-              <th style="border: 1px solid #ddd; padding: 8px;">Dog Name</th>
-              <th style="border: 1px solid #ddd; padding: 8px;">Date</th>
-              <th style="border: 1px solid #ddd; padding: 8px;">Vaccine Type</th>
-              <th style="border: 1px solid #ddd; padding: 8px;">Vet Name</th>
-              <th style="border: 1px solid #ddd; padding: 8px;">Next Due</th>
-              <th style="border: 1px solid #ddd; padding: 8px;">Batch#</th>
-              <th style="border: 1px solid #ddd; padding: 8px;">Notes</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${[...Array(10)].map(() => `
-              <tr>
-                <td style="border: 1px solid #ddd; padding: 8px; height: 30px;"></td>
-                <td style="border: 1px solid #ddd; padding: 8px; height: 30px;"></td>
-                <td style="border: 1px solid #ddd; padding: 8px; height: 30px;"></td>
-                <td style="border: 1px solid #ddd; padding: 8px; height: 30px;"></td>
-                <td style="border: 1px solid #ddd; padding: 8px; height: 30px;"></td>
-                <td style="border: 1px solid #ddd; padding: 8px; height: 30px;"></td>
-                <td style="border: 1px solid #ddd; padding: 8px; height: 30px;"></td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-        
-        <p style="font-size: 12px;"><strong>Vaccine Types:</strong> Rabies (FREE at ABC) | DHPP (₹200-500) | Deworming (₹50-200)</p>
-      </div>
-    `;
-  } else if (docType === 'sterilization-records') {
-    filename = 'Sterilization-Records.pdf';
-    htmlContent = `
-      <div style="font-family: Arial, sans-serif; padding: 20px;">
-        <h1 style="color: #2A7C6F; text-align: center; margin-bottom: 30px;">🏥 Sterilization Records</h1>
-        <p style="text-align: center; margin-bottom: 20px;">Track ABC surgeries, recovery, and post-operative care for stray dogs</p>
-        
-        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
-          <thead>
-            <tr style="background-color: #2A7C6F; color: white;">
-              <th style="border: 1px solid #ddd; padding: 8px;">Dog Description</th>
-              <th style="border: 1px solid #ddd; padding: 8px;">Surgery Date</th>
-              <th style="border: 1px solid #ddd; padding: 8px;">Vet/Clinic</th>
-              <th style="border: 1px solid #ddd; padding: 8px;">Male/Female</th>
-              <th style="border: 1px solid #ddd; padding: 8px;">Recovery Days</th>
-              <th style="border: 1px solid #ddd; padding: 8px;">Healed</th>
-              <th style="border: 1px solid #ddd; padding: 8px;">Notes</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${[...Array(10)].map(() => `
-              <tr>
-                <td style="border: 1px solid #ddd; padding: 8px; height: 30px;"></td>
-                <td style="border: 1px solid #ddd; padding: 8px; height: 30px;"></td>
-                <td style="border: 1px solid #ddd; padding: 8px; height: 30px;"></td>
-                <td style="border: 1px solid #ddd; padding: 8px; height: 30px;"></td>
-                <td style="border: 1px solid #ddd; padding: 8px; height: 30px;"></td>
-                <td style="border: 1px solid #ddd; padding: 8px; height: 30px;"></td>
-                <td style="border: 1px solid #ddd; padding: 8px; height: 30px;"></td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-        
-        <p style="font-size: 12px;"><strong>Post-Op Care:</strong> Keep wound clean & dry • No bathing for 2 weeks • Limit activity • Check daily for infection</p>
-      </div>
-    `;
-  } else if (docType === 'emergency-contacts') {
-    filename = 'Emergency-Contact-Sheet.pdf';
-    htmlContent = `
-      <div style="font-family: Arial, sans-serif; padding: 20px;">
-        <h1 style="color: #C80000; text-align: center; margin-bottom: 30px;">🚨 Emergency Contact Sheet</h1>
-        <p style="text-align: center; margin-bottom: 20px;">Quick reference for emergencies. Print and laminate. Keep in your pocket.</p>
-        
-        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
-          <thead>
-            <tr style="background-color: #C80000; color: white;">
-              <th style="border: 1px solid #ddd; padding: 10px;">Service</th>
-              <th style="border: 1px solid #ddd; padding: 10px;">Phone</th>
-              <th style="border: 1px solid #ddd; padding: 10px;">Details</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style="border: 1px solid #ddd; padding: 8px;">Police Emergency</td>
-              <td style="border: 1px solid #ddd; padding: 8px;"><strong>100</strong></td>
-              <td style="border: 1px solid #ddd; padding: 8px;">For poisoning, cruelty, accidents</td>
-            </tr>
-            <tr style="background-color: #FFE6E6;">
-              <td style="border: 1px solid #ddd; padding: 8px;">Ambulance/Medical</td>
-              <td style="border: 1px solid #ddd; padding: 8px;"><strong>102</strong></td>
-              <td style="border: 1px solid #ddd; padding: 8px;">For injured dogs needing transport</td>
-            </tr>
-            <tr>
-              <td style="border: 1px solid #ddd; padding: 8px;">Municipal ABC Cell</td>
-              <td style="border: 1px solid #ddd; padding: 8px;">Check city website</td>
-              <td style="border: 1px solid #ddd; padding: 8px;">Free sterilization & vaccination services</td>
-            </tr>
-            <tr style="background-color: #FFE6E6;">
-              <td style="border: 1px solid #ddd; padding: 8px;">Local Veterinary Clinic</td>
-              <td style="border: 1px solid #ddd; padding: 8px;">_______________</td>
-              <td style="border: 1px solid #ddd; padding: 8px;">Add your nearest veterinary clinic</td>
-            </tr>
-            <tr>
-              <td style="border: 1px solid #ddd; padding: 8px;">Animal Welfare NGO</td>
-              <td style="border: 1px solid #ddd; padding: 8px;">_______________</td>
-              <td style="border: 1px solid #ddd; padding: 8px;">Add local animal welfare organization</td>
-            </tr>
-            <tr style="background-color: #FFE6E6;">
-              <td style="border: 1px solid #ddd; padding: 8px;">24-Hr Emergency Vet</td>
-              <td style="border: 1px solid #ddd; padding: 8px;">_______________</td>
-              <td style="border: 1px solid #ddd; padding: 8px;">24-hour emergency veterinary services</td>
-            </tr>
-          </tbody>
-        </table>
-        
-        <h3 style="color: #C80000; margin-top: 20px;">When to Call:</h3>
-        <p style="font-size: 12px;"><strong>🚑 Immediately:</strong> Unconsciousness, heavy bleeding, difficulty breathing, fractures, suspected poisoning, vehicle hit</p>
-        <p style="font-size: 12px;"><strong>⚡ Within 2 hours:</strong> Deep wounds, maggots, severe injuries, heat stroke</p>
-        <p style="font-size: 12px;"><strong>📞 Within 24 hours:</strong> Bite wounds, suspected rabies, skin infections, persistent vomiting/diarrhea</p>
-      </div>
-    `;
-  }
-  
-  const element = document.createElement('div');
-  element.innerHTML = htmlContent;
-  
-  const options = {
-    margin: 10,
-    filename: filename,
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2 },
-    jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
-  };
-  
-  html2pdf().set(options).from(element).save();
-}
-</script>
+
 </body>
 </html>
