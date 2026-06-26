@@ -2728,92 +2728,7 @@ function sendCustomWA() {
     waInput.value = '';
   }
 }
-function showBlogPage(blogIndex) {
-  if (blogIndex < 0 || blogIndex >= articles.length) {
-    showPage('home');
-    return;
-  }
-  
-  var article = articles[blogIndex];
-  
-  // Hide all pages
-  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
-  document.querySelectorAll('.nav-links a[id]').forEach(function(a){ a.classList.remove('active'); });
-  
-  // Mark blog nav as active
-  var navBlog = document.getElementById('nav-blog');
-  if (navBlog) navBlog.classList.add('active');
-  
-  // Hide header/footer
-  var mainNav = document.getElementById('mainNav');
-  var footerEl = document.querySelector('footer');
-  var waW = document.querySelector('.wa-widget');
-  if (mainNav) mainNav.style.display = '';
-  if (footerEl) footerEl.style.display = '';
-  if (waW) waW.style.display = '';
-  
-  window.scrollTo(0, 0);
-  
-  // Build blog HTML
-  var blogHtml = '<div class="page" style="background:var(--white);min-height:100vh;padding:60px 20px 40px"><div style="max-width:800px;margin:0 auto">';
-  
-  // Back button
-  blogHtml += '<button onclick="showPage(\'blog\');return false" style="background:none;border:none;color:var(--gold);font-size:14px;font-weight:700;letter-spacing:.1em;cursor:pointer;margin-bottom:24px;padding:0;text-transform:uppercase;display:flex;align-items:center;gap:6px">← BACK TO ALL BLOGS</button>';
-  
-  // Blog header
-  blogHtml += '<div style="margin-bottom:32px">';
-  blogHtml += '<div style="font-size:40px;margin-bottom:12px">' + article.emoji + '</div>';
-  blogHtml += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><span style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);background:var(--cream);padding:4px 10px;border-radius:2px">' + article.tag + '</span></div>';
-  blogHtml += '<h1 style="font-family:\'Cormorant Garamond\',serif;font-size:48px;line-height:1.1;color:var(--dark);margin:0 0 16px 0;font-weight:700">' + article.title + '</h1>';
-  blogHtml += '<div style="font-size:13px;color:var(--muted);font-weight:600">' + article.date + '</div>';
-  blogHtml += '</div>';
-  
-  // Blog body
-  blogHtml += '<div style="font-family:\'Lora\',\'Georgia\',serif;font-size:15px;line-height:1.85;color:var(--dark);margin-bottom:48px">' + article.body + '</div>';
-  
-  // Share section
-  blogHtml += '<div style="border-top:1px solid var(--cream-mid);padding-top:24px;margin-top:32px">';
-  blogHtml += '<div style="font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:14px">SHARE</div>';
-  blogHtml += '<div style="display:flex;gap:12px">';
-  var waUrl = 'https://api.whatsapp.com/send?text=Check%20out%20this%20article%3A%20' + encodeURIComponent(article.title) + '%20%20https%3A//gameofbones.in/?page=blog-' + blogIndex;
-  blogHtml += '<a href="' + waUrl + '" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:10px 14px;background:var(--cream);color:var(--dark);text-decoration:none;border:1px solid var(--cream-mid);border-radius:3px;font-size:12px;font-weight:600">📱 WHATSAPP</a>';
-  blogHtml += '<button onclick="var copyUrl=\'https://gameofbones.in/?page=blog-' + blogIndex + '\';navigator.clipboard.writeText(copyUrl);this.textContent=\'✓ COPIED!\';setTimeout(function(){var btn=document.querySelector(\'button[onclick*=\\\'blog-' + blogIndex + '\\\']\');if(btn)btn.textContent=\'📋 COPY LINK\';},2000);return false" style="padding:10px 14px;background:var(--cream);color:var(--dark);border:1px solid var(--cream-mid);border-radius:3px;font-size:12px;font-weight:600;cursor:pointer">📋 COPY LINK</button>';
-  blogHtml += '</div></div>';
-  
-  // Related blogs
-  blogHtml += '<div style="margin-top:48px;padding-top:32px;border-top:1px solid var(--cream-mid)">';
-  blogHtml += '<h3 style="font-family:\'Cormorant Garamond\',serif;font-size:28px;color:var(--dark);margin:0 0 20px 0">More Articles</h3>';
-  blogHtml += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">';
-  for (var i = 0; i < articles.length; i++) {
-    if (i === blogIndex) continue;
-    var art = articles[i];
-    blogHtml += '<a href="javascript:void(0)" onclick="showBlogPage(' + i + ');try{window.history.pushState({page:\'blog-' + i + '\'},\'\',\'?page=blog-' + i + '\')}catch(e){}return false" style="background:var(--cream);padding:16px;border:1px solid var(--cream-mid);border-radius:4px;text-decoration:none;transition:all .2s;display:block" onmouseover="this.style.boxShadow=\'0 4px 12px rgba(0,0,0,.08)\';this.style.borderColor=\'var(--gold)\'" onmouseout="this.style.boxShadow=\'\';this.style.borderColor=\'var(--cream-mid)\'">';
-    blogHtml += '<div style="font-size:20px;margin-bottom:8px">' + art.emoji + '</div>';
-    blogHtml += '<h4 style="margin:0 0 8px 0;color:var(--dark);font-family:\'Jost\',sans-serif;font-size:13px;font-weight:700;line-height:1.4">' + art.title + '</h4>';
-    blogHtml += '<div style="font-size:11px;color:var(--muted)">' + art.date + '</div>';
-    blogHtml += '</a>';
-  }
-  blogHtml += '</div></div></div></div>';
-  
-  // Get or create container
-  var container = document.getElementById('blog-full-page');
-  if (!container) {
-    container = document.createElement('div');
-    container.id = 'blog-full-page';
-    container.classList.add('page');
-    document.body.insertBefore(container, document.querySelector('footer'));
-  }
-  
-  container.classList.add('active');
-  container.innerHTML = blogHtml;
-  
-  // Update URL
-  try {
-    window.history.pushState({page: 'blog-' + blogIndex}, '', '?page=blog-' + blogIndex);
-  } catch(e) {}
-}
 function showPage(id) {
-
   // Stop carousel auto-rotate when leaving product page
   if (id !== 'product' && typeof stopDetailCarouselAutoRotate === 'function') {
     stopDetailCarouselAutoRotate();
@@ -2972,8 +2887,29 @@ const articles = [
 
 var currentArtIdx = 0;
 function openArt(idx) {
-  // Redirect to full blog page instead of modal
-  showBlogPage(idx);
+  var a = articles[idx];
+  if (!a) return;
+  currentArtIdx = idx;
+  var __g_art_emoji=document.getElementById('art-emoji');if(__g_art_emoji)__g_art_emoji.textContent = a.emoji;
+  var __g_art_tag=document.getElementById('art-tag');if(__g_art_tag)__g_art_tag.textContent = a.tag;
+  var __g_art_title=document.getElementById('art-title');if(__g_art_title)__g_art_title.textContent = a.title;
+  var __g_art_meta=document.getElementById('art-meta');if(__g_art_meta)__g_art_meta.textContent = a.date;
+  document.getElementById('art-body').innerHTML = a.body;
+  // Update WhatsApp share link
+  var waShare = document.getElementById('art-wa-share');
+  if (waShare) {
+    var msg = encodeURIComponent('Check out this article from Game of Bones: \u201c' + a.title + '\u201d \ud83d\udc3e gameofbones.in');
+    waShare.href = 'https://wa.me/?text=' + msg;
+  }
+  // Update prev/next nav
+  var prevBtn = document.getElementById('art-prev-btn');
+  var nextBtn = document.getElementById('art-next-btn');
+  if (prevBtn) { prevBtn.style.display = idx > 0 ? 'inline-flex' : 'none'; }
+  if (nextBtn) { nextBtn.style.display = idx < articles.length - 1 ? 'inline-flex' : 'none'; }
+  var overlay = document.getElementById('artOverlay');
+  overlay.classList.add('open');
+  overlay.scrollTop = 0;
+  document.body.style.overflow = 'hidden';
 }
 
 function closeArt() {
@@ -4718,7 +4654,6 @@ function submitReviewData(productId, dogName, productName, reviewText, photoUrl,
       submitBtn.style.opacity = '1';
     }
   });
-}
 }
 
 function awardReviewPoints(phone) {
@@ -7089,23 +7024,7 @@ function verifyReviewPurchase() {
   }).catch(() => document.getElementById('review-phone-error').textContent = 'Verification error');
 }
 
-function submitReview() {
-  if (!reviewVerified) { document.getElementById('review-submit-error').textContent = 'Verify purchase first'; return; }
-  const name = document.getElementById('review-name').value.trim(), text = document.getElementById('review-text').value.trim();
-  if (!name) { document.getElementById('review-submit-error').textContent = 'Enter name'; return; }
-  if (!currentReviewRating) { document.getElementById('review-submit-error').textContent = 'Select rating'; return; }
-  if (text.length < 10) { document.getElementById('review-submit-error').textContent = 'Min 10 characters'; return; }
-  const btn = document.getElementById('review-submit-btn');
-  btn.disabled = true; btn.textContent = 'Submitting...';
-  fetch('https://syuostlqzzinigqwjzap.supabase.co/rest/v1/reviews', {
-    method: 'POST',
-    headers: { 'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5dW9zdGxxenppbmlncXdqemFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NTA3MzIsImV4cCI6MjA4OTQyNjczMn0.BKf4EF2QhNcW_u1SVVbtiGdlnzdthiptlVcNk3gP2KU', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5dW9zdGxxenppbmlncXdqemFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NTA3MzIsImV4cCI6MjA4OTQyNjczMn0.BKf4EF2QhNcW_u1SVVbtiGdlnzdthiptlVcNk3gP2KU', 'Content-Type': 'application/json' },
-    body: JSON.stringify({ product_id: currentReviewIdx + 1, customer_phone: reviewVerifiedPhone, customer_name: name, rating: currentReviewRating, review_text: text, created_at: new Date().toISOString() })
-  }).then(res => { if (!res.ok) throw new Error(); return res.json(); }).then(() => {
-    document.getElementById('review-submit-success').textContent = '✓ Review submitted!'; btn.disabled = false; btn.textContent = 'Submit Review';
-    setTimeout(() => { document.getElementById('review-modal').style.display = 'none'; loadProductReviews(products[currentReviewIdx].name); }, 1500);
-  }).catch(() => { document.getElementById('review-submit-error').textContent = 'Error submitting'; btn.disabled = false; btn.textContent = 'Submit Review'; });
-}
+
 
 function initReveal() {
   setTimeout(function() {
@@ -7451,45 +7370,6 @@ function pickStar(val) {
   });
 }
 
-function submitReview() {
-  if (!currentUser) { closePModal(); showPage('login'); return; }
-  var text = document.getElementById('reviewText').value.trim();
-  var errEl = document.getElementById('reviewFormError');
-  errEl.style.display = 'none';
-  if (!currentPickedStar) { errEl.textContent='Please select a star rating.'; errEl.style.display='block'; return; }
-  if (!text || text.length < 10) { errEl.textContent='Please write at least a sentence about your experience.'; errEl.style.display='block'; return; }
-  var review = {
-    author: currentUser.name.split(' ')[0] + ' ' + currentUser.name.split(' ').slice(-1)[0].charAt(0) + '.',
-    dog: (document.getElementById('reviewDogName') && document.getElementById('reviewDogName').value.trim()) || currentUser.dog || 'My Dog',
-    city: currentUser.city || '',
-    rating: currentPickedStar,
-    text: text,
-    date: 'Just now',
-    verified: currentUser.purchased && currentUser.purchased.indexOf(currentReviewProductName) > -1
-  };
-  if (!sessionReviews[currentReviewProductName]) sessionReviews[currentReviewProductName] = [];
-  sessionReviews[currentReviewProductName].unshift(review);
-  document.getElementById('reviewText').value = '';
-  currentPickedStar = 0;
-  pickStar(0);
-  document.getElementById('reviewSuccess').style.display = 'block';
-  setTimeout(function(){ document.getElementById('reviewSuccess').style.display='none'; }, 3000);
-  loadProductReviews(currentReviewProductName);
-  
-  // Load images from admin database first (non-blocking)
-  if (window.loadProductsFromDatabase) {
-    window.loadProductsFromDatabase().then(function() {
-      renderProducts(products.slice(0,4), 'homeProd');
-      renderProducts(products, 'shopProd');
-    }).catch(function() {
-      renderProducts(products.slice(0,4), 'homeProd');
-      renderProducts(products, 'shopProd');
-    });
-  } else {
-    renderProducts(products.slice(0,4), 'homeProd');
-    renderProducts(products, 'shopProd');
-  }
-}
 
 
 // Nav scroll shadow
@@ -8339,25 +8219,6 @@ function renderReviews() {
   }).join("") + "</div>";
 }
 
-function submitReview() {
-  var name = (document.getElementById("reviewName").value || "").trim();
-  var product = document.getElementById("reviewProduct").value;
-  var text = (document.getElementById("reviewText").value || "").trim();
-  var msg = document.getElementById("reviewSubmitMsg");
-  if (!name || !text || reviewRating === 0) {
-    msg.innerHTML = "<p style='color:#c0392b;font-size:13px;margin-top:8px'>Please fill in your name, rating and review.</p>";
-    return;
-  }
-  var reviews = [];
-  try { reviews = JSON.parse(localStorage.getItem("gobReviews") || "[]"); } catch(e) {}
-  reviews.push({name:name,product:product,text:text,rating:reviewRating,date:new Date().toLocaleDateString("en-IN")});
-  try { localStorage.setItem("gobReviews", JSON.stringify(reviews)); } catch(e) {}
-  msg.innerHTML = "<div style='background:#f0fdf4;border:1px solid #86efac;padding:16px;margin-top:12px;font-size:14px;color:#166534'>Thank you " + name + "! Your review is pending approval.</div>";
-  document.getElementById("reviewName").value = "";
-  document.getElementById("reviewText").value = "";
-  setReviewStar(0); reviewRating = 0;
-  renderReviews();
-}
 
 // Init reviews on page load
 document.addEventListener("DOMContentLoaded", function() {
@@ -8558,28 +8419,6 @@ showPage = function(id) {
   }
 };
 // ── END LOYALTY POINTS REDEMPTION ──────────────────────────────────
-
-// URL ROUTING FOR BLOGS - Handle ?page=blog-X URLs
-window.addEventListener('load', function() {
-  var params = new URLSearchParams(window.location.search);
-  var pageParam = params.get('page');
-  
-  if (pageParam && pageParam.startsWith('blog-')) {
-    var blogIndex = parseInt(pageParam.replace('blog-', ''));
-    if (!isNaN(blogIndex) && blogIndex >= 0 && blogIndex < articles.length) {
-      setTimeout(function() {
-        showBlogPage(blogIndex);
-      }, 200);
-      return;
-    }
-  }
-  
-  // Default routing for other pages
-  var page = pageParam || 'home';
-  setTimeout(function() {
-    showPage(page);
-  }, 200);
-});
 // ===== PHASE 2: MOBILE FUNCTIONS =====
 function toggleMobileMenu(){const e=document.getElementById('mobileNavMenu'),t=document.querySelector('.hamburger-btn');e&&t&&(e.classList.toggle('mobile-open'),t.classList.toggle('open'))}document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('#mobileNavMenu a').forEach(function(e){e.addEventListener('click',function(){const t=document.getElementById('mobileNavMenu'),o=document.querySelector('.hamburger-btn');t&&t.classList.remove('mobile-open'),o&&o.classList.remove('open')})});let e=0;const t=document.getElementById('cartDrawer');t&&(t.addEventListener('touchstart',function(t){e=t.touches[0].clientX}),t.addEventListener('touchmove',function(t){const o=t.touches[0].clientX;100<e-o&&toggleCart()})),'IntersectionObserver'in window&&document.querySelectorAll('img[data-src]').length>0&&new IntersectionObserver(function(e,t){e.forEach(function(e){if(e.isIntersecting){const o=e.target;o.dataset.src&&(o.src=o.dataset.src,o.removeAttribute('data-src')),t.unobserve(o)}})}).observe(document.querySelectorAll('img[data-src]')[0])});
 // Render products on page load (after DOM is ready)
