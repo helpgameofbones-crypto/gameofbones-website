@@ -2886,6 +2886,19 @@ const articles = [
 ];
 
 var currentArtIdx = 0;
+// Create URL-friendly slug from blog title
+function createBlogSlug(title) {
+  return title.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').substring(0, 60);
+}
+
+// Get blog index from slug
+function getBlogIndexFromSlug(slug) {
+  for (var i = 0; i < articles.length; i++) {
+    if (createBlogSlug(articles[i].title) === slug) return i;
+  }
+  return -1;
+}
+
 function openArt(idx) {
   var a = articles[idx];
   if (!a) return;
@@ -2911,7 +2924,7 @@ function openArt(idx) {
   overlay.scrollTop = 0;
   document.body.style.overflow = 'hidden';
   // Update URL
-  try { window.history.pushState({}, '', '?page=blog-' + idx); } catch(e) {}
+  try { window.history.pushState({}, '', '?page=blog-' + createBlogSlug(a.title)); } catch(e) {}
 }
 
 function closeArt() {
@@ -4548,6 +4561,111 @@ function pickStar(rating) {
       star.style.transform = 'scale(1)';
     }
   });
+}
+
+
+// Photo upload handlers for review modal
+var _reviewImageFile2 = null;
+
+
+async function submitReviewModal() {
+  if (!reviewVerified) { document.getElementById('review-submit-error').textContent = 'Verify purchase first'; return; }
+  const name = document.getElementById('review-name').value.trim();
+  const text = document.getElementById('review-text').value.trim();
+  if (!name) { document.getElementById('review-submit-error').textContent = 'Enter name'; return; }
+  if (!currentReviewRating) { document.getElementById('review-submit-error').textContent = 'Select rating'; return; }
+  if (text.length < 10) { document.getElementById('review-submit-error').textContent = 'Min 10 characters'; return; }
+  const btn = document.getElementById('review-submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Uploading...';
+  
+  var photoUrl = null;
+  if (_reviewImageFile2) {
+    photoUrl = await uploadReviewPhoto2(currentReviewIdx + 1);
+  }
+  
+  btn.textContent = 'Submitting...';
+  fetch(SUPABASE_URL + '/rest/v1/reviews', {
+    method: 'POST',
+    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ product_id: currentReviewIdx + 1, customer_phone: reviewVerifiedPhone, customer_name: name, rating: currentReviewRating, review_text: text, photo_url: photoUrl, created_at: new Date().toISOString() })
+  }).then(res => { if (!res.ok) throw new Error(); return res.json(); }).then(() => {
+    document.getElementById('review-submit-success').textContent = '✓ Review submitted!';
+    btn.disabled = false;
+    btn.textContent = 'Submit Review';
+    _reviewImageFile2 = null;
+    setTimeout(() => { document.getElementById('review-modal').style.display = 'none'; }, 1500);
+  }).catch(err => {
+    document.getElementById('review-submit-error').textContent = 'Error submitting review';
+    btn.disabled = false;
+    btn.textContent = 'Submit Review';
+  });
+}
+function handleReviewPhotoUpload2(event) {
+  var file = event.target.files[0];
+  if (!file) return;
+  if (!file.type.startsWith('image/')) {
+    document.getElementById('photoUploadError2').style.display = 'block';
+    document.getElementById('photoUploadError2').textContent = 'Image file only';
+    return;
+  }
+  if (file.size > 5 * 1024 * 1024) {
+    document.getElementById('photoUploadError2').style.display = 'block';
+    document.getElementById('photoUploadError2').textContent = 'Max 5MB';
+    return;
+  }
+  _reviewImageFile2 = file;
+  document.getElementById('photoUploadError2').style.display = 'none';
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var preview = document.getElementById('reviewPhotoPreview2');
+    if (preview) {
+      preview.innerHTML = '<img src="' + e.target.result + '" style="width:100%;max-height:120px;object-fit:cover;border-radius:4px">';
+      preview.style.display = 'block';
+    }
+    document.getElementById('reviewPhotoRemove2').style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+  document.getElementById('reviewPhotoLabel2').style.display = 'none';
+  event.target.style.display = 'none';
+}
+
+function removeReviewPhoto2() {
+  _reviewImageFile2 = null;
+  document.getElementById('reviewPhotoPreview2').style.display = 'none';
+  document.getElementById('reviewPhotoRemove2').style.display = 'none';
+  document.getElementById('reviewPhotoLabel2').style.display = 'flex';
+  document.getElementById('reviewPhotoInput2').value = '';
+  document.getElementById('reviewPhotoInput2').style.display = 'none';
+}
+
+async function uploadReviewPhoto2(productId) {
+  if (!_reviewImageFile2) return null;
+  try {
+    var base64 = await new Promise(function(res,rej) {
+      var reader = new FileReader();
+      reader.onload = function() { res(reader.result.split(',')[1]); };
+      reader.onerror = rej;
+      reader.readAsDataURL(_reviewImageFile2);
+    });
+    var ext = _reviewImageFile2.name.split('.').pop();
+    var filename = 'review-' + Date.now() + '-' + Math.random().toString(36).substring(7) + '.' + ext;
+    var response = await fetch(SUPABASE_URL + '/storage/v1/object/product-reviews/' + filename, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+        'Content-Type': _reviewImageFile2.type
+      },
+      body: Uint8Array.from(atob(base64), c => c.charCodeAt(0))
+    });
+    if (response.ok) {
+      return SUPABASE_URL + '/storage/v1/object/public/product-reviews/' + filename;
+    }
+  } catch (err) {
+    console.log('Photo upload error:', err);
+  }
+  return null;
 }
 
 function submitReview() {
@@ -6978,8 +7096,9 @@ function createReviewModal() {
     <div style="margin-bottom:14px"><label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;color:var(--dark);margin-bottom:6px">Phone (verify purchase) *</label><input type="tel" id="review-phone" placeholder="10 digits" maxlength="10" style="width:100%;padding:10px 12px;border:1px solid var(--cream-mid);background:var(--cream);font-size:13px;color:var(--dark)" onblur="verifyReviewPurchase()"><div id="review-phone-error" style="color:#d32f2f;font-size:10px;margin-top:4px"></div><div id="review-verify-status" style="color:var(--teal);font-size:10px;margin-top:4px"></div></div>
     <div style="margin-bottom:14px"><label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;color:var(--dark);margin-bottom:6px">Name *</label><input type="text" id="review-name" placeholder="Your name" style="width:100%;padding:10px 12px;border:1px solid var(--cream-mid);background:var(--cream);font-size:13px;color:var(--dark)"></div>
     <div style="margin-bottom:14px"><label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;color:var(--dark);margin-bottom:6px">Rating *</label><div style="display:flex;gap:8px"><button onclick="setReviewRating(1)" class="review-star" style="background:none;border:none;font-size:24px;cursor:pointer;color:var(--cream-mid)">★</button><button onclick="setReviewRating(2)" class="review-star" style="background:none;border:none;font-size:24px;cursor:pointer;color:var(--cream-mid)">★</button><button onclick="setReviewRating(3)" class="review-star" style="background:none;border:none;font-size:24px;cursor:pointer;color:var(--cream-mid)">★</button><button onclick="setReviewRating(4)" class="review-star" style="background:none;border:none;font-size:24px;cursor:pointer;color:var(--cream-mid)">★</button><button onclick="setReviewRating(5)" class="review-star" style="background:none;border:none;font-size:24px;cursor:pointer;color:var(--cream-mid)">★</button></div></div>
+    <div style="margin-bottom:14px"><label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;color:var(--dark);margin-bottom:6px">📸 Add Photo (Optional)</label><label id="reviewPhotoLabel2" style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--white);border:1px solid var(--cream-mid);cursor:pointer;border-radius:2px;margin-bottom:10px"><span>📷</span><span>Choose photo</span><input id="reviewPhotoInput2" type="file" accept="image/*" onchange="handleReviewPhotoUpload2(event)" style="display:none"></label><div id="reviewPhotoPreview2" style="display:none;margin-bottom:10px"></div><button id="reviewPhotoRemove2" type="button" onclick="removeReviewPhoto2()" style="display:none;margin-bottom:10px;background:rgba(200,151,58,.2);color:var(--gold);border:1px solid var(--gold);padding:6px 12px;font-family:Jost,sans-serif;font-size:11px;font-weight:600;cursor:pointer;border-radius:2px">Remove Photo</button><div id="photoUploadError2" style="display:none;font-size:10px;color:#c0392b;margin-bottom:6px"></div></div>
     <div style="margin-bottom:14px"><label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;color:var(--dark);margin-bottom:6px">Review *</label><textarea id="review-text" placeholder="Share your thoughts..." style="width:100%;padding:10px 12px;border:1px solid var(--cream-mid);background:var(--cream);font-size:13px;color:var(--dark);min-height:80px"></textarea></div>
-    <button onclick="submitReview()" id="review-submit-btn" style="width:100%;background:var(--dark);color:var(--white);border:none;padding:12px;font-size:11px;font-weight:700;text-transform:uppercase;cursor:pointer;margin-top:16px">Submit Review</button>
+    <button onclick="submitReviewModal()" id="review-submit-btn" style="width:100%;background:var(--dark);color:var(--white);border:none;padding:12px;font-size:11px;font-weight:700;text-transform:uppercase;cursor:pointer;margin-top:16px">Submit Review</button>
     <div id="review-submit-error" style="color:#d32f2f;font-size:10px;margin-top:4px"></div>
     <div id="review-submit-success" style="color:var(--teal);font-size:10px;margin-top:4px"></div>
   </div>`;
@@ -8444,5 +8563,21 @@ window.addEventListener('load', function() {
     }
   }, 500);
 });
+
+// Handle blog slug URLs - convert slug to index and open article
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  var pageParam = params.get('page');
+  if (pageParam && pageParam.startsWith('blog-')) {
+    var slug = pageParam.substring(5); // Remove 'blog-' prefix
+    var blogIdx = getBlogIndexFromSlug(slug);
+    if (blogIdx >= 0) {
+      // Schedule the article opening after page fully loads
+      setTimeout(function() {
+        openArt(blogIdx);
+      }, 200);
+    }
+  }
+})();
 </script>
 </html>
