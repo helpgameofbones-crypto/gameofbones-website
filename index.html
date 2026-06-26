@@ -4284,6 +4284,26 @@ function toggleBillingAddr(cb) {
 }
 
 // ── YOUR RAZORPAY KEY ────────────────────────────────────────────────
+// ── REFERRAL TRACKING ────────────────────────────────────────────
+var _referrerCode = null; // e.g., GOB1234
+var _referrerPhone = null; // Phone number of the person who referred this customer
+
+// Parse referral code from URL (?ref=GOB1234)
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  var refCode = params.get('ref');
+  if (refCode && refCode.match(/^GOB\d{4}$/)) {
+    _referrerCode = refCode;
+    _referrerPhone = refCode.replace('GOB', ''); // Extract last 4 digits, will need full phone lookup
+    console.log('Referral code detected:', _referrerCode);
+    // Show banner that they're using a referral
+    var banner = document.createElement('div');
+    banner.style.cssText = 'background:linear-gradient(135deg,rgba(42,124,111,.15) 0%,rgba(42,124,111,.05) 100%);border:1.5px solid rgba(42,124,111,.3);padding:16px;margin:20px 6%;border-radius:4px;text-align:center;font-size:13px;color:rgba(255,255,255,.7);position:relative;z-index:100';
+    banner.innerHTML = '🎁 <strong style="color:var(--teal)">Referral Bonus Active!</strong> You\'ll get 300 loyalty points (₹90 off) when you place your first order!';
+    document.body.insertBefore(banner, document.body.firstChild);
+  }
+})();
+
 var RAZORPAY_KEY_ID = 'rzp_live_Sc4Adu52rXhZQ6'; // Live key — DO NOT COMMIT TO GIT (security risk)
 
 function _finaliseOrder(ref, phoneVal, orderItems) {
@@ -4340,6 +4360,9 @@ function _finaliseOrder(ref, phoneVal, orderItems) {
     payment_status: selectedPayment === 'cod' ? 'pending' : 'paid',
     status: 'placed',
     notes: null,
+    referrer_code: _referrerCode, // e.g., GOB1234
+    referrer_phone: _referrerCode ? _referrerCode.replace('GOB', '').slice(-10) : null, // Last 10 digits
+    referrer_points_credited: false, // Will be set to true by backend when points are awarded
     created_at: new Date().toISOString()
   };
   
