@@ -4305,8 +4305,8 @@ var _referrerPhone = null; // Phone number of the person who referred this custo
     console.log('Referral code detected:', _referrerCode);
     // Show banner that they're using a referral
     var banner = document.createElement('div');
-    banner.style.cssText = 'background:linear-gradient(135deg,rgba(42,124,111,.15) 0%,rgba(42,124,111,.05) 100%);border:1.5px solid rgba(42,124,111,.3);padding:16px;margin:20px 6%;border-radius:4px;text-align:center;font-size:13px;color:rgba(255,255,255,.7);position:relative;z-index:100';
-    banner.innerHTML = '🎁 <strong style="color:var(--teal)">Referral Bonus Active!</strong> You\'ll get 300 loyalty points (₹90 off) when you place your first order!';
+    banner.style.cssText = 'background:linear-gradient(135deg,rgba(42,124,111,.9) 0%,rgba(30,90,80,.95) 100%);border:1.5px solid rgba(42,124,111,.6);padding:18px;margin:20px 6%;border-radius:4px;text-align:center;font-size:13px;color:rgba(255,255,255,.95);position:relative;z-index:100;font-weight:500';
+    banner.innerHTML = '🎁 <strong style="color:var(--gold-light)">Referral Bonus Active!</strong> You\'ll get 300 loyalty points (₹90 off) when you place your first order!';
     document.body.insertBefore(banner, document.body.firstChild);
   }
 })();
