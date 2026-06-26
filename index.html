@@ -3119,22 +3119,22 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
           <div style="background:linear-gradient(135deg,rgba(200,151,58,.1),rgba(200,151,58,.05));padding:25px;border-radius:8px;border:1px solid rgba(200,151,58,.2)">
             <h3 style="color:var(--gold);font-weight:700;margin-bottom:12px;margin-top:0;font-size:14px">📋 Feeding & Health Log</h3>
             <p style="color:var(--dark);font-size:13px;line-height:1.6;margin-bottom:15px">Track dogs you feed, descriptions, health observations, vaccination dates, behavior changes.</p>
-            <button style="background:var(--gold);color:var(--dark);border:none;padding:10px 16px;font-size:12px;font-weight:600;cursor:pointer;border-radius:4px" onclick="alert('Coming soon')">📥 Download PDF</button>
+            <button style="background:var(--gold);color:var(--dark);border:none;padding:10px 16px;font-size:12px;font-weight:600;cursor:pointer;border-radius:4px" onclick="downloadFile('feeding-health-log.pdf')">📥 Download Now</button>
           </div>
           <div style="background:linear-gradient(135deg,rgba(200,151,58,.1),rgba(200,151,58,.05));padding:25px;border-radius:8px;border:1px solid rgba(200,151,58,.2)">
             <h3 style="color:var(--gold);font-weight:700;margin-bottom:12px;margin-top:0;font-size:14px">💉 Vaccination Records</h3>
             <p style="color:var(--dark);font-size:13px;line-height:1.6;margin-bottom:15px">Track rabies, DHPP, deworming, and other vaccinations with dates and vet details.</p>
-            <button style="background:var(--gold);color:var(--dark);border:none;padding:10px 16px;font-size:12px;font-weight:600;cursor:pointer;border-radius:4px" onclick="alert('Coming soon')">📥 Download PDF</button>
+            <button style="background:var(--gold);color:var(--dark);border:none;padding:10px 16px;font-size:12px;font-weight:600;cursor:pointer;border-radius:4px" onclick="downloadFile('vaccination-records.pdf')">📥 Download Now</button>
           </div>
           <div style="background:linear-gradient(135deg,rgba(200,151,58,.1),rgba(200,151,58,.05));padding:25px;border-radius:8px;border:1px solid rgba(200,151,58,.2)">
             <h3 style="color:var(--gold);font-weight:700;margin-bottom:12px;margin-top:0;font-size:14px">🏥 Sterilization Records</h3>
             <p style="color:var(--dark);font-size:13px;line-height:1.6;margin-bottom:15px">Document sterilization surgery dates, vet details, recovery status, and post-op observations.</p>
-            <button style="background:var(--gold);color:var(--dark);border:none;padding:10px 16px;font-size:12px;font-weight:600;cursor:pointer;border-radius:4px" onclick="alert('Coming soon')">📥 Download PDF</button>
+            <button style="background:var(--gold);color:var(--dark);border:none;padding:10px 16px;font-size:12px;font-weight:600;cursor:pointer;border-radius:4px" onclick="downloadFile('sterilization-records.pdf')">📥 Download Now</button>
           </div>
           <div style="background:linear-gradient(135deg,rgba(200,151,58,.1),rgba(200,151,58,.05));padding:25px;border-radius:8px;border:1px solid rgba(200,151,58,.2)">
             <h3 style="color:var(--gold);font-weight:700;margin-bottom:12px;margin-top:0;font-size:14px">🚨 Emergency Contact Sheet</h3>
             <p style="color:var(--dark);font-size:13px;line-height:1.6;margin-bottom:15px">Quick reference for vet clinics, ABC cells, police numbers, and animal welfare NGOs in your city.</p>
-            <button style="background:var(--gold);color:var(--dark);border:none;padding:10px 16px;font-size:12px;font-weight:600;cursor:pointer;border-radius:4px" onclick="alert('Coming soon')">📥 Download PDF</button>
+            <button style="background:var(--gold);color:var(--dark);border:none;padding:10px 16px;font-size:12px;font-weight:600;cursor:pointer;border-radius:4px" onclick="downloadFile('emergency-contacts.pdf')">📥 Download Now</button>
           </div>
         </div>
       </div>
@@ -9291,5 +9291,16 @@ window.addEventListener('load', function() {
   </div>
 </footer>
 
+
+<script>
+function downloadFile(filename) {
+  const link = document.createElement('a');
+  link.href = filename;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+</script>
 </body>
 </html>
