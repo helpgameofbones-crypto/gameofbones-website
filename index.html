@@ -2910,6 +2910,8 @@ function openArt(idx) {
   overlay.classList.add('open');
   overlay.scrollTop = 0;
   document.body.style.overflow = 'hidden';
+  // Update URL
+  try { window.history.pushState({}, '', '?page=blog-' + idx); } catch(e) {}
 }
 
 function closeArt() {
