@@ -1839,6 +1839,21 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
           </div>
           <!-- Dog name -->
           <input id="reviewDogName" type="text" placeholder="Your dog's name (optional)" style="width:100%;padding:10px 12px;border:1.5px solid var(--cream-mid);background:var(--white);font-family:'Jost',sans-serif;font-size:13px;color:var(--dark);outline:none;box-sizing:border-box;margin-bottom:10px">
+          
+          <!-- PHOTO UPLOAD (NEW) -->
+          <div style="margin-bottom:10px;padding:12px;background:var(--cream);border:1.5px dashed var(--cream-mid);border-radius:4px">
+            <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:8px;letter-spacing:.08em;text-transform:uppercase">📸 Add Photo (Optional)</div>
+            <label id="reviewPhotoLabel" style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--white);border:1.5px solid var(--cream-mid);border-radius:2px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--cream-mid)'">
+              <span style="font-size:18px">📷</span>
+              <span style="font-size:12px;color:var(--dark);font-weight:600">Choose photo</span>
+              <input id="reviewPhotoInput" type="file" accept="image/*" onchange="handleReviewPhotoUpload(event)" style="display:none">
+            </label>
+            <div id="reviewPhotoPreview" style="display:none;margin-top:10px"></div>
+            <button id="reviewPhotoRemove" type="button" onclick="removeReviewPhoto()" style="display:none;margin-top:8px;background:rgba(200,151,58,.2);color:var(--gold);border:1px solid var(--gold);padding:6px 12px;font-family:'Jost',sans-serif;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border-radius:2px">Remove Photo</button>
+            <div id="photoUploadError" style="display:none;font-size:11px;color:#c0392b;margin-top:6px;font-weight:600"></div>
+            <div style="font-size:10px;color:var(--muted);margin-top:6px;line-height:1.4">Tips: Show your dog enjoying the treat! Max file: 5MB. PNG, JPG, WebP supported.</div>
+          </div>
+          
           <!-- Review text -->
           <textarea id="reviewText" rows="3" placeholder="Share your dog's experience with this treat..." style="width:100%;padding:10px 12px;border:1.5px solid var(--cream-mid);background:var(--white);font-family:'Jost',sans-serif;font-size:13px;color:var(--dark);outline:none;box-sizing:border-box;resize:vertical;margin-bottom:10px"></textarea>
           <div id="reviewFormError" style="display:none;font-size:12px;color:#c0392b;margin-bottom:8px;font-weight:600"></div>
@@ -2449,6 +2464,13 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
           <!-- Delivery address -->
           <div style="background:var(--white);padding:24px;margin-bottom:16px;border:1px solid var(--cream-mid)">
             <h3 style="font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--dark);margin-bottom:18px">Delivery Address</h3>
+            
+            <!-- SAVED ADDRESSES (NEW) -->
+            <div id="savedAddressesSection" style="display:none;margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--cream-mid)">
+              <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Quick Select</div>
+              <div id="savedAddressesContainer" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px"></div>
+            </div>
+            
             <div style="margin-bottom:12px"><label style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px">Street Address *</label><input class="co-input" id="co-addr1" type="text" placeholder="House / Flat / Building" style="width:100%;padding:11px 14px;border:1.5px solid var(--cream-mid);background:var(--cream);font-family:'Jost',sans-serif;font-size:14px;color:var(--dark);outline:none;box-sizing:border-box"></div>
             <div style="margin-bottom:12px"><label style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px">Apartment / Area</label><input class="co-input" id="co-addr2" type="text" placeholder="Street, Locality, Area" style="width:100%;padding:11px 14px;border:1.5px solid var(--cream-mid);background:var(--cream);font-family:'Jost',sans-serif;font-size:14px;color:var(--dark);outline:none;box-sizing:border-box"></div>
             <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
@@ -2459,7 +2481,7 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
                   <option>Andhra Pradesh</option><option>Assam</option><option>Bihar</option><option>Chandigarh</option><option>Chhattisgarh</option><option>Delhi</option><option>Goa</option><option>Gujarat</option><option>Haryana</option><option>Himachal Pradesh</option><option>Jammu &amp; Kashmir</option><option>Jharkhand</option><option>Karnataka</option><option>Kerala</option><option>Madhya Pradesh</option><option selected>Maharashtra</option><option>Manipur</option><option>Meghalaya</option><option>Mizoram</option><option>Nagaland</option><option>Odisha</option><option>Puducherry</option><option>Punjab</option><option>Rajasthan</option><option>Sikkim</option><option>Tamil Nadu</option><option>Telangana</option><option>Tripura</option><option>Uttar Pradesh</option><option>Uttarakhand</option><option>West Bengal</option>
                 </select>
               </div>
-              <div><label style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px">PIN Code *</label><input class="co-input" id="co-pin" type="text" inputmode="numeric" maxlength="6" placeholder="400001" style="width:100%;padding:11px 14px;border:1.5px solid var(--cream-mid);background:var(--cream);font-family:'Jost',sans-serif;font-size:14px;color:var(--dark);outline:none;box-sizing:border-box"></div>
+              <div><label style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px">PIN Code *</label><input class="co-input" id="co-pin" type="text" inputmode="numeric" maxlength="6" placeholder="400001" style="width:100%;padding:11px 14px;border:1.5px solid var(--cream-mid);background:var(--cream);font-family:'Jost',sans-serif;font-size:14px;color:var(--dark);outline:none;box-sizing:border-box" oninput="autoDetectFromPin()"><div id="pinValidMsg" style="display:none;font-size:11px;margin-top:4px;font-weight:600"></div></div>
             </div>
           </div>
 
@@ -2491,6 +2513,10 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
 
           <!-- Place order CTA -->
           <button class="btn-gold" onclick="placeOrder()" style="width:100%;padding:18px;font-size:14px;letter-spacing:.12em;margin-top:8px">Place Order →</button>
+          <label style="display:flex;align-items:center;gap:10px;margin-top:12px;cursor:pointer;font-size:12px;color:var(--muted)">
+            <input type="checkbox" id="co-save-addr" style="width:16px;height:16px;cursor:pointer;accent-color:var(--teal)">
+            <span>Save this address for next time</span>
+          </label>
           <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:12px;line-height:1.6">By placing your order you agree to our <a onclick="navigateTo('returns')" style="color:var(--teal);cursor:pointer">return policy</a>. We'll confirm via WhatsApp within 30 minutes.</p>
         </div>
 
@@ -2702,7 +2728,92 @@ function sendCustomWA() {
     waInput.value = '';
   }
 }
+function showBlogPage(blogIndex) {
+  if (blogIndex < 0 || blogIndex >= articles.length) {
+    showPage('home');
+    return;
+  }
+  
+  var article = articles[blogIndex];
+  
+  // Hide all pages
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.nav-links a[id]').forEach(function(a){ a.classList.remove('active'); });
+  
+  // Mark blog nav as active
+  var navBlog = document.getElementById('nav-blog');
+  if (navBlog) navBlog.classList.add('active');
+  
+  // Hide header/footer
+  var mainNav = document.getElementById('mainNav');
+  var footerEl = document.querySelector('footer');
+  var waW = document.querySelector('.wa-widget');
+  if (mainNav) mainNav.style.display = '';
+  if (footerEl) footerEl.style.display = '';
+  if (waW) waW.style.display = '';
+  
+  window.scrollTo(0, 0);
+  
+  // Build blog HTML
+  var blogHtml = '<div class="page" style="background:var(--white);min-height:100vh;padding:60px 20px 40px"><div style="max-width:800px;margin:0 auto">';
+  
+  // Back button
+  blogHtml += '<button onclick="showPage(\'blog\');return false" style="background:none;border:none;color:var(--gold);font-size:14px;font-weight:700;letter-spacing:.1em;cursor:pointer;margin-bottom:24px;padding:0;text-transform:uppercase;display:flex;align-items:center;gap:6px">← BACK TO ALL BLOGS</button>';
+  
+  // Blog header
+  blogHtml += '<div style="margin-bottom:32px">';
+  blogHtml += '<div style="font-size:40px;margin-bottom:12px">' + article.emoji + '</div>';
+  blogHtml += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><span style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);background:var(--cream);padding:4px 10px;border-radius:2px">' + article.tag + '</span></div>';
+  blogHtml += '<h1 style="font-family:\'Cormorant Garamond\',serif;font-size:48px;line-height:1.1;color:var(--dark);margin:0 0 16px 0;font-weight:700">' + article.title + '</h1>';
+  blogHtml += '<div style="font-size:13px;color:var(--muted);font-weight:600">' + article.date + '</div>';
+  blogHtml += '</div>';
+  
+  // Blog body
+  blogHtml += '<div style="font-family:\'Lora\',\'Georgia\',serif;font-size:15px;line-height:1.85;color:var(--dark);margin-bottom:48px">' + article.body + '</div>';
+  
+  // Share section
+  blogHtml += '<div style="border-top:1px solid var(--cream-mid);padding-top:24px;margin-top:32px">';
+  blogHtml += '<div style="font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:14px">SHARE</div>';
+  blogHtml += '<div style="display:flex;gap:12px">';
+  var waUrl = 'https://api.whatsapp.com/send?text=Check%20out%20this%20article%3A%20' + encodeURIComponent(article.title) + '%20%20https%3A//gameofbones.in/?page=blog-' + blogIndex;
+  blogHtml += '<a href="' + waUrl + '" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:10px 14px;background:var(--cream);color:var(--dark);text-decoration:none;border:1px solid var(--cream-mid);border-radius:3px;font-size:12px;font-weight:600">📱 WHATSAPP</a>';
+  blogHtml += '<button onclick="var copyUrl=\'https://gameofbones.in/?page=blog-' + blogIndex + '\';navigator.clipboard.writeText(copyUrl);this.textContent=\'✓ COPIED!\';setTimeout(function(){var btn=document.querySelector(\'button[onclick*=\\\'blog-' + blogIndex + '\\\']\');if(btn)btn.textContent=\'📋 COPY LINK\';},2000);return false" style="padding:10px 14px;background:var(--cream);color:var(--dark);border:1px solid var(--cream-mid);border-radius:3px;font-size:12px;font-weight:600;cursor:pointer">📋 COPY LINK</button>';
+  blogHtml += '</div></div>';
+  
+  // Related blogs
+  blogHtml += '<div style="margin-top:48px;padding-top:32px;border-top:1px solid var(--cream-mid)">';
+  blogHtml += '<h3 style="font-family:\'Cormorant Garamond\',serif;font-size:28px;color:var(--dark);margin:0 0 20px 0">More Articles</h3>';
+  blogHtml += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">';
+  for (var i = 0; i < articles.length; i++) {
+    if (i === blogIndex) continue;
+    var art = articles[i];
+    blogHtml += '<a href="javascript:void(0)" onclick="showBlogPage(' + i + ');try{window.history.pushState({page:\'blog-' + i + '\'},\'\',\'?page=blog-' + i + '\')}catch(e){}return false" style="background:var(--cream);padding:16px;border:1px solid var(--cream-mid);border-radius:4px;text-decoration:none;transition:all .2s;display:block" onmouseover="this.style.boxShadow=\'0 4px 12px rgba(0,0,0,.08)\';this.style.borderColor=\'var(--gold)\'" onmouseout="this.style.boxShadow=\'\';this.style.borderColor=\'var(--cream-mid)\'">';
+    blogHtml += '<div style="font-size:20px;margin-bottom:8px">' + art.emoji + '</div>';
+    blogHtml += '<h4 style="margin:0 0 8px 0;color:var(--dark);font-family:\'Jost\',sans-serif;font-size:13px;font-weight:700;line-height:1.4">' + art.title + '</h4>';
+    blogHtml += '<div style="font-size:11px;color:var(--muted)">' + art.date + '</div>';
+    blogHtml += '</a>';
+  }
+  blogHtml += '</div></div></div></div>';
+  
+  // Get or create container
+  var container = document.getElementById('blog-full-page');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'blog-full-page';
+    container.classList.add('page');
+    document.body.insertBefore(container, document.querySelector('footer'));
+  }
+  
+  container.classList.add('active');
+  container.innerHTML = blogHtml;
+  
+  // Update URL
+  try {
+    window.history.pushState({page: 'blog-' + blogIndex}, '', '?page=blog-' + blogIndex);
+  } catch(e) {}
+}
 function showPage(id) {
+
   // Stop carousel auto-rotate when leaving product page
   if (id !== 'product' && typeof stopDetailCarouselAutoRotate === 'function') {
     stopDetailCarouselAutoRotate();
@@ -2749,6 +2860,13 @@ function showPage(id) {
     }
   }
   if (id === 'reviews' && typeof renderReviews === 'function') { setTimeout(renderReviews, 50); }
+  
+  // PHASE 3: Initialize checkout features
+  if (id === 'checkout') {
+    loadSavedAddresses();
+    renderSavedAddresses();
+    checkLoyaltyAtCheckout();
+  }
 }
 function showShopCategory(filter) {
   document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
@@ -2854,29 +2972,8 @@ const articles = [
 
 var currentArtIdx = 0;
 function openArt(idx) {
-  var a = articles[idx];
-  if (!a) return;
-  currentArtIdx = idx;
-  var __g_art_emoji=document.getElementById('art-emoji');if(__g_art_emoji)__g_art_emoji.textContent = a.emoji;
-  var __g_art_tag=document.getElementById('art-tag');if(__g_art_tag)__g_art_tag.textContent = a.tag;
-  var __g_art_title=document.getElementById('art-title');if(__g_art_title)__g_art_title.textContent = a.title;
-  var __g_art_meta=document.getElementById('art-meta');if(__g_art_meta)__g_art_meta.textContent = a.date;
-  document.getElementById('art-body').innerHTML = a.body;
-  // Update WhatsApp share link
-  var waShare = document.getElementById('art-wa-share');
-  if (waShare) {
-    var msg = encodeURIComponent('Check out this article from Game of Bones: \u201c' + a.title + '\u201d \ud83d\udc3e gameofbones.in');
-    waShare.href = 'https://wa.me/?text=' + msg;
-  }
-  // Update prev/next nav
-  var prevBtn = document.getElementById('art-prev-btn');
-  var nextBtn = document.getElementById('art-next-btn');
-  if (prevBtn) { prevBtn.style.display = idx > 0 ? 'inline-flex' : 'none'; }
-  if (nextBtn) { nextBtn.style.display = idx < articles.length - 1 ? 'inline-flex' : 'none'; }
-  var overlay = document.getElementById('artOverlay');
-  overlay.classList.add('open');
-  overlay.scrollTop = 0;
-  document.body.style.overflow = 'hidden';
+  // Redirect to full blog page instead of modal
+  showBlogPage(idx);
 }
 
 function closeArt() {
@@ -4311,6 +4408,548 @@ var _referrerPhone = null; // Phone number of the person who referred this custo
   }
 })();
 
+// ── CHECKOUT PHASE 3: PIN CODE MAPPING ───────────────────────────
+var PIN_MAPPING = {
+  // Major cities (sample - you can expand this)
+  "400001":{"city":"Mumbai","state":"Maharashtra"},"400002":{"city":"Mumbai","state":"Maharashtra"},"400003":{"city":"Mumbai","state":"Maharashtra"},"400004":{"city":"Mumbai","state":"Maharashtra"},"400005":{"city":"Mumbai","state":"Maharashtra"},"400006":{"city":"Mumbai","state":"Maharashtra"},"400007":{"city":"Mumbai","state":"Maharashtra"},"400008":{"city":"Mumbai","state":"Maharashtra"},"400009":{"city":"Mumbai","state":"Maharashtra"},"400010":{"city":"Mumbai","state":"Maharashtra"},
+  "400011":{"city":"Mumbai","state":"Maharashtra"},"400012":{"city":"Mumbai","state":"Maharashtra"},"400013":{"city":"Mumbai","state":"Maharashtra"},"400014":{"city":"Mumbai","state":"Maharashtra"},"400015":{"city":"Mumbai","state":"Maharashtra"},"400016":{"city":"Mumbai","state":"Maharashtra"},"400017":{"city":"Mumbai","state":"Maharashtra"},"400018":{"city":"Mumbai","state":"Maharashtra"},"400019":{"city":"Mumbai","state":"Maharashtra"},"400020":{"city":"Mumbai","state":"Maharashtra"},
+  "400021":{"city":"Mumbai","state":"Maharashtra"},"400022":{"city":"Mumbai","state":"Maharashtra"},"400023":{"city":"Mumbai","state":"Maharashtra"},"400024":{"city":"Mumbai","state":"Maharashtra"},"400025":{"city":"Mumbai","state":"Maharashtra"},"400026":{"city":"Mumbai","state":"Maharashtra"},"400027":{"city":"Mumbai","state":"Maharashtra"},"400028":{"city":"Mumbai","state":"Maharashtra"},
+  "110001":{"city":"Delhi","state":"Delhi"},"110002":{"city":"Delhi","state":"Delhi"},"110003":{"city":"Delhi","state":"Delhi"},"110004":{"city":"Delhi","state":"Delhi"},"110005":{"city":"Delhi","state":"Delhi"},
+  "560001":{"city":"Bangalore","state":"Karnataka"},"560002":{"city":"Bangalore","state":"Karnataka"},"560034":{"city":"Bangalore","state":"Karnataka"},"560075":{"city":"Bangalore","state":"Karnataka"},
+  "500001":{"city":"Hyderabad","state":"Telangana"},"500002":{"city":"Hyderabad","state":"Telangana"},"500003":{"city":"Hyderabad","state":"Telangana"},"500004":{"city":"Hyderabad","state":"Telangana"},
+  "600001":{"city":"Chennai","state":"Tamil Nadu"},"600002":{"city":"Chennai","state":"Tamil Nadu"},"600003":{"city":"Chennai","state":"Tamil Nadu"},"600004":{"city":"Chennai","state":"Tamil Nadu"},
+  "700001":{"city":"Kolkata","state":"West Bengal"},"700002":{"city":"Kolkata","state":"West Bengal"},"700003":{"city":"Kolkata","state":"West Bengal"},"700004":{"city":"Kolkata","state":"West Bengal"},
+  "380001":{"city":"Ahmedabad","state":"Gujarat"},"380002":{"city":"Ahmedabad","state":"Gujarat"},"380005":{"city":"Ahmedabad","state":"Gujarat"},
+  "411001":{"city":"Pune","state":"Maharashtra"},"411002":{"city":"Pune","state":"Maharashtra"},"411003":{"city":"Pune","state":"Maharashtra"},"411004":{"city":"Pune","state":"Maharashtra"},
+  "143001":{"city":"Chandigarh","state":"Chandigarh"},"143002":{"city":"Chandigarh","state":"Chandigarh"},
+  "202001":{"city":"Noida","state":"Uttar Pradesh"},"202002":{"city":"Noida","state":"Uttar Pradesh"},"202003":{"city":"Noida","state":"Uttar Pradesh"},"202004":{"city":"Noida","state":"Uttar Pradesh"},
+  "201301":{"city":"Ghaziabad","state":"Uttar Pradesh"},"201302":{"city":"Ghaziabad","state":"Uttar Pradesh"},"201303":{"city":"Ghaziabad","state":"Uttar Pradesh"},
+  // Add more as needed
+};
+
+// Saved addresses (stored in localStorage)
+var SAVED_ADDRESSES = [];
+function loadSavedAddresses() {
+  try {
+    var saved = localStorage.getItem('gob_saved_addresses');
+    if (saved) SAVED_ADDRESSES = JSON.parse(saved);
+  } catch(e) { console.log('Could not load saved addresses'); }
+}
+function saveAddress() {
+  var addr = {
+    fname: document.getElementById('co-fname').value.trim(),
+    lname: document.getElementById('co-lname').value.trim(),
+    phone: document.getElementById('co-phone').value.trim(),
+    addr1: document.getElementById('co-addr1').value.trim(),
+    addr2: document.getElementById('co-addr2').value.trim(),
+    city: document.getElementById('co-city').value.trim(),
+    state: document.getElementById('co-state').value,
+    pin: document.getElementById('co-pin').value.trim(),
+    timestamp: Date.now()
+  };
+  // Avoid duplicates
+  SAVED_ADDRESSES = SAVED_ADDRESSES.filter(a => !(a.addr1 === addr.addr1 && a.pin === addr.pin));
+  SAVED_ADDRESSES.unshift(addr);
+  if (SAVED_ADDRESSES.length > 5) SAVED_ADDRESSES.pop(); // Keep last 5
+  try {
+    localStorage.setItem('gob_saved_addresses', JSON.stringify(SAVED_ADDRESSES));
+  } catch(e) { console.log('Could not save address'); }
+}
+function loadAddress(idx) {
+  if (SAVED_ADDRESSES[idx]) {
+    var a = SAVED_ADDRESSES[idx];
+    document.getElementById('co-fname').value = a.fname;
+    document.getElementById('co-lname').value = a.lname;
+    document.getElementById('co-phone').value = a.phone;
+    document.getElementById('co-addr1').value = a.addr1;
+    document.getElementById('co-addr2').value = a.addr2;
+    document.getElementById('co-city').value = a.city;
+    document.getElementById('co-state').value = a.state;
+    document.getElementById('co-pin').value = a.pin;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+// Auto-detect city/state from PIN (for known PIN codes, manual entry for others)
+function autoDetectFromPin() {
+  var pin = document.getElementById('co-pin').value.trim();
+  if (pin.length === 6) {
+    if (PIN_MAPPING[pin]) {
+      // PIN found in our database - auto-fill city & state
+      var data = PIN_MAPPING[pin];
+      document.getElementById('co-city').value = data.city;
+      document.getElementById('co-state').value = data.state;
+      document.getElementById('pinValidMsg').style.display = 'block';
+      document.getElementById('pinValidMsg').innerHTML = '✓ ' + data.city + ', ' + data.state;
+      document.getElementById('pinValidMsg').style.color = 'var(--teal)';
+    } else {
+      // PIN valid but not in our quick-detect database - show message but allow entry
+      document.getElementById('pinValidMsg').style.display = 'block';
+      document.getElementById('pinValidMsg').innerHTML = '📍 Enter city & state manually for this PIN';
+      document.getElementById('pinValidMsg').style.color = 'var(--muted)';
+    }
+  } else {
+    document.getElementById('pinValidMsg').style.display = 'none';
+  }
+}
+
+function renderSavedAddresses() {
+  var section = document.getElementById('savedAddressesSection');
+  var container = document.getElementById('savedAddressesContainer');
+  if (!section || !container) return;
+  
+  if (SAVED_ADDRESSES.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+  
+  section.style.display = 'block';
+  container.innerHTML = '';
+  SAVED_ADDRESSES.forEach(function(addr, idx) {
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.style.cssText = 'background:var(--cream);border:1.5px solid var(--cream-mid);padding:12px;cursor:pointer;border-radius:2px;transition:all .2s;text-align:left';
+    btn.onmouseover = function() { this.style.borderColor = 'var(--teal)'; this.style.background = 'rgba(42,124,111,.05)'; };
+    btn.onmouseout = function() { this.style.borderColor = 'var(--cream-mid)'; this.style.background = 'var(--cream)'; };
+    btn.onclick = function() { loadAddress(idx); };
+    btn.innerHTML = '<div style="font-size:11px;font-weight:700;color:var(--dark)">' + addr.city + '</div><div style="font-size:10px;color:var(--muted);margin-top:2px">' + addr.pin + '</div>';
+    container.appendChild(btn);
+  });
+}
+
+// ── REVIEW SYSTEM (PHASE 4) ───────────────────────────────────────
+var _currentCustomerPhone = null;
+var _customerBoughtProduct = false;
+var _currentReviewStar = 0;
+var REVIEW_POINTS = 50; // Points awarded per review
+
+function checkCustomerPurchaseHistory(productName) {
+  // Save phone from rewards page if customer just entered it
+  var rewardPhoneInput = document.getElementById('rewards-phone-input');
+  if (rewardPhoneInput && rewardPhoneInput.value.trim()) {
+    var phone = rewardPhoneInput.value.trim().replace(/[^0-9]/g, '');
+    if (phone.length >= 10) {
+      _currentCustomerPhone = phone;
+      localStorage.setItem('gob_customer_phone', phone);
+    }
+  }
+  
+  var phone = _currentCustomerPhone || localStorage.getItem('gob_customer_phone');
+  
+  if (!phone) {
+    // Show gate - ask to sign in
+    document.getElementById('pmodal-review-gate').style.display = 'block';
+    document.getElementById('pmodal-review-form').style.display = 'none';
+    return;
+  }
+  
+  _currentCustomerPhone = phone;
+  
+  // Fetch orders from Supabase to check if they bought this product
+  fetch(SUPABASE_URL + '/rest/v1/orders?customer_phone=eq.' + phone + '&select=items', {
+    method: 'GET',
+    headers: {
+      'apikey': SUPABASE_ANON_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
+    }
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (!data || data.length === 0) {
+      showCannotReviewMessage(productName);
+      return;
+    }
+    
+    // Check if any order contains this product
+    var hasBoughtProduct = false;
+    for (var order of data) {
+      if (order.items && Array.isArray(order.items)) {
+        for (var item of order.items) {
+          if (item.product_name && item.product_name.toLowerCase() === productName.toLowerCase()) {
+            hasBoughtProduct = true;
+            break;
+          }
+        }
+      }
+      if (hasBoughtProduct) break;
+    }
+    
+    if (hasBoughtProduct) {
+      _customerBoughtProduct = true;
+      document.getElementById('pmodal-review-gate').style.display = 'none';
+      document.getElementById('pmodal-review-form').style.display = 'block';
+    } else {
+      showCannotReviewMessage(productName);
+    }
+  })
+  .catch(err => {
+    console.log('Error checking purchase history:', err);
+    document.getElementById('pmodal-review-gate').style.display = 'block';
+    document.getElementById('pmodal-review-form').style.display = 'none';
+  });
+}
+
+function showCannotReviewMessage(productName) {
+  _customerBoughtProduct = false;
+  document.getElementById('pmodal-review-gate').style.display = 'block';
+  document.getElementById('pmodal-review-form').style.display = 'none';
+  document.getElementById('pmodal-review-gate').innerHTML = '<div style="font-size:13px;text-align:center;padding:16px"><strong style="color:var(--dark);display:block;margin-bottom:6px">❌ Cannot Review</strong><span style="font-size:12px;color:var(--muted);display:block">You can only review products you\'ve purchased.<br>Order this treat first!</span><button onclick="closePModal();showPage(\'shop\')" style="margin-top:10px;background:var(--teal);color:var(--white);border:none;padding:9px 20px;font-family:\'Jost\',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px">Shop Now &#8594;</button></div>';
+}
+
+function pickStar(rating) {
+  _currentReviewStar = rating;
+  document.querySelectorAll('.star-pick').forEach(function(star, idx) {
+    var starRating = idx + 1;
+    if (starRating <= rating) {
+      star.textContent = '★';
+      star.style.color = 'var(--gold)';
+      star.style.transform = 'scale(1.2)';
+    } else {
+      star.textContent = '☆';
+      star.style.color = 'var(--cream-mid)';
+      star.style.transform = 'scale(1)';
+    }
+  });
+}
+
+function submitReview() {
+  if (_currentReviewStar === 0) {
+    document.getElementById('reviewFormError').style.display = 'block';
+    document.getElementById('reviewFormError').textContent = 'Please select a rating.';
+    return;
+  }
+  
+  var reviewText = document.getElementById('reviewText').value.trim();
+  if (!reviewText || reviewText.length < 10) {
+    document.getElementById('reviewFormError').style.display = 'block';
+    document.getElementById('reviewFormError').textContent = 'Review must be at least 10 characters.';
+    return;
+  }
+  
+  var dogName = document.getElementById('reviewDogName').value.trim() || 'Loyal Customer';
+  var productName = document.getElementById('pmodal-name').textContent.trim();
+  
+  // Find product index for ID
+  var productIndex = products.findIndex(p => p.name === productName);
+  if (productIndex === -1) {
+    document.getElementById('reviewFormError').style.display = 'block';
+    document.getElementById('reviewFormError').textContent = 'Product not found.';
+    return;
+  }
+  
+  var productId = productIndex + 1;
+  
+  // Disable submit button while saving
+  var submitBtn = document.querySelector('#pmodal-review-form button[onclick*="submitReview"]');
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.style.opacity = '0.5';
+  }
+  
+  // If image selected, upload it first
+  if (_reviewImageFile) {
+    uploadReviewPhoto(productId).then(function(imageUrl) {
+      submitReviewData(productId, dogName, productName, reviewText, imageUrl, submitBtn);
+    }).catch(function(err) {
+      console.log('Photo upload error, continuing without photo:', err);
+      submitReviewData(productId, dogName, productName, reviewText, null, submitBtn);
+    });
+  } else {
+    submitReviewData(productId, dogName, productName, reviewText, null, submitBtn);
+  }
+}
+
+function submitReviewData(productId, dogName, productName, reviewText, photoUrl, submitBtn) {
+  // Save review to Supabase
+  var reviewData = {
+    product_id: productId,
+    rating: _currentReviewStar,
+    review_text: reviewText,
+    customer_name: dogName,
+    customer_phone: _currentCustomerPhone,
+    photo_url: photoUrl || null,
+    created_at: new Date().toISOString()
+  };
+  
+  fetch(SUPABASE_URL + '/rest/v1/reviews', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': SUPABASE_ANON_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
+    },
+    body: JSON.stringify(reviewData)
+  })
+  .then(r => {
+    if (r.status === 201) {
+      // Review saved successfully - award points
+      awardReviewPoints(_currentCustomerPhone);
+      
+      // Show success message
+      document.getElementById('reviewSuccess').style.display = 'block';
+      document.getElementById('reviewFormError').style.display = 'none';
+      
+      // Clear form
+      document.getElementById('reviewText').value = '';
+      document.getElementById('reviewDogName').value = '';
+      _currentReviewStar = 0;
+      removeReviewPhoto();
+      document.querySelectorAll('.star-pick').forEach(function(star) {
+        star.textContent = '☆';
+        star.style.color = 'var(--cream-mid)';
+      });
+      
+      // Hide form after 2 seconds and reload reviews
+      setTimeout(function() {
+        document.getElementById('reviewSuccess').style.display = 'none';
+        document.getElementById('pmodal-review-form').style.display = 'none';
+        loadProductReviews(productName);
+      }, 2000);
+    } else {
+      throw new Error('Failed to save review');
+    }
+  })
+  .catch(err => {
+    console.log('Error saving review:', err);
+    document.getElementById('reviewFormError').style.display = 'block';
+    document.getElementById('reviewFormError').textContent = 'Error saving review. Please try again.';
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.style.opacity = '1';
+    }
+  });
+}
+}
+
+function awardReviewPoints(phone) {
+  // Award 50 points for writing a review
+  if (!phone) return;
+  
+  // Method 1: Save to loyalty_points table (if you have it)
+  // OR store in localStorage for now until backend is ready
+  
+  try {
+    var pointsRecord = {
+      customer_phone: phone,
+      points: REVIEW_POINTS,
+      type: 'review',
+      created_at: new Date().toISOString()
+    };
+    
+    // Try to save to Supabase
+    fetch(SUPABASE_URL + '/rest/v1/loyalty_points', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
+      },
+      body: JSON.stringify(pointsRecord)
+    })
+    .then(r => {
+      if (r.status === 201) {
+        console.log('✓ Awarded 50 review points to', phone);
+      }
+    })
+    .catch(err => console.log('Note: Points stored locally (backend pending)'));
+  } catch(e) {
+    console.log('Could not award points:', e);
+  }
+}
+
+function loadExistingReviews(productName) {
+  // Fetch and display existing reviews for this product
+  fetch(SUPABASE_URL + '/rest/v1/product_reviews?product_name=eq.' + encodeURIComponent(productName) + '&order=created_at.desc&limit=50', {
+    method: 'GET',
+    headers: {
+      'apikey': SUPABASE_ANON_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
+    }
+  })
+  .then(r => r.json())
+  .then(reviews => {
+    var listEl = document.getElementById('pmodal-review-list');
+    if (!listEl) return;
+    
+    if (!reviews || reviews.length === 0) {
+      listEl.innerHTML = '<div style="text-align:center;color:var(--muted);font-size:12px;padding:20px">No reviews yet. Be the first to review!</div>';
+      updateReviewStats([]);
+      return;
+    }
+    
+    // Update stats
+    updateReviewStats(reviews);
+    
+    // Render reviews
+    listEl.innerHTML = '';
+    reviews.forEach(function(review) {
+      var stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
+      var reviewEl = document.createElement('div');
+      reviewEl.style.cssText = 'padding:16px;background:rgba(255,255,255,.5);border-radius:2px;border-left:3px solid var(--gold)';
+      reviewEl.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+          <div style="font-weight:700;color:var(--dark);font-size:13px">${review.dog_name}</div>
+          <div style="color:var(--gold);font-size:14px;letter-spacing:2px">${stars}</div>
+        </div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.4">${review.review_text}</div>
+        <div style="font-size:10px;color:rgba(0,0,0,.3);text-transform:uppercase;font-weight:600">${new Date(review.created_at).toLocaleDateString()}</div>
+      `;
+      listEl.appendChild(reviewEl);
+    });
+  })
+  .catch(err => console.log('Error loading reviews:', err));
+}
+
+function updateReviewStats(reviews) {
+  if (!reviews || reviews.length === 0) {
+    document.getElementById('pmodal-avg-score').textContent = '—';
+    document.getElementById('pmodal-avg-stars').innerHTML = '';
+    document.getElementById('pmodal-review-count').textContent = '';
+    return;
+  }
+  
+  var totalRating = 0;
+  var starCounts = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0};
+  
+  reviews.forEach(function(review) {
+    totalRating += review.rating;
+    starCounts[review.rating] = (starCounts[review.rating] || 0) + 1;
+  });
+  
+  var avgRating = (totalRating / reviews.length).toFixed(1);
+  var avgStars = '★'.repeat(Math.round(avgRating)) + '☆'.repeat(5 - Math.round(avgRating));
+  
+  document.getElementById('pmodal-avg-score').textContent = avgRating;
+  document.getElementById('pmodal-avg-stars').innerHTML = avgStars;
+  document.getElementById('pmodal-review-count').textContent = reviews.length + ' review' + (reviews.length !== 1 ? 's' : '');
+  
+  // Show bar chart
+  var barChart = document.getElementById('pmodal-bar-chart');
+  if (barChart) {
+    barChart.innerHTML = '';
+    for (var i = 5; i >= 1; i--) {
+      var count = starCounts[i] || 0;
+      var percent = (count / reviews.length) * 100;
+      var barEl = document.createElement('div');
+      barEl.style.cssText = 'display:flex;align-items:center;gap:8px;font-size:11px';
+      barEl.innerHTML = `
+        <span style="min-width:30px">${i} ★</span>
+        <div style="flex:1;height:6px;background:var(--cream-mid);border-radius:2px;overflow:hidden">
+          <div style="height:100%;background:var(--gold);width:${percent}%"></div>
+        </div>
+        <span style="min-width:30px;text-align:right;color:var(--muted)">${count}</span>
+      `;
+      barChart.appendChild(barEl);
+    }
+  }
+}
+
+// ── REVIEW PHOTO UPLOAD ──────────────────────────────────────
+var _reviewImageFile = null;
+var _reviewImagePreview = null;
+
+function handleReviewPhotoUpload(event) {
+  var file = event.target.files[0];
+  if (!file) return;
+  
+  // Validate file type
+  if (!file.type.startsWith('image/')) {
+    document.getElementById('photoUploadError').style.display = 'block';
+    document.getElementById('photoUploadError').textContent = 'Please select an image file.';
+    return;
+  }
+  
+  // Validate file size (max 5MB)
+  if (file.size > 5 * 1024 * 1024) {
+    document.getElementById('photoUploadError').style.display = 'block';
+    document.getElementById('photoUploadError').textContent = 'Image must be smaller than 5MB.';
+    return;
+  }
+  
+  _reviewImageFile = file;
+  document.getElementById('photoUploadError').style.display = 'none';
+  
+  // Show preview
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    _reviewImagePreview = e.target.result;
+    var previewEl = document.getElementById('reviewPhotoPreview');
+    if (previewEl) {
+      previewEl.innerHTML = '<img src="' + e.target.result + '" style="width:100%;max-height:150px;object-fit:cover;border-radius:4px;border:1px solid var(--cream-mid)">';
+      previewEl.style.display = 'block';
+    }
+    
+    var removeBtn = document.getElementById('reviewPhotoRemove');
+    if (removeBtn) removeBtn.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+  
+  // Hide file input after selection
+  event.target.style.display = 'none';
+  document.getElementById('reviewPhotoLabel').style.display = 'none';
+}
+
+function removeReviewPhoto() {
+  _reviewImageFile = null;
+  _reviewImagePreview = null;
+  document.getElementById('reviewPhotoInput').value = '';
+  document.getElementById('reviewPhotoInput').style.display = 'block';
+  document.getElementById('reviewPhotoLabel').style.display = 'block';
+  var previewEl = document.getElementById('reviewPhotoPreview');
+  if (previewEl) previewEl.style.display = 'none';
+  document.getElementById('reviewPhotoRemove').style.display = 'none';
+}
+
+async function uploadReviewPhoto(productId) {
+  if (!_reviewImageFile) return null;
+  
+  // Generate unique filename
+  var timestamp = Date.now();
+  var random = Math.random().toString(36).substring(2, 8);
+  var extension = _reviewImageFile.name.split('.').pop();
+  var filename = 'review-' + productId + '-' + timestamp + '-' + random + '.' + extension;
+  
+  try {
+    // Read file as base64
+    var base64 = await new Promise((resolve, reject) => {
+      var reader = new FileReader();
+      reader.onload = () => {
+        var base64String = reader.result.split(',')[1];
+        resolve(base64String);
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(_reviewImageFile);
+    });
+    
+    // Upload to Supabase Storage
+    var response = await fetch(
+      SUPABASE_URL + '/storage/v1/object/product-reviews/' + filename,
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+          'Content-Type': _reviewImageFile.type
+        },
+        body: Uint8Array.from(atob(base64), c => c.charCodeAt(0))
+      }
+    );
+    
+    if (response.ok) {
+      // Return public URL
+      return SUPABASE_URL + '/storage/v1/object/public/product-reviews/' + filename;
+    } else {
+      console.log('Upload failed:', response.status);
+      return null;
+    }
+  } catch (err) {
+    console.log('Error uploading photo:', err);
+    return null;
+  }
+}
+
+// ────────────────────────────────────────────────────────────────
+
+
 var RAZORPAY_KEY_ID = 'rzp_live_Sc4Adu52rXhZQ6'; // Live key — DO NOT COMMIT TO GIT (security risk)
 
 function _finaliseOrder(ref, phoneVal, orderItems) {
@@ -4491,6 +5130,12 @@ function placeOrder() {
   var grandText = grandEl ? grandEl.textContent.replace(/[^0-9]/g,'') : '0';
   var grandTotal = parseInt(grandText) || 0;
   _currentOrderTotal = grandTotal;
+
+  // PHASE 3: Save address if checkbox is checked
+  var saveAddrCheckbox = document.getElementById('co-save-addr');
+  if (saveAddrCheckbox && saveAddrCheckbox.checked) {
+    saveAddress();
+  }
 
   // COD: skip Razorpay, go straight to success
   if (selectedPayment === 'cod') {
@@ -6008,6 +6653,10 @@ function shareProduct(platform) {
 
 function loadProductReviews(productName) {
   console.log('🔵 loadProductReviews called for:', productName);
+  
+  // CHECK PURCHASE HISTORY FIRST
+  checkCustomerPurchaseHistory(productName);
+  
   const productIndex = products.findIndex(p => p.name === productName);
   if (productIndex === -1) {
     console.log('❌ Product not found');
@@ -7909,6 +8558,28 @@ showPage = function(id) {
   }
 };
 // ── END LOYALTY POINTS REDEMPTION ──────────────────────────────────
+
+// URL ROUTING FOR BLOGS - Handle ?page=blog-X URLs
+window.addEventListener('load', function() {
+  var params = new URLSearchParams(window.location.search);
+  var pageParam = params.get('page');
+  
+  if (pageParam && pageParam.startsWith('blog-')) {
+    var blogIndex = parseInt(pageParam.replace('blog-', ''));
+    if (!isNaN(blogIndex) && blogIndex >= 0 && blogIndex < articles.length) {
+      setTimeout(function() {
+        showBlogPage(blogIndex);
+      }, 200);
+      return;
+    }
+  }
+  
+  // Default routing for other pages
+  var page = pageParam || 'home';
+  setTimeout(function() {
+    showPage(page);
+  }, 200);
+});
 // ===== PHASE 2: MOBILE FUNCTIONS =====
 function toggleMobileMenu(){const e=document.getElementById('mobileNavMenu'),t=document.querySelector('.hamburger-btn');e&&t&&(e.classList.toggle('mobile-open'),t.classList.toggle('open'))}document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('#mobileNavMenu a').forEach(function(e){e.addEventListener('click',function(){const t=document.getElementById('mobileNavMenu'),o=document.querySelector('.hamburger-btn');t&&t.classList.remove('mobile-open'),o&&o.classList.remove('open')})});let e=0;const t=document.getElementById('cartDrawer');t&&(t.addEventListener('touchstart',function(t){e=t.touches[0].clientX}),t.addEventListener('touchmove',function(t){const o=t.touches[0].clientX;100<e-o&&toggleCart()})),'IntersectionObserver'in window&&document.querySelectorAll('img[data-src]').length>0&&new IntersectionObserver(function(e,t){e.forEach(function(e){if(e.isIntersecting){const o=e.target;o.dataset.src&&(o.src=o.dataset.src,o.removeAttribute('data-src')),t.unobserve(o)}})}).observe(document.querySelectorAll('img[data-src]')[0])});
 // Render products on page load (after DOM is ready)
