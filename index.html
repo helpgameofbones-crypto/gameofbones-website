@@ -1913,38 +1913,85 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
 
 <!-- ── REWARDS PAGE ──────────────────────────────────────────────────── -->
 <div id="page-rewards" class="page">
-  <section style="background:var(--cream);min-height:80vh;padding:80px 6%">
-    <div class="sec-inner" style="max-width:700px">
-      <div class="sec-eyebrow">Loyalty Rewards</div>
-      <h2 class="sec-title">Your <em>Reward Points</em></h2>
-      <p class="sec-sub">Earn 1 point for every Rs.10 spent. Redeem 100 points = Rs.10 off your next order.</p>
-      <div style="background:var(--white);border:1px solid var(--cream-mid);padding:32px;margin-bottom:24px">
-        <label style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px">Enter your phone to check points</label>
-        <div style="display:flex;gap:10px">
+  <section style="background:linear-gradient(135deg,var(--dark) 0%,#3d2b1f 100%);min-height:100vh;padding:80px 6%">
+    <div class="sec-inner" style="max-width:900px">
+      <div class="sec-eyebrow" style="color:var(--gold-light)">Loyalty Rewards</div>
+      <h2 class="sec-title" style="color:var(--white);margin-bottom:8px">Your <em style="color:var(--gold-light)">Reward Points</em></h2>
+      <p class="sec-sub" style="color:rgba(255,255,255,.6);margin-bottom:40px">Earn points. Unlock rewards. Stack with coupons.</p>
+
+      <!-- PHONE INPUT -->
+      <div style="background:rgba(255,255,255,.05);border:1px solid rgba(200,151,58,.2);backdrop-filter:blur(10px);padding:24px;margin-bottom:32px;border-radius:4px">
+        <label style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:12px">Check Your Points</label>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
           <input id="rewardsPhone" type="tel" placeholder="98765 43210" maxlength="10"
-            style="flex:1;padding:12px 16px;border:1.5px solid var(--cream-mid);background:var(--cream);font-family:Jost,sans-serif;font-size:15px;color:var(--dark);outline:none">
-          <button onclick="checkRewards()" class="btn-gold" style="padding:12px 28px;font-size:12px">Check</button>
+            style="flex:1;min-width:200px;padding:14px 16px;border:1.5px solid rgba(200,151,58,.3);background:rgba(255,255,255,.08);font-family:Jost,sans-serif;font-size:15px;color:var(--white);outline:none;border-radius:2px;transition:all .2s"
+            onfocus="this.style.borderColor='rgba(200,151,58,.6)';this.style.background='rgba(255,255,255,.12)'"
+            onblur="this.style.borderColor='rgba(200,151,58,.3)';this.style.background='rgba(255,255,255,.08)'">
+          <button onclick="checkRewards()" class="btn-gold" style="padding:14px 32px;font-size:12px">Check Points</button>
         </div>
       </div>
+
+      <!-- DASHBOARD -->
       <div id="rewardsResult"></div>
-      <div style="background:var(--dark);padding:32px;margin-top:32px">
-        <h3 style="font-family:Cormorant Garamond,serif;font-size:24px;color:var(--white);margin-bottom:20px">How to Earn Points</h3>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
-          <div style="text-align:center;padding:20px;border:1px solid rgba(200,151,58,.2)">
-            <div style="font-size:28px;margin-bottom:8px">&#128722;</div>
-            <div style="font-size:13px;font-weight:700;color:var(--gold);margin-bottom:4px">Every Purchase</div>
-            <div style="font-size:12px;color:rgba(255,255,255,.5)">1 point per Rs.10 spent</div>
+
+      <!-- HOW TO EARN -->
+      <div style="margin-top:60px">
+        <h3 style="font-family:Cormorant Garamond,serif;font-size:28px;color:var(--white);margin-bottom:32px">How to Earn Points</h3>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px">
+          <!-- PURCHASES -->
+          <div style="background:rgba(255,255,255,.04);border:1px solid rgba(200,151,58,.2);padding:28px;text-align:center;border-radius:4px;transition:all .3s;cursor:pointer" onmouseover="this.style.background='rgba(255,255,255,.08)';this.style.borderColor='rgba(200,151,58,.4)'" onmouseout="this.style.background='rgba(255,255,255,.04)';this.style.borderColor='rgba(200,151,58,.2)'">
+            <div style="font-size:40px;margin-bottom:12px">🛍️</div>
+            <div style="font-size:14px;font-weight:700;color:var(--gold-light);margin-bottom:6px">Every Purchase</div>
+            <div style="font-size:13px;color:rgba(255,255,255,.6);line-height:1.6">
+              <strong style="color:var(--gold)">1 point</strong> per<br>Rs.10 spent
+            </div>
           </div>
-          <div style="text-align:center;padding:20px;border:1px solid rgba(200,151,58,.2)">
-            <div style="font-size:28px;margin-bottom:8px">&#11088;</div>
-            <div style="font-size:13px;font-weight:700;color:var(--gold);margin-bottom:4px">Write a Review</div>
-            <div style="font-size:12px;color:rgba(255,255,255,.5)">50 bonus points</div>
+          <!-- REVIEWS -->
+          <div style="background:rgba(255,255,255,.04);border:1px solid rgba(200,151,58,.2);padding:28px;text-align:center;border-radius:4px;transition:all .3s;cursor:pointer" onmouseover="this.style.background='rgba(255,255,255,.08)';this.style.borderColor='rgba(200,151,58,.4)'" onmouseout="this.style.background='rgba(255,255,255,.04)';this.style.borderColor='rgba(200,151,58,.2)'">
+            <div style="font-size:40px;margin-bottom:12px">⭐</div>
+            <div style="font-size:14px;font-weight:700;color:var(--gold-light);margin-bottom:6px">Write a Review</div>
+            <div style="font-size:13px;color:rgba(255,255,255,.6);line-height:1.6">
+              <strong style="color:var(--gold)">50 points</strong><br>per review
+            </div>
           </div>
-          <div style="text-align:center;padding:20px;border:1px solid rgba(200,151,58,.2)">
-            <div style="font-size:28px;margin-bottom:8px">&#128101;</div>
-            <div style="font-size:13px;font-weight:700;color:var(--gold);margin-bottom:4px">Refer a Friend</div>
-            <div style="font-size:12px;color:rgba(255,255,255,.5)">100 points when they order</div>
+          <!-- REFERRAL -->
+          <div style="background:rgba(255,255,255,.04);border:1px solid rgba(200,151,58,.2);padding:28px;text-align:center;border-radius:4px;transition:all .3s;cursor:pointer" onmouseover="this.style.background='rgba(255,255,255,.08)';this.style.borderColor='rgba(200,151,58,.4)'" onmouseout="this.style.background='rgba(255,255,255,.04)';this.style.borderColor='rgba(200,151,58,.2)'">
+            <div style="font-size:40px;margin-bottom:12px">👥</div>
+            <div style="font-size:14px;font-weight:700;color:var(--gold-light);margin-bottom:6px">Refer Friends</div>
+            <div style="font-size:13px;color:rgba(255,255,255,.6);line-height:1.6">
+              <strong style="color:var(--gold)">300 points</strong><br>when they order
+            </div>
           </div>
+        </div>
+      </div>
+
+      <!-- REDEMPTION TIERS -->
+      <div style="margin-top:60px">
+        <h3 style="font-family:Cormorant Garamond,serif;font-size:28px;color:var(--white);margin-bottom:32px">Redeem Your Points</h3>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px">
+          <div style="background:linear-gradient(135deg,rgba(200,151,58,.15) 0%,rgba(200,151,58,.05) 100%);border:1.5px solid rgba(200,151,58,.3);padding:20px;text-align:center;border-radius:4px">
+            <div style="font-size:24px;font-weight:700;color:var(--gold);font-family:Cormorant Garamond,serif">100</div>
+            <div style="font-size:10px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.05em;margin:4px 0">Points</div>
+            <div style="font-size:16px;font-weight:700;color:var(--gold-light)">₹30 Off</div>
+          </div>
+          <div style="background:linear-gradient(135deg,rgba(200,151,58,.15) 0%,rgba(200,151,58,.05) 100%);border:1.5px solid rgba(200,151,58,.3);padding:20px;text-align:center;border-radius:4px">
+            <div style="font-size:24px;font-weight:700;color:var(--gold);font-family:Cormorant Garamond,serif">150</div>
+            <div style="font-size:10px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.05em;margin:4px 0">Points</div>
+            <div style="font-size:16px;font-weight:700;color:var(--gold-light)">₹45 Off</div>
+          </div>
+          <div style="background:linear-gradient(135deg,rgba(200,151,58,.15) 0%,rgba(200,151,58,.05) 100%);border:1.5px solid rgba(200,151,58,.3);padding:20px;text-align:center;border-radius:4px">
+            <div style="font-size:24px;font-weight:700;color:var(--gold);font-family:Cormorant Garamond,serif">200</div>
+            <div style="font-size:10px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.05em;margin:4px 0">Points</div>
+            <div style="font-size:16px;font-weight:700;color:var(--gold-light)">₹60 Off</div>
+          </div>
+          <div style="background:linear-gradient(135deg,rgba(200,151,58,.15) 0%,rgba(200,151,58,.05) 100%);border:1.5px solid rgba(200,151,58,.3);padding:20px;text-align:center;border-radius:4px">
+            <div style="font-size:24px;font-weight:700;color:var(--gold);font-family:Cormorant Garamond,serif">250</div>
+            <div style="font-size:10px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.05em;margin:4px 0">Points</div>
+            <div style="font-size:16px;font-weight:700;color:var(--gold-light)">₹75 Off</div>
+          </div>
+        </div>
+        <div style="background:rgba(42,124,111,.1);border:1px solid rgba(42,124,111,.3);padding:16px;margin-top:20px;border-radius:4px;font-size:12px;color:rgba(255,255,255,.7);text-align:center">
+          💡 <strong>Stack with coupons!</strong> Use your points PLUS any coupon code for maximum savings. Points expire 30 days after earned.
         </div>
       </div>
     </div>
@@ -1953,20 +2000,62 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
 
 <!-- ── REFER A FRIEND PAGE ─────────────────────────────────────────── -->
 <div id="page-refer" class="page">
-  <section style="background:var(--cream);min-height:80vh;padding:80px 6%">
-    <div class="sec-inner" style="max-width:600px">
-      <div class="sec-eyebrow">Refer and Earn</div>
-      <h2 class="sec-title">Share the Love, <em>Earn Rewards</em></h2>
-      <p class="sec-sub">Share your unique link. When your friend places their first order, you both get 100 loyalty points.</p>
-      <div style="background:var(--white);border:1px solid var(--cream-mid);padding:32px;margin-bottom:24px">
-        <label style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px">Your Phone Number</label>
-        <div style="display:flex;gap:10px">
+  <section style="background:linear-gradient(135deg,var(--dark) 0%,#3d2b1f 100%);min-height:100vh;padding:80px 6%">
+    <div class="sec-inner" style="max-width:700px">
+      <div class="sec-eyebrow" style="color:var(--gold-light)">Refer and Earn</div>
+      <h2 class="sec-title" style="color:var(--white)">Share the Love, <em style="color:var(--gold-light)">Earn Together</em></h2>
+      <p class="sec-sub" style="color:rgba(255,255,255,.6);margin-bottom:40px">Share your link. When your friend places their first order, you both get 300 loyalty points.</p>
+
+      <!-- PHONE INPUT -->
+      <div style="background:rgba(255,255,255,.05);border:1px solid rgba(200,151,58,.2);backdrop-filter:blur(10px);padding:28px;margin-bottom:32px;border-radius:4px">
+        <label style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:12px">Your Phone Number</label>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
           <input id="referPhone" type="tel" placeholder="98765 43210" maxlength="10"
-            style="flex:1;padding:12px 16px;border:1.5px solid var(--cream-mid);background:var(--cream);font-family:Jost,sans-serif;font-size:15px;color:var(--dark);outline:none">
-          <button onclick="generateReferral()" class="btn-gold" style="padding:12px 28px;font-size:12px">Get Link</button>
+            style="flex:1;min-width:200px;padding:14px 16px;border:1.5px solid rgba(200,151,58,.3);background:rgba(255,255,255,.08);font-family:Jost,sans-serif;font-size:15px;color:var(--white);outline:none;border-radius:2px;transition:all .2s"
+            onfocus="this.style.borderColor='rgba(200,151,58,.6)';this.style.background='rgba(255,255,255,.12)'"
+            onblur="this.style.borderColor='rgba(200,151,58,.3)';this.style.background='rgba(255,255,255,.08)'">
+          <button onclick="generateReferral()" class="btn-gold" style="padding:14px 28px;font-size:12px">Get My Link</button>
         </div>
       </div>
+
+      <!-- REFERRAL RESULT -->
       <div id="referResult"></div>
+
+      <!-- BENEFITS -->
+      <div style="margin-top:60px">
+        <h3 style="font-family:Cormorant Garamond,serif;font-size:24px;color:var(--white);margin-bottom:28px">How It Works</h3>
+        <div style="background:rgba(255,255,255,.03);border:1px solid rgba(200,151,58,.2);border-radius:4px;overflow:hidden">
+          <div style="padding:28px;border-bottom:1px solid rgba(200,151,58,.1);display:flex;gap:20px;align-items:flex-start">
+            <div style="width:48px;height:48px;background:rgba(200,151,58,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">1️⃣</div>
+            <div>
+              <div style="font-size:14px;font-weight:700;color:var(--white);margin-bottom:4px">Share Your Link</div>
+              <div style="font-size:13px;color:rgba(255,255,255,.6)">Send your unique referral link to your friend via WhatsApp, email, or any app.</div>
+            </div>
+          </div>
+          <div style="padding:28px;border-bottom:1px solid rgba(200,151,58,.1);display:flex;gap:20px;align-items:flex-start">
+            <div style="width:48px;height:48px;background:rgba(200,151,58,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">2️⃣</div>
+            <div>
+              <div style="font-size:14px;font-weight:700;color:var(--white);margin-bottom:4px">They Place First Order</div>
+              <div style="font-size:13px;color:rgba(255,255,255,.6)">Your friend places their first order using your link and pays via Razorpay or COD.</div>
+            </div>
+          </div>
+          <div style="padding:28px;display:flex;gap:20px;align-items:flex-start">
+            <div style="width:48px;height:48px;background:rgba(42,124,111,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">🎉</div>
+            <div>
+              <div style="font-size:14px;font-weight:700;color:var(--white);margin-bottom:4px">You Both Earn Points</div>
+              <div style="font-size:13px;color:rgba(255,255,255,.6)"><strong style="color:var(--gold)">You get 300 points</strong> (=₹90 off) and <strong style="color:var(--gold)">they get 300 points</strong> on their first order. Win-win!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REWARD PREVIEW -->
+      <div style="background:linear-gradient(135deg,rgba(42,124,111,.15) 0%,rgba(42,124,111,.05) 100%);border:1.5px solid rgba(42,124,111,.3);padding:24px;margin-top:40px;border-radius:4px;text-align:center">
+        <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);font-weight:700;margin-bottom:8px">You Will Earn</div>
+        <div style="font-size:32px;font-weight:700;color:var(--teal);font-family:Cormorant Garamond,serif">300 points</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.6);margin-top:4px">=<strong style="color:var(--gold)"> ₹90 off</strong> your next order</div>
+        <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(42,124,111,.2);font-size:11px;color:rgba(255,255,255,.5)">Plus, they also get 300 points (₹90) on their first order</div>
+      </div>
     </div>
   </section>
 </div>
@@ -7335,12 +7424,11 @@ function checkRewards() {
   var phone = document.getElementById("rewardsPhone").value.replace(/\D/g,"");
   var result = document.getElementById("rewardsResult");
   if (!phone || phone.length < 10) {
-    result.innerHTML = "<p style='color:#c0392b;font-size:13px'>Please enter a valid 10-digit number.</p>";
+    result.innerHTML = "<div style='background:rgba(192,57,43,.1);border:1px solid rgba(192,57,43,.3);color:#c0392b;font-size:13px;padding:16px;border-radius:4px'>Please enter a valid 10-digit number.</div>";
     return;
   }
-  result.innerHTML = "<p style='color:var(--muted);font-size:13px;text-align:center;padding:20px'>Loading your points...</p>";
+  result.innerHTML = "<div style='text-align:center;padding:40px;color:rgba(255,255,255,.5)'>⏳ Loading your points...</div>";
 
-  // Try last 10 digits to match various formats
   var phoneLast10 = phone.slice(-10);
 
   fetch(SUPABASE_URL + '/rest/v1/orders?select=id,grand_total,total_amount,status,created_at&customer_phone=ilike.*' + phoneLast10 + '&status=neq.cancelled&order=created_at.desc', {
@@ -7353,97 +7441,105 @@ function checkRewards() {
   .then(function(orders) {
     var myOrders = Array.isArray(orders) ? orders : [];
     var totalSpent = myOrders.reduce(function(s,o){ return s + (o.grand_total || o.total_amount || 0); }, 0);
-    var points = Math.floor(totalSpent / 10);
-    var rupees = Math.floor(points / 100) * 10;
+    var totalPoints = Math.floor(totalSpent / 10); // 1 point per Rs.10
+    var redeemableRupees = Math.floor(totalPoints / 100) * 30; // 100 points = Rs.30
+    var nextTierPoints = ((Math.floor(totalPoints / 100) + 1) * 100); // Next redemption tier
 
     var el = document.getElementById("rewardsResult");
     el.innerHTML = "";
 
     if (myOrders.length === 0) {
-            var noOrd = document.createElement("div");
-      noOrd.style.cssText = "background:var(--cream);border:1px solid var(--cream-mid);padding:24px;text-align:center";
-      noOrd.innerHTML = "<div style='font-size:32px;margin-bottom:12px'>&#128062;</div><div style='font-size:14px;font-weight:700;color:var(--dark);margin-bottom:8px'>No orders found</div><div style='font-size:13px;color:var(--muted)'>Place your first order to start earning loyalty points!</div>";
+      var noOrd = document.createElement("div");
+      noOrd.style.cssText = "background:rgba(255,255,255,.05);border:1px solid rgba(200,151,58,.2);padding:32px;text-align:center;border-radius:4px;backdrop-filter:blur(10px)";
+      noOrd.innerHTML = "<div style='font-size:48px;margin-bottom:16px'>🎯</div>" +
+        "<div style='font-size:16px;font-weight:700;color:var(--white);margin-bottom:8px'>No Orders Yet</div>" +
+        "<div style='font-size:13px;color:rgba(255,255,255,.6);margin-bottom:24px'>Place your first order to start earning loyalty points. Earn 1 point for every Rs.10 spent!</div>";
       var shopBtn = document.createElement("button");
       shopBtn.className = "btn-gold";
-      shopBtn.style.cssText = "margin-top:16px;font-size:12px;padding:10px 24px";
-      shopBtn.textContent = "Shop Now";
+      shopBtn.style.cssText = "font-size:12px;padding:12px 28px";
+      shopBtn.textContent = "Shop Now & Earn Points";
       shopBtn.onclick = function(){ showPage("shop"); };
       noOrd.appendChild(shopBtn);
       el.appendChild(noOrd);
       return;
     }
 
-    var div = document.createElement("div");
-    div.style.cssText = "background:var(--dark);padding:32px;text-align:center";
-    div.innerHTML =
-      "<div style='font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:12px'>Your Points Balance</div>" +
-      "<div style='font-size:72px;font-weight:700;color:var(--white);font-family:Cormorant Garamond,serif;line-height:1'>" + points + "</div>" +
-      "<div style='font-size:14px;color:rgba(255,255,255,.5);margin-top:6px'>loyalty points</div>" +
-      (rupees > 0
-        ? "<div style='margin-top:20px;background:rgba(200,151,58,.15);border:1px solid rgba(200,151,58,.3);padding:14px;font-size:14px;color:var(--gold);font-weight:600'>&#127873; Redeem " + (rupees*10) + " points for <strong>Rs." + rupees + " off</strong> your next order</div>"
-        : "<div style='margin-top:16px;font-size:12px;color:rgba(255,255,255,.3)'>Earn " + (100 - (points % 100)) + " more points to unlock Rs.10 off</div>") +
-      "<div style='margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:12px'>" +
-        "<div style='background:rgba(255,255,255,.07);padding:14px;border-radius:2px'>" +
-          "<div style='font-size:22px;font-weight:800;color:var(--gold)'>" + myOrders.length + "</div>" +
-          "<div style='font-size:11px;color:rgba(255,255,255,.4);margin-top:4px'>Total Orders</div>" +
-        "</div>" +
-        "<div style='background:rgba(255,255,255,.07);padding:14px;border-radius:2px'>" +
-          "<div style='font-size:22px;font-weight:800;color:var(--gold)'>Rs." + Math.round(totalSpent).toLocaleString("en-IN") + "</div>" +
-          "<div style='font-size:11px;color:rgba(255,255,255,.4);margin-top:4px'>Total Spent</div>" +
-        "</div>" +
-      "</div>";
-    el.appendChild(div);
+    // MAIN POINTS DISPLAY
+    var mainDiv = document.createElement("div");
+    mainDiv.style.cssText = "background:linear-gradient(135deg,rgba(200,151,58,.15) 0%,rgba(200,151,58,.05) 100%);border:1.5px solid rgba(200,151,58,.3);padding:40px;text-align:center;border-radius:4px;margin-bottom:28px";
+    mainDiv.innerHTML =
+      "<div style='font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:16px'>Your Points Balance</div>" +
+      "<div style='font-size:68px;font-weight:700;color:var(--gold-light);font-family:Cormorant Garamond,serif;line-height:1'>" + totalPoints + "</div>" +
+      "<div style='font-size:14px;color:rgba(255,255,255,.6);margin-top:8px'>loyalty points</div>";
+    el.appendChild(mainDiv);
 
-    // Recent orders list
-    var hist = document.createElement("div");
-    hist.style.cssText = "margin-top:16px;background:var(--white);border:1px solid var(--cream-mid)";
-    hist.innerHTML = "<div style='padding:14px 16px;border-bottom:1px solid var(--cream-mid);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)'>Recent Orders</div>" +
-      myOrders.slice(0,5).map(function(o) {
-        var amt = o.grand_total || o.total_amount || 0;
-        var pts = Math.floor(amt / 10);
-        var date = new Date(o.created_at).toLocaleDateString("en-IN", {day:"numeric",month:"short",year:"numeric"});
-        return "<div style='padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--cream-mid)'>" +
-          "<div><div style='font-size:13px;font-weight:600;color:var(--dark)'>Rs." + amt.toLocaleString("en-IN") + "</div>" +
-          "<div style='font-size:11px;color:var(--muted);margin-top:2px'>" + date + "</div></div>" +
-          "<div style='font-size:12px;font-weight:700;color:var(--teal)'>+" + pts + " pts</div>" +
-          "</div>";
-      }).join("") +
-      "</div>";
-    el.appendChild(hist);
-
-    // Redeem button
-    if (rupees > 0) {
-      var btn = document.createElement("button");
-      btn.className = "btn-gold";
-      btn.style.cssText = "width:100%;margin-top:16px;font-size:13px;padding:14px";
-      btn.textContent = "Redeem Rs." + rupees + " off on WhatsApp";
-      btn.onclick = function(){
-        var msg = "Hi! I want to redeem my " + points + " loyalty points (Rs." + rupees + " off) on my next order. My phone number is " + phone + ".";
-        var url = "https://wa.me/919082503295?text=" + encodeURIComponent(msg);
-        window.open(url, "_blank");
-      };
-      el.appendChild(btn);
+    // REDEMPTION INFO
+    if (redeemableRupees > 0) {
+      var redeemDiv = document.createElement("div");
+      redeemDiv.style.cssText = "background:rgba(42,124,111,.1);border:1.5px solid rgba(42,124,111,.3);padding:20px;border-radius:4px;text-align:center;margin-bottom:28px";
+      redeemDiv.innerHTML =
+        "<div style='font-size:12px;color:var(--teal);text-transform:uppercase;font-weight:700;letter-spacing:.05em;margin-bottom:8px'>Ready to Redeem</div>" +
+        "<div style='font-size:28px;font-weight:700;color:var(--teal);margin-bottom:8px'>₹" + redeemableRupees + " Off</div>" +
+        "<div style='font-size:12px;color:rgba(255,255,255,.6)'>Use " + (Math.floor(totalPoints/100)*100) + " points at checkout</div>";
+      el.appendChild(redeemDiv);
     } else {
-      var btn2 = document.createElement("button");
-      btn2.className = "btn-gold";
-      btn2.style.cssText = "width:100%;margin-top:16px;font-size:13px;padding:14px";
-      btn2.textContent = "Shop Now to Earn More Points";
-      btn2.onclick = function(){ showPage("shop"); };
-      el.appendChild(btn2);
+      var needDiv = document.createElement("div");
+      needDiv.style.cssText = "background:rgba(200,151,58,.08);border:1px solid rgba(200,151,58,.2);padding:16px;border-radius:4px;text-align:center;margin-bottom:28px;font-size:12px;color:rgba(255,255,255,.7)";
+      needDiv.innerHTML = "💡 Earn " + (100 - (totalPoints % 100)) + " more points to unlock your first Rs.30 redemption";
+      el.appendChild(needDiv);
     }
-  })
-  .catch(function(e) {
-    // Fallback to localStorage
-    var orders = [];
-    try { orders = JSON.parse(localStorage.getItem("gobOrders") || "[]"); } catch(ex) {}
-    var myOrders = orders.filter(function(o){ return (o.phone||"").replace(/\D/g,"").slice(-10) === phoneLast10 && o.status !== "cancelled"; });
-    var totalSpent = myOrders.reduce(function(s,o){ return s + (o.total||0); }, 0);
-    var points = Math.floor(totalSpent / 10);
-    result.innerHTML = "<div style='background:var(--cream);border:1px solid var(--cream-mid);padding:20px;text-align:center'>" +
-      "<div style='font-size:32px;margin-bottom:8px'>&#127881;</div>" +
-      "<div style='font-size:28px;font-weight:700;color:var(--dark);font-family:Cormorant Garamond,serif'>" + points + " points</div>" +
-      "<div style='font-size:13px;color:var(--muted);margin-top:8px'>Based on " + myOrders.length + " local orders</div>" +
+
+    // STATS ROW
+    var statsDiv = document.createElement("div");
+    statsDiv.style.cssText = "display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px";
+    statsDiv.innerHTML =
+      "<div style='background:rgba(255,255,255,.03);border:1px solid rgba(200,151,58,.1);padding:20px;border-radius:4px'>" +
+        "<div style='font-size:24px;font-weight:700;color:var(--gold);font-family:Cormorant Garamond,serif'>" + myOrders.length + "</div>" +
+        "<div style='font-size:11px;color:rgba(255,255,255,.5);margin-top:6px;text-transform:uppercase;letter-spacing:.05em;font-weight:600'>Orders Placed</div>" +
+      "</div>" +
+      "<div style='background:rgba(255,255,255,.03);border:1px solid rgba(200,151,58,.1);padding:20px;border-radius:4px'>" +
+        "<div style='font-size:24px;font-weight:700;color:var(--gold);font-family:Cormorant Garamond,serif'>₹" + Math.round(totalSpent).toLocaleString("en-IN") + "</div>" +
+        "<div style='font-size:11px;color:rgba(255,255,255,.5);margin-top:6px;text-transform:uppercase;letter-spacing:.05em;font-weight:600'>Total Spent</div>" +
       "</div>";
+    el.appendChild(statsDiv);
+
+    // RECENT ORDERS
+    var histDiv = document.createElement("div");
+    histDiv.style.cssText = "background:rgba(255,255,255,.03);border:1px solid rgba(200,151,58,.1);border-radius:4px;overflow:hidden;margin-bottom:28px";
+    var histTitle = document.createElement("div");
+    histTitle.style.cssText = "padding:16px 20px;border-bottom:1px solid rgba(200,151,58,.1);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)";
+    histTitle.textContent = "Recent Orders";
+    histDiv.appendChild(histTitle);
+    
+    myOrders.slice(0,5).forEach(function(o) {
+      var amt = o.grand_total || o.total_amount || 0;
+      var pts = Math.floor(amt / 10);
+      var date = new Date(o.created_at).toLocaleDateString("en-IN", {day:"numeric",month:"short",year:"numeric"});
+      var row = document.createElement("div");
+      row.style.cssText = "padding:14px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(200,151,58,.1);font-size:13px";
+      row.innerHTML =
+        "<div>" +
+          "<div style='font-weight:600;color:var(--white)'>₹" + amt.toLocaleString("en-IN") + "</div>" +
+          "<div style='font-size:11px;color:rgba(255,255,255,.5);margin-top:2px'>" + date + "</div>" +
+        "</div>" +
+        "<div style='font-weight:700;color:var(--teal)'>+<span style=\"color:var(--gold)\">" + pts + "</span> pts</div>";
+      histDiv.appendChild(row);
+    });
+    el.appendChild(histDiv);
+
+    // NEXT MILESTONE
+    var milestoneDiv = document.createElement("div");
+    var pointsNeeded = nextTierPoints - totalPoints;
+    milestoneDiv.style.cssText = "background:rgba(255,255,255,.03);border:1px solid rgba(200,151,58,.1);padding:20px;border-radius:4px;text-align:center";
+    milestoneDiv.innerHTML =
+      "<div style='font-size:11px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.05em;font-weight:600;margin-bottom:8px'>Next Reward Tier</div>" +
+      "<div style='font-size:28px;font-weight:700;color:var(--gold);font-family:Cormorant Garamond,serif'>" + nextTierPoints + "</div>" +
+      "<div style='font-size:12px;color:rgba(255,255,255,.6);margin-top:8px'>Earn <strong style=\"color:var(--gold)\">" + pointsNeeded + " more points</strong> to unlock Rs." + ((Math.floor(nextTierPoints/100)*30)) + " off</div>";
+    el.appendChild(milestoneDiv);
+
+  }).catch(function(e) {
+    console.error("Rewards fetch error:", e);
+    result.innerHTML = "<div style='background:rgba(192,57,43,.1);border:1px solid rgba(192,57,43,.3);color:rgba(255,255,255,.7);font-size:13px;padding:20px;border-radius:4px;text-align:center'>Unable to load your rewards. Please try again or <button onclick=\"openWA()\" style=\"background:none;border:none;color:var(--teal);text-decoration:underline;cursor:pointer;font-weight:600\">contact us</button>.</div>";
   });
 }
 
@@ -7452,37 +7548,82 @@ function generateReferral() {
   var phone = document.getElementById("referPhone").value.replace(/\D/g,"");
   var result = document.getElementById("referResult");
   if (!phone || phone.length < 10) {
-    result.innerHTML = "<p style='color:#c0392b;font-size:13px'>Please enter a valid 10-digit number.</p>";
+    result.innerHTML = "<div style='background:rgba(192,57,43,.1);border:1px solid rgba(192,57,43,.3);color:#c0392b;font-size:13px;padding:16px;border-radius:4px;text-align:center'>Please enter a valid 10-digit number.</div>";
     return;
   }
   var code = "GOB" + phone.slice(-4);
   var link = window.location.href.split("?")[0] + "?ref=" + code;
   result.innerHTML = "";
-  var box = document.createElement("div");
-  box.style.cssText = "background:var(--white);border:1px solid var(--cream-mid);padding:24px";
-  var codeLabel = document.createElement("div");
-  codeLabel.style.cssText = "font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px";
-  codeLabel.textContent = "Your Referral Code";
-  var codeVal = document.createElement("div");
-  codeVal.style.cssText = "font-size:28px;font-weight:700;color:var(--gold);font-family:Cormorant Garamond,serif;margin-bottom:16px;letter-spacing:4px";
-  codeVal.textContent = code;
-  var row = document.createElement("div");
-  row.style.cssText = "display:flex;gap:8px;margin-bottom:12px";
-  var inp = document.createElement("input");
-  inp.readOnly = true; inp.value = link;
-  inp.style.cssText = "flex:1;padding:10px;border:1.5px solid var(--cream-mid);background:var(--cream);font-size:11px;font-family:Jost,sans-serif;color:var(--muted)";
+
+  // REFERRAL CODE DISPLAY
+  var codeBox = document.createElement("div");
+  codeBox.style.cssText = "background:rgba(255,255,255,.05);border:1.5px solid rgba(200,151,58,.3);backdrop-filter:blur(10px);padding:32px;text-align:center;border-radius:4px;margin-bottom:28px";
+  codeBox.innerHTML =
+    "<div style='font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:12px'>Your Referral Code</div>" +
+    "<div style='font-size:44px;font-weight:700;color:var(--gold-light);font-family:Cormorant Garamond,serif;margin-bottom:16px;letter-spacing:6px'>" + code + "</div>" +
+    "<div style='font-size:12px;color:rgba(255,255,255,.6);margin-bottom:20px'>Share this code or link to earn rewards</div>";
+  
+  var linkContainer = document.createElement("div");
+  linkContainer.style.cssText = "display:flex;gap:12px;flex-wrap:wrap;align-items:stretch";
+  
+  var linkInput = document.createElement("input");
+  linkInput.readOnly = true;
+  linkInput.value = link;
+  linkInput.style.cssText = "flex:1;min-width:200px;padding:12px 14px;border:1.5px solid rgba(200,151,58,.3);background:rgba(255,255,255,.08);font-family:Jost,sans-serif;font-size:12px;color:rgba(255,255,255,.8);outline:none;border-radius:2px;transition:all .2s";
+  linkInput.onfocus = function(){ this.style.borderColor='rgba(200,151,58,.6)'; this.style.background='rgba(255,255,255,.12)'; };
+  linkInput.onblur = function(){ this.style.borderColor='rgba(200,151,58,.3)'; this.style.background='rgba(255,255,255,.08)'; };
+  
   var copyBtn = document.createElement("button");
-  copyBtn.textContent = "Copy";
-  copyBtn.className = "btn-outline-dark";
-  copyBtn.style.cssText = "padding:10px 16px;font-size:11px";
-  copyBtn.onclick = function(){ navigator.clipboard.writeText(link).then(function(){ showCartToast("Link copied!","success"); }); };
-  var waBtn = document.createElement("button");
-  waBtn.style.cssText = "width:100%;background:#25d366;color:white;border:none;padding:12px;font-family:Jost,sans-serif;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer";
-  waBtn.textContent = "Share on WhatsApp";
-  waBtn.onclick = function(){ openWA(); };
-  row.appendChild(inp); row.appendChild(copyBtn);
-  box.appendChild(codeLabel); box.appendChild(codeVal); box.appendChild(row); box.appendChild(waBtn);
-  result.appendChild(box);
+  copyBtn.textContent = "Copy Link";
+  copyBtn.style.cssText = "padding:12px 20px;font-family:Jost,sans-serif;font-size:12px;font-weight:700;letter-spacing:.08em;background:transparent;border:1.5px solid rgba(200,151,58,.3);color:var(--gold);cursor:pointer;border-radius:2px;transition:all .2s;text-transform:uppercase";
+  copyBtn.onmouseover = function(){ this.style.background='rgba(200,151,58,.1)'; this.style.borderColor='var(--gold)'; };
+  copyBtn.onmouseout = function(){ this.style.background='transparent'; this.style.borderColor='rgba(200,151,58,.3)'; };
+  copyBtn.onclick = function(){ 
+    navigator.clipboard.writeText(link).then(function(){ 
+      showCartToast("Referral link copied! 📋", "success");
+      copyBtn.textContent = "Copied ✓";
+      setTimeout(function(){ copyBtn.textContent = "Copy Link"; }, 2000);
+    }); 
+  };
+  
+  var whatsappBtn = document.createElement("button");
+  whatsappBtn.textContent = "Share on WhatsApp";
+  whatsappBtn.style.cssText = "padding:12px 24px;font-family:Jost,sans-serif;font-size:12px;font-weight:700;letter-spacing:.08em;background:#25d366;color:white;border:none;cursor:pointer;border-radius:2px;transition:all .2s;text-transform:uppercase;min-width:160px";
+  whatsappBtn.onmouseover = function(){ this.style.opacity='0.9'; this.style.transform='scale(1.02)'; };
+  whatsappBtn.onmouseout = function(){ this.style.opacity='1'; this.style.transform='scale(1)'; };
+  whatsappBtn.onclick = function(){ 
+    var msg = "Hey! I'm earning amazing rewards on Game of Bones treats 🐾. Use my code " + code + " when you order your first treats and we BOTH get 300 bonus points (₹90 off)! Check it out: " + link;
+    window.open("https://wa.me/?text=" + encodeURIComponent(msg), "_blank");
+  };
+  
+  linkContainer.appendChild(linkInput);
+  linkContainer.appendChild(copyBtn);
+  codeBox.appendChild(linkContainer);
+  codeBox.appendChild(whatsappBtn);
+  result.appendChild(codeBox);
+
+  // REWARDS PREVIEW
+  var rewardBox = document.createElement("div");
+  rewardBox.style.cssText = "background:linear-gradient(135deg,rgba(42,124,111,.15) 0%,rgba(42,124,111,.05) 100%);border:1.5px solid rgba(42,124,111,.3);padding:28px;text-align:center;border-radius:4px;margin-bottom:28px";
+  rewardBox.innerHTML =
+    "<div style='font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);font-weight:700;margin-bottom:8px'>When They Order</div>" +
+    "<div style='font-size:28px;font-weight:700;color:var(--teal);margin-bottom:4px'>You Get 300 Points</div>" +
+    "<div style='font-size:13px;color:rgba(255,255,255,.6)'>= <strong style=\"color:var(--gold)\">₹90 Off</strong> your next order</div>" +
+    "<div style='margin-top:16px;padding-top:16px;border-top:1px solid rgba(42,124,111,.2);font-size:11px;color:rgba(255,255,255,.5);margin-bottom:-8px'>They also get 300 bonus points on their first order</div>";
+  result.appendChild(rewardBox);
+
+  // TIPS
+  var tipsBox = document.createElement("div");
+  tipsBox.style.cssText = "background:rgba(255,255,255,.03);border:1px solid rgba(200,151,58,.1);padding:20px;border-radius:4px";
+  tipsBox.innerHTML =
+    "<div style='font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:12px'>💡 Share Tips</div>" +
+    "<ul style='list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px;font-size:12px;color:rgba(255,255,255,.7);line-height:1.6'>" +
+      "<li>✓ Share with dog parent friends — they'll love your treats</li>" +
+      "<li>✓ Use WhatsApp, email, or Instagram — anywhere they shop</li>" +
+      "<li>✓ Your link works forever — share anytime, anywhere</li>" +
+      "<li>✓ No limit on referrals — keep earning 300 points each</li>" +
+    "</ul>";
+  result.appendChild(tipsBox);
 }
 
 // Reviews
