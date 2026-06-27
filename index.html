@@ -469,7 +469,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.6);padding:56px 6% 28px;ma
   /* Testi cards single col */
   .testi-card{padding:20px!important}
   /* Process steps - single col already set, ensure visual stacks */
-  .process-step-visual{aspect-ratio:2/1!important}
+  .process-step-visual{aspect-ratio:1/1!important}
   /* Hero text size */
   .hero h1,.hero-title{font-size:clamp(28px,7vw,52px)!important}
   /* Modal full screen */
@@ -729,6 +729,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
   * {
     -webkit-tap-highlight-color: transparent !important;
     box-sizing: border-box !important;
+    max-width: 100% !important;
   }
   
   html, body {
@@ -743,10 +744,113 @@ body:has(#page-login.active) #mainNav { display: none !important; }
     overflow-x: hidden !important;
   }
   
-  /* ===== NAVIGATION BAR ===== */
-  #mainNav {
-    height: 56px;
-    padding: 0;
+  /* ===== PRODUCT MODAL COMPLETE REWRITE ===== */
+  .pmodal {
+    grid-template-columns: 1fr !important;
+    max-height: 95vh !important;
+    border-radius: 12px !important;
+  }
+  
+  .pmodal-img {
+    width: 100% !important;
+    aspect-ratio: 1/1 !important;
+    max-height: 50vh !important;
+    display: block !important;
+    order: -1 !important;
+  }
+  
+  .pmodal-body {
+    padding: 20px 16px !important;
+    width: 100% !important;
+  }
+  
+  /* All buttons full-width in modal */
+  .pmodal-body button,
+  .pmodal-buy-btn,
+  [onclick*="addCart"] {
+    width: 100% !important;
+    min-height: 48px !important;
+    padding: 14px 16px !important;
+    margin: 0 0 10px 0 !important;
+    display: block !important;
+  }
+  
+  /* Heart wishlist button full-width */
+  #detail-fav {
+    width: 100% !important;
+    min-height: 48px !important;
+    padding: 14px 16px !important;
+    margin-bottom: 10px !important;
+  }
+  
+  /* Share buttons - stack vertically */
+  [style*="display:flex"][style*="background:var(--white)"][style*="padding:12px"][style*="border:1px"] {
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 8px !important;
+  }
+  
+  /* ===== GRID LAYOUTS - CONVERT TO SINGLE COLUMN ===== */
+  [style*="grid-template-columns: repeat(2"],
+  [style*="grid-template-columns: 1fr 1fr"],
+  [style*="grid-template-columns:1fr 1fr"],
+  [style*="display:grid"][style*="gap:72px"],
+  [style*="display:grid"][style*="gap:48px"] {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+  
+  /* Fix all grid 2+ columns */
+  [style*="grid-template-columns: repeat(3"],
+  [style*="grid-template-columns: repeat(4"],
+  [style*="grid-template-columns: 1fr 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+  
+  /* ===== TEXT OVERFLOW FIX ===== */
+  section {
+    overflow: visible !important;
+    width: 100% !important;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    overflow: visible !important;
+    word-wrap: break-word !important;
+    line-height: 1.2 !important;
+  }
+  
+  p {
+    overflow: visible !important;
+    word-wrap: break-word !important;
+  }
+  
+  /* ===== SPACING FIXES ===== */
+  section[style*="padding:"] {
+    padding: 40px 16px !important;
+  }
+  
+  [style*="padding:90px"],
+  [style*="padding: 90px"] {
+    padding: 40px 16px !important;
+  }
+  
+  [style*="padding:60px"],
+  [style*="padding: 60px"] {
+    padding: 30px 16px !important;
+  }
+  
+  /* ===== FONT SIZE RESPONSIVE ===== */
+  h1 {
+    font-size: clamp(20px, 5vw, 32px) !important;
+  }
+  
+  h2 {
+    font-size: clamp(18px, 4.5vw, 28px) !important;
+  }
+  
+  h3 {
+    font-size: clamp(16px, 4vw, 22px) !important;
   }
   
   .nav-inner {
@@ -1351,6 +1455,73 @@ body:has(#page-login.active) #mainNav { display: none !important; }
 .star-filled { color: var(--gold); font-weight: bold; }
 .star-empty { color: var(--cream-mid); opacity: 0.4; }
 .star-half { color: var(--gold); }
+
+/* ===== UNIVERSAL MOBILE BUTTON FIX ===== */
+@media (max-width: 768px) {
+  /* ALL buttons minimum 48px height for mobile accessibility */
+  button, [role="button"], a.btn-gold, a.btn-outline-light {
+    min-height: 48px !important;
+    padding: 14px 16px !important;
+    font-size: 14px !important;
+    letter-spacing: 0.1em !important;
+  }
+  
+  /* Full-width buttons on mobile */
+  button[style*="flex:1"],
+  button[style*="background:var(--dark)"][style*="color:var(--white)"],
+  .pmodal-buy-btn,
+  [onclick*="addCart"],
+  [onclick*="placeOrder"],
+  [onclick*="openWA"] {
+    width: 100% !important;
+    min-width: auto !important;
+    margin: 0 0 8px 0 !important;
+  }
+  
+  /* Product detail buttons - stack properly */
+  #detail-fav {
+    width: 100% !important;
+    height: 48px !important;
+    padding: 14px 16px !important;
+    margin-bottom: 8px !important;
+  }
+  
+  /* Share button container - single row, flex wrap */
+  [style*="display:flex"][style*="gap:8px"][style*="background:var(--white)"] {
+    flex-wrap: wrap !important;
+  }
+  
+  [style*="display:flex"][style*="gap:8px"][style*="background:var(--white)"] button {
+    flex: 1 1 calc(50% - 4px) !important;
+    min-width: 0 !important;
+  }
+  
+  /* Size and Price section on mobile */
+  [style*="grid-template-columns: 1fr 1fr"][style*="gap:16px"],
+  [style*="grid-template-columns:1fr 1fr"][style*="gap:"] {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Prevent text overflow */
+  * {
+    overflow-wrap: break-word !important;
+    word-break: break-word !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Extra small devices */
+  button, [role="button"] {
+    min-height: 44px !important;
+    padding: 12px 14px !important;
+    font-size: 13px !important;
+  }
+  
+  .pmodal-body button {
+    width: 100% !important;
+    margin-bottom: 8px !important;
+  }
+}
 </style>
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
@@ -1735,9 +1906,9 @@ body:has(#page-login.active) #mainNav { display: none !important; }
         </div>
         
         <!-- WISHLIST & ADD TO CART -->
-        <div style="display:flex;gap:8px;margin-bottom:16px">
-          <button id="detail-fav" onclick="toggleWishlist(this,currentProductIdx)" style="width:48px;height:48px;border:2px solid var(--cream-mid);background:var(--white);font-size:20px;cursor:pointer;border-radius:2px;transition:all .2s;display:flex;align-items:center;justify-content:center">♡</button>
-          <button onclick="addCart(this,currentProductIdx,currentProductSize)" style="flex:1;background:var(--dark);color:var(--white);border:none;padding:14px 20px;font-family:'Jost',sans-serif;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all .2s">Add to Cart +</button>
+        <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+          <button id="detail-fav" onclick="toggleWishlist(this,currentProductIdx)" style="width:48px;height:48px;border:2px solid var(--cream-mid);background:var(--white);font-size:20px;cursor:pointer;border-radius:2px;transition:all .2s;display:flex;align-items:center;justify-content:center;flex-shrink:0">♡</button>
+          <button onclick="addCart(this,currentProductIdx,currentProductSize)" style="flex:1;background:var(--dark);color:var(--white);border:none;padding:14px 20px;font-family:'Jost',sans-serif;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all .2s;min-width:150px;min-height:48px">Add to Cart +</button>
         </div>
         
         <!-- SHARE BUTTONS -->
@@ -2996,6 +3167,22 @@ body:has(#page-login.active) #mainNav { display: none !important; }
 /* ========== NUCLEAR MOBILE CSS - OVERRIDES ALL INLINE STYLES ========== */
 @media(max-width:768px) {
   * { max-width: 100% !important; }
+  
+  /* Make ALL buttons full width */
+  button[style*="flex:1"],
+  .pmodal-buy-btn,
+  .pmodal-wa,
+  [onclick*="addCart"] {
+    width: 100% !important;
+    min-height: 48px !important;
+    padding: 14px 16px !important;
+  }
+  
+  /* Flex containers with buttons - stack on mobile */
+  [style*="display:flex"][style*="gap:8px"],
+  [style*="display: flex"][style*="gap: 8px"] {
+    flex-direction: column !important;
+  }
   
   /* Override ALL inline grid styles */
   div[style*="grid"], [style*="grid-template-columns"] {
