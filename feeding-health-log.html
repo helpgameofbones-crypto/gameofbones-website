@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📋 Feeding & Health Log - Game of Bones</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #fff;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border: 3px solid #c8a06e;
+            border-radius: 8px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 3px solid #c8a06e;
+            padding-bottom: 15px;
+        }
+        .header h1 {
+            color: #c8a06e;
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        .header p {
+            color: #666;
+            font-size: 13px;
+        }
+        .print-note {
+            background: #fffacd;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 12px;
+            text-align: center;
+            color: #333;
+        }
+        .instructions {
+            background: rgba(100,150,100,.08);
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #649664;
+            margin-bottom: 25px;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            font-size: 11px;
+        }
+        th {
+            background: linear-gradient(135deg, rgba(200,160,110,.2), rgba(200,160,110,.1));
+            color: #c8a06e;
+            padding: 12px;
+            border: 1px solid #ddd;
+            font-weight: 700;
+            text-align: left;
+        }
+        td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            height: 35px;
+        }
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px solid #ddd;
+            font-size: 11px;
+            color: #999;
+        }
+        @media print {
+            body {
+                padding: 0;
+                background: white;
+            }
+            .container {
+                border: 2px solid #c8a06e;
+                padding: 20px;
+            }
+            .print-note {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 FEEDING & HEALTH LOG</h1>
+            <p>Game of Bones - Track Your Community Animals</p>
+        </div>
+
+        <div class="print-note">
+            <strong>💡 INSTRUCTIONS:</strong> Fill this form weekly. Track description, feeding frequency, health observations, behavior changes. Keep one page per animal.
+        </div>
+
+        <div class="instructions">
+            <strong>📌 HOW TO USE THIS LOG:</strong><br>
+            • <strong>Animal ID:</strong> Give each dog a name or number • <strong>Location:</strong> Where you feed them • <strong>Color/Markings:</strong> Describe appearance for identification • <strong>Health Status:</strong> Healthy/Sick/Injured • <strong>Feeding Notes:</strong> What you feed, how often • <strong>Observations:</strong> Behavior, injuries, changes • <strong>Follow-up:</strong> Actions taken (vet visit, rescue contact)
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:8%">Date</th>
+                    <th style="width:12%">Animal ID/<br>Name</th>
+                    <th style="width:15%">Color & Markings<br>(Description)</th>
+                    <th style="width:10%">Health Status<br>(Healthy/Sick/Injured)</th>
+                    <th style="width:15%">What Fed<br>(Food & Quantity)</th>
+                    <th style="width:20%">Health Observations<br>(Wounds, Behavior, Mood)</th>
+                    <th style="width:15%">Follow-up Actions<br>(Vet? Rescue? Meds?)</th>
+                    <th style="width:5%">Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            </tbody>
+        </table>
+
+        <div class="footer">
+            <strong>Game of Bones</strong> | Caring for Community Animals<br>
+            WhatsApp: +91 90825 03295 | www.gameofbones.in<br>
+            Keep records for 6+ months to track animal health progress. Update weekly!
+        </div>
+    </div>
+</body>
+</html>
