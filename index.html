@@ -10396,7 +10396,72 @@ showPage = function(id) {
 };
 // ── END LOYALTY POINTS REDEMPTION ──────────────────────────────────
 // ===== PHASE 2: MOBILE FUNCTIONS =====
-function toggleMobileMenu(){const e=document.getElementById('mobileNavMenu'),t=document.querySelector('.hamburger-btn');e&&t&&(e.classList.toggle('mobile-open'),t.classList.toggle('open'))}document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('#mobileNavMenu a').forEach(function(e){e.addEventListener('click',function(){const t=document.getElementById('mobileNavMenu'),o=document.querySelector('.hamburger-btn');t&&t.classList.remove('mobile-open'),o&&o.classList.remove('open')})});let e=0;const t=document.getElementById('cartDrawer');t&&(t.addEventListener('touchstart',function(t){e=t.touches[0].clientX}),t.addEventListener('touchmove',function(t){const o=t.touches[0].clientX;100<e-o&&toggleCart()})),'IntersectionObserver'in window&&document.querySelectorAll('img[data-src]').length>0&&new IntersectionObserver(function(e,t){e.forEach(function(e){if(e.isIntersecting){const o=e.target;o.dataset.src&&(o.src=o.dataset.src,o.removeAttribute('data-src')),t.unobserve(o)}})}).observe(document.querySelectorAll('img[data-src]')[0])});
+function toggleMobileMenu() {
+  try {
+    var menu = document.getElementById('mobileNavMenu');
+    var btn = document.querySelector('.hamburger-btn');
+    
+    if (!menu || !btn) {
+      console.error('Mobile menu elements not found', {menu, btn});
+      return;
+    }
+    
+    console.log('Toggling mobile menu...');
+    menu.classList.toggle('mobile-open');
+    btn.classList.toggle('open');
+    console.log('Menu opened:', menu.classList.contains('mobile-open'));
+  } catch(e) {
+    console.error('Error in toggleMobileMenu:', e);
+  }
+}
+
+// Close menu when a link is clicked
+document.addEventListener('DOMContentLoaded', function(){
+  // Close menu on link click
+  var menuLinks = document.querySelectorAll('#mobileNavMenu a');
+  menuLinks.forEach(function(link) {
+    link.addEventListener('click', function() {
+      var menu = document.getElementById('mobileNavMenu');
+      var btn = document.querySelector('.hamburger-btn');
+      if (menu) menu.classList.remove('mobile-open');
+      if (btn) btn.classList.remove('open');
+    });
+  });
+  
+  // Cart swipe functionality
+  var cartDrawer = document.getElementById('cartDrawer');
+  if (cartDrawer) {
+    var startX = 0;
+    cartDrawer.addEventListener('touchstart', function(e) {
+      startX = e.touches[0].clientX;
+    });
+    cartDrawer.addEventListener('touchmove', function(e) {
+      var currentX = e.touches[0].clientX;
+      if (startX - currentX > 100) {
+        toggleCart();
+      }
+    });
+  }
+  
+  // Lazy load images
+  if ('IntersectionObserver' in window) {
+    var lazyImages = document.querySelectorAll('img[data-src]');
+    if (lazyImages.length > 0) {
+      new IntersectionObserver(function(entries, observer) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            var img = entry.target;
+            if (img.dataset.src) {
+              img.src = img.dataset.src;
+              img.removeAttribute('data-src');
+            }
+            observer.unobserve(img);
+          }
+        });
+      }).observe(lazyImages[0]);
+    }
+  }
+});
 // Render products on page load (after DOM is ready)
 window.addEventListener('load', function() {
   setTimeout(function() {
