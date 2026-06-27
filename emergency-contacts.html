@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚨 Emergency Contact Sheet - Game of Bones</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #fff;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border: 3px solid #c80000;
+            border-radius: 8px;
+            page-break-inside: avoid;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 3px solid #c80000;
+            padding-bottom: 15px;
+        }
+        .header h1 {
+            color: #c80000;
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        .header p {
+            color: #666;
+            font-size: 13px;
+        }
+        .print-note {
+            background: #fffacd;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 12px;
+            text-align: center;
+            color: #333;
+        }
+        .section {
+            margin-bottom: 25px;
+            page-break-inside: avoid;
+        }
+        .section-title {
+            background: #c86432;
+            color: white;
+            padding: 12px 15px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        .contacts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        .contact-card {
+            border: 1px solid #ddd;
+            border-left: 4px solid #c86432;
+            padding: 12px;
+            border-radius: 4px;
+            background: #f9f9f9;
+            font-size: 12px;
+        }
+        .contact-name {
+            color: #c86432;
+            font-weight: 700;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+        .contact-phone {
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 3px;
+            word-break: break-word;
+        }
+        .contact-note {
+            color: #666;
+            font-size: 11px;
+            font-style: italic;
+        }
+        .area-section {
+            background: #f5f5f5;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+            border-left: 3px solid #2a7c6f;
+        }
+        .area-title {
+            color: #2a7c6f;
+            font-weight: 700;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+        .area-contacts {
+            color: #333;
+            font-size: 11px;
+            line-height: 1.8;
+        }
+        .emergency-section {
+            background: linear-gradient(135deg, rgba(200, 0, 0, 0.1), rgba(200, 0, 0, 0.05));
+            border: 2px solid #c80000;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .emergency-title {
+            color: #c80000;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .emergency-contact {
+            background: white;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-left: 4px solid #c80000;
+            border-radius: 3px;
+        }
+        .emergency-label {
+            color: #c80000;
+            font-weight: 700;
+            font-size: 12px;
+        }
+        .emergency-number {
+            color: #333;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        .quick-tips {
+            background: linear-gradient(135deg, rgba(100, 150, 100, 0.1), rgba(100, 150, 100, 0.05));
+            border-left: 4px solid #649664;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-size: 11px;
+            line-height: 1.8;
+        }
+        .quick-tips-title {
+            color: #649664;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 2px solid #ddd;
+            font-size: 11px;
+            color: #999;
+        }
+        @media print {
+            body {
+                padding: 0;
+                background: white;
+            }
+            .container {
+                border: 2px solid #c80000;
+                padding: 20px;
+                max-width: 100%;
+            }
+            .print-note {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚨 EMERGENCY CONTACT SHEET</h1>
+            <p>Game of Bones - Feeder's Quick Reference Guide</p>
+        </div>
+
+        <div class="print-note">
+            <strong>💡 TIP:</strong> Print this sheet and laminate it. Keep it in your phone, wallet, or feeding area. Save these numbers in your phone contacts.
+        </div>
+
+        <!-- CRITICAL EMERGENCY -->
+        <div class="emergency-section">
+            <div class="emergency-title">🚨 CRITICAL EMERGENCY (USE IMMEDIATELY)</div>
+            <div class="emergency-contact">
+                <div class="emergency-label">Police Emergency</div>
+                <div class="emergency-number"><strong>112</strong></div>
+            </div>
+            <div class="emergency-contact">
+                <div class="emergency-label">Animal Helpline (India)</div>
+                <div class="emergency-number"><strong>1962</strong></div>
+            </div>
+            <div class="emergency-contact">
+                <div class="emergency-label">Poisoning / Severe Injury / Bleeding</div>
+                <div class="emergency-number">Call nearest vet IMMEDIATELY (see below)</div>
+            </div>
+        </div>
+
+        <!-- MAJOR RESCUE ORGANIZATIONS -->
+        <div class="section">
+            <div class="section-title">🚑 24/7 EMERGENCY RESCUE & TREATMENT (MUMBAI)</div>
+            <div class="contacts-grid">
+                <div class="contact-card">
+                    <div class="contact-name">Karuna Night+Day Ambulance</div>
+                    <div class="contact-phone"><strong>9833625427</strong></div>
+                    <div class="contact-phone"><strong>02228761313 / 02228763856</strong></div>
+                    <div class="contact-note">24/7 treatment & admission</div>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-name">SOS Save Our Strays</div>
+                    <div class="contact-phone"><strong>9820141310</strong></div>
+                    <div class="contact-note">Sterilization & rescue</div>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-name">ASHA (Road Treatment)</div>
+                    <div class="contact-phone"><strong>9820127085</strong></div>
+                    <div class="contact-note">Mobile treatment & admission</div>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-name">Vardhaman Sanskar</div>
+                    <div class="contact-phone"><strong>9930106106</strong></div>
+                    <div class="contact-note">Rescue & treatment</div>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-name">Jivdaya Abhiyan</div>
+                    <div class="contact-phone"><strong>8828261212</strong></div>
+                    <div class="contact-note">East Mumbai rescue</div>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-name">World For All (WFA)</div>
+                    <div class="contact-phone"><strong>9820001506</strong></div>
+                    <div class="contact-note">Rescue organization</div>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-name">Ramanugrah Trust</div>
+                    <div class="contact-phone"><strong>9619933223 / 9820499404</strong></div>
+                    <div class="contact-note">Rescue & care</div>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-name">Awaaz</div>
+                    <div class="contact-phone"><strong>7900094345</strong></div>
+                    <div class="contact-note">Rescue services</div>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-name">SRLC (Rescue & Care)</div>
+                    <div class="contact-phone"><strong>9822921100 / 7030159900</strong></div>
+                    <div class="contact-note">Rescue & rehabilitation</div>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-name">Karuna Parivar</div>
+                    <div class="contact-phone"><strong>9833625427</strong></div>
+                    <div class="contact-note">Rescue & support</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- WILDLIFE & SPECIAL CASES -->
+        <div class="section">
+            <div class="section-title">🦅 BIRDS, WILDLIFE & SPECIAL CASES</div>
+            <div class="contacts-grid">
+                <div class="contact-card">
+                    <div class="contact-name">Bird Helpline (Mumbai)</div>
+                    <div class="contact-phone"><strong>8655370005</strong></div>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-name">RAWW (Wildlife, Monkeys)</div>
+                    <div class="contact-phone"><strong>9869702020</strong></div>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-name">Snake Rescue</div>
+                    <div class="contact-phone"><strong>9820766877</strong></div>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-name">Sarp Mitra (Snake Rescue)</div>
+                    <div class="contact-phone"><strong>9769335531</strong></div>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-name">PAWA (Animal Cruelty)</div>
+                    <div class="contact-phone"><strong>9029468975</strong></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ANIMAL AMBULANCE & TRANSPORT -->
+        <div class="section">
+            <div class="section-title">🚗 ANIMAL AMBULANCE & PET TRANSPORTATION</div>
+            <div class="contacts-grid">
+                <div class="contact-card">
+                    <div class="contact-name">Trimurti Paws - Rahul Pachupate</div>
+                    <div class="contact-phone"><strong>9167707675 / 9833666616</strong></div>
+                    <div class="contact-note">Pick-up, drop, vet visits, last rites</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AREA-WISE CONTACTS -->
+        <div class="section">
+            <div class="section-title">📍 AREA-WISE RESCUE CONTACTS (MUMBAI)</div>
+            
+            <div class="area-section">
+                <div class="area-title">NORTH MUMBAI</div>
+                <div class="area-contacts">
+                    <strong>Borivali, Kandivali, Dahisar:</strong> Bird Helpline (8655370005) • SOS (9820141310) • Karuna Parivar (9833625427) • Ramanugrah Trust (9619933223/9820499404)<br><br>
+                    <strong>Mira Road, Bhayander:</strong> Kaushal (9821391283) • Karuna Parivar (9833625427) • JeevDAYA Foundation (9324760564)<br><br>
+                    <strong>Vasai:</strong> Karuna Virar (9273910004) • Divya Jyot (9320004343)<br><br>
+                    <strong>Powai:</strong> IDA Deonar (9320056581) • WFA (9820001506)
+                </div>
+            </div>
+
+            <div class="area-section">
+                <div class="area-title">CENTRAL MUMBAI</div>
+                <div class="area-contacts">
+                    <strong>Mulund, Bhandup, Ghatkopar, Vikhroli, Chembur:</strong> Bahena (02225689999) • Mangal Vardhini (02265252573) • IDA Deonar (9320056581)<br><br>
+                    <strong>Thane:</strong> Bahena (02225689999) • Manav Jyot (02225673587) • PALS (9324699829) • Thane SPCA (02232612344)<br><br>
+                    <strong>Dombivli, Kalyan:</strong> PAWS (9820161114)
+                </div>
+            </div>
+
+            <div class="area-section">
+                <div class="area-title">SOUTH & WEST MUMBAI</div>
+                <div class="area-contacts">
+                    <strong>Dadar, Worli, Parel, Mahim, Colaba:</strong> WSD (8976022838) • Vardhman Sanskar (02225069191) • YODA (9820952339)<br><br>
+                    <strong>Bandra, Khar, Santacruz, Vile Parle:</strong> YODA (9820952339) • SOS (9820141310) • ASHA (9820127085) • WFA (9820001506)<br><br>
+                    <strong>Andheri, Jogeshwari, Goregaon:</strong> SOS (9820141310) • ASHA (9820127085) • Awaaz (7900094345) • SRLC (9822921100) • WFA (9820001506)
+                </div>
+            </div>
+
+            <div class="area-section">
+                <div class="area-title">NAVI MUMBAI</div>
+                <div class="area-contacts">
+                    <strong>Vashi, Turbhe, Kharghar, Airoli:</strong> IDA Navi Mumbai (9320056585) • Bhumi Jivdaya (8424004484)<br><br>
+                    <strong>Panvel, Taloja:</strong> IDA Panvel (9320056589) • Bhumi Jivdaya (8424004484)
+                </div>
+            </div>
+        </div>
+
+        <!-- IMPORTANT INFORMATION -->
+        <div class="quick-tips">
+            <div class="quick-tips-title">💡 QUICK DECISION GUIDE</div>
+            <strong>When to call which number:</strong><br>
+            🚨 Bleeding/unconscious/not breathing → Call 112 FIRST<br>
+            🤕 Injured but alert → Call rescue (Karuna, SOS, ASHA)<br>
+            🦷 Bite/fight injury → SOS, Karuna, ASHA<br>
+            🪱 Sick/weak but stable → Visit veterinary clinic<br>
+            🦅 Bird/wildlife/snake → Call specialized org<br><br>
+            <strong>Prevention is Key:</strong> Clean feeding areas • Sterilize animals • Vaccinate against rabies • Report cruelty
+        </div>
+
+        <div class="footer">
+            <strong>Game of Bones</strong> | Caring for Community Animals<br>
+            WhatsApp: +91 90825 03295 | www.gameofbones.in<br>
+            Last Updated: June 2026 | PRINT & LAMINATE THIS SHEET!
+        </div>
+    </div>
+</body>
+</html>
