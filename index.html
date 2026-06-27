@@ -10920,6 +10920,37 @@ function toggleMobileMenu() {
   }
 }
 
+// Close menu when clicking outside
+document.addEventListener('click', function(event) {
+  var menu = document.getElementById('mobileNavMenu');
+  var btn = document.querySelector('.hamburger-btn');
+  var nav = document.getElementById('mainNav');
+  
+  if (!menu || !btn || !nav) return;
+  if (menu.classList.contains('mobile-open')) {
+    // Check if click is outside the nav
+    if (!nav.contains(event.target)) {
+      menu.classList.remove('mobile-open');
+      btn.classList.remove('open');
+    }
+  }
+});
+
+// Close menu when clicking a link
+document.addEventListener('DOMContentLoaded', function() {
+  var navLinks = document.querySelectorAll('.nav-links a');
+  navLinks.forEach(function(link) {
+    link.addEventListener('click', function() {
+      var menu = document.getElementById('mobileNavMenu');
+      var btn = document.querySelector('.hamburger-btn');
+      if (menu && btn) {
+        menu.classList.remove('mobile-open');
+        btn.classList.remove('open');
+      }
+    });
+  });
+});
+
 // Close menu when a link is clicked
 document.addEventListener('DOMContentLoaded', function(){
   // Close menu on link click
