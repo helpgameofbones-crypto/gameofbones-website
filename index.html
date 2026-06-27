@@ -555,16 +555,127 @@ body:has(#page-login.active) #mainNav { display: none !important; }
 /* ===== PHASE 2: MOBILE UX ===== */
 .hamburger-btn { display: none; }
 @media (max-width: 640px) {
+  /* Navigation */
   .hamburger-btn { display: flex; flex-direction: column; gap: 5px; width: 24px; height: 18px; margin-left: auto; background: none; border: none; padding: 0; cursor: pointer; }
   .hamburger-btn span { width: 100%; height: 2px; background: var(--dark); transition: transform 0.3s; }
   .hamburger-btn.open span:nth-child(1) { transform: rotate(45deg) translateY(10px); }
   .hamburger-btn.open span:nth-child(2) { opacity: 0; }
   .hamburger-btn.open span:nth-child(3) { transform: rotate(-45deg) translateY(-10px); }
   .nav-links { position: absolute; top: 68px; left: 0; right: 0; background: var(--white); flex-direction: column; gap: 0; max-height: 0; overflow: hidden; transition: max-height 0.3s ease; border-bottom: 1px solid var(--cream-mid); }
-  .nav-links.mobile-open { max-height: 400px; }
-  .nav-links a { display: block; padding: 16px 20px; border-bottom: 1px solid var(--cream-mid); font-size: 14px; }
+  .nav-links.mobile-open { max-height: 500px; }
+  .nav-links a { display: block; padding: 18px 20px; border-bottom: 1px solid var(--cream-mid); font-size: 15px; font-weight: 600; min-height: 48px; display: flex; align-items: center; }
   .nav-links a.active { background: var(--cream); border-bottom: 2px solid var(--gold); }
   .nav-actions { margin-left: auto; }
+  
+  /* Hero section */
+  .hero-title { font-size: clamp(24px, 7vw, 40px); margin-bottom: 16px; }
+  .hero-sub { font-size: 14px; margin-bottom: 24px; }
+  .hero-eyebrow { margin-bottom: 12px; }
+  
+  /* Typography improvements */
+  h1 { font-size: clamp(24px, 6.5vw, 40px); }
+  h2 { font-size: clamp(20px, 5.5vw, 32px); }
+  h3 { font-size: clamp(18px, 5vw, 24px); }
+  
+  /* Buttons - ensure 48px min height */
+  .btn-gold, .btn-outline-dark, .btn-outline-light, button[type="submit"], button[type="button"] { 
+    min-height: 48px; 
+    padding: 14px 20px; 
+    font-size: 13px;
+  }
+  .btn-gold { width: 100%; display: block; }
+  .btn-outline-dark { width: 100%; display: block; }
+  button[type="submit"] { width: 100%; display: block; }
+  
+  /* Product cards - better mobile sizing */
+  .prod-card { border-radius: 4px; }
+  .prod-name { font-size: 14px; line-height: 1.4; }
+  .prod-price { font-size: 15px; font-weight: 700; }
+  .prod-btn { font-size: 12px; padding: 10px 14px; min-height: 40px; }
+  
+  /* Forms */
+  .co-input, input, textarea, select { font-size: 16px; } /* Prevents zoom on iOS */
+  .co-input { padding: 14px 12px; }
+  
+  /* Modals/Popups */
+  #pmodal { 
+  max-height: 90vh; 
+  width: 95vw; 
+  margin: 5vh auto; 
+  border-radius: 8px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+@media(max-width:768px) {
+  #pmodal {
+    max-height: calc(100vh - 40px);
+    width: 96vw;
+    margin: 20px auto;
+  }
+  .pmodal-close { 
+    font-size: 24px; 
+    min-width: 48px; 
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .pmodal-body { 
+    padding: 16px; 
+    font-size: 14px;
+  }
+  .pmodal-title { 
+    font-size: 20px; 
+    padding: 16px;
+  }
+  .pmodal-img { 
+    max-height: 280px; 
+  }
+  .pmodal-info-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .pmodal-btn {
+    width: 100%;
+    font-size: 14px;
+    min-height: 48px;
+  }
+}
+  .pmodal-header { padding: 18px; font-size: 18px; }
+  .pmodal-body { padding: 16px; }
+  .pmodal-img { max-height: 300px; }
+  .pmodal-img img { max-height: 300px; }
+  
+  /* Sections - increased padding for mobile readability */
+  section { padding: 40px 5%; }
+  .sec-title { font-size: clamp(18px, 5vw, 28px); margin-bottom: 12px; }
+  .sec-sub { font-size: 14px; margin-bottom: 24px; }
+  
+  /* Cart/Drawer */
+  #cartDrawer { max-width: 100%; }
+  
+  /* Spacing */
+  gap { gap: 12px !important; }
+  
+  /* Text readability */
+  body { font-size: 14px; line-height: 1.6; }
+  p { margin-bottom: 12px; }
+  
+  /* Product detail improvements */
+  .prod-benefits { padding: 12px; margin: 12px 0; }
+  .prod-benefit-item { padding: 10px; }
+  
+  /* Feeder page improvements */
+  .feeder-section-card { padding: 16px; margin: 12px 0; border-radius: 6px; }
+  .feeder-grid { gap: 12px; }
+  
+  /* Links - better tap targets */
+  a { min-height: 44px; display: inline-flex; align-items: center; }
+  
+  /* Footer improvements */
+  .f-col { margin-bottom: 24px; }
+  .f-links li { margin-bottom: 8px; }
+  .f-links a { display: block; padding: 8px 0; font-size: 14px; }
 }
 @media (min-width: 641px) { .hamburger-btn { display: none; } .nav-links { max-height: none !important; } }
 .add-btn { width: 44px; height: 44px; border-radius: 50%; background: var(--dark); color: var(--white); border: none; font-size: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; flex-shrink: 0; }
@@ -575,7 +686,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
 .btn-outline-dark { min-height: 44px; }
 .btn-outline-light { min-height: 44px; }
 button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px; }
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .btn-gold, .btn-outline-dark, button[type="submit"] { width: 100%; display: block; }
   .hero-btns { flex-direction: column; gap: 12px; }
   .hero-btns .btn-gold, .hero-btns .btn-outline-light { width: 100%; }
@@ -594,6 +705,86 @@ button[type="submit"], button[type="button"] { min-height: 44px; min-width: 44px
   .co-form-group label{font-size:13px;font-weight:600;color:var(--dark);text-transform:uppercase;letter-spacing:.05em}
   .co-form-row{display:flex;flex-direction:column;gap:12px}
   .co-form-row > *{width:100%}
+  
+  /* Feeder page sections - mobile optimizations */
+  section[style*="padding:60px"] { padding: 40px 5% !important; }
+  
+  h2[style*="font-size:36px"] { font-size: 24px !important; }
+  h3[style*="font-size:28px"] { font-size: 20px !important; }
+  
+  /* Cards with padding: 50px */
+  [style*="padding:50px"] { padding: 24px 16px !important; }
+  
+  /* Grids with auto-fit */
+  [style*="grid-template-columns: repeat(auto-fit"] {
+    grid-template-columns: 1fr !important;
+  }
+  
+  [style*="grid-template-columns: repeat(auto-fill"] {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* 3-column layouts to single column */
+  [style*="grid-template-columns: repeat(3"] {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* 2-column layouts to responsive */
+  [style*="grid-template-columns: repeat(2"] {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Button grids */
+  .feeder-button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-start;
+  }
+  
+  .feeder-button-group button {
+    font-size: 12px;
+    padding: 10px 12px;
+    min-height: 44px;
+    flex: 1 1 calc(50% - 4px);
+    min-width: 120px;
+  }
+  
+  /* Large padding on cards - reduce for mobile */
+  [style*="padding:25px"] { padding: 16px !important; }
+  [style*="padding:30px"] { padding: 18px !important; }
+  
+  /* Large gaps - reduce for mobile */
+  [style*="gap:20px"] { gap: 12px !important; }
+  [style*="gap:30px"] { gap: 16px !important; }
+  
+  /* Text sizing */
+  p[style*="font-size:15px"], 
+  div[style*="font-size:15px"] { font-size: 14px !important; }
+  
+  /* List items */
+  li[style*="margin-bottom"] { margin-bottom: 8px !important; }
+}
+
+@media(max-width:480px){
+  /* Extra small screen optimizations */
+  section { padding: 32px 4% !important; }
+  section[style*="padding"] { padding: 32px 4% !important; }
+  
+  h1 { font-size: clamp(18px, 5vw, 26px) !important; }
+  h2 { font-size: clamp(16px, 4.5vw, 22px) !important; }
+  h3 { font-size: clamp(14px, 4vw, 18px) !important; }
+  
+  .btn-gold, .btn-outline-dark, button { 
+    font-size: 12px !important;
+    padding: 12px 16px !important;
+    min-height: 44px !important;
+  }
+  
+  .nav-links a { font-size: 14px; padding: 14px 16px; }
+  
+  /* Modal - max width on tiny screens */
+  #pmodal { width: 98vw !important; }
 }
 @media (min-width: 1024px) { body { display: flex; flex-direction: column; } #footer { margin-top: auto; } }
 @media (max-width: 1023px) { #footer { position: static; margin-top: 40px; } body { padding-bottom: 0; } }
