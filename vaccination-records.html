@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💉 Vaccination Records - Game of Bones</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #fff;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border: 3px solid #c8a06e;
+            border-radius: 8px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 3px solid #c8a06e;
+            padding-bottom: 15px;
+        }
+        .header h1 {
+            color: #c8a06e;
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        .header p {
+            color: #666;
+            font-size: 13px;
+        }
+        .print-note {
+            background: #fffacd;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 12px;
+            text-align: center;
+            color: #333;
+        }
+        .vaccine-info {
+            background: rgba(100,150,100,.08);
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #649664;
+            margin-bottom: 25px;
+            font-size: 11px;
+            line-height: 1.8;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            font-size: 11px;
+        }
+        th {
+            background: linear-gradient(135deg, rgba(200,160,110,.2), rgba(200,160,110,.1));
+            color: #c8a06e;
+            padding: 12px;
+            border: 1px solid #ddd;
+            font-weight: 700;
+            text-align: left;
+        }
+        td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            height: 35px;
+        }
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        .vaccine-codes {
+            background: rgba(200,160,110,.08);
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 25px;
+            font-size: 11px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+        .vaccine-code {
+            background: white;
+            padding: 12px;
+            border-left: 3px solid #c8a06e;
+            border-radius: 4px;
+        }
+        .vaccine-code strong {
+            color: #c8a06e;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px solid #ddd;
+            font-size: 11px;
+            color: #999;
+        }
+        @media print {
+            body {
+                padding: 0;
+                background: white;
+            }
+            .container {
+                border: 2px solid #c8a06e;
+                padding: 20px;
+            }
+            .print-note {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💉 VACCINATION RECORDS</h1>
+            <p>Game of Bones - Immunization Tracker for Community Animals</p>
+        </div>
+
+        <div class="print-note">
+            <strong>💡 IMPORTANT:</strong> Vaccination is CRITICAL for disease prevention. Keep all records safe. Contact SOS (9820141310) or Karuna (9833625427) for free sterilization + vaccination programs.
+        </div>
+
+        <div class="vaccine-info">
+            <strong>📌 VACCINATION SCHEDULE (Puppies):</strong><br>
+            • 6-8 weeks: First DHPP/9-in-1 dose (₹400-700)<br>
+            • 10-12 weeks: Second dose<br>
+            • 14-16 weeks: Third dose + Rabies (mandatory by law)<br>
+            • Annual: Booster shots every year<br><br>
+            <strong>⚠️ RABIES IS MANDATORY:</strong> All dogs must be vaccinated against rabies by 12-16 weeks. This is required by Indian law.
+        </div>
+
+        <div class="vaccine-codes">
+            <div class="vaccine-code">
+                <strong>DHPP / 9-in-1</strong><br>
+                Covers: Distemper, Hepatitis, Parvovirus, Parainfluenza, Leptospirosis, Corona
+            </div>
+            <div class="vaccine-code">
+                <strong>Rabies</strong><br>
+                Mandatory. Must be given by vet. One-time at 16 weeks, then booster every 3 years
+            </div>
+            <div class="vaccine-code">
+                <strong>Deworming</strong><br>
+                Every 2 weeks until 8 weeks, then monthly until 6 months, then quarterly
+            </div>
+            <div class="vaccine-code">
+                <strong>Feline Vaccines (Cats)</strong><br>
+                FVRCP (Feline Viral Rhinotracheitis, Calicivirus, Panleukopenia)
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:10%">Date</th>
+                    <th style="width:12%">Animal ID/<br>Name</th>
+                    <th style="width:15%">Age When<br>Vaccinated</th>
+                    <th style="width:18%">Vaccine Type<br>(DHPP/Rabies/Deworming)</th>
+                    <th style="width:10%">Dose #</th>
+                    <th style="width:12%">Vet Name &<br>Clinic</th>
+                    <th style="width:12%">Next Booster<br>Due Date</th>
+                    <th style="width:11%">Notes/<br>Cost</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            </tbody>
+        </table>
+
+        <div class="footer">
+            <strong>Game of Bones</strong> | Caring for Community Animals<br>
+            WhatsApp: +91 90825 03295 | www.gameofbones.in<br>
+            FREE Vaccination Programs: SOS (9820141310) • Karuna (9833625427) • ASHA (9820127085)
+        </div>
+    </div>
+</body>
+</html>
