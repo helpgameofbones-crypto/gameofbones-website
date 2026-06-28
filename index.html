@@ -9214,7 +9214,15 @@ function submitNewsletter() {
   }
   form.style.display = 'none';
   success.style.display = 'block';
-  // WhatsApp notify as fallback (opens WA with ema  // WhatsApp notify as fallback
+  // Save to backend (non-blocking)
+  try {
+    fetch(SUPABASE_URL + '/rest/v1/email_captures', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY, 'Prefer': 'return=minimal' },
+      body: JSON.stringify({ email: email, source: 'newsletter', status: 'active' })
+    }).catch(function(){});
+  } catch (e) {}
+  // WhatsApp notify as fallback (opens WA with email)
   var waMsg = encodeURIComponent('New newsletter signup: ' + email);
   window.open('https://wa.me/919082503295?text=' + waMsg, '_blank');
 }
@@ -9792,6 +9800,14 @@ function spinUnlock() {
     errEl.style.display = 'block';
     return;
   }
+  // Capture the email to the backend (non-blocking)
+  try {
+    fetch(SUPABASE_URL + '/rest/v1/email_captures', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY, 'Prefer': 'return=minimal' },
+      body: JSON.stringify({ email: email, source: 'spin_wheel', status: 'active' })
+    }).catch(function(){});
+  } catch (e) {}
   // Transition: hide pre, show spin
   document.getElementById('spinRightPre').style.display = 'none';
   var spinP = document.getElementById('spinRightSpin');
@@ -9852,6 +9868,20 @@ function submitBdayForm() {
   // Format birthday display
   var monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   var bdayStr = monthNames[m - 1] + ' ' + d;
+
+  // Save to backend (non-blocking)
+  try {
+    var bdayISO = year + '-' + ('0'+m).slice(-2) + '-' + ('0'+d).slice(-2);
+    var _h = { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY, 'Prefer': 'return=minimal' };
+    fetch(SUPABASE_URL + '/rest/v1/dog_birthdays', {
+      method: 'POST', headers: _h,
+      body: JSON.stringify({ customer_name: name, customer_email: email, dog_name: dogName, birthday: bdayISO })
+    }).catch(function(){});
+    fetch(SUPABASE_URL + '/rest/v1/email_captures', {
+      method: 'POST', headers: _h,
+      body: JSON.stringify({ email: email, source: 'dog_birthday', status: 'active' })
+    }).catch(function(){});
+  } catch (e) {}
 
   // Show success
   document.getElementById('bdayFormWrap').style.display = 'none';
