@@ -750,16 +750,33 @@ body:has(#page-login.active) #mainNav { display: none !important; }
   [style*="1fr 1fr 1fr"] {
     grid-template-columns: 1fr !important;
   }
-  /* Note: repeat(auto-fit/auto-fill, minmax(...)) grids are intentionally
-     left untouched — they already reflow responsively on their own. */
+  /* Auto-fit / auto-fill / minmax() grids: when the min track (e.g. 280px)
+     is wider than the space left after padding, they overflow and the text
+     gets clipped on the right. On phones, collapse them to one column. */
+  [style*="auto-fit"],
+  [style*="auto-fill"],
+  [style*="minmax("] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Heavy fixed inline padding stacks up on small screens and pushes content
+     off the right edge — pull it back to sane mobile values. */
+  [style*="padding:90px"], [style*="padding: 90px"],
+  [style*="padding:80px"], [style*="padding: 80px"],
+  [style*="padding:60px"], [style*="padding: 60px"],
+  [style*="padding:50px"], [style*="padding: 50px"] { padding: 22px !important; }
+  [style*="padding:40px"], [style*="padding: 40px"] { padding: 18px !important; }
+  [style*="padding:30px"], [style*="padding: 30px"] { padding: 16px !important; }
 
   /* Wide two-column flex content rows → stack */
   .process-page-step, .about-strip-inner {
     grid-template-columns: 1fr !important;
   }
 
-  /* Long data tables scroll horizontally rather than break the layout */
-  table { display: block; width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  /* Reference tables: make columns share the width and wrap text so they
+     fit the screen instead of overflowing/clipping. */
+  table { width: 100% !important; table-layout: fixed; }
+  table td, table th { word-break: break-word; overflow-wrap: anywhere; }
 
   /* Numbered step badges must stay perfectly circular, never ovals */
   .step-num, .process-step-visual { aspect-ratio: 1 / 1 !important; }
