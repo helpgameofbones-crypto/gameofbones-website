@@ -6325,7 +6325,7 @@ function selectPayment(method) {
     cod:'💵 Pay cash when your order arrives. ₹40 handling fee applies. COD up to ₹2,000 only.'
   };
   const n = document.getElementById('co-pay-note');
-  if(n) n.textContent = notes[method]||'';
+  if(n) { n.textContent = notes[method]||''; n.style.display = notes[method] ? 'block' : 'none'; }
   updateCheckoutTotals();
 }
 
@@ -7270,6 +7270,10 @@ function placeOrder() {
   }
 
   // COD: skip Razorpay, go straight to success
+  // Read directly from the checked radio button (belt + suspenders)
+  var checkedRadio = document.querySelector('input[name="payment"]:checked');
+  if (checkedRadio && checkedRadio.value === 'cod') selectedPayment = 'cod';
+  console.log('Payment method:', selectedPayment, '| Radio:', checkedRadio ? checkedRadio.value : 'none');
   if (selectedPayment === 'cod') {
     _finaliseOrder(ref, phoneVal, orderItems);
     return;
