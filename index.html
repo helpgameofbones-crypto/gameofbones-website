@@ -778,6 +778,20 @@ body:has(#page-login.active) #mainNav { display: none !important; }
   table { width: 100% !important; table-layout: fixed; }
   table td, table th { word-break: break-word; overflow-wrap: anywhere; }
 
+  /* Home "us vs them" comparison grid: it's a 3-col CSS grid whose cells
+     default to min-width:auto and won't shrink, so the third column was
+     clipping off-screen. Let the cells shrink and wrap, with tighter
+     padding/font so all three columns fit a phone. */
+  .compare-table { max-width: 100% !important; }
+  .compare-table > div {
+    min-width: 0 !important;
+    padding: 12px 7px !important;
+    font-size: 12px !important;
+    letter-spacing: .02em !important;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
   /* Numbered step badges must stay perfectly circular, never ovals */
   .step-num, .process-step-visual { aspect-ratio: 1 / 1 !important; }
 
