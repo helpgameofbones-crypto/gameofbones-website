@@ -372,6 +372,12 @@ section{padding:90px 6%}
 .process-page-step{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;padding:60px 0;border-bottom:1px solid var(--cream-mid)}
 .process-page-step:nth-child(even){direction:rtl}
 .process-page-step:nth-child(even) > *{direction:ltr}
+/* The process PAGE sits on a light (cream) background, so its step text must be
+   dark — the shared .process-step-* classes default to white for the dark
+   homepage grid. Scope readable colours to the process page only. */
+.process-page-step .process-step-title{color:var(--dark)}
+.process-page-step .process-step-body{color:var(--muted)}
+.process-page-step .process-step-visual{background:var(--white);border:1px solid var(--cream-mid)}
 .process-step-num{font-family:'Cormorant Garamond',serif;font-size:72px;font-weight:700;color:rgba(200,151,58,.2);line-height:1;margin-bottom:4px}
 .process-step-tag{font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
 .process-step-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--white);margin-bottom:10px}
@@ -590,89 +596,79 @@ footer{background:var(--dark);color:rgba(255,255,255,.6);padding:56px 6% 28px;ma
 body:has(#page-checkout.active) footer { display: none !important; }
 body:has(#page-login.active) footer { display: none !important; }
 body:has(#page-login.active) #mainNav { display: none !important; }
-/* ===== PHASE 2: MOBILE UX ===== */
+/* ===== MOBILE MENU — slide-in drawer (petritive-style) ===== */
 .hamburger-btn { display: none; }
-@media (max-width: 640px) {
-  /* Show hamburger on mobile */
-  .hamburger-btn { 
-    display: flex !important; 
-    flex-direction: column; 
-    gap: 4px; 
-    width: 28px; 
-    height: 20px; 
-    background: none; 
-    border: none; 
+#navOverlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); opacity: 0; visibility: hidden; transition: opacity .3s ease; z-index: 1900; }
+#navOverlay.open { opacity: 1; visibility: visible; }
+@media (max-width: 768px) {
+  /* Hamburger button (animates to an X when open) */
+  .hamburger-btn {
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
+    background: none;
+    border: none;
     padding: 8px;
     cursor: pointer;
     flex-shrink: 0;
-    z-index: 1001;
-    margin-left: 4px;
-    align-items: center;
-    justify-content: center;
+    position: relative;
+    z-index: 2100;
   }
-  .hamburger-btn span { 
-    width: 20px; 
-    height: 2px; 
-    background: var(--dark); 
-    transition: transform 0.3s; 
+  .hamburger-btn span {
+    width: 22px;
+    height: 2px;
+    background: var(--dark);
+    border-radius: 2px;
+    transition: transform .3s ease, opacity .2s ease;
     display: block;
   }
-  .hamburger-btn.open span:nth-child(1) { transform: rotate(45deg) translateY(8px); }
+  .hamburger-btn.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
   .hamburger-btn.open span:nth-child(2) { opacity: 0; }
-  .hamburger-btn.open span:nth-child(3) { transform: rotate(-45deg) translateY(-8px); }
-  
-  /* Adjust nav-actions on mobile - don't take margin-left: auto */
-  .nav-actions { 
-    margin-left: 0;
-    display: flex;
-    gap: 2px;
-    flex-shrink: 0;
-  }
-  
-  /* Hide nav-links by default on mobile, show only when open */
-  .nav-links { 
+  .hamburger-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .nav-actions { margin-left: auto; display: flex; gap: 2px; flex-shrink: 0; }
+
+  /* The drawer itself — slides in from the right */
+  .nav-links {
     position: fixed !important;
-    top: 52px; 
-    left: 0 !important; 
+    top: 0 !important;
     right: 0 !important;
-    margin-left: 0 !important;
+    left: auto !important;
+    bottom: 0 !important;
+    height: 100vh !important;
+    width: min(82vw, 330px) !important;
     margin: 0 !important;
-    padding: 0 !important;
-    background: var(--white); 
+    padding: 76px 0 24px !important;
+    background: var(--white) !important;
     display: flex !important;
-    flex-direction: column; 
-    gap: 0 !important; 
-    max-height: 0 !important; 
-    overflow: hidden !important; 
-    transition: max-height 0.3s ease; 
-    border-bottom: 1px solid var(--cream-mid);
-    z-index: 1000;
-    width: 100%;
+    flex-direction: column !important;
+    gap: 0 !important;
+    overflow-y: auto !important;
     list-style: none !important;
+    box-shadow: -10px 0 40px rgba(0,0,0,.2) !important;
+    transform: translateX(100%);
+    transition: transform .3s ease;
+    z-index: 2000 !important;
   }
-  .nav-links.mobile-open { 
-    max-height: calc(100vh - 52px) !important; 
-  }
-  .nav-links a { 
-    display: block !important; 
-    padding: 16px 20px; 
-    border-bottom: 1px solid var(--cream-mid); 
-    font-size: 14px; 
-    font-weight: 600;
-    min-height: 48px;
+  .nav-links.mobile-open { transform: translateX(0); }
+  .nav-links li { display: block !important; margin: 0 !important; padding: 0 !important; list-style: none !important; }
+  .nav-links a {
     display: flex !important;
     align-items: center;
+    padding: 16px 26px;
+    min-height: 54px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--dark);
+    border-bottom: 1px solid var(--cream-mid);
   }
-  .nav-links li {
-    display: block !important;
-    list-style: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-  .nav-links a.active { 
-    background: var(--cream); 
-    border-bottom: 2px solid var(--gold); 
-  }
+  .nav-links a.active { background: var(--cream); border-left: 3px solid var(--gold); }
+}
+@media (max-width: 640px) {
   
   /* Hero section */
   .hero-title { font-size: clamp(24px, 7vw, 40px); margin-bottom: 16px; }
@@ -770,6 +766,17 @@ body:has(#page-login.active) #mainNav { display: none !important; }
 
   /* Generous tap targets on links that act as buttons */
   .btn-gold, .btn-outline-dark, .btn-outline-light { min-height: 48px; }
+
+  /* Blog-article footer: stack the brand line, share row and CTA instead of
+     cramming them side-by-side (which squeezed text to one word per line). */
+  .art-modal-footer {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 16px !important;
+    padding: 20px 18px !important;
+  }
+  .art-modal-footer > span { font-size: 13px !important; }
+  .art-modal-footer .btn-gold { width: 100% !important; text-align: center; }
 }
 
 @media (max-width: 480px) {
@@ -960,6 +967,10 @@ body:has(#page-login.active) #mainNav { display: none !important; }
       <span></span>
     </button>
   </div>
+  <!-- Dark overlay behind the mobile drawer — tap anywhere to close.
+       Kept INSIDE #mainNav so it shares the nav's stacking context
+       (hamburger 2100 > drawer 2000 > overlay 1900). -->
+  <div id="navOverlay" onclick="closeMobileMenu()"></div>
 </nav>
 
 <!-- ── HOME ───────────────────────────────────────────────────────────── -->
@@ -1794,7 +1805,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
           <div class="process-step-title">Human-Grade Ingredients Only</div>
           <div class="process-step-body">We source exclusively from FSSAI-certified suppliers. Every ingredient meets human consumption standards &mdash; the same quality you&rsquo;d find at your butcher or fish market. Single origin, traceable, fresh. We visit suppliers personally and will not compromise on source quality regardless of cost.</div>
         </div>
-        <div class="process-step-visual">&#127822;</div>
+        <div class="process-step-visual">&#129385;</div>
       </div>
       <div class="process-page-step">
         <div>
@@ -1803,7 +1814,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
           <div class="process-step-title">Hand-Prepared, Zero Chemicals</div>
           <div class="process-step-body">Every piece is cleaned and prepared by hand. No bleach wash. No chemical treatment. No preservative spray. We clean with plain water and prepare each batch fresh on the day it goes into the dehydrator. For fish, we debone where required. For organs, we trim excess fat for ideal texture after dehydration.</div>
         </div>
-        <div class="process-step-visual">&#9999;&#65039;</div>
+        <div class="process-step-visual">&#128298;</div>
       </div>
       <div class="process-page-step">
         <div>
@@ -1847,12 +1858,12 @@ body:has(#page-login.active) #mainNav { display: none !important; }
     <div class="ingr-grid">
       <div class="ingr-card"><div class="ingr-emoji">&#127831;</div><div class="ingr-name">Chicken</div><p style="font-size:13px;color:var(--muted);line-height:1.6">Lean muscle meat, high-protein, easy to digest. The most versatile ingredient in our range and ideal for everyday feeding and training.</p><div class="ingr-tags"><span class="ingr-tag">High Protein</span><span class="ingr-tag">Low Fat</span><span class="ingr-tag">Digestive</span></div><div class="ingr-stats"><div class="ingr-stat"><div class="ingr-stat-val">31g</div><div class="ingr-stat-lab">Protein/100g</div></div><div class="ingr-stat"><div class="ingr-stat-val">3.6g</div><div class="ingr-stat-lab">Fat/100g</div></div></div></div>
       <div class="ingr-card"><div class="ingr-emoji">&#128003;</div><div class="ingr-name">Buffalo (Buff)</div><p style="font-size:13px;color:var(--muted);line-height:1.6">A novel protein for most Indian dogs. Higher iron and zinc than chicken. Ideal for dogs with suspected chicken sensitivities and for nutritional variety.</p><div class="ingr-tags"><span class="ingr-tag">Novel Protein</span><span class="ingr-tag">High Iron</span><span class="ingr-tag">Allergy Safe</span></div><div class="ingr-stats"><div class="ingr-stat"><div class="ingr-stat-val">26g</div><div class="ingr-stat-lab">Protein/100g</div></div><div class="ingr-stat"><div class="ingr-stat-val">3.3mg</div><div class="ingr-stat-lab">Iron/100g</div></div></div></div>
-      <div class="ingr-card"><div class="ingr-emoji">&#128031;</div><div class="ingr-name">Goat</div><p style="font-size:13px;color:var(--muted);line-height:1.6">Used in organs, trachea and ears. Goat organs are among the most nutrient-dense foods in any dog&rsquo;s diet &mdash; liver, lungs and trachea all offer different benefits.</p><div class="ingr-tags"><span class="ingr-tag">Organ Rich</span><span class="ingr-tag">Vitamin A</span><span class="ingr-tag">Collagen</span></div><div class="ingr-stats"><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">Vitamin A</div></div><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">B12</div></div></div></div>
+      <div class="ingr-card"><div class="ingr-emoji">&#128016;</div><div class="ingr-name">Goat</div><p style="font-size:13px;color:var(--muted);line-height:1.6">Used in organs, trachea and ears. Goat organs are among the most nutrient-dense foods in any dog&rsquo;s diet &mdash; liver, lungs and trachea all offer different benefits.</p><div class="ingr-tags"><span class="ingr-tag">Organ Rich</span><span class="ingr-tag">Vitamin A</span><span class="ingr-tag">Collagen</span></div><div class="ingr-stats"><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">Vitamin A</div></div><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">B12</div></div></div></div>
       <div class="ingr-card"><div class="ingr-emoji">&#128031;</div><div class="ingr-name">Fish</div><p style="font-size:13px;color:var(--muted);line-height:1.6">We use 9 different fish varieties. All are wild-caught from Indian waters. Rich in omega-3 fatty acids EPA and DHA &mdash; essential for brain, coat and joint health.</p><div class="ingr-tags"><span class="ingr-tag">Omega-3</span><span class="ingr-tag">Coat Health</span><span class="ingr-tag">Brain Health</span></div><div class="ingr-stats"><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">EPA+DHA</div></div><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">Selenium</div></div></div></div>
-      <div class="ingr-card"><div class="ingr-emoji">&#128028;</div><div class="ingr-name">Quail (Whole Prey)</div><p style="font-size:13px;color:var(--muted);line-height:1.6">Whole quail with bones, organs and meat intact. The most complete single-ingredient treat we offer &mdash; muscle, bone, organ nutrition in one natural package.</p><div class="ingr-tags"><span class="ingr-tag">Whole Prey</span><span class="ingr-tag">Bone-In</span><span class="ingr-tag">Complete</span></div><div class="ingr-stats"><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">Calcium</div></div><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">Minerals</div></div></div></div>
-      <div class="ingr-card"><div class="ingr-emoji">&#129459;</div><div class="ingr-name">Chicken Feet</div><p style="font-size:13px;color:var(--muted);line-height:1.6">One of the best natural sources of glucosamine and chondroitin. Excellent for joint health and as a natural dental chew. The cartilage provides prolonged chewing satisfaction.</p><div class="ingr-tags"><span class="ingr-tag">Glucosamine</span><span class="ingr-tag">Dental</span><span class="ingr-tag">Joint Health</span></div><div class="ingr-stats"><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">Glucosamine</div></div><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">Collagen</div></div></div></div>
-      <div class="ingr-card"><div class="ingr-emoji">&#128004;</div><div class="ingr-name">Chicken Liver</div><p style="font-size:13px;color:var(--muted);line-height:1.6">Called nature&rsquo;s multivitamin. Extremely high in vitamin A, B12 and iron. Small amounts provide dramatic nutritional impact. Used as a high-value training reward.</p><div class="ingr-tags"><span class="ingr-tag">Vitamin A</span><span class="ingr-tag">Iron Rich</span><span class="ingr-tag">B12</span></div><div class="ingr-stats"><div class="ingr-stat"><div class="ingr-stat-val">31mg</div><div class="ingr-stat-lab">B12/100g</div></div><div class="ingr-stat"><div class="ingr-stat-val">Very High</div><div class="ingr-stat-lab">Vitamin A</div></div></div></div>
-      <div class="ingr-card"><div class="ingr-emoji">&#129520;</div><div class="ingr-name">Goat Trachea</div><p style="font-size:13px;color:var(--muted);line-height:1.6">Cartilage-based chew naturally rich in chondroitin. Provides extended chewing time for dental benefits and mental enrichment. Suitable for medium and large breeds.</p><div class="ingr-tags"><span class="ingr-tag">Chondroitin</span><span class="ingr-tag">Dental</span><span class="ingr-tag">Long Lasting</span></div><div class="ingr-stats"><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">Chondroitin</div></div><div class="ingr-stat"><div class="ingr-stat-val">Medium</div><div class="ingr-stat-lab">Difficulty</div></div></div></div>
+      <div class="ingr-card"><div class="ingr-emoji">&#128038;</div><div class="ingr-name">Quail (Whole Prey)</div><p style="font-size:13px;color:var(--muted);line-height:1.6">Whole quail with bones, organs and meat intact. The most complete single-ingredient treat we offer &mdash; muscle, bone, organ nutrition in one natural package.</p><div class="ingr-tags"><span class="ingr-tag">Whole Prey</span><span class="ingr-tag">Bone-In</span><span class="ingr-tag">Complete</span></div><div class="ingr-stats"><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">Calcium</div></div><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">Minerals</div></div></div></div>
+      <div class="ingr-card"><div class="ingr-emoji">&#128020;</div><div class="ingr-name">Chicken Feet</div><p style="font-size:13px;color:var(--muted);line-height:1.6">One of the best natural sources of glucosamine and chondroitin. Excellent for joint health and as a natural dental chew. The cartilage provides prolonged chewing satisfaction.</p><div class="ingr-tags"><span class="ingr-tag">Glucosamine</span><span class="ingr-tag">Dental</span><span class="ingr-tag">Joint Health</span></div><div class="ingr-stats"><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">Glucosamine</div></div><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">Collagen</div></div></div></div>
+      <div class="ingr-card"><div class="ingr-emoji">&#127830;</div><div class="ingr-name">Chicken Liver</div><p style="font-size:13px;color:var(--muted);line-height:1.6">Called nature&rsquo;s multivitamin. Extremely high in vitamin A, B12 and iron. Small amounts provide dramatic nutritional impact. Used as a high-value training reward.</p><div class="ingr-tags"><span class="ingr-tag">Vitamin A</span><span class="ingr-tag">Iron Rich</span><span class="ingr-tag">B12</span></div><div class="ingr-stats"><div class="ingr-stat"><div class="ingr-stat-val">31mg</div><div class="ingr-stat-lab">B12/100g</div></div><div class="ingr-stat"><div class="ingr-stat-val">Very High</div><div class="ingr-stat-lab">Vitamin A</div></div></div></div>
+      <div class="ingr-card"><div class="ingr-emoji">&#129460;</div><div class="ingr-name">Goat Trachea</div><p style="font-size:13px;color:var(--muted);line-height:1.6">Cartilage-based chew naturally rich in chondroitin. Provides extended chewing time for dental benefits and mental enrichment. Suitable for medium and large breeds.</p><div class="ingr-tags"><span class="ingr-tag">Chondroitin</span><span class="ingr-tag">Dental</span><span class="ingr-tag">Long Lasting</span></div><div class="ingr-stats"><div class="ingr-stat"><div class="ingr-stat-val">High</div><div class="ingr-stat-lab">Chondroitin</div></div><div class="ingr-stat"><div class="ingr-stat-val">Medium</div><div class="ingr-stat-lab">Difficulty</div></div></div></div>
     </div>
   </section>
 </div>
@@ -4594,6 +4605,8 @@ function sendCustomWA() {
   }
 }
 function showPage(id) {
+  // Always close the mobile drawer when navigating
+  if (typeof closeMobileMenu === 'function') closeMobileMenu();
   // Stop carousel auto-rotate when leaving product page
   if (id !== 'product' && typeof stopDetailCarouselAutoRotate === 'function') {
     stopDetailCarouselAutoRotate();
@@ -10035,6 +10048,10 @@ function handleLoginClick(){
     var la=document.getElementById('loginAlreadyIn'),lf=document.getElementById('loginForm');
     if(la)la.style.display='block'; if(lf)lf.style.display='none';
     setText('loginWelcomeName',currentUser.name);
+    // Phone-based account: show the mobile number where the email line sits
+    var ph=currentUser.phone?String(currentUser.phone):'';
+    var phFmt=ph.length===10?(ph.slice(0,5)+' '+ph.slice(5)):ph;
+    setText('loginWelcomeEmail', phFmt?('\u{1F4F1} '+phFmt):'');
     if(typeof renderReorderSection==='function')renderReorderSection();
   } else {
     var la2=document.getElementById('loginAlreadyIn'),lf2=document.getElementById('loginForm');
@@ -10051,6 +10068,73 @@ function signOut(){
   if(la)la.style.display='none'; if(lf)lf.style.display='flex';
   showCartToast('Signed out','success');
 }
+
+// Paint the nav avatar button with the signed-in customer's initials
+function _applyLoginAvatar(){
+  var nb=document.getElementById('loginNavBtn');
+  if(!nb) return;
+  if(currentUser && currentUser.name){
+    var parts=String(currentUser.name).trim().split(/\s+/).filter(Boolean);
+    var initials=((parts[0]||'').charAt(0)+(parts.length>1?(parts[parts.length-1]||'').charAt(0):'')).toUpperCase();
+    nb.textContent=initials||'👤';
+    nb.style.background='var(--gold)';nb.style.color='var(--dark)';nb.style.fontWeight='700';nb.style.fontSize='12px';
+  } else {
+    nb.textContent='👤';
+    nb.style.background='';nb.style.color='';nb.style.fontWeight='';
+  }
+}
+
+// Sign in with mobile number + name (verified against order history).
+// This is the function the login page's "Sign In" button calls.
+function doLogin(){
+  var phoneEl=document.getElementById('loginPhone');
+  var nameEl=document.getElementById('loginName');
+  var phone=(phoneEl?phoneEl.value:'').replace(/\D/g,'');
+  var name=(nameEl?nameEl.value:'').trim();
+  if(phone.length<10){
+    if(typeof showCartToast==='function') showCartToast('Enter a valid 10-digit mobile number','error');
+    if(phoneEl){phoneEl.focus();phoneEl.style.borderColor='#c0392b';setTimeout(function(){phoneEl.style.borderColor='var(--cream-mid)';},1500);}
+    return;
+  }
+  if(!name){
+    if(typeof showCartToast==='function') showCartToast('Please enter your name','error');
+    if(nameEl){nameEl.focus();nameEl.style.borderColor='#c0392b';setTimeout(function(){nameEl.style.borderColor='var(--cream-mid)';},1500);}
+    return;
+  }
+  phone=phone.slice(-10);
+  currentUser={name:name,phone:phone,purchased:[]};
+  try{localStorage.setItem('gobCurrentUser',JSON.stringify(currentUser));}catch(e){}
+  _applyLoginAvatar();
+
+  // Best-effort: pull this customer's past orders so reviews can be marked
+  // "verified purchase" and the account shows order count. Non-blocking.
+  try{
+    fetch(SUPABASE_URL+'/rest/v1/orders?select=items&customer_phone=ilike.*'+phone,{
+      headers:{apikey:SUPABASE_ANON_KEY,Authorization:'Bearer '+SUPABASE_ANON_KEY}
+    }).then(function(r){return r.json();}).then(function(rows){
+      if(Array.isArray(rows)){
+        currentUser.orderCount=rows.length;
+        try{localStorage.setItem('gobCurrentUser',JSON.stringify(currentUser));}catch(e){}
+      }
+    }).catch(function(){});
+  }catch(e){}
+
+  if(typeof showCartToast==='function') showCartToast('Signed in as '+name.split(' ')[0],'success');
+  // Reveal nav/footer (login screen hid them) and return to the prior page
+  var footerEl=document.querySelector('footer');if(footerEl)footerEl.style.display='';
+  var mainNav=document.getElementById('mainNav');if(mainNav)mainNav.style.display='';
+  var waW=document.querySelector('.wa-widget');if(waW)waW.style.display='';
+  var back=sessionStorage.getItem('loginReturnPage')||'home';
+  navigateTo(back);
+}
+
+// Restore a saved sign-in when the site loads
+document.addEventListener('DOMContentLoaded',function(){
+  try{
+    var saved=localStorage.getItem('gobCurrentUser');
+    if(saved){ currentUser=JSON.parse(saved); _applyLoginAvatar(); }
+  }catch(e){}
+});
 
 function selfHeal(){var ids=['co-shipping-val','co-grand-total','co-discount-row','co-discount-val','co-cod-row','co-packaging-val','orderSuccessRef','orderSuccessOverlay','spinResultEmoji','spinResultTitle','spinResultSub','spinCodeBox','spinCodeVal','spinCopied','cartTotal','cartCount','cartUpsellName','cartUpsellPrice','pmodal-avg-score','pmodal-avg-stars','pmodal-review-count','pmodal-bar-chart'];ids.forEach(function(id){if(!document.getElementById(id)){var e=document.createElement((id.indexOf('row')>-1||id==='orderSuccessOverlay')?'div':'span');e.id=id;if(id.indexOf('row')>-1||id==='orderSuccessOverlay')e.style.display='none';document.body.appendChild(e);}});}
 document.addEventListener('DOMContentLoaded',function(){
@@ -10535,40 +10619,33 @@ showPage = function(id) {
 };
 // ── END LOYALTY POINTS REDEMPTION ──────────────────────────────────
 // ===== PHASE 2: MOBILE FUNCTIONS =====
-function toggleMobileMenu() {
-  try {
-    var menu = document.getElementById('mobileNavMenu');
-    var btn = document.querySelector('.hamburger-btn');
-    
-    if (!menu || !btn) {
-      console.error('Mobile menu elements not found', {menu, btn});
-      return;
-    }
-    
-    console.log('Toggling mobile menu...');
-    menu.classList.toggle('mobile-open');
-    btn.classList.toggle('open');
-    console.log('Menu opened:', menu.classList.contains('mobile-open'));
-  } catch(e) {
-    console.error('Error in toggleMobileMenu:', e);
-  }
+// ===== MOBILE MENU (slide-in drawer) =====
+function openMobileMenu(){
+  var menu=document.getElementById('mobileNavMenu');
+  var btn=document.querySelector('.hamburger-btn');
+  var ov=document.getElementById('navOverlay');
+  if(menu)menu.classList.add('mobile-open');
+  if(btn)btn.classList.add('open');
+  if(ov)ov.classList.add('open');
+  document.body.style.overflow='hidden';
 }
-
-// Close menu when clicking outside
-document.addEventListener('click', function(event) {
-  var menu = document.getElementById('mobileNavMenu');
-  var btn = document.querySelector('.hamburger-btn');
-  var nav = document.getElementById('mainNav');
-  
-  if (!menu || !btn || !nav) return;
-  if (menu.classList.contains('mobile-open')) {
-    // Check if click is outside the nav
-    if (!nav.contains(event.target)) {
-      menu.classList.remove('mobile-open');
-      btn.classList.remove('open');
-    }
-  }
-});
+function closeMobileMenu(){
+  var menu=document.getElementById('mobileNavMenu');
+  var btn=document.querySelector('.hamburger-btn');
+  var ov=document.getElementById('navOverlay');
+  if(menu)menu.classList.remove('mobile-open');
+  if(btn)btn.classList.remove('open');
+  if(ov)ov.classList.remove('open');
+  document.body.style.overflow='';
+}
+function toggleMobileMenu(){
+  var menu=document.getElementById('mobileNavMenu');
+  if(menu&&menu.classList.contains('mobile-open'))closeMobileMenu();
+  else openMobileMenu();
+}
+// Tapping outside the drawer is handled by #navOverlay's onclick.
+// Also allow Escape to close.
+document.addEventListener('keydown',function(e){ if(e.key==='Escape')closeMobileMenu(); });
 
 // Close menu when clicking a link
 document.addEventListener('DOMContentLoaded', function() {
