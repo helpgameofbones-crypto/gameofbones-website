@@ -40,8 +40,9 @@ button{font-family:'Jost',sans-serif;cursor:pointer;border:none;background:none}
 .logo-text{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--dark);letter-spacing:-.01em}
 @media(max-width:768px){.logo-text{font-size:18px}}
 @media(max-width:480px){.logo-text{display:none}}
-.nav-links{display:flex;gap:4px;list-style:none;margin-left:auto}
-.nav-links a{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:8px 14px;transition:color .2s;cursor:pointer}
+.nav-links{display:flex;gap:4px;list-style:none;margin-left:auto;align-items:center;flex-wrap:nowrap}
+.nav-links li{white-space:nowrap}
+.nav-links a{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:8px 14px;transition:color .2s;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
 .nav-links a:hover,.nav-links a.active{color:var(--dark)}
 .nav-links a.active{border-bottom:2px solid var(--gold)}
 .nav-actions{display:flex;align-items:center;gap:8px;margin-left:16px}
@@ -646,6 +647,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
     background: var(--white) !important;
     display: flex !important;
     flex-direction: column !important;
+    align-items: stretch !important;
     gap: 0 !important;
     overflow-y: auto !important;
     list-style: none !important;
