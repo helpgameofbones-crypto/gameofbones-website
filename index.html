@@ -7101,7 +7101,8 @@ function _finaliseOrder(ref, phoneVal, orderItems) {
     headers: {
       'Content-Type': 'application/json',
       'apikey': SUPABASE_ANON_KEY,
-      'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
+      'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+      'Prefer': 'return=representation'
     },
     body: JSON.stringify(orderPayload)
   })
@@ -7127,6 +7128,42 @@ function _finaliseOrder(ref, phoneVal, orderItems) {
         })
       });
     }
+
+    // ═══════════════════════ CREATE DELHIVERY SHIPMENT (non-blocking) ═══════════════════════
+    // Calls the Edge Function to auto-create a shipment in Delhivery and get an AWB.
+    // If this fails, the order is still saved — tracking can be added manually later.
+    try {
+      var dlvPayload = {
+        order_id: Array.isArray(data) && data[0] && data[0].id ? data[0].id : null,
+        order_ref: ref,
+        customer_name: fname + ' ' + lname,
+        customer_phone: phoneVal,
+        address: addr1 + (addr2 ? ', ' + addr2 : ''),
+        city: city,
+        state: state,
+        pincode: pin,
+        payment_method: selectedPayment === 'cod' ? 'cod' : 'prepaid',
+        grand_total: grandTotal,
+        items: itemsWithDetails.map(function(it) {
+          return { name: it.product_name, qty: it.quantity, price: it.pack_price, weight_grams: it.weight || 0 };
+        }),
+        weight_grams: 0
+      };
+      fetch(SUPABASE_URL + '/functions/v1/create-delhivery-shipment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY },
+        body: JSON.stringify(dlvPayload)
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        if (d && d.created && d.awb) {
+          console.log('Delhivery shipment created — AWB:', d.awb);
+        } else {
+          console.warn('Delhivery shipment not created:', d.error || d);
+        }
+      })
+      .catch(function(e) { console.warn('Delhivery auto-shipment skipped:', e.message); });
+    } catch(e) { console.warn('Delhivery call skipped:', e.message); }
   })
   .catch(function(err) {
     console.error('Supabase save failed (will retry):', err.message);
