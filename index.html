@@ -2608,18 +2608,18 @@ body:has(#page-login.active) #mainNav { display: none !important; }
         <p style="font-size:13px;color:var(--muted)">Spinning&hellip; good luck! &#127808;</p>
       </div>
 
-      <div id="spinResult" style="display:none;text-align:center">
+      <div id="spinResult" style="display:none;text-align:center;width:100%">
         <div id="spinResultEmoji" style="font-size:48px;margin-bottom:10px"></div>
-        <div id="spinResultTitle" style="font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--dark);margin-bottom:6px"></div>
-        <div id="spinResultSub" style="font-size:13px;color:var(--muted);margin-bottom:16px"></div>
-        <div id="spinCodeBox" style="display:none;background:var(--gold-pale);border:1.5px dashed var(--gold);padding:14px;margin-bottom:14px">
-          <div style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Your Code</div>
-          <div id="spinCodeVal" style="font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:var(--dark);letter-spacing:.06em"></div>
-          <div id="spinCopied" style="display:none;font-size:11px;color:var(--teal);font-weight:700;margin-top:4px">&#10003; Copied!</div>
-          <div id="spinMinOrder" style="display:none;margin-top:8px;font-size:11px;color:var(--muted);line-height:1.5">&#127974; Valid on orders of <strong style="color:var(--dark)">&#8377;749 or more</strong>.</div>
+        <div id="spinResultTitle" style="font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:var(--dark);margin-bottom:8px"></div>
+        <div id="spinResultSub" style="font-size:14px;color:var(--muted);margin-bottom:20px;line-height:1.6;max-width:340px;margin-left:auto;margin-right:auto"></div>
+        <div id="spinCodeBox" style="display:none;background:var(--gold-pale);border:1.5px dashed var(--gold);padding:20px;margin-bottom:16px;max-width:300px;margin-left:auto;margin-right:auto">
+          <div style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Your Code</div>
+          <div id="spinCodeVal" style="font-family:'Playfair Display',serif;font-size:32px;font-weight:900;color:var(--dark);letter-spacing:.06em"></div>
+          <div id="spinCopied" style="display:none;font-size:11px;color:var(--teal);font-weight:700;margin-top:6px">&#10003; Copied!</div>
+          <div id="spinMinOrder" style="display:none;margin-top:10px;font-size:12px;color:var(--muted);line-height:1.5">&#127974; Valid on orders of <strong style="color:var(--dark)">&#8377;749 or more</strong>.</div>
         </div>
-        <button id="spinCopyBtn" onclick="swCopyCode()" style="display:none;background:var(--dark);color:var(--white);border:none;padding:11px 24px;font-family:'Jost',sans-serif;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;margin-bottom:8px;width:100%">Copy Code</button>
-        <button onclick="spinWheelClose();showPage('shop')" style="display:block;width:100%;background:var(--gold);color:var(--dark);border:none;padding:13px;font-family:'Jost',sans-serif;font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer">Shop Now &#8594;</button>
+        <button id="spinCopyBtn" onclick="spinCopyCode()" style="display:none;background:var(--dark);color:var(--white);border:none;padding:11px 24px;font-family:'Jost',sans-serif;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;margin-bottom:8px;width:100%;max-width:300px">Copy Code</button>
+        <button onclick="spinWheelClose();showPage('shop')" style="display:block;width:100%;max-width:300px;margin:0 auto;background:var(--gold);color:var(--dark);border:none;padding:13px;font-family:'Jost',sans-serif;font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer">Shop Now &#8594;</button>
       </div>
     </div>
   </div>
@@ -6292,28 +6292,90 @@ function hideDiscountPanelOutside(e) {
 }
 
 function applyDiscount() {
-  const code = (document.getElementById('co-discount').value||'').trim().toUpperCase();
-  const msg = document.getElementById('discountMsg');
+  var codeInput = document.getElementById('co-discount');
+  var code = (codeInput ? codeInput.value : '').trim().toUpperCase();
+  var msg = document.getElementById('discountMsg');
+  if (!code) return;
   msg.style.display = 'block';
-  const dc = DISCOUNT_CODES[code];
-  if (dc) {
-    const subtotal = cartItems.reduce((s,i) => s + i.price * i.qty, 0);
-    if (dc.minOrder && subtotal < dc.minOrder) {
+  msg.style.color = 'var(--muted)';
+  msg.textContent = 'Checking...';
+
+  // Try fetching from the coupons table first
+  fetch(SUPABASE_URL + '/rest/v1/coupons?code=eq.' + encodeURIComponent(code) + '&is_active=eq.true&limit=1', {
+    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(rows) {
+    var coupon = Array.isArray(rows) && rows.length > 0 ? rows[0] : null;
+
+    // Fallback to hardcoded codes if not found in DB
+    if (!coupon) {
+      var dc = DISCOUNT_CODES[code];
+      if (dc) {
+        coupon = { code: code, type: dc.type, value: dc.value, min_order: dc.minOrder || null, valid_until: null };
+      }
+    }
+
+    if (!coupon) {
       appliedDiscount = null;
       msg.style.color = '#c0392b';
-      msg.textContent = '✗ ' + code + ' requires a minimum order of ₹' + dc.minOrder + '. Add more to qualify!';
-    } else {
-      appliedDiscount = dc;
-      msg.style.color = 'var(--teal)';
-      msg.textContent = '✓ ' + dc.label + ' applied!';
-      document.getElementById('co-discount').disabled = true;
+      msg.textContent = '✗ Invalid code. Try FIRST10 for 10% off your first order.';
+      updateCheckoutTotals();
+      return;
     }
-  } else {
-    appliedDiscount = null;
-    msg.style.color = '#c0392b';
-    msg.textContent = '✗ Invalid code. Try FIRST10 for 10% off your first order.';
-  }
-  updateCheckoutTotals();
+
+    // Check expiry
+    if (coupon.valid_until && new Date(coupon.valid_until) < new Date()) {
+      appliedDiscount = null;
+      msg.style.color = '#c0392b';
+      msg.textContent = '✗ This code has expired.';
+      updateCheckoutTotals();
+      return;
+    }
+
+    // Check min order
+    var subtotal = cartItems.reduce(function(s, i) { return s + i.price * i.qty; }, 0);
+    if (coupon.min_order && subtotal < coupon.min_order) {
+      appliedDiscount = null;
+      msg.style.color = '#c0392b';
+      msg.textContent = '✗ ' + code + ' requires a minimum order of ₹' + coupon.min_order + '.';
+      updateCheckoutTotals();
+      return;
+    }
+
+    // Apply
+    var label = coupon.type === 'percent' ? coupon.value + '% off' :
+                coupon.type === 'free' ? 'Free item' :
+                coupon.type === 'shipping' ? 'Free shipping' :
+                '₹' + coupon.value + ' off';
+    appliedDiscount = { type: coupon.type, value: coupon.value, label: label, code: code };
+    msg.style.color = 'var(--teal)';
+    msg.textContent = '✓ ' + label + ' applied!';
+    if (codeInput) codeInput.disabled = true;
+    updateCheckoutTotals();
+  })
+  .catch(function() {
+    // Network error — fall back to hardcoded
+    var dc = DISCOUNT_CODES[code];
+    if (dc) {
+      var subtotal = cartItems.reduce(function(s, i) { return s + i.price * i.qty; }, 0);
+      if (dc.minOrder && subtotal < dc.minOrder) {
+        appliedDiscount = null;
+        msg.style.color = '#c0392b';
+        msg.textContent = '✗ ' + code + ' requires min order ₹' + dc.minOrder + '.';
+      } else {
+        appliedDiscount = dc;
+        msg.style.color = 'var(--teal)';
+        msg.textContent = '✓ ' + dc.label + ' applied!';
+        if (codeInput) codeInput.disabled = true;
+      }
+    } else {
+      appliedDiscount = null;
+      msg.style.color = '#c0392b';
+      msg.textContent = '✗ Invalid code.';
+    }
+    updateCheckoutTotals();
+  });
 }
 
 function selectPayment(method) {
@@ -7079,7 +7141,7 @@ function _finaliseOrder(ref, phoneVal, orderItems) {
     items: itemsWithDetails,
     subtotal: subtotal,
     discount: 0,
-    coupon_code: null,
+    coupon_code: appliedDiscount && appliedDiscount.code ? appliedDiscount.code : null,
     shipping: shippingCharge,
     packaging: 0,
     grand_total: grandTotal,
@@ -7128,6 +7190,35 @@ function _finaliseOrder(ref, phoneVal, orderItems) {
         })
       });
     }
+
+    // ═══════════════════════ SEND ORDER CONFIRMATION EMAIL (non-blocking) ═══════════════════════
+    try {
+      var emailPayload = {
+        order: {
+          ref: ref,
+          customer_name: fname + ' ' + lname,
+          customer_email: email,
+          customer_phone: phoneVal,
+          payment_method: selectedPayment === 'cod' ? 'cod' : 'prepaid',
+          items: itemsWithDetails.map(function(it) {
+            return { name: it.product_name, size: it.pack_label, qty: it.quantity, price: it.pack_price };
+          }),
+          subtotal: subtotal,
+          discount: discount,
+          shipping: shippingCost,
+          grand_total: grandTotal,
+          shipping_address: { line1: addr1, line2: addr2, city: city, state: state, pincode: pin }
+        }
+      };
+      fetch('https://gameofbones-admin.vercel.app/api/order-confirmation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(emailPayload)
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(d) { console.log('Order confirmation email:', d.success ? 'sent' : (d.error || 'failed')); })
+      .catch(function(e) { console.warn('Email skipped:', e.message); });
+    } catch(e) { console.warn('Email call skipped:', e.message); }
 
     // ═══════════════════════ CREATE DELHIVERY SHIPMENT (non-blocking) ═══════════════════════
     // Calls the Edge Function to auto-create a shipment in Delhivery and get an AWB.
@@ -7190,6 +7281,8 @@ function _finaliseOrder(ref, phoneVal, orderItems) {
   var osOvl = document.getElementById('orderSuccessOverlay');
   if (osOvl) osOvl.style.display = 'flex';
   cartItems = []; updateCartBadge();
+  // Mark the abandoned cart as recovered (customer completed checkout)
+  _markCartRecovered();
   clearTimeout(window._orderSuccessTimer);
   window._orderSuccessTimer = setTimeout(function(){ closeOrderSuccess(); showPage('shop'); }, 10000);
   ['co-fname','co-lname','co-phone','co-email','co-addr1','co-addr2','co-city','co-pin'].forEach(function(id){
@@ -7407,6 +7500,72 @@ function addCartModal() {
 function updateCartBadge() {
   const total = cartItems.reduce((s, i) => s + i.qty, 0);
   var ccEl = document.getElementById('cartCount'); if (ccEl) ccEl.textContent = total;
+  // Sync abandoned cart state (debounced)
+  _debouncedAbandonedCartSync();
+}
+
+// ── ABANDONED CART TRACKING ─────────────────────────────────────────────
+var _abandonedCartTimer = null;
+var _abandonedCartId = null;
+function _debouncedAbandonedCartSync() {
+  if (_abandonedCartTimer) clearTimeout(_abandonedCartTimer);
+  _abandonedCartTimer = setTimeout(_syncAbandonedCart, 5000); // 5 sec debounce
+}
+function _syncAbandonedCart() {
+  try {
+    if (cartItems.length === 0) return; // nothing to track
+    var total = cartItems.reduce(function(s, i) { return s + (i.price || 0) * (i.qty || 1); }, 0);
+    var phone = ''; var email = ''; var name = '';
+    // Try to get customer info from checkout fields or login
+    var phoneEl = document.getElementById('co-phone');
+    if (phoneEl && phoneEl.value) phone = phoneEl.value.replace(/\D/g, '').slice(-10);
+    var emailEl = document.getElementById('co-email');
+    if (emailEl && emailEl.value) email = emailEl.value.trim();
+    var fnameEl = document.getElementById('co-fname');
+    var lnameEl = document.getElementById('co-lname');
+    if (fnameEl && fnameEl.value) name = fnameEl.value.trim() + (lnameEl && lnameEl.value ? ' ' + lnameEl.value.trim() : '');
+    if (!phone && currentUser && currentUser.phone) phone = currentUser.phone;
+    if (!name && currentUser && currentUser.name) name = currentUser.name;
+
+    var payload = {
+      customer_phone: phone || null,
+      customer_email: email || null,
+      customer_name: name || null,
+      items: JSON.stringify(cartItems),
+      total: total,
+      recovered: false,
+      abandoned_at: new Date().toISOString()
+    };
+
+    var headers = { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY, 'Prefer': 'return=representation' };
+
+    if (_abandonedCartId) {
+      // Update existing
+      fetch(SUPABASE_URL + '/rest/v1/abandoned_carts?id=eq.' + _abandonedCartId, {
+        method: 'PATCH', headers: headers, body: JSON.stringify(payload)
+      }).catch(function(){});
+    } else {
+      // Create new
+      fetch(SUPABASE_URL + '/rest/v1/abandoned_carts', {
+        method: 'POST', headers: headers, body: JSON.stringify(payload)
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(d) { if (Array.isArray(d) && d[0] && d[0].id) _abandonedCartId = d[0].id; })
+      .catch(function(){});
+    }
+  } catch(e) { /* silent */ }
+}
+function _markCartRecovered() {
+  if (_abandonedCartId) {
+    try {
+      fetch(SUPABASE_URL + '/rest/v1/abandoned_carts?id=eq.' + _abandonedCartId, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY },
+        body: JSON.stringify({ recovered: true })
+      }).catch(function(){});
+    } catch(e) {}
+    _abandonedCartId = null;
+  }
 }
 
 function changeQty(idx, delta) {
@@ -9793,7 +9952,12 @@ function showSpinResult(idx) {
   var res = document.getElementById('spinResult');
   if (pre) pre.style.display = 'none';
   if (spinP) spinP.style.display = 'none';
-  if (res) { res.style.display = 'flex'; }
+  if (res) { res.style.display = 'flex'; res.style.flexDirection = 'column'; res.style.alignItems = 'center'; }
+  // Collapse to single column so result gets full width
+  var wheelBox = document.getElementById('spinWheelBox');
+  if (wheelBox) { wheelBox.style.gridTemplateColumns = '1fr'; }
+  var wheelLeft = wheelBox ? wheelBox.querySelector(':scope > div:first-child') : null;
+  if (wheelLeft) { wheelLeft.style.display = 'none'; }
 
   var sre = document.getElementById('spinResultEmoji'); if (sre) sre.textContent = seg.emoji;
   var srt = document.getElementById('spinResultTitle'); if (srt) srt.textContent = seg.label;
@@ -9812,6 +9976,7 @@ function showSpinResult(idx) {
           'You won ' + seg.codeLabel + ' off your order! Use the code at checkout.';
     codeBox.style.display = 'block';
     var __g_spinCodeVal=document.getElementById('spinCodeVal');if(__g_spinCodeVal)__g_spinCodeVal.textContent = seg.code;
+    var __g_spinCopyBtn=document.getElementById('spinCopyBtn');if(__g_spinCopyBtn)__g_spinCopyBtn.style.display = 'block';
     var minOrderEl = document.getElementById('spinMinOrder');
     if (minOrderEl) minOrderEl.style.display = seg.type === 'free' ? 'block' : 'none';
   }
