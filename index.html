@@ -460,7 +460,6 @@ footer{background:var(--dark);color:rgba(255,255,255,.6);padding:56px 6% 28px;ma
   .hero { padding: 60px 6% !important; }
 
   .pmodal{grid-template-columns:1fr}
-  .pmodal-img{display:none}
   .process-steps,.testi-grid,.contact-grid,.ingr-grid,.process-page-step{grid-template-columns:1fr}
   .process-page-step:nth-child(even){direction:ltr}
   .art-grid{grid-template-columns:1fr}
@@ -2155,11 +2154,15 @@ body:has(#page-login.active) #mainNav { display: none !important; }
   </section>
   <section style="background:var(--cream);padding:60px 6% 90px">
     <div class="sec-inner" style="max-width:640px">
-      <h3 style="font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--dark);margin-bottom:8px">Enter Your Delhivery Tracking Number</h3>
-      <p style="font-size:14px;color:var(--muted);margin-bottom:24px">Every Game of Bones order ships with Delhivery. Your AWB / waybill number is in the dispatch SMS &amp; email we send the moment your order leaves us.</p>
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--dark);margin-bottom:8px">Track Your Order</h3>
+      <p style="font-size:14px;color:var(--muted);margin-bottom:24px">Enter your phone number to see all your orders and their delivery status.</p>
       <div style="display:flex;gap:0;margin-bottom:24px">
-        <input id="awbInput" placeholder="e.g. 1234567890123" inputmode="numeric" autocomplete="off" onkeydown="if(event.key==='Enter')trackOrder()" style="flex:1;border:1.5px solid var(--cream-mid);border-right:none;padding:13px 16px;font-family:'Jost',sans-serif;font-size:14px;background:var(--white)">
-        <button onclick="trackOrder()" class="btn-gold" style="padding:13px 24px;white-space:nowrap">Track &rarr;</button>
+        <input id="trackPhoneInput" placeholder="Enter your 10-digit mobile number" inputmode="numeric" maxlength="10" autocomplete="off" onkeydown="if(event.key==='Enter')trackByPhone()" style="flex:1;border:1.5px solid var(--cream-mid);border-right:none;padding:13px 16px;font-family:'Jost',sans-serif;font-size:14px;background:var(--white)">
+        <button onclick="trackByPhone()" class="btn-gold" style="padding:13px 24px;white-space:nowrap">Track &rarr;</button>
+      </div>
+      <div style="display:flex;gap:0;margin-bottom:16px">
+        <input id="awbInput" placeholder="Or enter AWB / tracking number" autocomplete="off" onkeydown="if(event.key==='Enter')trackOrder()" style="flex:1;border:1.5px solid var(--cream-mid);border-right:none;padding:10px 16px;font-family:'Jost',sans-serif;font-size:13px;background:var(--cream);color:var(--muted)">
+        <button onclick="trackOrder()" style="background:var(--dark);color:var(--white);border:none;padding:10px 18px;font-family:'Jost',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;cursor:pointer;white-space:nowrap">Track AWB</button>
       </div>
       <div id="trackLiveResult"></div>
       <div style="margin-top:40px;padding:24px;background:var(--white);border:1px solid var(--cream-mid)">
@@ -2179,7 +2182,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
   <div class="pmodal">
     <button class="pmodal-close" onclick="closePModal()">&#10005;</button>
     <div class="pmodal-img" style="position:relative">
-      <img id="pmodal-img" src="" alt="" onerror="this.style.display='none';document.getElementById('pmodal-placeholder').style.display='flex'">
+      <img id="pmodal-img" src="" alt="">
       <div class="pmodal-carousel-controls" id="pmodal-carousel-controls" style="display:none">
         <button class="pmodal-carousel-btn" onclick="carouselPrev()" title="Previous image">&#10094;</button>
         <span class="pmodal-carousel-counter"><span id="pmodal-img-current">1</span>/<span id="pmodal-img-total">1</span></span>
@@ -2954,7 +2957,8 @@ body:has(#page-login.active) #mainNav { display: none !important; }
               <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Subtotal</span><span id="co-subtotal" style="font-weight:600;color:var(--dark)">&#8377;0</span></div>
               <div id="co-discount-row" style="display:none;justify-content:space-between;color:var(--teal)"><span>Discount</span><span id="co-discount-val" style="font-weight:600"></span></div>
               <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Shipping</span><span id="co-shipping-val" style="font-weight:600;color:var(--dark)"></span></div>
-              <div id="co-cod-row" style="display:none;justify-content:space-between"><span style="color:var(--muted)">COD charge</span><span style="font-weight:600;color:var(--dark)">&#8377;40</span></div>
+              <div id="co-online-disc-row" style="display:none;justify-content:space-between;font-size:13px;color:var(--teal);font-weight:600"><span>&#127775; Pay Online Discount</span><span>&#8722;&#8377;50</span></div>
+            <div id="co-cod-row" style="display:none;justify-content:space-between"><span style="color:var(--muted)">COD charge</span><span style="font-weight:600;color:var(--dark)">&#8377;40</span></div>
               <div style="display:flex;justify-content:space-between;padding-top:10px;border-top:1px solid var(--cream-mid);margin-top:4px">
                 <span style="font-weight:700;font-size:15px;color:var(--dark)">Total</span>
                 <span id="co-grand-total" style="font-weight:800;font-size:17px;color:var(--dark);font-family:'Cormorant Garamond',serif">&#8377;0</span>
@@ -4750,6 +4754,66 @@ function _trkStatusColor(t){
   return '#c8973a';
 }
 
+
+// ── TRACK BY PHONE NUMBER ─────────────────────────────
+function trackByPhone() {
+  var phoneEl = document.getElementById('trackPhoneInput');
+  var result = document.getElementById('trackLiveResult');
+  if (!phoneEl || !result) return;
+  var phone = phoneEl.value.replace(/\D/g, '');
+  if (phone.length < 10) {
+    result.innerHTML = '<div style="background:#fff0f0;border:1px solid rgba(192,57,43,.3);padding:16px;text-align:center;font-size:13px;color:#c0392b">Please enter a valid 10-digit mobile number.</div>';
+    return;
+  }
+  phone = phone.slice(-10);
+  result.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted)">&#9203; Loading your orders...</div>';
+
+  fetch(SUPABASE_URL + '/rest/v1/orders?select=ref,status,grand_total,total_amount,items,created_at,delhivery_awb,payment_method&customer_phone=ilike.*' + phone + '&order=created_at.desc&limit=20', {
+    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
+  })
+  .then(function(res) { return res.json(); })
+  .then(function(orders) {
+    if (!Array.isArray(orders) || orders.length === 0) {
+      result.innerHTML = '<div style="background:var(--cream);padding:28px;text-align:center"><div style="font-size:40px;margin-bottom:12px">&#128230;</div><div style="font-size:15px;font-weight:600;color:var(--dark);margin-bottom:8px">No orders found</div><div style="font-size:13px;color:var(--muted)">No orders found for this number. <button onclick="openWA()" style="background:none;border:none;color:var(--teal);cursor:pointer;font-weight:600;font-size:13px">Chat on WhatsApp</button></div></div>';
+      return;
+    }
+    var statusColors = {placed:'#f59e0b',confirmed:'#3b82f6',dispatched:'#8b5cf6',shipped:'#8b5cf6',delivered:'#16a34a',cancelled:'#ef4444'};
+    var statusIcons = {placed:'&#128230;',confirmed:'&#9989;',dispatched:'&#128666;',shipped:'&#128666;',delivered:'&#127881;',cancelled:'&#10060;'};
+    var html = '<div style="font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:16px">' + orders.length + ' order' + (orders.length > 1 ? 's' : '') + ' found</div>';
+    html += '<div style="display:flex;flex-direction:column;gap:14px">';
+    orders.forEach(function(o) {
+      var col = statusColors[o.status] || '#6b7280';
+      var icon = statusIcons[o.status] || '&#128230;';
+      var amt = o.grand_total || o.total_amount || 0;
+      var date = new Date(o.created_at).toLocaleDateString('en-IN', {day:'numeric',month:'short',year:'numeric'});
+      var itemsList = '';
+      if (o.items && Array.isArray(o.items)) {
+        itemsList = o.items.map(function(it){ return typeof it === 'string' ? it : (it.name || it.product || JSON.stringify(it)); }).join(', ');
+      }
+      html += '<div style="background:var(--white);border:1px solid var(--cream-mid);padding:20px;border-radius:2px">';
+      html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">';
+      html += '<div style="display:flex;align-items:center;gap:8px"><span style="font-size:18px">' + icon + '</span><span style="font-size:12px;font-weight:700;color:var(--dark)">Order #' + (o.ref || '') + '</span></div>';
+      html += '<span style="background:' + col + '18;color:' + col + ';font-size:10px;font-weight:700;padding:4px 12px;text-transform:uppercase;letter-spacing:.08em;border-radius:20px">' + (o.status || 'placed') + '</span>';
+      html += '</div>';
+      if (itemsList) html += '<div style="font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.5">' + itemsList + '</div>';
+      html += '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">';
+      html += '<div><span style="font-size:16px;font-weight:700;color:var(--dark);font-family:Cormorant Garamond,serif">&#8377;' + amt.toLocaleString('en-IN') + '</span><span style="font-size:11px;color:var(--muted);margin-left:8px">' + date + '</span></div>';
+      if (o.delhivery_awb) {
+        html += '<a href="https://www.delhivery.com/track/package/' + o.delhivery_awb + '" target="_blank" rel="noopener" style="font-size:11px;font-weight:700;color:var(--teal);text-decoration:none;letter-spacing:.05em">Track Shipment &#8594;</a>';
+      } else if (o.status === 'placed' || o.status === 'confirmed') {
+        html += '<span style="font-size:11px;color:var(--muted);font-style:italic">Preparing to ship</span>';
+      }
+      html += '</div></div>';
+    });
+    html += '</div>';
+    result.innerHTML = html;
+  })
+  .catch(function(e) {
+    console.error('Track error:', e);
+    result.innerHTML = '<div style="background:#fff0f0;border:1px solid rgba(192,57,43,.3);padding:16px;text-align:center;font-size:13px;color:#c0392b">Unable to load orders. Please try again or <button onclick="openWA()" style="background:none;border:none;color:var(--teal);cursor:pointer;font-weight:600">contact us</button>.</div>';
+  });
+}
+
 function trackOrder() {
   var awbEl = document.getElementById('awbInput');
   var box = document.getElementById('trackLiveResult');
@@ -5055,19 +5119,7 @@ const products = [
     feeding:'Small dogs: 1 wing every 2 days. Medium dogs: 1 wing daily. Large dogs: 2 wings daily. Supervise all chewing sessions, especially for aggressive chewers.',
     storage:{tiles:[{icon:'🫙',val:'12 Months',label:'Unopened'},{icon:'🏠',val:'2–3 Months',label:'After Opening'},{icon:'🌡️',val:'Cool & Dry',label:'Store At'}],note:'Dehydrated chews and bones have a longer shelf life due to low moisture content. Store in a cool, dry location. Once opened, keep in the resealable pouch or an airtight container. No refrigeration needed. If you notice any soft spots or unusual smell, discard the affected piece.'},
   },
-  {img:'Chicken%20Neck.png', name:'Chicken Neck & Feet Mix', cat:'Chews & Bones', badge:'Best of Both', badgeCls:'', desc:'A mix of chicken neck and feet — combines calcium from necks with glucosamine from feet in one pack.', tags:['Joint + Bone','Dental','Mixed'], sizes:[{label:'70g',price:300},{label:'140g',price:599},{label:'210g',price:849},{label:'280g',price:1049}], filter:'chew',
-    tagline:'Why choose one when you can have both? This mix delivers the calcium of necks and the glucosamine of feet — a complete bone and joint support treat in a single pack.',
-    benefits:[
-      {icon:'🦴',title:'Calcium + Glucosamine Together',text:'Necks provide calcium for bones; feet provide glucosamine for joints. Together they cover both pillars of skeletal health.'},
-      {icon:'🎲',title:'Variety Keeps Dogs Interested',text:'The mix of textures — the crunch of neck vs the chew of feet — keeps dogs engaged longer than a single type.'},
-      {icon:'💰',title:'Best Value Combination',text:'More nutritional coverage per pack than buying either individually. Ideal for multi-dog households.'},
-      {icon:'🦷',title:'Dual Dental Action',text:'Both necks and feet contribute to natural plaque reduction through mechanical chewing action.'},
-    ],
-    nutrients:[{val:'Calcium',label:'From Necks'},{val:'Glucosamine',label:'From Feet'},{val:'Natural',label:'Protein'}],
-    feeding:'Same as individual products. Rotate between necks and feet across the day or week for maximum nutritional benefit.',
-    storage:{tiles:[{icon:'🫙',val:'12 Months',label:'Unopened'},{icon:'🏠',val:'2–3 Months',label:'After Opening'},{icon:'🌡️',val:'Cool & Dry',label:'Store At'}],note:'Dehydrated chews and bones have a longer shelf life due to low moisture content. Store in a cool, dry location. Once opened, keep in the resealable pouch or an airtight container. No refrigeration needed. If you notice any soft spots or unusual smell, discard the affected piece.'},
-  },
-  {img:'Chicken%20Bones.png', name:'Chicken Bones', cat:'Chews & Bones', badge:'High Value', badgeCls:'teal', desc:'Assorted dehydrated chicken bones — natural calcium source, safe digestible chew for all breeds.', tags:['Digestible','Calcium','Natural'], sizes:[{label:'100g',price:349},{label:'200g',price:679},{label:'300g',price:999},{label:'400g',price:1199}], filter:'chew',
+{img:'Chicken%20Bones.png', name:'Chicken Bones', cat:'Chews & Bones', badge:'High Value', badgeCls:'teal', desc:'Assorted dehydrated chicken bones — natural calcium source, safe digestible chew for all breeds.', tags:['Digestible','Calcium','Natural'], sizes:[{label:'100g',price:349},{label:'200g',price:679},{label:'300g',price:999},{label:'400g',price:1199}], filter:'chew',
     tagline:'An assortment of dehydrated chicken bones — a natural, affordable calcium supplement that doubles as an enriching chew.',
     benefits:[
       {icon:'🦴',title:'Natural Calcium Supply',text:'Provides bioavailable calcium essential for strong bones, healthy teeth, nerve function and muscle contraction.'},
@@ -5275,44 +5327,8 @@ const products = [
     feeding:'Feed 2–3 times per week. Small dogs: 3–4 prawns. Medium: 5–8. Large: 8–12. Higher cost reflects premium sourcing — worth reserving for high-value training moments.',
     storage:{tiles:[{icon:'🫙',val:'6 Months',label:'Unopened'},{icon:'🌬️',val:'3 Weeks',label:'After Opening'},{icon:'🚫',val:'Away from Heat',label:'Store Away'}],note:'Fish treats are moisture-sensitive. Store in a cool, dry location in the sealed pouch. After opening, press out air, reseal tightly and use within 3 weeks. Keep away from direct sunlight and heat sources. If you notice any off-smell or moisture, discard immediately.'},
   },
-  {img:'Bombayduck_pouch_front.png', name:'Fish Head', cat:'Fish Treats', badge:'Crunchy', badgeCls:'', desc:'Dehydrated whole fish heads — crunchy, mineral-rich and satisfying. A natural chew with omega-3 benefits.', tags:['Crunchy','Mineral Rich','Natural'], sizes:[{label:'15 pcs',price:299},{label:'30 pcs',price:549}], filter:'fish',
-    tagline:'Fish heads are the part most people discard — but they\'re loaded with minerals, omega-3 fatty acids from the brain and eyes, and provide a satisfying crunchy chew.',
-    benefits:[
-      {icon:'🧠',title:'Brain & Eye Nutrients',text:'The brain and eyes in fish heads are extraordinarily rich in DHA — the omega-3 most critical for brain and vision.'},
-      {icon:'🦴',title:'Mineral-Dense Bone',text:'Fish skull bones provide calcium, phosphorus and trace minerals in a safe, crushable form.'},
-      {icon:'🦷',title:'Natural Crunchy Dental Chew',text:'The satisfying crunch of dehydrated fish skull works like a natural toothbrush, cleaning teeth mechanically.'},
-      {icon:'💰',title:'Exceptional Value',text:'One of the most nutritionally complete and affordable treats in our range — great for daily feeding.'},
-    ],
-    nutrients:[{val:'High',label:'DHA'},{val:'Natural',label:'Calcium'},{val:'Rich',label:'Minerals'}],
-    feeding:'Small dogs: 2–3 heads daily. Medium: 4–6. Large: 6–10. Can be fed daily. Fully digestible — the bones are small and safe.',
-    storage:{tiles:[{icon:'🫙',val:'6 Months',label:'Unopened'},{icon:'🌬️',val:'3 Weeks',label:'After Opening'},{icon:'🚫',val:'Away from Heat',label:'Store Away'}],note:'Fish treats are moisture-sensitive. Store in a cool, dry location in the sealed pouch. After opening, press out air, reseal tightly and use within 3 weeks. Keep away from direct sunlight and heat sources. If you notice any off-smell or moisture, discard immediately.'},
-  },
-  {img:'Bombayduck.png', name:'Tuna Head', cat:'Fish Treats', noOrdersBadge:true, badge:'Jumbo Chew', badgeCls:'teal', desc:'Whole dehydrated tuna head — a large, mineral-dense chew rich in omega-3 and natural collagen.', tags:['Large Chew','Collagen','Omega-3'], sizes:[{label:'1 pc',price:449}], filter:'fish',
-    tagline:'A tuna head is a substantial, mineral-dense chew that doubles as a brain and joint supplement — containing DHA-rich brain tissue, collagen from connective tissue and natural calcium from the skull.',
-    benefits:[
-      {icon:'🦁',title:'Substantial Chew for Big Dogs',text:'Large enough to engage medium and large dogs for 20–40 minutes of focused, satisfying chewing.'},
-      {icon:'🧠',title:'DHA from Brain Tissue',text:'Tuna brain contains some of the highest DHA concentrations of any tissue — extraordinary brain food.'},
-      {icon:'✨',title:'Natural Collagen',text:'Connective tissue around the skull provides collagen for joint lubrication and coat shine.'},
-      {icon:'🦴',title:'Dense Mineral Matrix',text:'Tuna skull bones deliver calcium, phosphorus and trace minerals including magnesium and zinc.'},
-    ],
-    nutrients:[{val:'Very High',label:'DHA'},{val:'Natural',label:'Collagen'},{val:'Dense',label:'Minerals'}],
-    feeding:'Feed 1–2 times per week for medium/large dogs. Not recommended for dogs under 10kg. Always supervise. Best given outdoors or on an easy-clean surface.',
-    storage:{tiles:[{icon:'🫙',val:'6 Months',label:'Unopened'},{icon:'🌬️',val:'3 Weeks',label:'After Opening'},{icon:'🚫',val:'Away from Heat',label:'Store Away'}],note:'Fish treats are moisture-sensitive. Store in a cool, dry location in the sealed pouch. After opening, press out air, reseal tightly and use within 3 weeks. Keep away from direct sunlight and heat sources. If you notice any off-smell or moisture, discard immediately.'},
-  },
-  {img:'Anchovies_pouch_front.png', name:'Tuna Cartilage', cat:'Fish Treats', noOrdersBadge:true, badge:'Joint Support', badgeCls:'teal', desc:'Dehydrated tuna cartilage — an excellent natural source of chondroitin for joint health and mobility.', tags:['Chondroitin','Joint Support','Fish'], sizes:[{label:'60g',price:349}], filter:'fish',
-    tagline:'Tuna cartilage is a rare and highly effective source of marine-origin chondroitin — the compound shown to reduce joint degradation and improve mobility in dogs with arthritis.',
-    benefits:[
-      {icon:'🦴',title:'Marine Chondroitin',text:'Marine-sourced chondroitin from fish is considered highly bioavailable and is the form used in many human joint supplements.'},
-      {icon:'🏃',title:'Improved Joint Mobility',text:'Regular chondroitin intake is clinically associated with reduced joint pain and improved range of motion in dogs with arthritis.'},
-      {icon:'🌊',title:'Unique Marine Source',text:'Unlike mammal-sourced joint supplements, tuna cartilage provides marine omega-3 alongside chondroitin — a dual joint benefit.'},
-      {icon:'💊',title:'Replaces Joint Supplements',text:'Save on expensive glucosamine/chondroitin tablets — feed tuna cartilage as a natural, whole-food alternative.'},
-    ],
-    nutrients:[{val:'High',label:'Chondroitin'},{val:'Marine',label:'Omega-3'},{val:'Natural',label:'Collagen'}],
-    feeding:'Feed daily for therapeutic joint support. Small dogs: 15–20g. Medium: 30–40g. Large: 50–60g. Excellent for dogs already on joint supplements — reduces or replaces dosage.',
-    storage:{tiles:[{icon:'🫙',val:'6 Months',label:'Unopened'},{icon:'🌬️',val:'3 Weeks',label:'After Opening'},{icon:'🚫',val:'Away from Heat',label:'Store Away'}],note:'Fish treats are moisture-sensitive. Store in a cool, dry location in the sealed pouch. After opening, press out air, reseal tightly and use within 3 weeks. Keep away from direct sunlight and heat sources. If you notice any off-smell or moisture, discard immediately.'},
-  },
 
-  // ── WHOLE PREY ─────────────────────────────────────────
+// ── WHOLE PREY ─────────────────────────────────────────
   {img:'Chicken_Wings_pouch_front__2_.png', name:'Whole Quail', cat:'Whole Prey', badge:'Complete Nutrition', badgeCls:'brown', desc:'Whole dehydrated quail — the ultimate whole prey treat. Complete bone, meat and organ in a single piece.', tags:['Whole Prey','Complete Nutrition','Novel Protein'], sizes:[{label:'1 pc',price:399},{label:'2 pcs',price:799},{label:'3 pcs',price:1149},{label:'4 pcs',price:1499}], filter:'wholeprey',
     tagline:'A whole quail is nature\'s most complete single-ingredient treat — bone, muscle meat, skin and organs all in one, replicating what dogs evolved to eat in the wild.',
     benefits:[
@@ -6201,12 +6217,17 @@ function updateCheckoutTotals() {
     loyaltyDiscount = Math.min(loyaltyRupees, subtotal - couponDiscount); // Can't discount below 0
   }
 
+  // Auto ₹50 discount for online payment (not COD)
+  var onlineDisc = (selectedPayment && selectedPayment !== 'cod') ? 50 : 0;
+  var onlineRow = document.getElementById('co-online-disc-row');
+  if (onlineRow) onlineRow.style.display = onlineDisc > 0 ? 'flex' : 'none';
+
   // Total discount = both stacked
   const totalDiscount = couponDiscount + loyaltyDiscount;
   const after = subtotal - totalDiscount;
   const shipping = after >= 599 ? 0 : 50;
   const cod = selectedPayment === 'cod' ? 40 : 0;
-  const grand = after + shipping + cod;
+  const grand = after + shipping + cod - onlineDisc;
   
   const se = id => document.getElementById(id);
   
@@ -6393,10 +6414,10 @@ function applyDiscount() {
 function selectPayment(method) {
   selectedPayment = method;
   const notes = {
-    upi:'💡 After placing your order, we\'ll send UPI details & QR code to your WhatsApp / email.',
-    card:'💳 You\'ll be redirected to our secure payment gateway after placing the order.',
+    upi:'💡 Pay online and get ₹50 off! You\'ll be redirected to our secure Razorpay gateway.',
+    card:'💳 Pay online and get ₹50 off! Secure payment via Razorpay.',
     netbanking:'🏦 You\'ll be redirected to your bank\'s net banking portal after placing the order.',
-    cod:'💵 Pay cash when your order arrives. ₹40 handling fee applies. COD up to ₹2,000 only.'
+    cod:'💵 Pay cash on delivery. ₹40 handling fee applies. Save ₹50 by paying online!'
   };
   const n = document.getElementById('co-pay-note');
   if(n) { n.textContent = notes[method]||''; n.style.display = notes[method] ? 'block' : 'none'; }
@@ -7292,7 +7313,7 @@ function _finaliseOrder(ref, phoneVal, orderItems) {
   if (osRef) osRef.textContent = 'Order Ref: ' + ref;
   var osOvl = document.getElementById('orderSuccessOverlay');
   if (osOvl) osOvl.style.display = 'flex';
-  cartItems = []; updateCartBadge();
+  cartItems = []; _saveCart(); updateCartBadge();
   // Mark the abandoned cart as recovered (customer completed checkout)
   _markCartRecovered();
   clearTimeout(window._orderSuccessTimer);
@@ -7459,6 +7480,12 @@ function closeOrderSuccess() {
 
 // ── CART SYSTEM ────────────────────────────────────────────────────────
 let cartItems = []; // [{product, size, price, qty}]
+// Restore cart from localStorage
+try { var _savedCart = localStorage.getItem('gobCartItems'); if (_savedCart) { cartItems = JSON.parse(_savedCart); setTimeout(function(){ updateCartBadge(); },100); } } catch(e) {}
+
+function _saveCart() {
+  try { localStorage.setItem('gobCartItems', JSON.stringify(cartItems)); } catch(e) {}
+}
 let addedProductIdxs = new Set(); // tracks which product indices have been added to cart
 
 function toggleCart() {
@@ -7491,6 +7518,7 @@ function addCart(btn, productIdx, sizeIdx) {
   if (existing) { existing.qty++; } else {
     cartItems.push({name: p.name, img: p.img, sizeLabel: size.label, price: size.price, qty: 1});
   }
+  _saveCart();
   addedProductIdxs.add(productIdx);
   updateCartBadge();
   showCartToast(p.name + ' added to cart 🐾', 'success');
@@ -7519,6 +7547,7 @@ function addCartModal() {
   if (existing) { existing.qty++; } else {
     cartItems.push({name: p.name, img: p.img, sizeLabel: size.label, price: size.price, qty: 1});
   }
+  _saveCart();
   updateCartBadge();
   // Unlock FBT bundle discount now that main product is in cart
   fbtMainProductAdded = true;
@@ -7604,6 +7633,7 @@ function _markCartRecovered() {
 function changeQty(idx, delta) {
   if (delta < 0 && cartItems[idx].qty === 1) {
     cartItems.splice(idx, 1);
+    _saveCart();
     updateCartBadge();
     renderCartDrawer();
     showCartToast('Item removed from cart');
@@ -7611,6 +7641,7 @@ function changeQty(idx, delta) {
   }
   cartItems[idx].qty += delta;
   if (cartItems[idx].qty <= 0) cartItems.splice(idx, 1);
+  _saveCart();
   updateCartBadge();
   renderCartDrawer();
 }
@@ -7671,7 +7702,7 @@ function showCartToast(msg, type) {
 }
 
 function clearCart() {
-  cartItems = [];
+  cartItems = []; _saveCart();
   updateCartBadge();
   renderCartDrawer();
 }
@@ -8088,7 +8119,6 @@ var FBT_MAP = {
   'Goat Trachea':             ['Chicken Feet','Goat Ear','Chicken Jerky'],
   'Goat Ear':                 ['Buff Jerky','Goat Trachea','Bombay Duck'],
   'Goat Trotter':             ['Goat Ear','Buff Jerky','Mackerel'],
-  'Chicken Neck & Feet Mix':  ['Chicken Jerky','Goat Liver','Anchovies'],
   'Chicken Bones':            ['Chicken Jerky','Goat Lungs','Bombay Duck'],
   'Chicken Gizzards':         ['Chicken Jerky','Chicken Liver','Anchovies'],
   'Chicken Liver':            ['Chicken Jerky','Goat Liver','Mackerel'],
@@ -8317,6 +8347,7 @@ function quickAddFbt(idx) {
   var existing = cartItems.findIndex(function(c) { return c.name === prod.name && c.size === prod.sizes[0].label; });
   if (existing > -1) { cartItems[existing].qty++; }
   else { cartItems.push({ name: prod.name, size: prod.sizes[0].label, price: prod.sizes[0].price, img: prod.img || '', qty: 1, emoji: prod.emoji || '🍖' }); }
+  _saveCart();
   updateCartBadge();
   renderCartDrawer();
   var btn = document.getElementById('fbt-btn-' + idx);
@@ -8357,8 +8388,6 @@ var PRODUCT_RATINGS = {
   'Mackerel':                {avg:4.5, count:44, dist:[1,2,3,10,28]},
   'Sardines':                {avg:4.3, count:38, dist:[1,2,4,10,21]},
   'Fish Bites':              {avg:4.6, count:42, dist:[1,1,3,9,28]},
-  'Chicken Neck & Feet Mix': {avg:4.7, count:45, dist:[1,1,3,8,32]},
-  'Tuna Head':               {avg:4.3, count:28, dist:[1,2,3,7,15]},
   // Unrated — shows "Be the first to review"
   // Whole Quail, Fish Head, Tuna, Tuna Cartilage, Mackerel Fillet, Prawns, Goat Spleen, Chicken Bones
 };
@@ -8685,6 +8714,12 @@ let currentProductSize = 0;
 const SUPABASE_IMG_URL = 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/';
 
 function openProductPage(idx) {
+  // Update URL for product page
+  var p = products[idx];
+  if (p) {
+    var slug = p.name.toLowerCase().replace(/[&\s]+/g, '-');
+    try { history.pushState({page:'product',productIdx:idx}, '', '?p=' + slug); } catch(e) {}
+  }
   currentProductIdx = idx;
   currentProductSize = 0;
   
@@ -9141,28 +9176,14 @@ function loadProductReviews(productName) {
         '4-Lightweight, easy to carry around.',
         '2-Bit small for the price point honestly.'
       ],
-      'Fish Head': [
-        '5-Whole fish head. Maximum nutrition.',
-        '5-Great omega-3 content. Coat is glossy now.',
-        '4-Crunchy parts. Good for natural teeth cleaning.',
-        '4-My dog\'s brain function improved.',
-        '2-Very messy. Lot of fragments everywhere.'
-      ],
-      'Tuna': [
+          'Tuna': [
         '5-Premium quality tuna. Dogs go crazy for it!',
         '5-Pure protein. No additives whatsoever.',
         '4-Great for shiny coat and healthy skin.',
         '4-My vet recommends this for omega-3.',
         '2-Pricey option. Other fish treats are cheaper.'
       ],
-      'Tuna Head': [
-        '5-Whole fish head. Maximum nutrition.',
-        '5-Great omega-3 content. Coat is glossy.',
-        '4-Crunchy parts. Good for teeth cleaning.',
-        '4-My dog\'s brain function noticeably improved.',
-        '2-Very strong smell. Not apartment-friendly.'
-      ],
-      'Mackerel': [
+          'Mackerel': [
         '5-Rich in omega-3. My dog\'s skin improved.',
         '5-Natural fish oil benefits. Coat looks amazing.',
         '4-Whole fish dried naturally. Very fresh.',
@@ -9176,14 +9197,7 @@ function loadProductReviews(productName) {
         '4-Natural chew toy. Keeps teeth clean.',
         '2-Can be a bit crunchy. Watch for splinters.'
       ],
-      'Chicken Neck & Feet Mix': [
-        '5-Perfect variety pack. Different textures!',
-        '5-Joints and bones in one. Complete nutrition.',
-        '4-Best of both worlds. Great value.',
-        '4-My dog doesn\'t get bored.',
-        '2-Mix proportions could be more balanced.'
-      ],
-      'Goat Trotter': [
+          'Goat Trotter': [
         '5-Perfect size for medium dogs. Great chew.',
         '5-Natural collagen source. Joint support.',
         '4-Durable and long-lasting. Keeps dog occupied.',
@@ -9744,13 +9758,6 @@ var productReviews = {
     {author:'Geeta V.',dog:'Tommy',city:'Nashik',rating:4,text:'Tommy is a very picky eater and I was worried he would reject fish. He didn\'t \u2014 he loved them immediately. The smell is strong but that\'s clearly what makes them so appealing to dogs.',date:'January 2025',verified:true},
     {author:'Kavitha S.',dog:'Brownie',city:'Bangalore',rating:3,text:'The bites are very small \u2014 I thought they would be bigger based on the photo. For a large breed like mine you need to give quite a few to make it feel like a reward. That said the fish quality is genuinely clean and Brownie loves the taste.',date:'December 2024',verified:true},
   ],
-  'Tuna Head': [
-    {author:'Abhishek R.',dog:'Rocky',city:'Mumbai',rating:5,text:'Rocky is a Rottweiler who needs a serious power chew. Tuna head gave him nearly 2 hours of engagement. The cartilage and bone are completely safe \u2014 no splinters, no sharp edges. And the smell drives him absolutely crazy.',date:'March 2025',verified:true},
-    {author:'Snehal D.',dog:'Bhavra',city:'Pune',rating:4,text:'Bhavra had never eaten fish before this. She was curious, sniffed it for 5 minutes, then went to town. Took her about 45 minutes. The natural collagen from the head cartilage is a bonus for her joints.',date:'February 2025',verified:true},
-    {author:'Kapil S.',dog:'Titan',city:'Nashik',rating:4,text:'Titan is a large breed and I needed something that would last longer than 10 minutes. Tuna head delivered \u2014 about an hour of chewing. The fish smell is powerful but he was completely engrossed.',date:'January 2025',verified:true},
-    {author:'Chandrika B.',dog:'Mishti',city:'Kolkata',rating:3,text:'Mishti found the head a bit intimidating at first \u2014 she circled it for 20 minutes before engaging. Maybe slice or break it for hesitant dogs. Once she started she loved it but the initial approach took patience.',date:'December 2024',verified:true},
-    {author:'Rajesh A.',dog:'Coco',city:'Hyderabad',rating:2,text:'Coco is a medium-sized dog and the tuna head was quite large \u2014 she couldn\'t get a proper grip on it. I had to break it into pieces which was not easy with my bare hands. Would have been nice to have a smaller-portioned version or a tip on breaking it before giving.',date:'November 2024',verified:true},
-  ],
   'Tuna': [
     {author:'Lalitha S.',dog:'Pebbles',city:'Chennai',rating:5,text:'Pebbles has the driest coat I\'ve ever seen despite a good diet. Added tuna treats three times a week and within a month she looked like a different dog \u2014 glossy, soft, no more flaking.',date:'March 2025',verified:true},
     {author:'Santosh R.',dog:'Koda',city:'Bangalore',rating:5,text:'Koda is a fish-obsessed Labrador. The tuna smell sends him into a frenzy. Single ingredient, clean, and his skin issues from chicken have not returned. Permanent part of his weekly rotation.',date:'February 2025',verified:true},
@@ -9769,12 +9776,6 @@ var productReviews = {
     {author:'Sumitra B.',dog:'Ladoo',city:'Ratnagiri',rating:4,text:'We\'re from a fishing family and dehydrated prawns for dogs felt very natural to us. Ladoo eats them like a local. The iodine content is great for his thyroid. Will keep buying.',date:'January 2025',verified:true},
     {author:'Neesha J.',dog:'Mochi',city:'Mumbai',rating:3,text:'Mochi loves these but they vanish in seconds. The prawns are quite small and for a 25kg dog the pouch is gone in 2-3 days at a reasonable serving. Better value if there was a 200g option.',date:'December 2024',verified:true},
     {author:'Gaurav D.',dog:'Rex',city:'Pune',rating:2,text:'Rex developed mild hives after trying prawns \u2014 took 2 days to figure out the cause. He has no known seafood allergy but prawns triggered a reaction. If your dog hasn\'t had shellfish before, start with a single prawn and wait 24 hours before giving more.',date:'November 2024',verified:true},
-  ],
-  'Chicken Neck & Feet Mix': [
-    {author:'Rekha V.',dog:'Chewy',city:'Navi Mumbai',rating:5,text:'Chewy is a 6-year-old Indie mix with early joint stiffness. The combination of glucosamine from feet and dental benefit from necks in one pack is exactly what she needs. 4 months in and her vet is pleased.',date:'March 2025',verified:true},
-    {author:'Arun S.',dog:'Simba',city:'Thane',rating:5,text:'As a busy dog parent, getting both dental and joint benefits in one pouch is perfect. Simba absolutely loves both pieces and I love not needing to buy two products. Great value bundle.',date:'February 2025',verified:true},
-    {author:'Pallavi D.',dog:'Cookie',city:'Pune',rating:4,text:'Cookie uses the neck for her weekly teeth clean and the feet for her joint health \u2014 the combo makes so much sense. She engages with them differently which is interesting to watch. High quality on both.',date:'January 2025',verified:true},
-    {author:'Tejas B.',dog:'Bruno',city:'Nashik',rating:3,text:'Good product. My only note is that the ratio in the pouch can vary \u2014 one order had more necks, the next had mostly feet. I prefer a consistent split. Not a dealbreaker but worth mentioning.',date:'December 2024',verified:true},
   ],
 };
 
@@ -10224,8 +10225,14 @@ function annCopyCode(code) {
 // ── RECENTLY VIEWED ─────────────────────────────────────────────
 var recentlyViewed = [];
 function trackRecentlyViewed(idx) {
-  recentlyViewed = recentlyViewed.filter(function(i){return i!==idx;});
-  recentlyViewed.unshift(idx);
+  var pName = products[idx] ? products[idx].name : null;
+  if (!pName) return;
+  // Store by name so indices can change safely
+  recentlyViewed = recentlyViewed.filter(function(i){
+    if (typeof i === 'number') return products[i] && products[i].name !== pName;
+    return i !== pName;
+  });
+  recentlyViewed.unshift(pName);
   if(recentlyViewed.length>5) recentlyViewed=recentlyViewed.slice(0,5);
   try{localStorage.setItem('gobRecentlyViewed',JSON.stringify(recentlyViewed));}catch(e){}
   renderRecentlyViewed();
@@ -10235,7 +10242,10 @@ function renderRecentlyViewed() {
   var list=document.getElementById('cartRecentList');
   if(!rv||!list) return;
   var inCart=cartItems.map(function(i){return i.name;});
-  var toShow=recentlyViewed.filter(function(i){return products[i]&&inCart.indexOf(products[i].name)===-1;}).slice(0,3);
+  var toShow=recentlyViewed.map(function(item){
+    if(typeof item==='string'){return products.findIndex(function(p){return p.name===item;});}
+    return item;
+  }).filter(function(i){return i>=0&&products[i]&&inCart.indexOf(products[i].name)===-1;}).slice(0,3);
   if(!toShow.length){rv.style.display='none';return;}
   rv.style.display='block';
   list.innerHTML=toShow.map(function(idx){
