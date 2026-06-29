@@ -582,6 +582,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.6);padding:56px 6% 28px;ma
 .faq-q::after{content:'+';font-size:20px;font-weight:300;color:var(--gold);flex-shrink:0;transition:transform .3s}
 .faq-item.open .faq-q::after{transform:rotate(45deg)}
 .faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.faq-item.open .faq-a{max-height:600px}
 .faq-a p{font-size:14px;color:var(--muted);line-height:1.75;padding-bottom:18px;margin:0}
 
 @media(max-width:768px){
@@ -964,6 +965,18 @@ body:has(#page-login.active) #mainNav { display: none !important; }
       }
       
       console.log(`✓ Updated ${updated} products from database`);
+      
+      // Remove products that are NOT in the active DB list (hidden/deactivated in admin)
+      if (data && data.length > 0) {
+        var activeNames = data.map(function(p) { return p.name.toLowerCase(); });
+        var before = products.length;
+        products = products.filter(function(p) {
+          return activeNames.indexOf(p.name.toLowerCase()) > -1;
+        });
+        if (products.length < before) {
+          console.log('✓ Filtered out ' + (before - products.length) + ' hidden products');
+        }
+      }
       
     } catch (e) {
       console.error('💥 Exception in loadProductsFromDatabase:', e);
@@ -1538,7 +1551,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
           <p style="font-size:13px;color:rgba(255,255,255,.55);line-height:1.7">We source only what we&rsquo;d accept from our own butcher or fish market. The same quality standard you&rsquo;d hold your own food to. No by-products. No mystery meat.</p>
         </div>
         <div style="background:var(--white);padding:40px 28px;text-align:center">
-          <div style="width:68px;height:68px;border-radius:50%;background:var(--dark);margin:0 auto 18px;display:flex;align-items:center;justify-content:center;font-size:30px">&#127470;&#127475;</div>
+          <div style="width:68px;height:68px;border-radius:50%;border:2px solid var(--gold);margin:0 auto 18px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:var(--white)"><div style="width:44px;height:30px;display:flex;flex-direction:column;border-radius:2px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.15)"><div style="flex:1;background:#FF9933"></div><div style="flex:1;background:#FFFFFF;position:relative"><div style="width:10px;height:10px;border:1.5px solid #000080;border-radius:50%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)"></div></div><div style="flex:1;background:#138808"></div></div></div>
           <div style="font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:10px">Promise 03</div>
           <h3 style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;color:var(--dark);margin-bottom:12px">Made in India.<br>Always.</h3>
           <p style="font-size:13px;color:var(--muted);line-height:1.7">Made in Maharashtra, India. Indian ingredients, Indian hands, humidity-proof packaging. We live here. We know what monsoon season does to food.</p>
@@ -2175,18 +2188,10 @@ body:has(#page-login.active) #mainNav { display: none !important; }
       <button id="pmodal-upload-btn" onclick="openImageUpload(currentModalProduct&&currentModalProduct.name,event)" style="position:absolute;bottom:10px;right:10px;background:rgba(26,16,8,.75);color:var(--gold-pale);border:1px solid var(--gold);padding:7px 12px;font-family:'Jost',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(4px);display:flex;align-items:center;gap:5px;display:none!important">&#128247; Add Photo</button>
       <div class="pmodal-img-placeholder" id="pmodal-placeholder" style="display:none">&#127831;</div>
     </div>
-    <!-- Bundle image header — shown instead of product img for bundle products -->
-    <div id="pmodal-bundle-img-section" style="display:none;flex-direction:column;align-items:center;justify-content:center;padding:28px 20px;gap:12px;min-height:160px;position:relative">
+    <!-- Bundle image header — hidden for security, admins manage images via admin panel -->
+    <div id="pmodal-bundle-img-section" style="display:none!important;flex-direction:column;align-items:center;justify-content:center;padding:28px 20px;gap:12px;min-height:160px;position:relative">
       <div id="pmodal-bundle-icon" style="font-size:52px;line-height:1"></div>
       <img id="pmodal-bundle-img-preview" src="" alt="" style="display:none;width:100%;max-height:180px;object-fit:cover;border-radius:4px">
-      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
-        <label style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.18);color:var(--white);border:1.5px solid rgba(255,255,255,.35);padding:7px 14px;font-family:'Jost',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border-radius:2px">
-          &#128247; Upload Photo
-          <input type="file" accept="image/*" onchange="pmodalBundleImgUpload(this)" style="display:none">
-        </label>
-        <button onclick="pmodalBundleImgUrl()" style="background:rgba(255,255,255,.12);color:var(--white);border:1.5px solid rgba(255,255,255,.25);padding:7px 14px;font-family:'Jost',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border-radius:2px">&#128279; Add URL</button>
-      </div>
-      <div style="font-size:10px;color:rgba(255,255,255,.5);text-align:center;line-height:1.5">Add a photo to show on the product card</div>
     </div>
     <div class="pmodal-body">
       <div class="pmodal-cat" id="pmodal-cat"></div>
@@ -5000,19 +5005,6 @@ const products = [
     feeding:'Small dogs: 1–2 strips daily. Medium dogs: 2–3 strips. Large dogs: 3–5 strips. Particularly useful as a rotation protein — alternate with chicken treats weekly to reduce allergy risk.',
     storage:{tiles:[{icon:'🫙',val:'6 Months',label:'Unopened'},{icon:'❄️',val:'4 Weeks',label:'After Opening'},{icon:'🌡️',val:'Cool & Dry',label:'Store At'}],note:'Store in a cool, dry place away from direct sunlight. Once opened, seal the resealable pouch tightly or transfer to an airtight container. Do not refrigerate — moisture accelerates spoilage. Keep away from humid areas like kitchens.'},
   },
-  {img:'Chicken%20Bites.png', name:'Chicken Bites', cat:'Boneless Jerky', badge:'Training Treat', badgeCls:'', desc:'Bite-sized dehydrated chicken pieces — perfect treat size for training. High protein, easy to carry.', tags:['Single Ingredient','Small Bites'], sizes:[{label:'60g',price:329},{label:'120g',price:658},{label:'180g',price:987},{label:'240g',price:1316}], filter:'jerky',
-    tagline:'Small, consistent pieces of dehydrated chicken designed for training sessions where you need to reward quickly and often without overfeeding.',
-    benefits:[
-      {icon:'🎯',title:'Training Optimised',text:'Uniform bite-sized pieces allow precise portion control during reward-based training — no tearing required.'},
-      {icon:'🎒',title:'Carry Anywhere',text:'Dry, mess-free and compact. Perfect for carrying in a treat pouch during walks, classes or outdoor activities.'},
-      {icon:'🧠',title:'High Motivation',text:'The smell of real dehydrated chicken is a powerful motivator — dogs stay focused during training sessions.'},
-      {icon:'⚖️',title:'Low Calorie Reward',text:'High protein-to-calorie ratio means you can reward frequently without worrying about weight gain.'},
-    ],
-    nutrients:[{val:'High',label:'Protein'},{val:'Low',label:'Calories'},{val:'Zero',label:'Fillers'}],
-    feeding:'Use as training rewards throughout the day. Limit to 10% of daily caloric intake. For a 10kg dog, up to 8–10 bites per session is appropriate. Always count treats toward daily food allowance.',
-    storage:{tiles:[{icon:'🫙',val:'6 Months',label:'Unopened'},{icon:'❄️',val:'4 Weeks',label:'After Opening'},{icon:'🌡️',val:'Cool & Dry',label:'Store At'}],note:'Store in a cool, dry place away from direct sunlight. Once opened, seal the resealable pouch tightly or transfer to an airtight container. Do not refrigerate — moisture accelerates spoilage. Keep away from humid areas like kitchens.'},
-  },
-
   // ── CHEWS & BONES ──────────────────────────────────────
   {img:'Chicken%20Feet.png', name:'Chicken Feet', cat:'Chews & Bones', badge:'Dental Health', badgeCls:'teal', desc:'Natural glucosamine & chondroitin source. Soft dehydrated bone scrapes plaque while your dog chews.', tags:['Joint Support','Dental','Glucosamine'], sizes:[{label:'70g',price:300},{label:'140g',price:599},{label:'210g',price:849},{label:'280g',price:1049}], filter:'chew',
     tagline:'Chicken feet are one of nature\'s most complete functional treats — they clean teeth, support joints and keep dogs entertained, all from a single natural ingredient.',
@@ -5038,6 +5030,19 @@ const products = [
     feeding:'Small dogs: ½ neck daily. Medium dogs: 1 neck daily. Large dogs: 1–2 necks daily. Best given as a meal-time supplement or evening chew. Always supervise first-time chewers.',
     storage:{tiles:[{icon:'🫙',val:'12 Months',label:'Unopened'},{icon:'🏠',val:'2–3 Months',label:'After Opening'},{icon:'🌡️',val:'Cool & Dry',label:'Store At'}],note:'Dehydrated chews and bones have a longer shelf life due to low moisture content. Store in a cool, dry location. Once opened, keep in the resealable pouch or an airtight container. No refrigeration needed. If you notice any soft spots or unusual smell, discard the affected piece.'},
   },
+  {img:'Chicken%20Bites.png', name:'Chicken Bites', cat:'Boneless Jerky', badge:'Training Treat', badgeCls:'', desc:'Bite-sized dehydrated chicken pieces — perfect treat size for training. High protein, easy to carry.', tags:['Single Ingredient','Small Bites'], sizes:[{label:'60g',price:329},{label:'120g',price:658},{label:'180g',price:987},{label:'240g',price:1316}], filter:'jerky',
+    tagline:'Small, consistent pieces of dehydrated chicken designed for training sessions where you need to reward quickly and often without overfeeding.',
+    benefits:[
+      {icon:'🎯',title:'Training Optimised',text:'Uniform bite-sized pieces allow precise portion control during reward-based training — no tearing required.'},
+      {icon:'🎒',title:'Carry Anywhere',text:'Dry, mess-free and compact. Perfect for carrying in a treat pouch during walks, classes or outdoor activities.'},
+      {icon:'🧠',title:'High Motivation',text:'The smell of real dehydrated chicken is a powerful motivator — dogs stay focused during training sessions.'},
+      {icon:'⚖️',title:'Low Calorie Reward',text:'High protein-to-calorie ratio means you can reward frequently without worrying about weight gain.'},
+    ],
+    nutrients:[{val:'High',label:'Protein'},{val:'Low',label:'Calories'},{val:'Zero',label:'Fillers'}],
+    feeding:'Use as training rewards throughout the day. Limit to 10% of daily caloric intake. For a 10kg dog, up to 8–10 bites per session is appropriate. Always count treats toward daily food allowance.',
+    storage:{tiles:[{icon:'🫙',val:'6 Months',label:'Unopened'},{icon:'❄️',val:'4 Weeks',label:'After Opening'},{icon:'🌡️',val:'Cool & Dry',label:'Store At'}],note:'Store in a cool, dry place away from direct sunlight. Once opened, seal the resealable pouch tightly or transfer to an airtight container. Do not refrigerate — moisture accelerates spoilage. Keep away from humid areas like kitchens.'},
+  },
+
   {img:'Chicken%20Wings.png', name:'Chicken Wings', cat:'Chews & Bones', badge:'Fan Favourite', badgeCls:'', desc:'Crunchy dehydrated chicken wings — collagen-rich, great for coat health and a satisfying long chew.', tags:['Collagen Rich','Coat Health','Bone-In'], sizes:[{label:'5 pcs',price:399},{label:'10 pcs',price:799},{label:'15 pcs',price:1149}], filter:'chew',
     tagline:'More skin, more cartilage, more collagen. Chicken wings are the coat and joint treat disguised as a delicious crunchy chew.',
     benefits:[
@@ -5210,7 +5215,7 @@ const products = [
     feeding:'Can be fed daily due to very low fat. Small dogs: 2–3 pieces. Medium: 4–6 pieces. Large: 6–10 pieces. Excellent as a daily low-calorie training treat.',
     storage:{tiles:[{icon:'🫙',val:'6 Months',label:'Unopened'},{icon:'🌬️',val:'3 Weeks',label:'After Opening'},{icon:'🚫',val:'Away from Heat',label:'Store Away'}],note:'Fish treats are moisture-sensitive. Store in a cool, dry location in the sealed pouch. After opening, press out air, reseal tightly and use within 3 weeks. Keep away from direct sunlight and heat sources. If you notice any off-smell or moisture, discard immediately.'},
   },
-  {img:'Bombayduck.png', name:'Mackerel', cat:'Fish Treats', badge:'Omega Rich', badgeCls:'teal', desc:'Whole dehydrated mackerel — packed with omega-3 fatty acids, B12 and selenium for complete fish nutrition.', tags:['Omega-3','B12','Whole Fish'], sizes:[{label:'100g',price:629},{label:'200g',price:1199},{label:'300g',price:1799}], filter:'fish',
+  {img:'Bombayduck.png', name:'Whole Mackerel', cat:'Fish Treats', badge:'Omega Rich', badgeCls:'teal', desc:'Whole dehydrated mackerel — packed with omega-3 fatty acids, B12 and selenium for complete fish nutrition.', tags:['Omega-3','B12','Whole Fish'], sizes:[{label:'100g',price:629},{label:'200g',price:1199},{label:'300g',price:1799}], filter:'fish',
     tagline:'Whole mackerel is a complete fish treat — bones, flesh and all — delivering the full nutritional spectrum of a wild ocean fish in a safe, dehydrated form.',
     benefits:[
       {icon:'🐠',title:'Complete Whole Fish Nutrition',text:'Every part of the mackerel — flesh, bone, organs — contributes different nutrients. You\'re feeding the whole ecosystem.'},
@@ -5867,15 +5872,22 @@ function doCalc() {
 
 // ── FAQ TOGGLE ────────────────────────────────────────────────────────────
 function toggleFaq(btn) {
-  var answer = btn.nextElementSibling;
-  var isOpen = btn.classList.contains('open');
-  document.querySelectorAll('.faq-q.open').forEach(function(b){
-    b.classList.remove('open');
-    b.nextElementSibling.classList.remove('open');
+  var item = btn.closest('.faq-item');
+  if (!item) return;
+  var isOpen = item.classList.contains('open');
+  // Close all FAQ items
+  document.querySelectorAll('.faq-item.open').forEach(function(el){ 
+    el.classList.remove('open');
+    var a = el.querySelector('.faq-a');
+    if (a) a.style.maxHeight = '0';
   });
+  // Open clicked one if it was closed
   if (!isOpen) {
-    btn.classList.add('open');
-    answer.classList.add('open');
+    item.classList.add('open');
+    var answer = item.querySelector('.faq-a');
+    if (answer) {
+      answer.style.maxHeight = answer.scrollHeight + 20 + 'px';
+    }
   }
 }
 
@@ -7423,6 +7435,27 @@ function closeOrderSuccess() {
   document.getElementById('orderSuccessOverlay').style.display = 'none';
   clearTimeout(window._orderSuccessTimer);
 }
+
+// ── AUTO-LOGOUT AFTER 15 MIN INACTIVITY ──────────────────────────────
+(function(){
+  var INACTIVITY_LIMIT = 15 * 60 * 1000; // 15 minutes
+  var _logoutTimer = null;
+  function _resetInactivityTimer() {
+    if (_logoutTimer) clearTimeout(_logoutTimer);
+    _logoutTimer = setTimeout(function() {
+      if (currentUser) {
+        currentUser = null;
+        try { localStorage.removeItem('gobCurrentUser'); } catch(e){}
+        showCartToast('Logged out due to inactivity.');
+        console.log('Auto-logout: 15 min inactivity');
+      }
+    }, INACTIVITY_LIMIT);
+  }
+  ['mousemove','keydown','scroll','touchstart','click'].forEach(function(evt){
+    document.addEventListener(evt, _resetInactivityTimer, {passive:true});
+  });
+  _resetInactivityTimer();
+})();
 
 // ── CART SYSTEM ────────────────────────────────────────────────────────
 let cartItems = []; // [{product, size, price, qty}]
@@ -9434,6 +9467,28 @@ var DEMO_USERS = {
 };
 var currentUser = null; // {email, name, dog, city, purchased:[]}
 
+// ── AUTO-LOGOUT AFTER 15 MIN INACTIVITY ─────────────────────────────
+var _inactivityTimer = null;
+var _INACTIVITY_TIMEOUT = 15 * 60 * 1000; // 15 minutes
+function _resetInactivityTimer() {
+  if (_inactivityTimer) clearTimeout(_inactivityTimer);
+  _inactivityTimer = setTimeout(function() {
+    if (currentUser) {
+      currentUser = null;
+      localStorage.removeItem('gobCurrentUser');
+      var loginBtn = document.getElementById('loginBtnWrapper');
+      var initials = document.getElementById('userInitials');
+      if (loginBtn) loginBtn.style.display = '';
+      if (initials) initials.style.display = 'none';
+      console.log('Auto-logged out after 15 min inactivity');
+    }
+  }, _INACTIVITY_TIMEOUT);
+}
+['mousemove','keydown','touchstart','click','scroll'].forEach(function(evt) {
+  document.addEventListener(evt, _resetInactivityTimer, { passive: true });
+});
+_resetInactivityTimer();
+
 function doSignIn() {
   var email = document.getElementById('siEmail').value.trim().toLowerCase();
   var errEl = document.getElementById('siError');
@@ -10277,9 +10332,9 @@ function checkPmPin() {
 // ── IMAGE UPLOAD ────────────────────────────────────────────────
 var productImages={};
 function loadSavedImages(){try{var s=JSON.parse(localStorage.getItem('gobProductImages')||'{}')||{};productImages=s;products.forEach(function(p){if(productImages[p.name])p.img=productImages[p.name];});}catch(e){}}
-function saveProductImage(n,d){productImages[n]=d;var p=products.find(function(x){return x.name===n;});if(p)p.img=d;try{localStorage.setItem('gobProductImages',JSON.stringify(productImages));}catch(e){}renderProducts(products.slice(0,4),'homeProd');renderProducts(products,'shopProd');restoreViewCartBtns();showCartToast('Image saved','success');}
-function openImageUpload(n,e){if(e)e.stopPropagation();if(!n)return;var inp=document.createElement('input');inp.type='file';inp.accept='image/*';inp.onchange=function(ev){var f=ev.target.files[0];if(!f)return;if(f.size>3145728){showCartToast('Max 3MB');return;}var r=new FileReader();r.onload=function(ev2){saveProductImage(n,ev2.target.result);};r.readAsDataURL(f);};inp.click();}
-function removeProductImage(n,e){if(e)e.stopPropagation();delete productImages[n];var p=products.find(function(x){return x.name===n;});if(p)p.img='';try{localStorage.setItem('gobProductImages',JSON.stringify(productImages));}catch(e){}renderProducts(products.slice(0,4),'homeProd');renderProducts(products,'shopProd');restoreViewCartBtns();showCartToast('Image removed');}
+function saveProductImage(n,d){return;}
+function openImageUpload(n,e){return;}
+function removeProductImage(n,e){return;}
 
 // ── SELF-HEAL ────────────────────────────────────────────────────
 function annShowCopied(code){
@@ -10291,9 +10346,9 @@ function annShowCopied(code){
 }
 var productImages={};
 function loadSavedImages(){try{var s=JSON.parse(localStorage.getItem('gobProductImages')||'{}')||{};productImages=s;products.forEach(function(p){if(productImages[p.name])p.img=productImages[p.name];});}catch(e){}}
-function saveProductImage(n,d){productImages[n]=d;var p=products.find(function(x){return x.name===n;});if(p)p.img=d;try{localStorage.setItem('gobProductImages',JSON.stringify(productImages));}catch(e){}renderProducts(products.slice(0,4),'homeProd');renderProducts(products,'shopProd');restoreViewCartBtns();showCartToast('Image saved','success');}
-function openImageUpload(n,e){if(e)e.stopPropagation();if(!n)return;var inp=document.createElement('input');inp.type='file';inp.accept='image/*';inp.onchange=function(ev){var f=ev.target.files[0];if(!f)return;if(f.size>3145728){showCartToast('Max 3MB');return;}var r=new FileReader();r.onload=function(ev2){saveProductImage(n,ev2.target.result);};r.readAsDataURL(f);};inp.click();}
-function removeProductImage(n,e){if(e)e.stopPropagation();delete productImages[n];var p=products.find(function(x){return x.name===n;});if(p)p.img='';try{localStorage.setItem('gobProductImages',JSON.stringify(productImages));}catch(e){}renderProducts(products.slice(0,4),'homeProd');renderProducts(products,'shopProd');restoreViewCartBtns();showCartToast('Image removed');}
+function saveProductImage(n,d){return;}
+function openImageUpload(n,e){return;}
+function removeProductImage(n,e){return;}
 function handleLoginClick(){
   // Close any open overlays first
   var pmO=document.getElementById('pmodalOverlay');
@@ -10706,7 +10761,7 @@ document.addEventListener("DOMContentLoaded", function() {
 // Fetches live product data from Supabase and updates images/prices/status
 
 function syncProductsFromSupabase() {
-  fetch(SUPABASE_URL + '/rest/v1/products?select=name,image_url,images,price,description,category,filter,is_active,is_bestseller,tags&is_active=eq.true&order=name', {
+  fetch(SUPABASE_URL + '/rest/v1/products?select=name,image_url,images,price,description,category,filter,is_active,is_bestseller,tags&order=name', {
     headers: {
       'apikey': SUPABASE_ANON_KEY,
       'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
@@ -10716,39 +10771,44 @@ function syncProductsFromSupabase() {
   .then(function(dbProducts) {
     if (!dbProducts || !Array.isArray(dbProducts) || dbProducts.length === 0) return;
     var updated = 0;
+    // First: hide products that are marked inactive in Supabase
+    var inactiveNames = dbProducts.filter(function(p){ return p.is_active === false; }).map(function(p){ return (p.name||'').toLowerCase().trim(); });
+    if (inactiveNames.length > 0) {
+      products = products.filter(function(p) {
+        return inactiveNames.indexOf(p.name.toLowerCase().trim()) === -1;
+      });
+    }
+    // Then: enrich active products with DB data
     dbProducts.forEach(function(dbP) {
-      // Find matching product in hardcoded array by name (case-insensitive)
+      if (dbP.is_active === false) return; // skip inactive
       var match = products.find(function(p) {
         return p.name.toLowerCase().trim() === (dbP.name||'').toLowerCase().trim();
       });
       if (match) {
-        // Update image from Supabase if available
         if (dbP.image_url) {
           match.img = dbP.image_url;
         } else if (dbP.images && dbP.images.length > 0) {
           match.img = dbP.images[0];
         }
-        // Update price if set in Supabase
+        // Store all images for carousel
+        if (dbP.images && dbP.images.length > 0) {
+          match.allImages = dbP.images;
+        }
         if (dbP.price && dbP.price > 0 && match.sizes && match.sizes.length > 0) {
           match.sizes[0].price = Math.round(dbP.price);
         }
-        // Update bestseller badge
         if (dbP.is_bestseller && !match.badge) {
           match.badge = 'Bestseller';
         }
         updated++;
       }
     });
-    // Also hide products marked inactive in Supabase
-    var activeNames = dbProducts.map(function(p){ return (p.name||'').toLowerCase().trim(); });
-    // Re-render with updated images
-    if (updated > 0) {
-      var homeProd = document.getElementById('homeProd');
-      var shopProd = document.getElementById('shopProd');
-      if (homeProd && typeof renderProducts === 'function') renderProducts(products.slice(0,4), 'homeProd');
-      if (shopProd && typeof renderProducts === 'function') renderProducts(products, 'shopProd');
-      if (typeof restoreViewCartBtns === 'function') restoreViewCartBtns();
-    }
+    // Re-render with updated images and filtered products
+    var homeProd = document.getElementById('homeProd');
+    var shopProd = document.getElementById('shopProd');
+    if (homeProd && typeof renderProducts === 'function') renderProducts(products.slice(0,4), 'homeProd');
+    if (shopProd && typeof renderProducts === 'function') renderProducts(products, 'shopProd');
+    if (typeof restoreViewCartBtns === 'function') restoreViewCartBtns();
   })
   .catch(function(e) {
     // Silently fail - hardcoded products still show
@@ -11083,7 +11143,6 @@ window.addEventListener('popstate', function(event) {
     <div class="f-bottom">
       <span class="f-copy">&copy; 2025 Game of Bones. Made with &#10084; in Kalyan, Maharashtra.</span>
       <div class="f-badges">
-        <span class="f-badge">FSSAI Certified</span>
         <span class="f-badge">Made in India</span>
       </div>
     </div>
