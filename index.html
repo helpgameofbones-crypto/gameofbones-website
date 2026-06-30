@@ -991,19 +991,26 @@ body:has(#page-login.active) #mainNav { display: none !important; }
 <div id="announceBanner" style="background:var(--dark);overflow:hidden;white-space:nowrap;padding:8px 0;position:relative;z-index:1001">
   <div style="display:inline-block;animation:scrollBanner 30s linear infinite;padding-left:100%">
     <span style="font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:.08em;color:var(--white)">
-      &#127881; FREE SHIPPING on orders above &#8377;599 &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+      &#127881; FREE SHIPPING on ALL orders &nbsp;&nbsp;&bull;&nbsp;&nbsp;
       &#127873; Use code <span style="color:var(--gold)">FIRSTBITE</span> for 15% off your first order &nbsp;&nbsp;&bull;&nbsp;&nbsp;
       &#128176; Pay online &amp; get &#8377;50 OFF &nbsp;&nbsp;&bull;&nbsp;&nbsp;
       &#128666; PAN India delivery via Delhivery &nbsp;&nbsp;&bull;&nbsp;&nbsp;
       &#127775; 100% Natural &#8212; Zero Preservatives &#8212; Single Ingredient &nbsp;&nbsp;&bull;&nbsp;&nbsp;
       &#128062; Trusted by 5000+ dog parents across India &nbsp;&nbsp;&bull;&nbsp;&nbsp;
-      &#127881; FREE SHIPPING on orders above &#8377;599 &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+      &#127881; FREE SHIPPING on ALL orders &nbsp;&nbsp;&bull;&nbsp;&nbsp;
       &#127873; Use code <span style="color:var(--gold)">FIRSTBITE</span> for 15% off your first order &nbsp;&nbsp;&bull;&nbsp;&nbsp;
       &#128176; Pay online &amp; get &#8377;50 OFF
     </span>
   </div>
 </div>
 <style>
+
+@media(max-width:768px){
+  #related-products-grid{grid-template-columns:repeat(3,1fr)!important;gap:10px!important}
+}
+@media(max-width:480px){
+  #related-products-grid{grid-template-columns:repeat(2,1fr)!important;gap:8px!important}
+}
 @keyframes scrollBanner { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
 </style>
 <nav id="mainNav">
@@ -1072,7 +1079,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
       <div class="trust-item"><span class="trust-dot"></span>100% Natural Ingredients</div>
       <div class="trust-item"><span class="trust-dot"></span>Slow Dehydrated at 55&ndash;70&deg;C</div>
       <div class="trust-item"><span class="trust-dot"></span>No BHA / BHT / Artificial Additives</div>
-      <div class="trust-item"><span class="trust-dot"></span>Free Shipping Above &#8377;599</div>
+      <div class="trust-item"><span class="trust-dot"></span>Free Shipping on All Orders</div>
       <div class="trust-item"><span class="trust-dot"></span>COD Available</div>
     </div>
   </div>
@@ -1201,7 +1208,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
 
   <div class="cta-banner">
     <h2>Ready to Make Your Dog&rsquo;s Day? <em>Order Today.</em></h2>
-    <p>First order? Use code <strong style="color:var(--gold-light)">FIRSTBITE</strong> for 15% off. Free shipping above &#8377;599. COD available.</p>
+    <p>First order? Use code <strong style="color:var(--gold-light)">FIRSTBITE</strong> for 15% off. Free shipping on all orders. COD available.</p>
     <div class="cta-btns">
       <a class="btn-gold" onclick="navigateTo('shop')">Shop All Treats &rarr;</a>
       <button class="btn-gold-outline" onclick="openWA()">WhatsApp Us &#128172;</button>
@@ -1361,7 +1368,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
   <section style="background:var(--cream);padding:60px 6%;border-top:1px solid var(--cream-mid)">
     <div style="max-width:1200px;margin:0 auto">
       <h2 style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:var(--dark);margin-bottom:40px">You may also like</h2>
-      <div id="related-products-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px">
+      <div id="related-products-grid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:16px">
         <!-- Populated by JavaScript -->
       </div>
     </div>
@@ -1949,7 +1956,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
         <div style="background:var(--white);padding:24px;text-align:center">
           <div style="font-size:32px;margin-bottom:8px">&#128666;</div>
           <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--dark)">Free Shipping</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:4px">on all orders above &#8377;599</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:4px">on every order &#8212; no minimum!</div>
         </div>
         <div style="background:var(--dark);padding:24px;text-align:center">
           <div style="font-size:32px;margin-bottom:8px">&#9989;</div>
@@ -1986,8 +1993,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
         <h3>Shipping Charges</h3>
         <table>
           <tr><th>Order Value</th><th>Shipping Charge</th></tr>
-          <tr><td>&#8377;599 and above</td><td><strong style="color:var(--teal)">FREE</strong></td></tr>
-          <tr><td>Below &#8377;599</td><td>Flat &#8377;50 delivery charge</td></tr>
+          <tr><td>All orders</td><td><strong style="color:var(--teal)">FREE</strong></td></tr>
         </table>
         <p>Shipping charges are calculated based on the actual weight of your order and your delivery PIN code. The exact charge is shown at checkout before you pay.</p>
 
@@ -2794,7 +2800,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
     </div>
     <div id="cartShipBar" style="margin-bottom:14px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
-        <span id="cartShipMsg" style="font-size:11px;color:var(--muted);font-weight:600">Add ₹599 for free shipping</span>
+        <span id="cartShipMsg" style="font-size:11px;color:var(--muted);font-weight:600">Free shipping on all orders! 🎉</span>
         <span id="cartShipAmt" style="font-size:11px;color:var(--muted);font-weight:600"></span>
       </div>
       <div style="height:5px;background:var(--cream-mid);border-radius:3px;overflow:hidden">
@@ -3068,7 +3074,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
         <div class="faq-item" data-cat="product"><button class="faq-q" onclick="toggleFaq(this)">Are these treats grain-free and additive-free?</button><div class="faq-a"><p>Yes, completely. Every product contains exactly one ingredient — the meat or fish itself. No grains, no corn, no soy, no artificial flavours, no preservatives. What you see on the label is all that is in the bag.</p></div></div>
         <div class="faq-item" data-cat="product"><button class="faq-q" onclick="toggleFaq(this)">How much should I feed per day?</button><div class="faq-a"><p>Treats should make up no more than 10% of your dog's daily caloric intake. Use our Treat Calculator (on the Shop page) to get a personalised recommendation based on your dog's weight and the treat type.</p></div></div>
         <div class="faq-item" data-cat="shipping"><button class="faq-q" onclick="toggleFaq(this)">How long does delivery take?</button><div class="faq-a"><p>Maharashtra orders typically arrive in 2–4 business days. Pan-India delivery takes 3–7 business days. We dispatch orders within 24 hours of confirmation via WhatsApp.</p></div></div>
-        <div class="faq-item" data-cat="shipping"><button class="faq-q" onclick="toggleFaq(this)">Is there free shipping?</button><div class="faq-a"><p>Yes! All orders above ₹599 qualify for free shipping. Orders below ₹599 attract a flat ₹50 delivery charge.</p></div></div>
+        <div class="faq-item" data-cat="shipping"><button class="faq-q" onclick="toggleFaq(this)">Is there free shipping?</button><div class="faq-a"><p>Yes! We offer free shipping on all orders across India. No minimum order required.</p></div></div>
         <div class="faq-item" data-cat="shipping"><button class="faq-q" onclick="toggleFaq(this)">Do you deliver pan-India?</button><div class="faq-a"><p>Yes, we deliver across India. Use the Pincode Checker on the Shop page to check estimated delivery time for your area.</p></div></div>
         <div class="faq-item" data-cat="returns"><button class="faq-q" onclick="toggleFaq(this)">What is your return policy?</button><div class="faq-a"><p>We offer a 7-day return policy. If your order arrives damaged or incorrect, WhatsApp us at +91 90825 03295 with a photo and we will arrange a replacement or full refund. Opened products cannot be returned for hygiene reasons.</p></div></div>
         <div class="faq-item" data-cat="returns"><button class="faq-q" onclick="toggleFaq(this)">My dog didn't like the treat. Can I return it?</button><div class="faq-a"><p>We understand every dog is different! If your dog doesn't take to a treat, WhatsApp us — we'll recommend an alternative and work something out. Our goal is a happy dog, not a completed sale.</p></div></div>
@@ -4469,13 +4475,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
         </div>
       </section>
 
-  <div class="cta-banner">
-    <h2>Ready to Be a Feeder?</h2>
-    <p>Every feeder counts. Every meal saves a life.</p>
-    <div class="cta-btns">
-      <button class="btn-gold-outline" onclick="openFeederSignup()">Become a Feeder Today &#128172;</button>
-    </div>
-  </div>
+
 </div>
 
 <script>
@@ -6244,7 +6244,7 @@ function updateCheckoutTotals() {
   // Total discount = both stacked
   const totalDiscount = couponDiscount + loyaltyDiscount;
   const after = subtotal - totalDiscount;
-  const shipping = after >= 599 ? 0 : 50;
+  const shipping = 0; // Free shipping on all orders
   const cod = selectedPayment === 'cod' ? 40 : 0;
   const grand = after + shipping + cod - onlineDisc;
   
@@ -7174,7 +7174,7 @@ function _finaliseOrder(ref, phoneVal, orderItems) {
     return sum + (item.price * (item.qty || 1));
   }, 0);
   
-  var shippingCharge = subtotal > 599 ? 0 : 50;
+  var shippingCharge = 0; // Free shipping on all orders
   var codCharge = selectedPayment === 'cod' ? 40 : 0;
   var grandTotal = subtotal + shippingCharge + codCharge;
   
