@@ -4442,6 +4442,19 @@ body:has(#page-login.active) #mainNav { display: none !important; }
       </div>
       </section>
 
+      
+  <!-- DOG GALLERY SECTION - loaded from Supabase -->
+  <section id="dog-gallery-section" style="background:var(--cream);padding:60px 6%;display:none">
+    <div style="max-width:1200px;margin:0 auto">
+      <div style="text-align:center;margin-bottom:40px">
+        <div style="font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:8px">OUR COMMUNITY</div>
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--dark);margin:0">Dogs Who Love Game of Bones</h2>
+      </div>
+      <div id="dog-gallery-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px">
+      </div>
+    </div>
+  </section>
+
       <!-- Featured Stories - Strays We're Helping -->
       <section style="padding:60px 6%;background:var(--cream)">
         <div style="max-width:1320px;margin:0 auto">
@@ -5064,7 +5077,7 @@ window._openArtReal = openArt;
 // Product data with real images
 const products = [
   // ── JERKY ──────────────────────────────────────────────
-  {img:'Chicken%20Jerky.png', name:'Chicken Jerky', cat:'Boneless Jerky', badge:'Bestseller', badgeCls:'', desc:'Single-ingredient slow-dehydrated chicken breast. High-protein, low-fat. Perfect for training rewards.', tags:['Single Ingredient','Preservative Free'], sizes:[{label:'Pack of 1',price:329},{label:'Pack of 2',price:658},{label:'Pack of 3',price:987},{label:'Pack of 4',price:1316}], filter:'jerky',
+  {img:'Chicken%20Jerky.png', name:'Chicken Jerky', cat:'Boneless Jerky', badge:'Bestseller', badgeCls:'', desc:'Single-ingredient slow-dehydrated chicken breast. High-protein, low-fat. Perfect for training rewards.', tags:['Single Ingredient','Preservative Free'], sizes:[{label:'Pack of 1',price:329,mrp:379},{label:'Pack of 2',price:658,mrp:749},{label:'Pack of 3',price:987,mrp:1129},{label:'Pack of 4',price:1316,mrp:1499}], filter:'jerky',
     tagline:'Pure dehydrated chicken breast — nothing added, nothing removed. One ingredient, complete nutrition.',
     benefits:[
       {icon:'💪',title:'Lean Muscle Growth',text:'High biological value protein supports strong, healthy muscles in dogs of all ages.'},
@@ -5076,7 +5089,7 @@ const products = [
     feeding:'Small dogs (under 10kg): 1–2 strips daily. Medium dogs (10–25kg): 2–3 strips. Large dogs (25kg+): 3–5 strips. Can be broken into smaller pieces for training. Always offer fresh water alongside treats.',
     storage:{tiles:[{icon:'🫙',val:'6 Months',label:'Unopened'},{icon:'❄️',val:'4 Weeks',label:'After Opening'},{icon:'🌡️',val:'Cool & Dry',label:'Store At'}],note:'Store in a cool, dry place away from direct sunlight. Once opened, seal the resealable pouch tightly or transfer to an airtight container. Do not refrigerate — moisture accelerates spoilage. Keep away from humid areas like kitchens.'},
   },
-  {img:'Buff%20Jerky.png', name:'Buff Jerky', cat:'Boneless Jerky', badge:'Novel Protein', badgeCls:'brown', desc:'Premium buffalo jerky — rich in iron, zinc and amino acids. Ideal for dogs with chicken sensitivity.', tags:['Single Ingredient','Allergy Friendly'], sizes:[{label:'Pack of 1',price:449},{label:'Pack of 2',price:898},{label:'Pack of 3',price:1299},{label:'Pack of 4',price:1649}], filter:'jerky',
+  {img:'Buff%20Jerky.png', name:'Buff Jerky', cat:'Boneless Jerky', badge:'Novel Protein', badgeCls:'brown', desc:'Premium buffalo jerky — rich in iron, zinc and amino acids. Ideal for dogs with chicken sensitivity.', tags:['Single Ingredient','Allergy Friendly'], sizes:[{label:'Pack of 1',price:449,mrp:519},{label:'Pack of 2',price:898,mrp:1019},{label:'Pack of 3',price:1299,mrp:1479},{label:'Pack of 4',price:1649,mrp:1879}], filter:'jerky',
     tagline:'Buffalo is a novel protein most dogs haven\'t been exposed to — making it the ideal choice for allergy-prone dogs who need a break from chicken or beef.',
     benefits:[
       {icon:'🧬',title:'Novel Protein Source',text:'Most dogs haven\'t eaten buffalo before — meaning zero prior allergy exposure. Perfect elimination diet treat.'},
@@ -5089,7 +5102,7 @@ const products = [
     storage:{tiles:[{icon:'🫙',val:'6 Months',label:'Unopened'},{icon:'❄️',val:'4 Weeks',label:'After Opening'},{icon:'🌡️',val:'Cool & Dry',label:'Store At'}],note:'Store in a cool, dry place away from direct sunlight. Once opened, seal the resealable pouch tightly or transfer to an airtight container. Do not refrigerate — moisture accelerates spoilage. Keep away from humid areas like kitchens.'},
   },
   // ── CHEWS & BONES ──────────────────────────────────────
-  {img:'Chicken%20Feet.png', name:'Chicken Feet', cat:'Chews & Bones', badge:'Dental Health', badgeCls:'teal', desc:'Natural glucosamine & chondroitin source. Soft dehydrated bone scrapes plaque while your dog chews.', tags:['Joint Support','Dental','Glucosamine'], sizes:[{label:'Pack of 1',price:300},{label:'Pack of 2',price:599},{label:'Pack of 3',price:849},{label:'Pack of 4',price:1049}], filter:'chew',
+  {img:'Chicken%20Feet.png', name:'Chicken Feet', cat:'Chews & Bones', badge:'Dental Health', badgeCls:'teal', desc:'Natural glucosamine & chondroitin source. Soft dehydrated bone scrapes plaque while your dog chews.', tags:['Joint Support','Dental','Glucosamine'], sizes:[{label:'Pack of 1',price:300,mrp:349},{label:'Pack of 2',price:599,mrp:679},{label:'Pack of 3',price:849,mrp:969},{label:'Pack of 4',price:1049,mrp:1199}], filter:'chew',
     tagline:'Chicken feet are one of nature\'s most complete functional treats — they clean teeth, support joints and keep dogs entertained, all from a single natural ingredient.',
     benefits:[
       {icon:'🦴',title:'Natural Joint Supplement',text:'Loaded with glucosamine and chondroitin — the same compounds in expensive joint supplements, but in a form dogs actually want to eat.'},
@@ -5101,7 +5114,7 @@ const products = [
     feeding:'1–2 feet per day depending on size. Small breeds: 1 foot. Medium/large breeds: 2 feet. Feed as a standalone treat or alongside meals. Completely digestible — safe unlike cooked bones.',
     storage:{tiles:[{icon:'🫙',val:'12 Months',label:'Unopened'},{icon:'🏠',val:'2–3 Months',label:'After Opening'},{icon:'🌡️',val:'Cool & Dry',label:'Store At'}],note:'Dehydrated chews and bones have a longer shelf life due to low moisture content. Store in a cool, dry location. Once opened, keep in the resealable pouch or an airtight container. No refrigeration needed. If you notice any soft spots or unusual smell, discard the affected piece.'},
   },
-  {img:'Chicken%20Neck.png', name:'Chicken Neck', cat:'Chews & Bones', badge:'Calcium Rich', badgeCls:'teal', desc:'Whole chicken neck — satisfying chew with natural calcium and phosphorus for strong bones.', tags:['Digestible Bone','Calcium','Natural'], sizes:[{label:'Pack of 1',price:300},{label:'Pack of 2',price:599},{label:'Pack of 3',price:849},{label:'Pack of 4',price:1049}], filter:'chew',
+  {img:'Chicken%20Neck.png', name:'Chicken Neck', cat:'Chews & Bones', badge:'Calcium Rich', badgeCls:'teal', desc:'Whole chicken neck — satisfying chew with natural calcium and phosphorus for strong bones.', tags:['Digestible Bone','Calcium','Natural'], sizes:[{label:'Pack of 1',price:300,mrp:349},{label:'Pack of 2',price:599,mrp:679},{label:'Pack of 3',price:849,mrp:969},{label:'Pack of 4',price:1049,mrp:1199}], filter:'chew',
     tagline:'A natural, digestible bone treat that delivers the calcium-phosphorus balance dogs need for strong bones — without the risks of cooked bones.',
     benefits:[
       {icon:'🦴',title:'Natural Calcium Source',text:'Provides bioavailable calcium and phosphorus in the correct ratio for bone density and dental health.'},
@@ -5113,7 +5126,7 @@ const products = [
     feeding:'Small dogs: ½ neck daily. Medium dogs: 1 neck daily. Large dogs: 1–2 necks daily. Best given as a meal-time supplement or evening chew. Always supervise first-time chewers.',
     storage:{tiles:[{icon:'🫙',val:'12 Months',label:'Unopened'},{icon:'🏠',val:'2–3 Months',label:'After Opening'},{icon:'🌡️',val:'Cool & Dry',label:'Store At'}],note:'Dehydrated chews and bones have a longer shelf life due to low moisture content. Store in a cool, dry location. Once opened, keep in the resealable pouch or an airtight container. No refrigeration needed. If you notice any soft spots or unusual smell, discard the affected piece.'},
   },
-  {img:'Chicken%20Bites.png', name:'Chicken Bites', cat:'Boneless Jerky', badge:'Training Treat', badgeCls:'', desc:'Bite-sized dehydrated chicken pieces — perfect treat size for training. High protein, easy to carry.', tags:['Single Ingredient','Small Bites'], sizes:[{label:'Pack of 1',price:329},{label:'Pack of 2',price:658},{label:'Pack of 3',price:987},{label:'Pack of 4',price:1316}], filter:'jerky',
+  {img:'Chicken%20Bites.png', name:'Chicken Bites', cat:'Boneless Jerky', badge:'Training Treat', badgeCls:'', desc:'Bite-sized dehydrated chicken pieces — perfect treat size for training. High protein, easy to carry.', tags:['Single Ingredient','Small Bites'], sizes:[{label:'Pack of 1',price:329,mrp:379},{label:'Pack of 2',price:658,mrp:749},{label:'Pack of 3',price:987,mrp:1129},{label:'Pack of 4',price:1316,mrp:1499}], filter:'jerky',
     tagline:'Small, consistent pieces of dehydrated chicken designed for training sessions where you need to reward quickly and often without overfeeding.',
     benefits:[
       {icon:'🎯',title:'Training Optimised',text:'Uniform bite-sized pieces allow precise portion control during reward-based training — no tearing required.'},
@@ -5126,7 +5139,7 @@ const products = [
     storage:{tiles:[{icon:'🫙',val:'6 Months',label:'Unopened'},{icon:'❄️',val:'4 Weeks',label:'After Opening'},{icon:'🌡️',val:'Cool & Dry',label:'Store At'}],note:'Store in a cool, dry place away from direct sunlight. Once opened, seal the resealable pouch tightly or transfer to an airtight container. Do not refrigerate — moisture accelerates spoilage. Keep away from humid areas like kitchens.'},
   },
 
-  {img:'Chicken%20Wings.png', name:'Chicken Wings', cat:'Chews & Bones', badge:'Fan Favourite', badgeCls:'', desc:'Crunchy dehydrated chicken wings — collagen-rich, great for coat health and a satisfying long chew.', tags:['Collagen Rich','Coat Health','Bone-In'], sizes:[{label:'Pack of 1',price:399},{label:'Pack of 2',price:799},{label:'Pack of 3',price:1149}], filter:'chew',
+  {img:'Chicken%20Wings.png', name:'Chicken Wings', cat:'Chews & Bones', badge:'Fan Favourite', badgeCls:'', desc:'Crunchy dehydrated chicken wings — collagen-rich, great for coat health and a satisfying long chew.', tags:['Collagen Rich','Coat Health','Bone-In'], sizes:[{label:'Pack of 1',price:399,mrp:459},{label:'Pack of 2',price:799,mrp:909},{label:'Pack of 3',price:1149,mrp:1309}], filter:'chew',
     tagline:'More skin, more cartilage, more collagen. Chicken wings are the coat and joint treat disguised as a delicious crunchy chew.',
     benefits:[
       {icon:'✨',title:'Shiny Coat & Skin',text:'The high collagen content in skin and cartilage directly supports skin elasticity and a glossy, healthy coat.'},
@@ -5138,7 +5151,7 @@ const products = [
     feeding:'Small dogs: 1 wing every 2 days. Medium dogs: 1 wing daily. Large dogs: 2 wings daily. Supervise all chewing sessions, especially for aggressive chewers.',
     storage:{tiles:[{icon:'🫙',val:'12 Months',label:'Unopened'},{icon:'🏠',val:'2–3 Months',label:'After Opening'},{icon:'🌡️',val:'Cool & Dry',label:'Store At'}],note:'Dehydrated chews and bones have a longer shelf life due to low moisture content. Store in a cool, dry location. Once opened, keep in the resealable pouch or an airtight container. No refrigeration needed. If you notice any soft spots or unusual smell, discard the affected piece.'},
   },
-{img:'Chicken%20Bones.png', name:'Chicken Bones', cat:'Chews & Bones', badge:'High Value', badgeCls:'teal', desc:'Assorted dehydrated chicken bones — natural calcium source, safe digestible chew for all breeds.', tags:['Digestible','Calcium','Natural'], sizes:[{label:'Pack of 1',price:349},{label:'Pack of 2',price:679},{label:'Pack of 3',price:999},{label:'Pack of 4',price:1199}], filter:'chew',
+{img:'Chicken%20Bones.png', name:'Chicken Bones', cat:'Chews & Bones', badge:'High Value', badgeCls:'teal', desc:'Assorted dehydrated chicken bones — natural calcium source, safe digestible chew for all breeds.', tags:['Digestible','Calcium','Natural'], sizes:[{label:'Pack of 1',price:349,mrp:399},{label:'Pack of 2',price:679,mrp:769},{label:'Pack of 3',price:999,mrp:1139},{label:'Pack of 4',price:1199,mrp:1369}], filter:'chew',
     tagline:'An assortment of dehydrated chicken bones — a natural, affordable calcium supplement that doubles as an enriching chew.',
     benefits:[
       {icon:'🦴',title:'Natural Calcium Supply',text:'Provides bioavailable calcium essential for strong bones, healthy teeth, nerve function and muscle contraction.'},
@@ -5150,7 +5163,7 @@ const products = [
     feeding:'Feed 1–2 pieces daily depending on size. Ensure fresh water is always available. Do not feed if your dog is on calcium-restricted diet — consult your vet.',
     storage:{tiles:[{icon:'🫙',val:'12 Months',label:'Unopened'},{icon:'🏠',val:'2–3 Months',label:'After Opening'},{icon:'🌡️',val:'Cool & Dry',label:'Store At'}],note:'Dehydrated chews and bones have a longer shelf life due to low moisture content. Store in a cool, dry location. Once opened, keep in the resealable pouch or an airtight container. No refrigeration needed. If you notice any soft spots or unusual smell, discard the affected piece.'},
   },
-  {img:'Bombayduck.png', name:'Goat Trachea', cat:'Chews & Bones', badge:'Joint Superfood', badgeCls:'teal', desc:'Natural cartilage-rich chew packed with glucosamine & chondroitin. Excellent for senior or active dogs.', tags:['Glucosamine','Cartilage','Joint Support'], sizes:[{label:'Pack of 1',price:299},{label:'Pack of 2',price:599},{label:'Pack of 3',price:849}], filter:'chew',
+  {img:'Bombayduck.png', name:'Goat Trachea', cat:'Chews & Bones', badge:'Joint Superfood', badgeCls:'teal', desc:'Natural cartilage-rich chew packed with glucosamine & chondroitin. Excellent for senior or active dogs.', tags:['Glucosamine','Cartilage','Joint Support'], sizes:[{label:'Pack of 1',price:299,mrp:349},{label:'Pack of 2',price:599,mrp:679},{label:'Pack of 3',price:849,mrp:969}], filter:'chew',
     tagline:'Goat trachea is almost pure cartilage — which means it is almost pure glucosamine and chondroitin. Nature\'s own joint supplement in a form dogs find delicious.',
     benefits:[
       {icon:'🏃',title:'Superior Joint Support',text:'Cartilage is the richest natural source of glucosamine and chondroitin — compounds proven to reduce joint inflammation and improve mobility.'},
@@ -5162,7 +5175,7 @@ const products = [
     feeding:'1 piece per day for medium/large dogs. Small dogs: ½ piece daily. Best given as an evening chew. Ideal as a daily joint supplement for senior dogs (7+ years).',
     storage:{tiles:[{icon:'🫙',val:'12 Months',label:'Unopened'},{icon:'🏠',val:'2–3 Months',label:'After Opening'},{icon:'🌡️',val:'Cool & Dry',label:'Store At'}],note:'Dehydrated chews and bones have a longer shelf life due to low moisture content. Store in a cool, dry location. Once opened, keep in the resealable pouch or an airtight container. No refrigeration needed. If you notice any soft spots or unusual smell, discard the affected piece.'},
   },
-  {img:'Bombayduck.png', name:'Goat Trotter', cat:'Chews & Bones', badge:'Long Lasting', badgeCls:'', desc:'Hard-working chew for powerful chewers. Rich in collagen and marrow, keeps dogs engaged for hours.', tags:['Power Chewer','Collagen','Marrow'], sizes:[{label:'Pack of 1',price:299},{label:'Pack of 2',price:599},{label:'Pack of 3',price:849},{label:'Pack of 4',price:1099}], filter:'chew',
+  {img:'Bombayduck.png', name:'Goat Trotter', cat:'Chews & Bones', badge:'Long Lasting', badgeCls:'', desc:'Hard-working chew for powerful chewers. Rich in collagen and marrow, keeps dogs engaged for hours.', tags:['Power Chewer','Collagen','Marrow'], sizes:[{label:'Pack of 1',price:299,mrp:349},{label:'Pack of 2',price:599,mrp:679},{label:'Pack of 3',price:849,mrp:969},{label:'Pack of 4',price:1099,mrp:1249}], filter:'chew',
     tagline:'Built for dogs that destroy every chew in minutes. Goat trotters are dense, durable and loaded with marrow and collagen — a true power chew.',
     benefits:[
       {icon:'💪',title:'Built for Power Chewers',text:'Dense bone structure withstands aggressive chewing — ideal for dogs that finish every other chew too quickly.'},
@@ -5174,7 +5187,7 @@ const products = [
     feeding:'1 trotter per week for large breeds; 1 every 10 days for medium breeds; not recommended for toy breeds under 5kg. Always supervise. Limit marrow-rich bones to prevent loose stools.',
     storage:{tiles:[{icon:'🫙',val:'12 Months',label:'Unopened'},{icon:'🏠',val:'2–3 Months',label:'After Opening'},{icon:'🌡️',val:'Cool & Dry',label:'Store At'}],note:'Dehydrated chews and bones have a longer shelf life due to low moisture content. Store in a cool, dry location. Once opened, keep in the resealable pouch or an airtight container. No refrigeration needed. If you notice any soft spots or unusual smell, discard the affected piece.'},
   },
-  {img:'Bombayduck.png', name:'Goat Ear', cat:'Chews & Bones', badge:'Light Chew', badgeCls:'', desc:'Thin, crunchy goat ears — a lighter chew that is great for smaller breeds and senior dogs.', tags:['Light Chew','Small Breeds','Crunchy'], sizes:[{label:'Pack of 1',price:299},{label:'Pack of 2',price:599},{label:'Pack of 3',price:899},{label:'Pack of 4',price:1049}], filter:'chew',
+  {img:'Bombayduck.png', name:'Goat Ear', cat:'Chews & Bones', badge:'Light Chew', badgeCls:'', desc:'Thin, crunchy goat ears — a lighter chew that is great for smaller breeds and senior dogs.', tags:['Light Chew','Small Breeds','Crunchy'], sizes:[{label:'Pack of 1',price:299,mrp:349},{label:'Pack of 2',price:599,mrp:679},{label:'Pack of 3',price:899,mrp:1019},{label:'Pack of 4',price:1049,mrp:1199}], filter:'chew',
     tagline:'Not every dog wants a dense, hours-long chew. Goat ears are the perfect light, satisfying crunch — crunchy, digestible and low in fat.',
     benefits:[
       {icon:'🐩',title:'Perfect for Small Breeds',text:'Light, thin and not too hard — ideal for small or toy breeds whose jaws aren\'t built for heavy bones.'},
@@ -5188,7 +5201,7 @@ const products = [
   },
 
   // ── ORGAN TREATS ───────────────────────────────────────
-  {img:'Chicken%20Gizzards.png', name:'Chicken Gizzards', cat:'Organ Treats', badge:'B12 Powerhouse', badgeCls:'brown', desc:'Nutrient-dense gizzards packed with B12, iron, zinc and phosphorus. Nature\'s multivitamin for dogs.', tags:['B12','Iron Rich','Immune Support'], sizes:[{label:'Pack of 1',price:359},{label:'Pack of 2',price:699},{label:'Pack of 3',price:1049},{label:'Pack of 4',price:1249}], filter:'organ',
+  {img:'Chicken%20Gizzards.png', name:'Chicken Gizzards', cat:'Organ Treats', badge:'B12 Powerhouse', badgeCls:'brown', desc:'Nutrient-dense gizzards packed with B12, iron, zinc and phosphorus. Nature\'s multivitamin for dogs.', tags:['B12','Iron Rich','Immune Support'], sizes:[{label:'Pack of 1',price:359,mrp:419},{label:'Pack of 2',price:699,mrp:799},{label:'Pack of 3',price:1049,mrp:1199},{label:'Pack of 4',price:1249,mrp:1419}], filter:'organ',
     tagline:'Gizzards are the hidden gem of organ meats — extremely nutrient-dense yet often overlooked. Think of them as a natural, whole-food multivitamin.',
     benefits:[
       {icon:'🧬',title:'B12 for Nerve Health',text:'Chicken gizzards are exceptionally high in Vitamin B12, essential for healthy nerve function and red blood cell formation.'},
@@ -5200,7 +5213,7 @@ const products = [
     feeding:'Organ meats should make up no more than 10–15% of the diet. Feed 2–3 times per week. Small dogs: 30–40g per serving. Medium dogs: 60–80g. Large dogs: 100–120g.',
     storage:{tiles:[{icon:'🫙',val:'6 Months',label:'Unopened'},{icon:'❄️',val:'3 Weeks',label:'After Opening'},{icon:'🌡️',val:'Cool & Dry',label:'Store At'}],note:'Organ treats have higher moisture sensitivity than jerky. Store in a cool, dry location in the sealed pouch. After opening, reseal tightly and keep in a cool spot — or refrigerate for maximum freshness. Use within 3 weeks of opening. Discard if you detect any unusual smell.'},
   },
-  {img:'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/b8ea22dc-d46f-4ee9-b779-8c1aacafd755/image-0-1782759470191.png', name:'Chicken Heart & Liver', cat:'Organ Treats', badge:'Superfood', badgeCls:'brown', desc:'Rich in Vitamin A, B12 and iron. One of the most nutrient-dense organ meats available.', tags:['Vitamin A','B12','Organ Meat'], sizes:[{label:'Pack of 1',price:359},{label:'Pack of 2',price:699},{label:'Pack of 3',price:1049},{label:'Pack of 4',price:1249}], filter:'organ',
+  {img:'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/b8ea22dc-d46f-4ee9-b779-8c1aacafd755/image-0-1782759470191.png', name:'Chicken Heart & Liver', cat:'Organ Treats', badge:'Superfood', badgeCls:'brown', desc:'Rich in Vitamin A, B12 and iron. One of the most nutrient-dense organ meats available.', tags:['Vitamin A','B12','Organ Meat'], sizes:[{label:'Pack of 1',price:359,mrp:419},{label:'Pack of 2',price:699,mrp:799},{label:'Pack of 3',price:1049,mrp:1199},{label:'Pack of 4',price:1249,mrp:1419}], filter:'organ',
     tagline:'Liver is the most nutrient-dense food on the planet — for humans and dogs alike. A small amount delivers an extraordinary range of vitamins and minerals.',
     benefits:[
       {icon:'👁️',title:'Vitamin A for Vision',text:'Liver is the richest natural source of Vitamin A, essential for eye health, immune function and skin maintenance.'},
@@ -5212,7 +5225,7 @@ const products = [
     feeding:'Liver is very rich — feed in moderation. 2–3 times per week maximum. Small dogs: 20–30g per serving. Medium: 50–60g. Large: 80–100g. Excessive liver can cause Vitamin A toxicity — do not overfeed.',
     storage:{tiles:[{icon:'🫙',val:'6 Months',label:'Unopened'},{icon:'❄️',val:'3 Weeks',label:'After Opening'},{icon:'🌡️',val:'Cool & Dry',label:'Store At'}],note:'Organ treats have higher moisture sensitivity than jerky. Store in a cool, dry location in the sealed pouch. After opening, reseal tightly and keep in a cool spot — or refrigerate for maximum freshness. Use within 3 weeks of opening. Discard if you detect any unusual smell.'},
   },
-  {img:'Bombayduck.png', name:'Goat Liver', cat:'Organ Treats', badge:'Premium Organ', badgeCls:'brown', desc:'Goat liver — richer and more intense than chicken. Exceptional source of Vitamin A, copper and folate.', tags:['Vitamin A','Copper','Rich Flavour'], sizes:[{label:'Pack of 1',price:549},{label:'Pack of 2',price:1049},{label:'Pack of 3',price:1549},{label:'Pack of 4',price:2049}], filter:'organ',
+  {img:'Bombayduck.png', name:'Goat Liver', cat:'Organ Treats', badge:'Premium Organ', badgeCls:'brown', desc:'Goat liver — richer and more intense than chicken. Exceptional source of Vitamin A, copper and folate.', tags:['Vitamin A','Copper','Rich Flavour'], sizes:[{label:'Pack of 1',price:549,mrp:629},{label:'Pack of 2',price:1049,mrp:1199},{label:'Pack of 3',price:1549,mrp:1769},{label:'Pack of 4',price:2049,mrp:2339}], filter:'organ',
     tagline:'Goat liver carries a richer, more intense nutritional profile than chicken liver — particularly in copper, folate and Vitamin A. Excellent for dogs needing a nutritional boost.',
     benefits:[
       {icon:'🥇',title:'Superior Vitamin A Density',text:'Goat liver contains even higher concentrations of Vitamin A than chicken liver — powerful immune and vision support.'},
@@ -5224,7 +5237,7 @@ const products = [
     feeding:'Same moderation as chicken liver applies. Feed 2–3 times per week. The higher nutrient density means you need slightly smaller servings than chicken liver.',
     storage:{tiles:[{icon:'🫙',val:'6 Months',label:'Unopened'},{icon:'❄️',val:'3 Weeks',label:'After Opening'},{icon:'🌡️',val:'Cool & Dry',label:'Store At'}],note:'Organ treats have higher moisture sensitivity than jerky. Store in a cool, dry location in the sealed pouch. After opening, reseal tightly and keep in a cool spot — or refrigerate for maximum freshness. Use within 3 weeks of opening. Discard if you detect any unusual smell.'},
   },
-  {img:'Bombayduck.png', name:'Goat Lungs', cat:'Organ Treats', badge:'Low Fat', badgeCls:'', desc:'Lightweight and crunchy dehydrated goat lungs. High protein, very low fat — great for weight-conscious dogs.', tags:['Low Fat','High Protein','Light'], sizes:[{label:'Pack of 1',price:549},{label:'Pack of 2',price:1049},{label:'Pack of 3',price:1549},{label:'Pack of 4',price:2049}], filter:'organ',
+  {img:'Bombayduck.png', name:'Goat Lungs', cat:'Organ Treats', badge:'Low Fat', badgeCls:'', desc:'Lightweight and crunchy dehydrated goat lungs. High protein, very low fat — great for weight-conscious dogs.', tags:['Low Fat','High Protein','Light'], sizes:[{label:'Pack of 1',price:549,mrp:629},{label:'Pack of 2',price:1049,mrp:1199},{label:'Pack of 3',price:1549,mrp:1769},{label:'Pack of 4',price:2049,mrp:2339}], filter:'organ',
     tagline:'Goat lungs are the rare organ treat that is genuinely low in fat — making them perfect for overweight dogs or breeds prone to pancreatitis who still deserve a delicious reward.',
     benefits:[
       {icon:'⚖️',title:'Ideal for Weight Management',text:'Very low fat content makes lungs one of the few organ treats that can be given to dogs on calorie-restricted diets.'},
@@ -5236,7 +5249,7 @@ const products = [
     feeding:'Can be given more freely than other organs due to low fat. Daily feeding is fine for most dogs. Great as a training treat for dogs on weight management programmes.',
     storage:{tiles:[{icon:'🫙',val:'6 Months',label:'Unopened'},{icon:'❄️',val:'3 Weeks',label:'After Opening'},{icon:'🌡️',val:'Cool & Dry',label:'Store At'}],note:'Organ treats have higher moisture sensitivity than jerky. Store in a cool, dry location in the sealed pouch. After opening, reseal tightly and keep in a cool spot — or refrigerate for maximum freshness. Use within 3 weeks of opening. Discard if you detect any unusual smell.'},
   },
-  {img:'Bombayduck.png', name:'Goat Heart & Kidney Mix', cat:'Organ Treats', badge:'Heart Health', badgeCls:'', desc:'Goat heart and kidney — rich in taurine, CoQ10 and B vitamins. Supports cardiovascular health.', tags:['Taurine','Heart Health','B Vitamins'], sizes:[{label:'Pack of 1',price:549},{label:'Pack of 2',price:1049},{label:'Pack of 3',price:1549},{label:'Pack of 4',price:2049}], filter:'organ',
+  {img:'Bombayduck.png', name:'Goat Heart & Kidney Mix', cat:'Organ Treats', badge:'Heart Health', badgeCls:'', desc:'Goat heart and kidney — rich in taurine, CoQ10 and B vitamins. Supports cardiovascular health.', tags:['Taurine','Heart Health','B Vitamins'], sizes:[{label:'Pack of 1',price:549,mrp:629},{label:'Pack of 2',price:1049,mrp:1199},{label:'Pack of 3',price:1549,mrp:1769},{label:'Pack of 4',price:2049,mrp:2339}], filter:'organ',
     tagline:'Heart and kidney are muscle meat-adjacent organs packed with taurine and CoQ10 — two nutrients critical for cardiac health that are often deficient in grain-fed dogs.',
     benefits:[
       {icon:'❤️',title:'Taurine for Heart Health',text:'Taurine deficiency is linked to dilated cardiomyopathy in dogs. Heart organ meat is one of the best natural taurine sources.'},
@@ -5248,7 +5261,7 @@ const products = [
     feeding:'Feed 2–3 times per week as part of a varied diet. Small dogs: 30–40g. Medium: 60–80g. Large: 100g. Combine with liver for a complete organ meat rotation.',
     storage:{tiles:[{icon:'🫙',val:'6 Months',label:'Unopened'},{icon:'❄️',val:'3 Weeks',label:'After Opening'},{icon:'🌡️',val:'Cool & Dry',label:'Store At'}],note:'Organ treats have higher moisture sensitivity than jerky. Store in a cool, dry location in the sealed pouch. After opening, reseal tightly and keep in a cool spot — or refrigerate for maximum freshness. Use within 3 weeks of opening. Discard if you detect any unusual smell.'},
   },
-  {img:'Bombayduck.png', name:'Goat Spleen', cat:'Organ Treats', badge:'Iron Rich', badgeCls:'brown', desc:'Goat spleen is one of the richest natural iron sources available. Excellent for anaemic or low-energy dogs.', tags:['Iron Rich','Haemoglobin','Rare Organ'], sizes:[{label:'Pack of 1',price:549},{label:'Pack of 2',price:1049},{label:'Pack of 3',price:1549},{label:'Pack of 4',price:2049}], filter:'organ',
+  {img:'Bombayduck.png', name:'Goat Spleen', cat:'Organ Treats', badge:'Iron Rich', badgeCls:'brown', desc:'Goat spleen is one of the richest natural iron sources available. Excellent for anaemic or low-energy dogs.', tags:['Iron Rich','Haemoglobin','Rare Organ'], sizes:[{label:'Pack of 1',price:549,mrp:629},{label:'Pack of 2',price:1049,mrp:1199},{label:'Pack of 3',price:1549,mrp:1769},{label:'Pack of 4',price:2049,mrp:2339}], filter:'organ',
     tagline:'Spleen is arguably the single richest natural source of iron available in whole food form — far more concentrated than liver or muscle meat.',
     benefits:[
       {icon:'🩸',title:'Exceptional Iron Content',text:'Spleen contains iron concentrations several times higher than muscle meat — directly combating anaemia and fatigue.'},
@@ -5262,7 +5275,7 @@ const products = [
   },
 
   // ── FISH ───────────────────────────────────────────────
-  {img:'Anchovies.png', name:'Anchovies', cat:'Fish Treats', badge:'Omega-3', badgeCls:'teal', desc:'Wild-caught whole anchovies — one of the best natural sources of EPA & DHA omega-3. Shiny coat guaranteed.', tags:['Omega-3','DHA','Wild Caught'], sizes:[{label:'Pack of 1',price:449},{label:'Pack of 2',price:849},{label:'Pack of 3',price:1249},{label:'Pack of 4',price:1549}], filter:'fish',
+  {img:'Anchovies.png', name:'Anchovies', cat:'Fish Treats', badge:'Omega-3', badgeCls:'teal', desc:'Wild-caught whole anchovies — one of the best natural sources of EPA & DHA omega-3. Shiny coat guaranteed.', tags:['Omega-3','DHA','Wild Caught'], sizes:[{label:'Pack of 1',price:449,mrp:519},{label:'Pack of 2',price:849,mrp:969},{label:'Pack of 3',price:1249,mrp:1419},{label:'Pack of 4',price:1549,mrp:1769}], filter:'fish',
     tagline:'Small fish, massive nutritional impact. Anchovies have one of the highest omega-3 concentrations of any food — and because they\'re small, they\'re free from heavy metal accumulation.',
     benefits:[
       {icon:'✨',title:'Guaranteed Shiny Coat',text:'EPA and DHA omega-3 fatty acids directly feed skin cells and hair follicles — visible coat improvement within 4–6 weeks.'},
@@ -5274,7 +5287,7 @@ const products = [
     feeding:'2–4 anchovies daily for small dogs. 4–6 for medium. 6–10 for large dogs. Can be crumbled as a meal topper. Daily feeding is ideal for ongoing omega-3 supplementation.',
     storage:{tiles:[{icon:'🫙',val:'6 Months',label:'Unopened'},{icon:'🌬️',val:'3 Weeks',label:'After Opening'},{icon:'🚫',val:'Away from Heat',label:'Store Away'}],note:'Fish treats are moisture-sensitive. Store in a cool, dry location in the sealed pouch. After opening, press out air, reseal tightly and use within 3 weeks. Keep away from direct sunlight and heat sources. If you notice any off-smell or moisture, discard immediately.'},
   },
-  {img:'Bombayduck.png', name:'Bombay Duck', cat:'Fish Treats', badge:'Uniquely Indian', badgeCls:'brown', desc:'Traditional Bombil (Bombay Duck) — a low-calorie, high-protein coastal treat rich in iodine and selenium.', tags:['Iodine','Low Calorie','Made in India'], sizes:[{label:'Pack of 1',price:499},{label:'Pack of 2',price:949},{label:'Pack of 3',price:1349},{label:'Pack of 4',price:1849}], filter:'fish',
+  {img:'Bombayduck.png', name:'Bombay Duck', cat:'Fish Treats', badge:'Uniquely Indian', badgeCls:'brown', desc:'Traditional Bombil (Bombay Duck) — a low-calorie, high-protein coastal treat rich in iodine and selenium.', tags:['Iodine','Low Calorie','Made in India'], sizes:[{label:'Pack of 1',price:499,mrp:579},{label:'Pack of 2',price:949,mrp:1079},{label:'Pack of 3',price:1349,mrp:1539},{label:'Pack of 4',price:1849,mrp:2109}], filter:'fish',
     tagline:'Bombil is a uniquely Indian coastal fish rarely found in any pet treat worldwide. Exceptionally lean, high in iodine and deeply familiar to any dog raised near the coast.',
     benefits:[
       {icon:'🇮🇳',title:'Proudly Indian Superfood',text:'Bombil is found only along the Maharashtra and Gujarat coasts — a native ingredient no international brand can replicate.'},
@@ -5286,7 +5299,7 @@ const products = [
     feeding:'Can be fed daily due to very low fat. Small dogs: 2–3 pieces. Medium: 4–6 pieces. Large: 6–10 pieces. Excellent as a daily low-calorie training treat.',
     storage:{tiles:[{icon:'🫙',val:'6 Months',label:'Unopened'},{icon:'🌬️',val:'3 Weeks',label:'After Opening'},{icon:'🚫',val:'Away from Heat',label:'Store Away'}],note:'Fish treats are moisture-sensitive. Store in a cool, dry location in the sealed pouch. After opening, press out air, reseal tightly and use within 3 weeks. Keep away from direct sunlight and heat sources. If you notice any off-smell or moisture, discard immediately.'},
   },
-  {img:'Bombayduck.png', name:'Whole Mackerel', cat:'Fish Treats', badge:'Omega Rich', badgeCls:'teal', desc:'Whole dehydrated mackerel — packed with omega-3 fatty acids, B12 and selenium for complete fish nutrition.', tags:['Omega-3','B12','Whole Fish'], sizes:[{label:'Pack of 1',price:629},{label:'Pack of 2',price:1199},{label:'Pack of 3',price:1799}], filter:'fish',
+  {img:'Bombayduck.png', name:'Whole Mackerel', cat:'Fish Treats', badge:'Omega Rich', badgeCls:'teal', desc:'Whole dehydrated mackerel — packed with omega-3 fatty acids, B12 and selenium for complete fish nutrition.', tags:['Omega-3','B12','Whole Fish'], sizes:[{label:'Pack of 1',price:629,mrp:719},{label:'Pack of 2',price:1199,mrp:1369},{label:'Pack of 3',price:1799,mrp:2049}], filter:'fish',
     tagline:'Whole mackerel is a complete fish treat — bones, flesh and all — delivering the full nutritional spectrum of a wild ocean fish in a safe, dehydrated form.',
     benefits:[
       {icon:'🐠',title:'Complete Whole Fish Nutrition',text:'Every part of the mackerel — flesh, bone, organs — contributes different nutrients. You\'re feeding the whole ecosystem.'},
@@ -5298,7 +5311,7 @@ const products = [
     feeding:'Small dogs: ¼ fish. Medium: ½ fish. Large: 1 whole fish. Feed 2–3 times per week. Break into pieces for smaller dogs.',
     storage:{tiles:[{icon:'🫙',val:'6 Months',label:'Unopened'},{icon:'🌬️',val:'3 Weeks',label:'After Opening'},{icon:'🚫',val:'Away from Heat',label:'Store Away'}],note:'Fish treats are moisture-sensitive. Store in a cool, dry location in the sealed pouch. After opening, press out air, reseal tightly and use within 3 weeks. Keep away from direct sunlight and heat sources. If you notice any off-smell or moisture, discard immediately.'},
   },
-  {img:'Anchovies_pouch_front.png', name:'Mackerel Fillet', cat:'Fish Treats', badge:'Boneless', badgeCls:'', desc:'Dehydrated boneless mackerel fillet — all the omega-3 nutrition with no bones. Great for small breeds.', tags:['Boneless','Omega-3','Small Breeds'], sizes:[{label:'Pack of 1',price:599},{label:'Pack of 2',price:1199},{label:'Pack of 3',price:1749},{label:'Pack of 4',price:2249}], filter:'fish',
+  {img:'Anchovies_pouch_front.png', name:'Mackerel Fillet', cat:'Fish Treats', badge:'Boneless', badgeCls:'', desc:'Dehydrated boneless mackerel fillet — all the omega-3 nutrition with no bones. Great for small breeds.', tags:['Boneless','Omega-3','Small Breeds'], sizes:[{label:'Pack of 1',price:599,mrp:679},{label:'Pack of 2',price:1199,mrp:1369},{label:'Pack of 3',price:1749,mrp:1989},{label:'Pack of 4',price:2249,mrp:2559}], filter:'fish',
     tagline:'All the rich omega-3 goodness of mackerel, but boneless — making it completely safe and appropriate for small dogs, puppies and senior dogs who need a gentler fish treat.',
     benefits:[
       {icon:'✅',title:'Completely Bone-Free',text:'Ideal for dogs where whole fish bones may be a concern — same omega-3 nutrition, zero risk.'},
@@ -5310,7 +5323,7 @@ const products = [
     feeding:'Small dogs: 1–2 strips daily. Medium: 2–3 strips. Large: 3–5 strips. Can be fed daily as an omega-3 supplement. Crumble over food for picky eaters.',
     storage:{tiles:[{icon:'🫙',val:'6 Months',label:'Unopened'},{icon:'🌬️',val:'3 Weeks',label:'After Opening'},{icon:'🚫',val:'Away from Heat',label:'Store Away'}],note:'Fish treats are moisture-sensitive. Store in a cool, dry location in the sealed pouch. After opening, press out air, reseal tightly and use within 3 weeks. Keep away from direct sunlight and heat sources. If you notice any off-smell or moisture, discard immediately.'},
   },
-  {img:'Bombayduck.png', name:'Sardines', cat:'Fish Treats', badge:'Brain Boost', badgeCls:'teal', desc:'Whole dehydrated sardines — exceptional omega-3 content for brain health, coat shine and joint support.', tags:['Omega-3','Brain Health','Whole Fish'], sizes:[{label:'Pack of 1',price:549},{label:'Pack of 2',price:1049},{label:'Pack of 3',price:1549},{label:'Pack of 4',price:2099}], filter:'fish',
+  {img:'Bombayduck.png', name:'Sardines', cat:'Fish Treats', badge:'Brain Boost', badgeCls:'teal', desc:'Whole dehydrated sardines — exceptional omega-3 content for brain health, coat shine and joint support.', tags:['Omega-3','Brain Health','Whole Fish'], sizes:[{label:'Pack of 1',price:549,mrp:629},{label:'Pack of 2',price:1049,mrp:1199},{label:'Pack of 3',price:1549,mrp:1769},{label:'Pack of 4',price:2099,mrp:2389}], filter:'fish',
     tagline:'Sardines are one of the most omega-3 dense fish in the ocean — and they are small enough to be free from heavy metal contamination, making them a safe, daily supplement.',
     benefits:[
       {icon:'🧠',title:'Brain Health & Cognition',text:'DHA from sardines is the primary structural fat of brain tissue — essential for puppies and aging dogs alike.'},
@@ -5322,7 +5335,7 @@ const products = [
     feeding:'Small dogs: 1–2 sardines daily. Medium: 2–3. Large: 3–5. Feed daily for maximum omega-3 benefit. An excellent fish oil supplement replacement.',
     storage:{tiles:[{icon:'🫙',val:'6 Months',label:'Unopened'},{icon:'🌬️',val:'3 Weeks',label:'After Opening'},{icon:'🚫',val:'Away from Heat',label:'Store Away'}],note:'Fish treats are moisture-sensitive. Store in a cool, dry location in the sealed pouch. After opening, press out air, reseal tightly and use within 3 weeks. Keep away from direct sunlight and heat sources. If you notice any off-smell or moisture, discard immediately.'},
   },
-  {img:'Anchovies_pouch_front.png', name:'Tuna', cat:'Fish Treats', badge:'High Protein', badgeCls:'', desc:'Dehydrated tuna — lean, high-protein ocean fish. Rich in selenium and B12. Dogs love the intense flavour.', tags:['High Protein','Selenium','Ocean Fish'], sizes:[{label:'Pack of 1',price:649},{label:'Pack of 2',price:1249},{label:'Pack of 3',price:1849},{label:'Pack of 4',price:2499}], filter:'fish',
+  {img:'Anchovies_pouch_front.png', name:'Tuna', cat:'Fish Treats', badge:'High Protein', badgeCls:'', desc:'Dehydrated tuna — lean, high-protein ocean fish. Rich in selenium and B12. Dogs love the intense flavour.', tags:['High Protein','Selenium','Ocean Fish'], sizes:[{label:'Pack of 1',price:649,mrp:739},{label:'Pack of 2',price:1249,mrp:1419},{label:'Pack of 3',price:1849,mrp:2109},{label:'Pack of 4',price:2499,mrp:2849}], filter:'fish',
     tagline:'Tuna is an ocean powerhouse — lean, protein-dense, and rich in selenium and B vitamins. Its intense flavour makes it one of the most motivating treats available.',
     benefits:[
       {icon:'💪',title:'Exceptionally High Protein',text:'Tuna has one of the highest protein densities of any fish — great for muscle maintenance and repair.'},
@@ -5334,7 +5347,7 @@ const products = [
     feeding:'Feed 2–3 times per week rather than daily due to higher mercury content in tuna vs small fish. Small dogs: 1–2 pieces. Medium: 2–3. Large: 3–5 pieces.',
     storage:{tiles:[{icon:'🫙',val:'6 Months',label:'Unopened'},{icon:'🌬️',val:'3 Weeks',label:'After Opening'},{icon:'🚫',val:'Away from Heat',label:'Store Away'}],note:'Fish treats are moisture-sensitive. Store in a cool, dry location in the sealed pouch. After opening, press out air, reseal tightly and use within 3 weeks. Keep away from direct sunlight and heat sources. If you notice any off-smell or moisture, discard immediately.'},
   },
-  {img:'Bombayduck_pouch_front.png', name:'Prawns', cat:'Fish Treats', badge:'Antioxidant', badgeCls:'', desc:'Dehydrated prawns — rich in antioxidants, iodine and astaxanthin. A premium coastal treat dogs adore.', tags:['Antioxidant','Iodine','Coastal'], sizes:[{label:'Pack of 1',price:649},{label:'Pack of 2',price:1249},{label:'Pack of 3',price:1849},{label:'Pack of 4',price:2499}], filter:'fish',
+  {img:'Bombayduck_pouch_front.png', name:'Prawns', cat:'Fish Treats', badge:'Antioxidant', badgeCls:'', desc:'Dehydrated prawns — rich in antioxidants, iodine and astaxanthin. A premium coastal treat dogs adore.', tags:['Antioxidant','Iodine','Coastal'], sizes:[{label:'Pack of 1',price:649,mrp:739},{label:'Pack of 2',price:1249,mrp:1419},{label:'Pack of 3',price:1849,mrp:2109},{label:'Pack of 4',price:2499,mrp:2849}], filter:'fish',
     tagline:'Prawns are a luxury treat packed with astaxanthin — a powerful antioxidant that gives them their pink colour and provides exceptional anti-inflammatory and immune benefits.',
     benefits:[
       {icon:'🦐',title:'Astaxanthin Antioxidant',text:'Astaxanthin is 6,000x more powerful than Vitamin C as an antioxidant — it gives prawns their pink colour and dogs a huge health boost.'},
@@ -5348,7 +5361,7 @@ const products = [
   },
 
 // ── WHOLE PREY ─────────────────────────────────────────
-  {img:'Chicken_Wings_pouch_front__2_.png', name:'Whole Quail', cat:'Whole Prey', badge:'Complete Nutrition', badgeCls:'brown', desc:'Whole dehydrated quail — the ultimate whole prey treat. Complete bone, meat and organ in a single piece.', tags:['Whole Prey','Complete Nutrition','Novel Protein'], sizes:[{label:'Pack of 1',price:399},{label:'Pack of 2',price:799},{label:'Pack of 3',price:1149},{label:'Pack of 4',price:1499}], filter:'wholeprey',
+  {img:'Chicken_Wings_pouch_front__2_.png', name:'Whole Quail', cat:'Whole Prey', badge:'Complete Nutrition', badgeCls:'brown', desc:'Whole dehydrated quail — the ultimate whole prey treat. Complete bone, meat and organ in a single piece.', tags:['Whole Prey','Complete Nutrition','Novel Protein'], sizes:[{label:'Pack of 1',price:399,mrp:459},{label:'Pack of 2',price:799,mrp:909},{label:'Pack of 3',price:1149,mrp:1309},{label:'Pack of 4',price:1499,mrp:1709}], filter:'wholeprey',
     tagline:'A whole quail is nature\'s most complete single-ingredient treat — bone, muscle meat, skin and organs all in one, replicating what dogs evolved to eat in the wild.',
     benefits:[
       {icon:'🌿',title:'Biologically Complete Meal',text:'Whole prey contains the exact ratio of bone, meat and organ that carnivores evolved to consume. Nothing is missing.'},
@@ -5391,7 +5404,7 @@ const products = [
   {img:'', name:'Surprise Me Box', cat:'Bundle', badge:'Mystery', badgeCls:'',
     desc:'Let us pick for you. A curated selection of our best-sellers — different proteins, different textures, maximum excitement. No two boxes are the same.',
     tags:['Mystery Box','Best Sellers','Mixed Proteins','Gift'],
-    sizes:[{label:'Pack of 1',price:699},{label:'Pack of 2',price:1299},{label:'Pack of 3',price:1899}], filter:'bundle',
+    sizes:[{label:'Pack of 1',price:699,mrp:799},{label:'Pack of 2',price:1299,mrp:1479},{label:'Pack of 3',price:1899,mrp:2159}], filter:'bundle',
     tagline:'Hand-curated by the Game of Bones team. We pick a balanced mix across proteins — jerky, organs, fish and a chew — so your dog discovers something new every time.',
     benefits:[
       {icon:'🎁',title:'Handpicked By Us',text:'Our team selects the best in-season, freshest treats across the full range. Balanced across proteins and textures.'},
@@ -8926,8 +8939,8 @@ function updateRelatedProductsDisplay() {
   const related = window.currentRelatedProducts;
   const idx = window.relatedCarouselIdx || 0;
   
-  // Show 2 products at a time, rotating through
-  const itemsPerPage = 2;
+  // Show 5 products at a time
+  const itemsPerPage = 5;
   const displayProducts = [];
   for (let i = 0; i < itemsPerPage; i++) {
     displayProducts.push(related[(idx + i) % related.length]);
@@ -8947,7 +8960,7 @@ function updateRelatedProductsDisplay() {
     
     return `
       <div onclick="openProductPage(${prodIdx})" style="cursor:pointer;transition:all .2s">
-        <div style="aspect-ratio:1;background:var(--white);border:1px solid var(--cream-mid);margin-bottom:12px;display:flex;align-items:center;justify-content:center;overflow:hidden">
+        <div style="aspect-ratio:1;background:var(--white);border:1px solid var(--cream-mid);margin-bottom:8px;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:4px">
           <img src="${imgUrl}" alt="${prod.name}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'">
         </div>
         <h3 style="font-size:13px;font-weight:600;color:var(--dark);margin-bottom:4px;line-height:1.3">${prod.name}</h3>
@@ -8960,7 +8973,7 @@ function updateRelatedProductsDisplay() {
 
 function startRelatedCarouselAutoRotate() {
   if (window.relatedCarouselTimer) clearInterval(window.relatedCarouselTimer);
-  if (!window.currentRelatedProducts || window.currentRelatedProducts.length <= 2) return;
+  if (!window.currentRelatedProducts || window.currentRelatedProducts.length <= 5) return;
   
   console.log('▶️ Related products auto-rotate started (6 sec)');
   
@@ -10854,6 +10867,103 @@ document.addEventListener("DOMContentLoaded", function() {
 // ═══════════════════ SUPABASE PRODUCT SYNC v2 ═══════════════════════
 // Fetches live product data from Supabase and updates images/prices/status
 
+
+// ── DOG GALLERY FROM SUPABASE ────────────────────
+function loadDogGallery() {
+  fetch(SUPABASE_URL + '/rest/v1/dog_gallery?select=dog_name,breed,media_url,media_type,caption,is_featured&is_active=eq.true&order=created_at.desc&limit=12', {
+    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(dogs) {
+    if (!Array.isArray(dogs) || dogs.length === 0) return;
+    var section = document.getElementById('dog-gallery-section');
+    var grid = document.getElementById('dog-gallery-grid');
+    if (!section || !grid) return;
+    section.style.display = '';
+    grid.innerHTML = dogs.map(function(d) {
+      if (d.media_type === 'video') {
+        return '<div style="border-radius:8px;overflow:hidden;background:var(--white);border:1px solid var(--cream-mid)"><video src="'+d.media_url+'" style="width:100%;aspect-ratio:1;object-fit:cover" autoplay muted loop playsinline></video>'+(d.dog_name?'<div style="padding:10px"><div style="font-weight:700;font-size:13px">'+d.dog_name+'</div>'+(d.breed?'<div style="font-size:11px;color:var(--muted)">'+d.breed+'</div>':'')+(d.caption?'<div style="font-size:11px;color:var(--muted);margin-top:4px">'+d.caption+'</div>':'')+'</div>':'')+'</div>';
+      }
+      return '<div style="border-radius:8px;overflow:hidden;background:var(--white);border:1px solid var(--cream-mid)"><img src="'+d.media_url+'" alt="'+(d.dog_name||'')+'" style="width:100%;aspect-ratio:1;object-fit:cover" loading="lazy">'+(d.dog_name?'<div style="padding:10px"><div style="font-weight:700;font-size:13px">'+d.dog_name+'</div>'+(d.breed?'<div style="font-size:11px;color:var(--muted)">'+d.breed+'</div>':'')+(d.caption?'<div style="font-size:11px;color:var(--muted);margin-top:4px">'+d.caption+'</div>':'')+'</div>':'')+'</div>';
+    }).join('');
+  })
+  .catch(function(e) { console.log('Dog gallery skip:', e.message); });
+}
+
+// ── LOAD STRAYS FROM SUPABASE ────────────────────
+function loadStrays() {
+  fetch(SUPABASE_URL + '/rest/v1/strays?select=name,location,description,images&is_active=eq.true&order=created_at', {
+    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(strays) {
+    if (!Array.isArray(strays) || strays.length === 0) return;
+    var container = document.getElementById('strays-grid-dynamic');
+    if (!container) return;
+    container.innerHTML = strays.map(function(s) {
+      var img = (s.images && s.images.length > 0) ? s.images[0] : '';
+      var moreImgs = (s.images && s.images.length > 1) ? '<div style="display:flex;gap:4px;margin-top:8px">' + s.images.slice(1,4).map(function(u){ return '<img src="'+u+'" style="width:48px;height:48px;object-fit:cover;border-radius:4px">'; }).join('') + '</div>' : '';
+      return '<div style="background:var(--white);border:1px solid var(--cream-mid);border-radius:8px;overflow:hidden">' +
+        (img ? '<img src="'+img+'" alt="'+s.name+'" style="width:100%;height:200px;object-fit:cover">' : '<div style="width:100%;height:200px;background:var(--cream);display:flex;align-items:center;justify-content:center;font-size:48px">&#128054;</div>') +
+        '<div style="padding:16px"><h4 style="font-size:16px;font-weight:700;margin:0 0 4px">' + s.name + '</h4>' +
+        '<div style="font-size:12px;color:var(--teal);font-weight:600;margin-bottom:8px">' + (s.location||'') + '</div>' +
+        '<div style="font-size:13px;color:var(--muted);line-height:1.5">' + (s.description||'') + '</div>' +
+        moreImgs + '</div></div>';
+    }).join('');
+  })
+  .catch(function(e) { console.log('Strays skip:', e.message); });
+}
+
+// ── BIRTHDAY CAPTURE POPUP ────────────────────
+function showBirthdayPopup() {
+  if (localStorage.getItem('gobBirthdayDismissed')) return;
+  // Show after 60 seconds on site
+  setTimeout(function() {
+    if (localStorage.getItem('gobBirthdayDismissed')) return;
+    var overlay = document.createElement('div');
+    overlay.id = 'birthday-popup';
+    overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:2002;padding:16px';
+    overlay.innerHTML = '<div style="background:var(--white);padding:32px;max-width:380px;width:100%;border-radius:8px;text-align:center">' +
+      '<button onclick="this.closest(\'#birthday-popup\').remove();localStorage.setItem(\'gobBirthdayDismissed\',\'1\')" style="float:right;background:none;border:none;font-size:18px;cursor:pointer;color:var(--muted)">&#10005;</button>' +
+      '<div style="font-size:40px;margin-bottom:12px">&#127874;</div>' +
+      '<h3 style="font-family:\'Cormorant Garamond\',serif;font-size:24px;color:var(--dark);margin:0 0 8px">Birthday treats, on us!</h3>' +
+      '<p style="font-size:13px;color:var(--muted);margin-bottom:20px">Tell us your pet\'s birthday and we\'ll send a special treat!</p>' +
+      '<input id="bday-pet-name" placeholder="Pet\'s name" style="width:100%;padding:10px 12px;border:1px solid var(--cream-mid);margin-bottom:10px;font-family:\'Jost\',sans-serif;font-size:14px;box-sizing:border-box">' +
+      '<input id="bday-phone" placeholder="Your phone (10 digits)" maxlength="10" inputmode="numeric" style="width:100%;padding:10px 12px;border:1px solid var(--cream-mid);margin-bottom:10px;font-family:\'Jost\',sans-serif;font-size:14px;box-sizing:border-box">' +
+      '<div style="display:flex;gap:8px;margin-bottom:16px">' +
+        '<input id="bday-day" placeholder="DD" maxlength="2" inputmode="numeric" style="flex:1;padding:10px;border:1px solid var(--cream-mid);text-align:center;font-size:14px;font-family:\'Jost\',sans-serif">' +
+        '<input id="bday-month" placeholder="MM" maxlength="2" inputmode="numeric" style="flex:1;padding:10px;border:1px solid var(--cream-mid);text-align:center;font-size:14px;font-family:\'Jost\',sans-serif">' +
+        '<input id="bday-year" placeholder="YYYY" maxlength="4" inputmode="numeric" style="flex:1;padding:10px;border:1px solid var(--cream-mid);text-align:center;font-size:14px;font-family:\'Jost\',sans-serif">' +
+      '</div>' +
+      '<button onclick="submitBirthday()" style="width:100%;padding:14px;background:var(--gold);color:var(--dark);border:none;font-family:\'Jost\',sans-serif;font-size:14px;font-weight:700;letter-spacing:.06em;cursor:pointer">Claim Birthday Treat &#127881;</button>' +
+      '<div style="font-size:11px;color:var(--muted);margin-top:12px;cursor:pointer" onclick="this.closest(\'#birthday-popup\').remove();localStorage.setItem(\'gobBirthdayDismissed\',\'1\')">No thanks</div>' +
+    '</div>';
+    document.body.appendChild(overlay);
+  }, 60000);
+}
+
+function submitBirthday() {
+  var petName = (document.getElementById('bday-pet-name').value || '').trim();
+  var phone = (document.getElementById('bday-phone').value || '').replace(/\D/g, '');
+  var day = parseInt(document.getElementById('bday-day').value) || 0;
+  var month = parseInt(document.getElementById('bday-month').value) || 0;
+  var year = parseInt(document.getElementById('bday-year').value) || 0;
+  if (!petName || phone.length < 10 || !day || !month) {
+    alert('Please fill in pet name, phone, and birthday (day & month)');
+    return;
+  }
+  fetch(SUPABASE_URL + '/rest/v1/customer_birthdays', {
+    method: 'POST',
+    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+    body: JSON.stringify({ dog_name: petName, customer_phone: phone, birthday_day: day, birthday_month: month, birthday_year: year || null })
+  }).then(function() {
+    var popup = document.getElementById('birthday-popup');
+    if (popup) popup.innerHTML = '<div style="background:var(--white);padding:40px;max-width:380px;width:100%;border-radius:8px;text-align:center"><div style="font-size:48px;margin-bottom:16px">&#127881;</div><h3 style="font-family:\'Cormorant Garamond\',serif;font-size:24px;color:var(--dark);margin-bottom:8px">Thank you!</h3><p style="font-size:14px;color:var(--muted)">We\'ll send ' + petName + ' a special birthday treat! &#128054;</p><button onclick="this.closest(\'#birthday-popup\').remove()" style="margin-top:16px;padding:10px 24px;background:var(--gold);color:var(--dark);border:none;font-family:\'Jost\',sans-serif;font-weight:700;cursor:pointer">Close</button></div>';
+    localStorage.setItem('gobBirthdayDismissed', '1');
+  }).catch(function() { alert('Something went wrong. Please try again.'); });
+}
+
+
 function syncProductsFromSupabase() {
   fetch(SUPABASE_URL + '/rest/v1/products?select=name,image_url,images,price,compare_price,sizes,description,category,filter,is_active,is_bestseller,tags&order=name', {
     headers: {
@@ -10926,6 +11036,9 @@ function syncProductsFromSupabase() {
 // Run sync after page loads
 document.addEventListener('DOMContentLoaded', function() {
   setTimeout(syncProductsFromSupabase, 500);
+  setTimeout(loadDogGallery, 1000);
+  setTimeout(loadStrays, 1200);
+  showBirthdayPopup();
 });
 // ═══════════════════ END SUPABASE PRODUCT SYNC ═══════════════════
 
