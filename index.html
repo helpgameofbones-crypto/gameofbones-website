@@ -10928,8 +10928,10 @@ function showBirthdayPopup() {
       '<div style="font-size:40px;margin-bottom:12px">&#127874;</div>' +
       '<h3 style="font-family:\'Cormorant Garamond\',serif;font-size:24px;color:var(--dark);margin:0 0 8px">Birthday treats, on us!</h3>' +
       '<p style="font-size:13px;color:var(--muted);margin-bottom:20px">Tell us your pet\'s birthday and we\'ll send a special treat!</p>' +
-      '<input id="bday-pet-name" placeholder="Pet\'s name" style="width:100%;padding:10px 12px;border:1px solid var(--cream-mid);margin-bottom:10px;font-family:\'Jost\',sans-serif;font-size:14px;box-sizing:border-box">' +
-      '<input id="bday-phone" placeholder="Your phone (10 digits)" maxlength="10" inputmode="numeric" style="width:100%;padding:10px 12px;border:1px solid var(--cream-mid);margin-bottom:10px;font-family:\'Jost\',sans-serif;font-size:14px;box-sizing:border-box">' +
+      '<input id="bday-pet-name" placeholder="Pet\'s name" style="width:100%;padding:10px 12px;border:1px solid var(--cream-mid);margin-bottom:10px;font-family:\'Jost\',sans-serif;font-size:14px;box-sizing:border-box;border-radius:4px">' +
+      '<input id="bday-owner-name" placeholder="Your name" style="width:100%;padding:10px 12px;border:1px solid var(--cream-mid);margin-bottom:10px;font-family:\'Jost\',sans-serif;font-size:14px;box-sizing:border-box;border-radius:4px">' +
+      '<input id="bday-email" type="email" placeholder="Email address" style="width:100%;padding:10px 12px;border:1px solid var(--cream-mid);margin-bottom:10px;font-family:\'Jost\',sans-serif;font-size:14px;box-sizing:border-box;border-radius:4px">' +
+      '<input id="bday-phone" placeholder="Phone number (10 digits)" maxlength="10" inputmode="numeric" style="width:100%;padding:10px 12px;border:1px solid var(--cream-mid);margin-bottom:10px;font-family:\'Jost\',sans-serif;font-size:14px;box-sizing:border-box;border-radius:4px">' +
       '<div style="display:flex;gap:8px;margin-bottom:16px">' +
         '<input id="bday-day" placeholder="DD" maxlength="2" inputmode="numeric" style="flex:1;padding:10px;border:1px solid var(--cream-mid);text-align:center;font-size:14px;font-family:\'Jost\',sans-serif">' +
         '<input id="bday-month" placeholder="MM" maxlength="2" inputmode="numeric" style="flex:1;padding:10px;border:1px solid var(--cream-mid);text-align:center;font-size:14px;font-family:\'Jost\',sans-serif">' +
@@ -10944,6 +10946,8 @@ function showBirthdayPopup() {
 
 function submitBirthday() {
   var petName = (document.getElementById('bday-pet-name').value || '').trim();
+  var ownerName = (document.getElementById('bday-owner-name').value || '').trim();
+  var email = (document.getElementById('bday-email').value || '').trim();
   var phone = (document.getElementById('bday-phone').value || '').replace(/\D/g, '');
   var day = parseInt(document.getElementById('bday-day').value) || 0;
   var month = parseInt(document.getElementById('bday-month').value) || 0;
@@ -10952,10 +10956,10 @@ function submitBirthday() {
     alert('Please fill in pet name, phone, and birthday (day & month)');
     return;
   }
-  fetch(SUPABASE_URL + '/rest/v1/customer_birthdays', {
+  fetch(SUPABASE_URL + '/rest/v1/dog_birthdays', {
     method: 'POST',
     headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-    body: JSON.stringify({ dog_name: petName, customer_phone: phone, birthday_day: day, birthday_month: month, birthday_year: year || null })
+    body: JSON.stringify({ dog_name: petName, customer_name: ownerName, customer_email: email, customer_phone: phone, birthday_day: day, birthday_month: month, birthday_year: year || null })
   }).then(function() {
     var popup = document.getElementById('birthday-popup');
     if (popup) popup.innerHTML = '<div style="background:var(--white);padding:40px;max-width:380px;width:100%;border-radius:8px;text-align:center"><div style="font-size:48px;margin-bottom:16px">&#127881;</div><h3 style="font-family:\'Cormorant Garamond\',serif;font-size:24px;color:var(--dark);margin-bottom:8px">Thank you!</h3><p style="font-size:14px;color:var(--muted)">We\'ll send ' + petName + ' a special birthday treat! &#128054;</p><button onclick="this.closest(\'#birthday-popup\').remove()" style="margin-top:16px;padding:10px 24px;background:var(--gold);color:var(--dark);border:none;font-family:\'Jost\',sans-serif;font-weight:700;cursor:pointer">Close</button></div>';
