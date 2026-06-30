@@ -1357,7 +1357,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
             <span>Customer Reviews</span>
             <span id="review-count" style="font-size:11px;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:normal"></span>
           </div>
-          <div id="product-reviews-list" style="display:flex;flex-direction:column;gap:16px;margin-bottom:24px"></div>
+          <div id="product-reviews-list" style="display:flex;flex-direction:column;gap:16px;margin-bottom:24px;max-height:500px;overflow-y:auto;padding-right:8px"></div>
           <button onclick="openReviewForm(currentProductIdx)" style="width:100%;background:none;border:1px solid var(--cream-mid);color:var(--muted);padding:12px;font-family:'Jost',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all .2s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--brown)'" onmouseout="this.style.borderColor='var(--cream-mid)';this.style.color='var(--muted)'">✎ Write a Review</button>
         </div>
       </div>
@@ -9063,179 +9063,229 @@ function loadProductReviews(productName) {
     // Product-specific genuine reviews
         const productReviews = {
       'Chicken Jerky': [
-        '5-Great protein source! My Golden Retriever loves the taste.',
-        '5-Single ingredient, no fillers. Perfect for my pup\'s diet.',
-        '4-Excellent quality. Dogs go crazy for it!',
-        '4-My vet recommended this. Best choice for healthy treats.',
-        '2-Decent treat but my dog wasn\'t as interested as other brands.'
+        '5-My indie loves these SO much. The moment I open the pouch she comes running from wherever she is in the house. Been ordering monthly for 5 months now.',
+        '5-Finally found treats I can trust. No weird ingredients, just chicken. My beagle Bruno has a sensitive stomach and these have been perfect.',
+        '5-Gave these to my neighbour\'s dog as a gift and now she keeps asking me where I got them from lol. Quality is really good.',
+        '4-Good treats, my labrador finishes them in like 2 seconds though. Wish the pieces were slightly bigger for large breeds.',
+        '5-Started with a trial box and now I order the 240g pack every month. My pomeranian goes absolutely mental for these.',
+        '4-Smell is strong but honestly that\'s how you know it\'s real meat. My dogs don\'t care about the smell, they just want more.',
+        '5-My vet actually recommended Game of Bones and the chicken jerky was the first thing I tried. No regrets at all.',
+        '3-Decent treats but I feel like the quantity could be more for the price. My GSD finishes a pack in 3 days.',
+        '5-I have 2 strays I feed daily and they wait for me now because of these treats. The quality is consistent every time.',
+        '4-Been using these as training treats for my 6 month old golden. Works like magic, he\'ll do anything for a piece.'
       ],
       'Buff Jerky': [
-        '5-Premium quality buffalo meat. My dog\'s coat looks visibly shinier!',
-        '5-High in protein, low in fat. Perfect for my active dog\'s muscles.',
-        '4-Unique taste, my dog actually prefers this over chicken treats.',
-        '4-Great for muscle development. My vet was impressed.',
-        '2-Okay product but a bit pricey for the quantity you get.'
+        '5-My dog refused chicken treats from other brands but goes crazy for this buff jerky. The texture is perfect and it smells like real meat.',
+        '5-Tried this because my indie has a mild chicken allergy. He loves it and no more itching! Thank you Game of Bones.',
+        '4-Really good protein source. My dog\'s coat has gotten noticeably shinier since I switched to these.',
+        '5-These are hands down the best treats I\'ve found in India. My rottweiler is very picky and he devours these.',
+        '4-Slightly pricier than chicken jerky but the quality justifies it. My Lab loves the chewy texture.',
+        '5-Ordering for the third time now. My dog literally does a happy dance when she sees the pouch. Not exaggerating.',
+        '3-Good product but my small dog struggles with some of the thicker pieces. Maybe offer a small breed version?',
+        '5-Was skeptical about buffalo treats at first but my vet said they\'re actually leaner than chicken. Dog approves too.'
       ],
       'Chicken Feet': [
-        '5-Amazing for dental health! My dog\'s teeth are noticeably cleaner.',
-        '5-Natural joint support. My senior dog moves better now.',
-        '4-Long-lasting chew. Keeps my Lab busy for hours.',
-        '4-Packed with collagen. My dog\'s joints improved.',
-        '2-My dog didn\'t like the texture as much as I expected.'
+        '5-Ok so my dog has never been this obsessed with any treat before. She carries the chicken foot around like a trophy before eating it.',
+        '5-My 9 year old Lab has stiff joints and since I started giving these twice a week, she\'s moving so much better. Natural glucosamine is the real deal.',
+        '4-Great chew that actually lasts more than 5 minutes unlike most treats. My German Shepherd takes about 20 mins with one.',
+        '5-The crunchy sound when they chew is oddly satisfying lol. Both my dogs fight over who gets the next one.',
+        '5-I was worried about giving bones but these are dehydrated so they don\'t splinter. Completely safe, my vet confirmed.',
+        '4-My puppy\'s teeth look cleaner since I started giving these weekly. Better than any dental chew from the pet store.',
+        '3-My small spitz finds them a bit big. I have to break them which is a bit messy. Great for medium/large dogs though.',
+        '5-Bought these for my indie rescue and he went from being suspicious to absolutely loving them in one bite.'
       ],
       'Chicken Neck': [
-        '5-Perfect size for my medium dog. Great portion control.',
-        '5-Promotes healthy teeth and gums naturally.',
-        '4-Single ingredient, very clean. No mess!',
-        '4-My vet approved. Using weekly now.',
-        '2-Not bad but there are cheaper alternatives out there.'
+        '5-Perfect for my medium sized indie. Not too big, not too small. She takes her time chewing and I can see her teeth getting cleaner.',
+        '5-Natural calcium source! My vet said stop giving calcium tablets and switch to these instead. My dog is so much happier.',
+        '4-The crunch is amazing. My beagle absolutely loves the sound and texture. Orders every 2 weeks now.',
+        '5-I give one neck every evening as a bedtime chew. My dog knows the routine and waits by the kitchen at 9pm sharp.',
+        '4-Great product, just wish there were more pieces per pack. My large breed goes through them pretty quick.',
+        '5-These are what treats SHOULD be. Just one ingredient, nothing else. My dachshund is obsessed.',
+        '3-Good treat but some necks are bigger than others in the same pack. Consistency could improve a bit.'
       ],
       'Chicken Bites': [
-        '5-Perfect for training treats. My pup learns faster with these.',
-        '5-Small, manageable pieces. No choking hazard whatsoever.',
-        '4-Great for multiple dogs. Everyone gets a fair share.',
-        '4-High quality meat. Completely natural.',
-        '2-Bit small for the price. Expected bigger pieces.'
+        '5-THE best training treats. Small enough that I can give multiple during a session without overfeeding. My puppy learned sit and shake in one week.',
+        '5-I keep a small bag in my pocket during walks. Every stray in my colony now recognises me because of these.',
+        '4-Perfect size for my toy poodle. Finally treats that aren\'t too big for small dogs!',
+        '5-My 3 dogs all get these and there\'s no jealousy because the pieces are uniform. Fair shares for everyone.',
+        '4-Really convenient size. I use these for recall training and my indie comes running every single time now.',
+        '3-Nice treats but the pack finishes really fast when you\'re using them for training. Need a bigger pack option.',
+        '5-My cat also loves these haha. The small size works perfectly for cats too. Ordering for both my pets now.'
       ],
       'Chicken Gizzards': [
-        '5-Excellent iron content. Very nutritious for my dog!',
-        '5-Supports digestive health. My dog digests everything perfectly.',
-        '4-Rich in essential nutrients. Recommended by my vets.',
-        '4-My dog\'s energy levels improved significantly.',
-        '2-Strong smell bothered me personally, though dog liked it.'
+        '5-My dog\'s energy levels have actually improved since I started adding gizzards to his diet. Vet said it\'s the iron content.',
+        '5-Crunchy and my dog LOVES the texture. Way better than those processed treats from pet stores.',
+        '4-Took my dog a couple tries to figure out the texture but now he\'s hooked. Very nutritious from what I\'ve read.',
+        '5-I mix small pieces into his kibble and he finishes his bowl in record time now. Before he used to leave half.',
+        '4-Great organ treat. My indie was a fussy eater but she accepts these happily every time.',
+        '3-Good quality but the smell is quite strong when you open the pack. My dog doesn\'t mind though.',
+        '5-Ordering this along with the chicken jerky every month now. My golden retriever waits by the door on delivery day.'
       ],
       'Chicken Wings': [
-        '5-Perfect bone-in option. Dogs absolutely love it!',
-        '5-Natural calcium source. Great for strong bones.',
-        '4-My German Shepherd goes wild for these.',
-        '4-Meaty goodness. Keeps teeth clean naturally.',
-        '2-Messier than I expected. Lot of cleanup required.'
+        '5-My husky goes absolutely crazy for chicken wings. It\'s his favourite treat out of everything I\'ve tried.',
+        '5-Great chew that lasts a while. The collagen in these has made my dog\'s coat so much better.',
+        '4-Perfect size for my medium breed indie. She holds it in her paws and chews away happily.',
+        '5-Was nervous about wing bones but dehydrated ones are completely safe. My vet said these are actually great for teeth.',
+        '4-Bit messy to eat but my dog doesn\'t care and honestly neither do I anymore. She loves them too much.',
+        '3-Good treat but I wish they came in a bigger pack. My large dog finishes 3 in one sitting easily.',
+        '5-My rescue was terrified of everything when I got him. These wings were the first thing he ate confidently. Special place in my heart.'
       ],
       'Chicken Heart & Liver': [
-        '5-Super nutritious organ meat. Dogs absolutely adore it.',
-        '5-Great for picky eaters. Always finishes it immediately.',
-        '4-High in vitamins and minerals. Vet approved.',
-        '4-Smell indicates real freshness. Premium quality.',
-        '2-The smell is quite strong. Not ideal for indoor use.'
+        '5-Organ treats are SO underrated. My dog\'s coat went from dull to shiny in like 3 weeks of adding these to meals.',
+        '5-Both heart and liver in one pack is genius. My pup gets the benefits of both without me buying separately.',
+        '4-Smell is intense when you open the bag but my dog goes absolutely nuts for it. Real meat smell = happy dog.',
+        '5-My vet recommended organ meats and this was the easiest way to add them. My indie loves the taste.',
+        '4-I break these into small pieces and use as meal toppers. My fussy eater now finishes his food every time.',
+        '3-Strong smell, not gonna lie. But the nutritional value is amazing so I deal with it for my dog\'s sake.',
+        '5-Been giving these 3 times a week for 2 months. My senior dog has more energy and his blood work improved.'
       ],
       'Goat Trachea': [
-        '5-Great for dogs with allergies. Natural protein alternative.',
-        '5-Crunchy texture. Excellent for natural dental care.',
-        '4-My sensitive dog tolerates this perfectly.',
-        '4-Premium protein source. No digestive issues.',
-        '2-Bit expensive compared to chicken options.'
+        '5-My arthritic lab has been chewing these daily and honestly the improvement in her mobility is unbelievable. Natural joint supplement.',
+        '5-This is THE chew for aggressive chewers. My pittie takes almost an hour to finish one. Finally a challenge for her.',
+        '4-Interesting texture, very cartilage-y. My dog figured it out quickly and now asks for one every evening.',
+        '5-Love that it\'s hollow so I can stuff some peanut butter inside. My dog works on it forever. Great enrichment.',
+        '4-Bit pricey but it\'s pure glucosamine basically. Way cheaper than joint supplements from the vet.',
+        '3-My small dog can\'t really handle the size. Would be great if there was a smaller version available.',
+        '5-My 11 year old GSD was limping badly. After a month of daily trachea, she\'s walking normally again. I\'m not crying, you are.'
       ],
       'Goat Ear': [
-        '5-Long-lasting natural chew. Great quality.',
-        '5-No artificial anything. Pure meat, nothing else.',
-        '4-Perfect for aggressive chewers. Very durable.',
-        '4-My golden loves chewing for hours.',
-        '2-Not as soft as I expected. Quite tough for younger dogs.'
+        '5-These are perfect for my small breed. Not too hard, not too soft. My shih tzu can actually finish one without struggling.',
+        '5-Great alternative to rawhide which my vet told me to avoid. These are fully digestible and my dog loves them.',
+        '4-Thin and crunchy. My dog treats these like chips lol. Goes through them pretty fast though.',
+        '5-Ordered for my puppy and she loves them. Gentle enough for baby teeth but still satisfying to chew.',
+        '4-No mess, no smell, easy to give. My favourite treat to hand out. Dogs love the crunch.',
+        '3-Wish they were a bit thicker. My lab goes through them in like 2 minutes flat.',
+        '5-Perfect for my senior indie. She can\'t handle hard chews anymore but these are just right.'
       ],
       'Goat Liver': [
-        '5-Premium organ meat. Rich in essential nutrients.',
-        '5-Great immune booster. My dog\'s health improved noticeably.',
-        '4-Single ingredient perfection. No additives.',
-        '4-My vet recommends this for nutritional deficiencies.',
-        '2-Very pungent smell. Wouldn\'t recommend for apartment living.'
+        '5-The RICHEST smelling treat. My dog can smell it from the next room. She goes completely wild for goat liver.',
+        '5-My vet said goat liver is even more nutritious than chicken liver. Been giving it weekly and my dog\'s coat is amazing.',
+        '4-Very intense flavour. Perfect for picky eaters who turn their nose up at everything else.',
+        '5-I tried chicken liver first but my dog actually prefers the goat. Something about the taste just hits different for her.',
+        '4-Great quality, breaks easily for portioning. I use it as a high value training reward.',
+        '3-The smell is VERY strong. I have to wash my hands twice after handling. But my dog is obsessed so I keep buying.',
+        '5-Mixing this into homemade meals has been a game changer. My dogs eat better than most humans lol.'
       ],
       'Goat Lungs': [
-        '5-Lightweight treat. Perfect for training sessions.',
-        '5-Pure organ meat. Incredibly nutritious.',
-        '4-Dogs love the crispy texture.',
-        '4-Low fat, high protein. Exactly what I needed.',
-        '2-Falls apart too quickly. Pieces get tiny fast.'
+        '5-So light and airy! My small dog can eat these without any issue. Like treats made of clouds but nutritious.',
+        '5-Perfect training treats because they\'re low calorie. I can give lots during a session without worrying about weight.',
+        '4-My indie loves the crunchy texture. These break apart easily so good for all dog sizes.',
+        '5-Bought these on a whim and they\'ve become my dog\'s absolute favourite. She chooses these over everything else.',
+        '4-Light on the stomach too. My dog with digestive issues handles these perfectly.',
+        '3-They crumble a bit in the bag during shipping. Some pieces were more powder than treat. Still tasty though.',
+        '5-Great low-fat option for my overweight lab who\'s on a diet. She doesn\'t feel deprived at all.'
       ],
       'Goat Heart & Kidney Mix': [
-        '5-Organ meat blend. Nutritionally complete meal.',
-        '5-Supports overall health. My dog absolutely thrives.',
-        '4-Natural vitamins and minerals in one treat.',
-        '4-Different organs provide variety and nutrition.',
-        '2-Some organs had stronger smell than I preferred.'
+        '5-Two organs in one pack! My dog gets variety and I don\'t have to buy multiple products. Smart concept.',
+        '5-The heart pieces are chewier and the kidney is more crumbly. My dog loves both textures.',
+        '4-Really nutritious according to my vet. She said heart is great for CoQ10 and kidney for B vitamins.',
+        '5-My fussy eater actually gobbled these up on the first try. Usually she sniffs and walks away from new treats.',
+        '4-Good quality organ mix. I give these as meal toppers 4 times a week.',
+        '3-Slightly stronger smell than the chicken organs but my dog doesn\'t mind. I\'ve gotten used to it.',
+        '5-My rescue dog was malnourished when I got him. These organs helped him recover so much faster. Grateful for this product.'
       ],
       'Goat Spleen': [
-        '5-Unique organ meat. Very nutritious.',
-        '5-Supports immune system. Dog rarely gets sick now.',
-        '4-Rich in iron and minerals.',
-        '4-Different texture. Dogs enjoy the variety.',
-        '2-Tougher than other organ treats. Hard to break.'
+        '5-Unusual treat but incredibly iron-rich. My dog was slightly anemic and the vet suggested adding spleen to her diet.',
+        '5-Chewy texture that my dog really enjoys. Different from the crunchy treats she usually gets.',
+        '4-Not something you find in regular pet stores. Happy I discovered Game of Bones for rare organ treats.',
+        '4-My dog took to these immediately. Good quality and consistent across orders.',
+        '3-Very niche product but effective. My dog\'s iron levels improved after regular feeding.',
+        '5-Love that this brand offers organs most others don\'t. My raw-feeding friend recommended these specifically.'
       ],
       'Anchovies': [
-        '5-Omega-3 powerhouse! Coat is shiny and healthy.',
-        '5-Whole fish, completely natural source.',
-        '4-Great for brain and heart health.',
-        '4-My vet recommends fish treats weekly.',
-        '2-Very fishy smell. Not ideal for indoor dogs.'
+        '5-My golden goes INSANE for these little fish. I barely open the bag and she\'s already sitting perfectly waiting.',
+        '5-Best omega-3 source I\'ve found for dogs. Way better than those fish oil capsules that my dog used to spit out.',
+        '4-Whole tiny fish, super crunchy. My dog eats them like snacks. The fishy smell is strong but dogs love it.',
+        '5-My dog\'s itchy skin cleared up after 3 weeks of daily anchovies. Vet confirmed it\'s the omega-3 working.',
+        '4-Great value for money. So many little fish in one pack. Lasts us about 2 weeks.',
+        '3-The smell lingers on your hands for a while after handling. Keep a wet wipe nearby. Dog doesn\'t care though.',
+        '5-Even my cats love these! I give them to both my lab and my 2 cats. Everyone\'s happy at treat time.',
+        '5-Been ordering for 6 months straight. My dog\'s coat has never looked this good. People comment on it during walks.'
       ],
       'Bombay Duck': [
-        '5-Unique fish treat. My dog loves trying new things.',
-        '5-Great source of protein and omega oils.',
-        '4-Fresh and naturally dried. No preservatives.',
-        '4-Different flavor. Dogs get genuinely excited.',
-        '2-Bit of an acquired taste. Not all dogs liked it.'
+        '5-My dog had never tried Bombay Duck before and she loved it instantly. The crunchy texture is perfect.',
+        '5-As a Mumbaiker I love that this is a local fish being used for dog treats. Great concept and great quality.',
+        '4-Interesting treat that most other brands don\'t offer. My dog always gets excited for something different.',
+        '5-Lighter than other fish treats. My small breed can eat these easily without struggling.',
+        '4-Good protein source and my dog\'s skin health has improved. Worth trying if your dog likes fish.',
+        '3-Taste seems to be hit or miss. My Lab loves it but my indie is not so sure about it yet.'
       ],
       'Mackerel Fillet': [
-        '5-Fillets only. No bones or wasted parts.',
-        '5-Rich in omega fatty acids. Coat improved remarkably.',
-        '4-Cleaner than whole fish. Super easy to serve.',
-        '4-High quality fillet cuts. Worth every penny.',
-        '2-Fishier smell than other options. Bit strong.'
+        '5-Boneless fish fillet for dogs?? Yes please! My vet loved that I\'m giving omega-3 through real food instead of pills.',
+        '5-The quality is obvious. Clean fillets, no bones, my dog eats them like a fancy meal.',
+        '4-A bit pricier than other fish treats but the fillet cut makes it worth it. No waste at all.',
+        '5-My dog\'s dandruff completely disappeared after a month of these. Fish oils for the win.',
+        '4-Easy to break into pieces for smaller dogs. I split one fillet across 2 days for my pom.',
+        '3-Wish the pack was bigger for the price. My medium dog finishes a pack in a week.',
+        '5-Hands down the best fish treat available in India. Nothing else comes close in quality.'
       ],
       'Sardines': [
-        '5-Packed with nutrients. Dogs absolutely go wild!',
-        '5-Whole sardines. Nothing removed or added.',
-        '4-Great for senior dogs. Easy to chew.',
-        '4-Natural omega-3 supplement. Very healthy.',
-        '2-Fish smell takes time to get used to.'
+        '5-Whole sardines! My dog eats them head to tail, crunching away happily. The omega-3 content is incredible.',
+        '5-Perfect brain food for my working breed. My border collie seems sharper and more focused since I added these.',
+        '4-Great size fish, not too big for my indie. She finishes one sardine in about a minute.',
+        '5-I feed these to the strays in my area too. They deserve good nutrition as well. Game of Bones quality is consistent.',
+        '4-Fresh tasting, you can tell these are properly dehydrated and not some cheap dried fish.',
+        '3-Strong fish smell on your hands and in the room. Open near a window. Dog absolutely loves them though.',
+        '5-My senior dog\'s arthritis improved noticeably since adding sardines to her diet. Fish fats are magic.'
       ],
       'Fish Bites': [
-        '5-Perfect portion size. Great for training.',
-        '5-Fresh fish. Smells and tastes authentic.',
-        '4-My multiple dogs all get portions.',
-        '4-Lightweight, easy to carry around.',
-        '2-Bit small for the price point honestly.'
+        '5-Perfect little fish pieces for training. My puppy is so motivated by these that training sessions are a breeze.',
+        '5-Great for dogs who love fish but need smaller portions. My chihuahua gets these as daily treats.',
+        '4-Convenient size, easy to carry in pocket during walks. Fish smell aside, these are great.',
+        '5-My multi-dog household goes through these fast. Everyone gets fair portions because the size is uniform.',
+        '3-Good treats but finish quickly in our house with 3 dogs. Need a jumbo pack option.',
+        '4-Healthy alternative to store-bought treats. Just fish, nothing else. Exactly what I wanted.'
       ],
-          'Tuna': [
-        '5-Premium quality tuna. Dogs go crazy for it!',
-        '5-Pure protein. No additives whatsoever.',
-        '4-Great for shiny coat and healthy skin.',
-        '4-My vet recommends this for omega-3.',
-        '2-Pricey option. Other fish treats are cheaper.'
+      'Tuna': [
+        '5-Premium quality tuna treats. My dog acts like it\'s his birthday every time I give him one.',
+        '5-Lean protein, great for my overweight lab who needs high-protein low-fat options.',
+        '4-Meaty texture that my dog really enjoys. Different from the flaky fish treats.',
+        '5-My finicky cat actually loves these too. Multi-pet household approved!',
+        '4-Wish the pack was bigger since tuna is so popular in our house. Dog and cat both want their share.',
+        '3-Good product but on the expensive side compared to other fish options. Quality is there though.'
       ],
-          'Mackerel': [
-        '5-Rich in omega-3. My dog\'s skin improved.',
-        '5-Natural fish oil benefits. Coat looks amazing.',
-        '4-Whole fish dried naturally. Very fresh.',
-        '4-Great for joints and inflammation.',
-        '2-Bit fishy for my preference indoors.'
+      'Mackerel': [
+        '5-Whole mackerel dried perfectly. My dog gets one every Sunday as a special treat and she knows the routine.',
+        '5-The omega-3 in whole mackerel is insane. My dog\'s coat went from rough to silky in a month.',
+        '4-Bit messy to eat but that\'s fish for you. My dog doesn\'t mind and I\'ve stopped minding too.',
+        '5-Great supplement to regular meals. I break one mackerel into pieces and add to kibble throughout the week.',
+        '4-Fishy smell fills the room but honestly I\'ve grown to associate it with happy dog moments.',
+        '3-Some fish are bigger than others in the pack. Would like more consistency in sizing.'
       ],
       'Chicken Bones': [
-        '5-Raw bones. Natural calcium and minerals.',
-        '5-Meaty bones. Very satisfying for dogs.',
-        '4-Supports bone and joint health.',
-        '4-Natural chew toy. Keeps teeth clean.',
-        '2-Can be a bit crunchy. Watch for splinters.'
+        '5-Was so scared of giving bones until I learned about dehydrated ones. These are safe, digestible and my dog loves them.',
+        '5-Natural calcium! My vet said these are better than any calcium supplement I was giving before.',
+        '4-My aggressive chewer stays busy for a good 30 minutes with one bone. That\'s a record in our house.',
+        '5-Puppies love these. Supervised of course, but the bones are soft enough that they crumble safely.',
+        '4-Way better than rawhide or those coloured bone things from pet stores. Real bone, real nutrition.',
+        '3-Some bones in the pack are very small. Would prefer more uniformity.',
+        '5-My dog buries these in the garden like a treasure. She\'s very protective of her chicken bones lol.'
       ],
-          'Goat Trotter': [
-        '5-Perfect size for medium dogs. Great chew.',
-        '5-Natural collagen source. Joint support.',
-        '4-Durable and long-lasting. Keeps dog occupied.',
-        '4-My vet approved for joint health.',
-        '2-A bit harder than expected for softer teeth.'
+      'Goat Trotter': [
+        '5-THE ultimate power chew. My pitbull who destroys everything in 5 minutes took over an hour with this. Finally.',
+        '5-Full of marrow and collagen. My dog chews on the outside and then works on getting the marrow out. Great enrichment.',
+        '4-Not for small dogs, this is serious chewing material. My lab absolutely loves the challenge.',
+        '5-My dog\'s joints have improved since I started giving trotters weekly. The collagen really works.',
+        '4-Messy to eat, I give it on a towel. But the mental stimulation my dog gets is totally worth it.',
+        '3-Only concern is my dog gets very possessive over these. Resource guarding is real with this treat lol.',
+        '5-Best long-lasting chew I\'ve ever found. Nothing else keeps my GSD occupied this long.'
       ],
       'Prawns': [
-        '5-Whole prawns! Great for dogs with chicken allergies.',
-        '5-Unique protein source. My dog loves variety.',
-        '4-Premium quality shellfish. Very fresh.',
-        '4-Great for sensitive dogs.',
-        '2-Expensive for the serving size honestly.'
+        '5-My dog literally does a backflip when she smells prawns. Not joking. She jumps and spins.',
+        '5-Great for dogs with chicken and beef allergies. Finally a novel protein treat that\'s actually tasty.',
+        '4-Premium treat, I save these for special occasions or really important training moments.',
+        '5-The pink colour is natural from the prawns, no artificial stuff. My vet checked and approved.',
+        '4-Small but packed with flavour. My dog savours each one instead of inhaling like she does with other treats.',
+        '3-Expensive for the quantity but I understand prawns aren\'t cheap. Quality is excellent though.'
       ],
       'Whole Quail': [
-        '5-Whole quail! Nutritionally complete meal.',
-        '5-Perfect for raw feeders. Single prey item.',
-        '4-My dog thrives on these. Perfect portions.',
-        '4-Natural complete meal for raw diet.',
-        '2-Takes longer to prepare than other treats.'
+        '5-An actual whole bird for my dog! He felt like a proper wolf eating this. The most natural treat possible.',
+        '5-Perfect for raw feeders transitioning to dehydrated. All the benefits of raw without the mess and bacteria worry.',
+        '4-Bone, meat, organs all in one. My dog gets complete nutrition from a single treat. Brilliant concept.',
+        '5-My indie rescue ate his first whole quail and I swear he looked at me differently after. Like I finally understood him.',
+        '4-Bit pricey but it\'s literally a whole bird. You can\'t get more natural than this. Worth it for special days.',
+        '3-Packaging could be better, the quail was slightly crushed during shipping. Taste was still fine though.',
+        '5-This is what dogs were meant to eat. Watching my dog crunch through the tiny bones is so satisfying.'
       ]
     };
 
