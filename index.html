@@ -7567,10 +7567,12 @@ function addCart(btn, productIdx, sizeIdx) {
   addedProductIdxs.add(productIdx);
   updateCartBadge();
   showCartToast(p.name + ' added to cart 🐾', 'success');
-  btn.textContent = '✓';
+  var originalText = btn.textContent; // remember what the button said before ("+" on cards, "Add to Cart +" on the detail page)
+  var isSmallRoundBtn = btn.classList.contains('add-btn'); // the small 44px circular + button on product cards
+  btn.textContent = isSmallRoundBtn ? '✓' : '✓ Added to Cart';
   btn.style.background = 'var(--teal)';
   setTimeout(() => {
-    btn.textContent = '+';
+    btn.textContent = originalText;
     btn.style.background = '';
     showViewCartBtn(productIdx);
   }, 900);
