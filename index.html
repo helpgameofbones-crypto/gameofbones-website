@@ -1361,15 +1361,6 @@ body:has(#page-login.active) #mainNav { display: none !important; }
           </div>
         </div>
         
-        <!-- SELECTED SIZE PRICE - updates when tapping a size box above -->
-        <div id="detail-selected-price" style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--gold);margin-bottom:14px"></div>
-
-        <!-- WISHLIST & ADD TO CART -->
-        <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
-          <button id="detail-fav" onclick="toggleWishlist(this,currentProductIdx)" style="width:48px;height:48px;border:2px solid var(--cream-mid);background:var(--white);font-size:20px;cursor:pointer;border-radius:2px;transition:all .2s;display:flex;align-items:center;justify-content:center;flex-shrink:0">♡</button>
-          <button onclick="addCart(this,currentProductIdx,currentProductSize)" style="flex:1;background:var(--dark);color:var(--white);border:none;padding:14px 20px;font-family:'Jost',sans-serif;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all .2s;min-width:150px;min-height:48px">Add to Cart +</button>
-        </div>
-        
         <!-- SHARE BUTTONS -->
         <div style="display:flex;gap:8px;background:var(--white);padding:12px;border:1px solid var(--cream-mid);border-radius:2px;margin-bottom:20px">
           <span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;margin-right:4px">Share:</span>
@@ -8923,6 +8914,12 @@ function updateProductImage(idx, p) {
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           ${sizeOpts}
         </div>
+      </div>
+
+      <!-- WISHLIST & ADD TO CART -->
+      <div style="display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap">
+        <button id="detail-fav" onclick="toggleWishlist(this,currentProductIdx)" style="width:48px;height:48px;border:2px solid var(--cream-mid);background:var(--white);font-size:20px;cursor:pointer;border-radius:2px;transition:all .2s;display:flex;align-items:center;justify-content:center;flex-shrink:0">♡</button>
+        <button onclick="addCart(this,currentProductIdx,currentProductSize)" style="flex:1;background:var(--dark);color:var(--white);border:none;padding:14px 20px;font-family:'Jost',sans-serif;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all .2s;min-width:150px;min-height:48px">Add to Cart +</button>
       </div>
       
       <div style="margin-bottom:24px">
