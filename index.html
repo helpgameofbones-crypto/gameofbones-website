@@ -11041,10 +11041,12 @@ function submitBirthday() {
 
 
 function syncProductsFromSupabase() {
-  fetch(SUPABASE_URL + '/rest/v1/products?select=name,image_url,images,price,compare_price,sizes,description,category,filter,is_active,is_bestseller,tags&order=name', {
+  fetch(SUPABASE_URL + '/rest/v1/products?select=name,image_url,images,price,compare_price,sizes,description,category,filter,is_active,is_bestseller,tags&order=name&_cb=' + Date.now(), {
+    cache: 'no-store',
     headers: {
       'apikey': SUPABASE_ANON_KEY,
-      'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
+      'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+      'Cache-Control': 'no-cache'
     }
   })
   .then(function(res) { return res.json(); })
@@ -11120,10 +11122,14 @@ function syncProductsFromSupabase() {
 
 // Run sync after page loads
 document.addEventListener('DOMContentLoaded', function() {
-  setTimeout(syncProductsFromSupabase, 500);
+  setTimeout(syncProductsFromSupabase, 150);
   setTimeout(loadDogGallery, 1000);
   setTimeout(loadStrays, 1200);
   setTimeout(loadBlogsFromDB, 1400);
+  setInterval(function() {
+    if (typeof syncProductsFromSupabase === 'function') syncProductsFromSupabase();
+  }, 60000);
+
   showBirthdayPopup();
 });
 // ═══════════════════ END SUPABASE PRODUCT SYNC ═══════════════════
