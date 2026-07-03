@@ -11042,11 +11042,9 @@ function submitBirthday() {
 
 function syncProductsFromSupabase() {
   fetch(SUPABASE_URL + '/rest/v1/products?select=name,image_url,images,price,compare_price,sizes,description,category,filter,is_active,is_bestseller,tags&order=name&_cb=' + Date.now(), {
-    cache: 'no-store',
     headers: {
       'apikey': SUPABASE_ANON_KEY,
-      'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
-      'Cache-Control': 'no-cache'
+      'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
     }
   })
   .then(function(res) { return res.json(); })
@@ -11116,7 +11114,7 @@ function syncProductsFromSupabase() {
   })
   .catch(function(e) {
     // Silently fail - hardcoded products still show
-    console.log('Supabase sync skipped:', e.message);
+    console.error('Product price sync failed — website may show outdated prices. Error:', e);
   });
 }
 
