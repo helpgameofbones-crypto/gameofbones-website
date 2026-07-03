@@ -1066,8 +1066,8 @@ body:has(#page-login.active) #mainNav { display: none !important; }
         </div>
       </div>
       <div class="hero-visual">
-        <div class="hero-img-wrap">
-          <div class="hero-prod-placeholder">&#127831;</div>
+        <div class="hero-img-wrap" id="hero-img-wrap">
+          <div class="hero-prod-placeholder" id="hero-prod-placeholder">&#127831;</div>
           <div class="hero-badge">Best<br>Seller</div>
         </div>
       </div>
@@ -3207,8 +3207,8 @@ body:has(#page-login.active) #mainNav { display: none !important; }
               <p style="color:var(--dark);font-size:12px;margin:0">Contact vet IMMEDIATELY. Time is critical — most toxins are treatable if handled quickly.</p>
             </div>
           </div>
-          <div style="background:linear-gradient(135deg,rgba(200,0,0,.1),rgba(200,0,0,.05));border-radius:8px;height:550px;display:flex;align-items:center;justify-content:center;border:2px dashed rgba(200,0,0,.3)">
-            <div style="text-align:center">
+          <div id="foods-infographic-wrap" style="background:linear-gradient(135deg,rgba(200,0,0,.1),rgba(200,0,0,.05));border-radius:8px;height:550px;display:flex;align-items:center;justify-content:center;border:2px dashed rgba(200,0,0,.3);overflow:hidden">
+            <div id="foods-infographic-placeholder" style="text-align:center">
               <div style="font-size:80px;margin-bottom:16px">📸</div>
               <p style="color:var(--muted);font-size:14px;margin:0"><strong>Infographic Space</strong><br>Add visual guide of toxic foods</p>
             </div>
@@ -10910,6 +10910,14 @@ function loadBlogsFromDB() {
         iconBox.appendChild(img);
         iconBox.style.fontSize = '0';
         iconBox.style.padding = '0';
+        // Container needs an explicit fixed height — without it, height:100% on the
+        // image has nothing to size against and renders at its huge natural size.
+        var isMini = iconBox.classList.contains('mini-post-img');
+        var fixedHeight = isMini ? '90px' : '160px';
+        iconBox.style.height = fixedHeight;
+        iconBox.style.minHeight = fixedHeight;
+        iconBox.style.maxHeight = fixedHeight;
+        iconBox.style.overflow = 'hidden';
       }
       // Rewire click to open the full DB article (with body content) instead of the static reader
       card.onclick = function(e) { if (e) e.stopPropagation(); openDbBlog(match.slug); };
@@ -10963,6 +10971,46 @@ function loadDogGallery() {
 }
 
 // ── LOAD STRAYS FROM SUPABASE ────────────────────
+// ── LOAD SITE CONTENT (hero image, infographic) FROM SUPABASE ────────────
+function loadSiteContent() {
+  fetch(SUPABASE_URL + '/rest/v1/site_content?select=section,image_url&is_active=eq.true', {
+    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(items) {
+    if (!Array.isArray(items)) return;
+    var bySection = {};
+    items.forEach(function(it) { if (it.image_url) bySection[it.section] = it.image_url; });
+
+    // Hero image
+    if (bySection.hero_image) {
+      var heroWrap = document.getElementById('hero-img-wrap');
+      var heroPlaceholder = document.getElementById('hero-prod-placeholder');
+      if (heroWrap && heroPlaceholder) {
+        var img = document.createElement('img');
+        img.src = bySection.hero_image;
+        img.alt = 'Game of Bones';
+        heroPlaceholder.replaceWith(img);
+      }
+    }
+
+    // Foods to Never Give infographic (Feeders page)
+    if (bySection.foods_to_avoid_infographic) {
+      var infoWrap = document.getElementById('foods-infographic-wrap');
+      var infoPlaceholder = document.getElementById('foods-infographic-placeholder');
+      if (infoWrap && infoPlaceholder) {
+        var img2 = document.createElement('img');
+        img2.src = bySection.foods_to_avoid_infographic;
+        img2.alt = 'Foods to avoid';
+        img2.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block';
+        infoWrap.style.border = 'none';
+        infoPlaceholder.replaceWith(img2);
+      }
+    }
+  })
+  .catch(function(e) { console.log('Site content skip:', e.message); });
+}
+
 function loadStrays() {
   fetch(SUPABASE_URL + '/rest/v1/strays?select=name,location,description,images&is_active=eq.true&order=created_at', {
     headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
@@ -11124,6 +11172,7 @@ document.addEventListener('DOMContentLoaded', function() {
   setTimeout(loadDogGallery, 1000);
   setTimeout(loadStrays, 1200);
   setTimeout(loadBlogsFromDB, 1400);
+  setTimeout(loadSiteContent, 1600);
   setInterval(function() {
     if (typeof syncProductsFromSupabase === 'function') syncProductsFromSupabase();
   }, 60000);
