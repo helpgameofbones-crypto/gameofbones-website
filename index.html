@@ -1265,23 +1265,22 @@ body:has(#page-login.active) #mainNav { display: none !important; }
     </div>
   </section>
 
-  <section class="insta-sec">
-    <h2>Follow <span class="insta-handle">@gameofbones.in</span></h2>
-    <p>Real dogs &middot; Real treats &middot; Real results &middot; Come join our pack</p>
-    <div style="margin-top:28px"><a href="https://www.instagram.com/gameofbones.in/" target="_blank" class="btn-outline-dark">Follow on Instagram &rarr;</a></div>
-  </section>
-
-
   <!-- DOG GALLERY SECTION - loaded from Supabase -->
   <section id="dog-gallery-section" style="background:var(--cream);padding:60px 6%;display:none">
     <div style="max-width:1200px;margin:0 auto">
       <div style="text-align:center;margin-bottom:40px">
         <div style="font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:8px">OUR COMMUNITY</div>
-        <h2 style="font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--dark);margin:0">Dogs Who Love Game of Bones</h2>
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--dark);margin:0">Furries Who Love Game of Bones</h2>
       </div>
       <div id="dog-gallery-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px">
       </div>
     </div>
+  </section>
+
+  <section class="insta-sec">
+    <h2>Follow <span class="insta-handle">@gameofbones.in</span></h2>
+    <p>Real dogs &middot; Real treats &middot; Real results &middot; Come join our pack</p>
+    <div style="margin-top:28px"><a href="https://www.instagram.com/gameofbones.in/" target="_blank" class="btn-outline-dark">Follow on Instagram &rarr;</a></div>
   </section>
 
 </div><!-- /page-home -->
@@ -8474,7 +8473,7 @@ function getOrdersThisWeek(productIdx) {
 
 function renderBundleCard(p, globalIdx) {
   const firstSize = p.sizes[0];
-  const sizeOpts = p.sizes.map((s,i) => `<option value="${i}" ${i===0?'selected':''}>${s.label} — ₹${s.price}${s.mrp ? ' (MRP ₹'+s.mrp+')' : ''}</option>`).join('');
+  const sizeOpts = p.sizes.map((s,i) => `<option value="${i}" ${i===0?'selected':''}>${s.label} — ₹${s.price}</option>`).join('');
   const isCat = p.name === 'Cat Trial Box';
   const isSurprise = p.isSurpriseBox;
   const isTrialBox = p.isTrialBox;
@@ -8676,7 +8675,7 @@ function renderProducts(items, containerId) {
     // Special rendering for bundle cards
     if (p.isBundle) return renderBundleCard(p, globalIdx);
     const firstSize = p.sizes[0];
-    const sizeOpts = p.sizes.map((s,i) => `<option value="${i}" ${i===0?'selected':''}>${s.label} — ₹${s.price}${s.mrp ? ' (MRP ₹'+s.mrp+')' : ''}</option>`).join('');
+    const sizeOpts = p.sizes.map((s,i) => `<option value="${i}" ${i===0?'selected':''}>${s.label} — ₹${s.price}</option>`).join('');
     
     // Handle both full URLs (from database) and partial URLs (from storage)
     let imgUrl = p.img;
