@@ -7568,12 +7568,16 @@ function addCart(btn, productIdx, sizeIdx) {
   updateCartBadge();
   showCartToast(p.name + ' added to cart 🐾', 'success');
   var originalText = btn.textContent; // remember what the button said before ("+" on cards, "Add to Cart +" on the detail page)
+  // Capture the button's ACTUAL current background (from its CSS/inline style) before
+  // overwriting it — setting style.background='' afterward would otherwise clear it to
+  // nothing rather than restoring it, leaving white text invisible on no background.
+  var originalBackground = getComputedStyle(btn).backgroundColor;
   var isSmallRoundBtn = btn.classList.contains('add-btn'); // the small 44px circular + button on product cards
   btn.textContent = isSmallRoundBtn ? '✓' : '✓ Added to Cart';
   btn.style.background = 'var(--teal)';
   setTimeout(() => {
     btn.textContent = originalText;
-    btn.style.background = '';
+    btn.style.background = originalBackground;
     showViewCartBtn(productIdx);
   }, 900);
 }
