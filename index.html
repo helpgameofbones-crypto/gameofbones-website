@@ -2833,6 +2833,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
     </div>
     <button class="btn-gold" onclick="goToCheckout()" style="width:100%;padding:15px;font-size:13px;letter-spacing:.1em">Proceed to Checkout →</button>
     <button onclick="toggleCart()" style="width:100%;background:none;border:none;color:var(--muted);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;padding:10px;margin-top:6px">← Continue Shopping</button>
+    <button onclick="if(confirm('Remove all items from your cart?')){clearCart();}" style="width:100%;background:none;border:none;color:#c0392b;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;padding:6px;opacity:.7">🗑 Clear Cart</button>
   </div>
 </div>
 
@@ -7744,12 +7745,22 @@ function showCartToast(msg, type) {
   if (existing) existing.remove();
   var t = document.createElement('div');
   t.id = 'gobToast';
-  t.textContent = msg;
-  t.style.cssText = 'position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 100px);left:50%;transform:translateX(-50%) translateY(20px);background:var(--dark);color:var(--white);padding:11px 22px;font-family:\'Jost\',sans-serif;font-size:13px;font-weight:600;z-index:9999;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;white-space:nowrap;letter-spacing:.04em;border-left:3px solid var(--gold)';
+  t.style.cssText = 'position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 100px);left:50%;transform:translateX(-50%) translateY(20px);max-width:calc(100vw - 32px);background:var(--dark);color:var(--white);padding:11px 18px;font-family:\'Jost\',sans-serif;font-size:13px;font-weight:600;z-index:9999;opacity:0;transition:opacity .25s,transform .25s;white-space:nowrap;letter-spacing:.04em;border-left:3px solid var(--gold);display:flex;align-items:center;gap:14px;box-sizing:border-box';
   if (type === 'success') t.style.borderLeftColor = 'var(--teal)';
+  var msgSpan = document.createElement('span');
+  msgSpan.textContent = msg;
+  msgSpan.style.cssText = 'overflow:hidden;text-overflow:ellipsis;min-width:0';
+  t.appendChild(msgSpan);
+  if (type === 'success') {
+    var viewBtn = document.createElement('button');
+    viewBtn.textContent = 'View Cart →';
+    viewBtn.style.cssText = 'background:var(--gold);color:var(--dark);border:none;padding:5px 12px;font-size:11px;font-weight:700;letter-spacing:.04em;cursor:pointer;border-radius:2px;font-family:\'Jost\',sans-serif;flex-shrink:0';
+    viewBtn.onclick = function(e) { e.stopPropagation(); t.remove(); toggleCart(); };
+    t.appendChild(viewBtn);
+  }
   document.body.appendChild(t);
   requestAnimationFrame(function(){ t.style.opacity='1'; t.style.transform='translateX(-50%) translateY(0)'; });
-  setTimeout(function(){ t.style.opacity='0'; t.style.transform='translateX(-50%) translateY(10px)'; setTimeout(function(){ if(t.parentNode) t.remove(); }, 300); }, 2400);
+  setTimeout(function(){ if(t.parentNode){ t.style.opacity='0'; t.style.transform='translateX(-50%) translateY(10px)'; setTimeout(function(){ if(t.parentNode) t.remove(); }, 300);} }, 3200);
 }
 
 function clearCart() {
