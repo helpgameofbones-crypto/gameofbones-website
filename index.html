@@ -8830,7 +8830,15 @@ function updateProductImage(idx, p) {
   if (favBtn) favBtn.textContent = isWishlisted(idx) ? '♥' : '♡';
   
   // Build product details HTML
-  const sizeOpts = p.sizes.map((s,i) => `<div style="padding:10px 16px;border:1px solid var(--cream-mid);background:var(--white);cursor:pointer;border-radius:2px;transition:all .2s;text-align:center" onclick="currentProductSize=${i};this.parentElement.querySelector('.active')?.classList.remove('active');this.classList.add('active')" class="${i===0?'active':''}" data-size="${i}"><div style="font-size:13px;font-weight:600;color:var(--dark)">${s.label}</div><div style="font-size:15px;font-weight:700;color:var(--gold);margin-top:4px">₹${s.price}</div></div>`).join('');
+  const sizeOpts = p.sizes.map((s,i) => {
+    var discPct = (s.mrp && s.mrp > s.price) ? Math.round((1 - s.price / s.mrp) * 100) : 0;
+    return `<div style="padding:10px 16px;border:1px solid var(--cream-mid);background:var(--white);cursor:pointer;border-radius:2px;transition:all .2s;text-align:center;position:relative" onclick="currentProductSize=${i};this.parentElement.querySelector('.active')?.classList.remove('active');this.classList.add('active')" class="${i===0?'active':''}" data-size="${i}">
+      ${discPct > 0 ? `<div style="position:absolute;top:-8px;right:-6px;background:var(--teal);color:#fff;font-size:8px;font-weight:700;padding:2px 5px;border-radius:8px">${discPct}% OFF</div>` : ''}
+      <div style="font-size:13px;font-weight:600;color:var(--dark)">${s.label}</div>
+      ${s.mrp && s.mrp > s.price ? `<div style="font-size:11px;color:var(--muted);text-decoration:line-through;margin-top:4px">₹${s.mrp}</div>` : ''}
+      <div style="font-size:15px;font-weight:700;color:var(--gold);margin-top:${s.mrp && s.mrp > s.price ? '0' : '4px'}">₹${s.price}</div>
+    </div>`;
+  }).join('');
   
   const benefitsHtml = (p.benefits || []).map(b => `
     <div style="display:flex;gap:12px;margin-bottom:16px">
@@ -11011,10 +11019,14 @@ function syncProductsFromSupabase() {
           if (match.sizes && match.sizes.length > 0) match.sizes[0].mrp = Math.round(dbP.compare_price);
         }
         if (dbP.sizes && Array.isArray(dbP.sizes) && dbP.sizes.length > 0) {
-          dbP.sizes.forEach(function(dbSize, si) {
-            if (si < match.sizes.length && dbSize.compare_price) {
-              match.sizes[si].mrp = Math.round(dbSize.compare_price);
-              if (dbSize.price) match.sizes[si].price = Math.round(dbSize.price);
+          dbP.sizes.forEach(function(dbSize) {
+            var sizeMatch = match.sizes.find(function(ms){ return ms.label === dbSize.label; });
+            if (!sizeMatch && dbP.sizes.indexOf(dbSize) < match.sizes.length) {
+              sizeMatch = match.sizes[dbP.sizes.indexOf(dbSize)]; // fallback to index if label doesn't match
+            }
+            if (sizeMatch) {
+              if (dbSize.compare_price) sizeMatch.mrp = Math.round(dbSize.compare_price);
+              if (dbSize.price) sizeMatch.price = Math.round(dbSize.price);
             }
           });
         }
@@ -11030,6 +11042,11 @@ function syncProductsFromSupabase() {
     if (homeProd && typeof renderProducts === 'function') renderProducts(products.slice(0,4), 'homeProd');
     if (shopProd && typeof renderProducts === 'function') renderProducts(products, 'shopProd');
     if (typeof restoreViewCartBtns === 'function') restoreViewCartBtns();
+    // If user is currently viewing a product detail page, refresh it so MRP shows without needing a reload
+    var pdPage = document.getElementById('page-product');
+    if (pdPage && pdPage.classList.contains('active') && typeof currentProductIdx === 'number' && typeof openProductPage === 'function') {
+      openProductPage(currentProductIdx);
+    }
   })
   .catch(function(e) {
     // Silently fail - hardcoded products still show
