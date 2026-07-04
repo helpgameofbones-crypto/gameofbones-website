@@ -70,7 +70,7 @@ button{font-family:'Jost',sans-serif;cursor:pointer;border:none;background:none}
 @media(max-width:768px){.hero{min-height:auto;padding:60px 5%}}
 @media(max-width:480px){.hero{padding:40px 5%}}
 .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 70% 50%,rgba(61,43,31,.6) 0%,var(--dark) 70%)}
-.hero-content{position:relative;z-index:1;max-width:1320px;margin:0 auto;padding:80px 6%;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;width:100%}
+.hero-content{position:relative;z-index:1;max-width:1320px;margin:0 auto;padding:80px 6%;display:grid;grid-template-columns:1fr;gap:60px;align-items:center;width:100%}
 @media(max-width:1024px){.hero-content{padding:60px 5%;gap:40px}}
 @media(max-width:768px){.hero-content{grid-template-columns:1fr;gap:30px;padding:0}}
 .hero-eyebrow{font-size:10px;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
@@ -717,6 +717,13 @@ body:has(#page-login.active) #mainNav { display: none !important; }
 }
 @media (max-width: 640px) { #cartDrawer { max-width: 100%; width: 100%; } }
 .co-input{width:100%;padding:12px 14px;border:1px solid var(--cream-mid);background:var(--cream);font-family:'Jost',sans-serif;font-size:16px;color:var(--dark);cursor:pointer;outline:none;transition:border-color .2s;border-radius:2px;min-height:44px}
+.co-summary-item{display:flex;align-items:center;gap:12px}
+.co-summary-item-img{position:relative;width:52px;height:52px;flex-shrink:0;border-radius:4px;overflow:hidden;background:var(--cream-mid)}
+.co-summary-item-img img{width:100%;height:100%;object-fit:cover;display:block}
+.co-summary-item-qty{position:absolute;top:-6px;right:-6px;background:var(--dark);color:var(--white);font-size:10px;font-weight:700;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px;border:2px solid var(--white)}
+.co-summary-item-name{font-size:13px;font-weight:600;color:var(--dark);line-height:1.3}
+.co-summary-item-size{font-size:11px;color:var(--muted);margin-top:2px}
+.co-summary-item-price{font-size:13px;font-weight:700;color:var(--dark);flex-shrink:0;white-space:nowrap}
 .co-input:focus{border-color:var(--gold);background:var(--white);box-shadow:0 0 0 3px rgba(200,151,58,.1)}
 .co-input::placeholder{color:var(--muted);opacity:0.7}
 /* ============================================
@@ -1055,11 +1062,6 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
           <div class="hero-trust-item">Lab Tested</div>
         </div>
       </div>
-      <div class="hero-visual">
-        <div class="hero-img-wrap" id="hero-img-wrap">
-          <div class="hero-prod-placeholder" id="hero-prod-placeholder">&#127831;</div>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -1394,6 +1396,9 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
           <button onclick="shareProduct('twitter')" title="Share on Twitter" style="background:none;border:none;font-size:18px;cursor:pointer;opacity:.6;transition:opacity .2s;padding:4px 6px" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.6'">𝕏</button>
           <button onclick="shareProduct('copy')" title="Copy link" style="background:none;border:none;font-size:18px;cursor:pointer;opacity:.6;transition:opacity .2s;padding:4px 6px" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.6'">🔗</button>
         </div>
+
+        <!-- WHY THIS TREAT IS SAFE — per-product infographic card -->
+        <div id="product-detail-safety"></div>
       </div>
       
       <!-- RIGHT: PRODUCT INFO -->
@@ -9231,9 +9236,44 @@ function updateProductImage(idx, p) {
   // Load related products and blogs
   renderRelatedProducts(idx);
   renderBlogs();
+  renderSafetyCard(p);
   
   showPage('product');
   window.scrollTo(0, 0);
+}
+
+function renderSafetyCard(p) {
+  var el = document.getElementById('product-detail-safety');
+  if (!el) return;
+  var d = getDehydrationInfo(p.name);
+  var pts = [];
+  pts.push('Single ingredient — ' + (d ? d.ingredient.toLowerCase() : 'real meat') + ', nothing else added');
+  if (d) pts.push('Slow-dehydrated at ' + d.tempC + '°C (' + d.tempF + '°F), gently removing moisture while preserving nutrients — not fried or cooked at high heat');
+  pts.push('No salt, sugar, spices, colours or preservatives — safe to feed regularly, not just as an occasional treat');
+  if (p.filter === 'chew') {
+    pts.push('Naturally digestible chew — always supervise your dog and pick a size appropriate for their jaw');
+  } else if (p.filter === 'organ') {
+    pts.push('Nutrient-dense organ meat — best given in moderation as a treat, not a full meal replacement');
+  } else if (p.filter === 'fish') {
+    pts.push('Naturally rich in omega-3 fatty acids for a healthy coat — feed in moderation given its natural oil content');
+  } else if (p.filter === 'wholeprey') {
+    pts.push('Mirrors a natural whole-prey diet — introduce gradually alongside your dog\'s regular meals');
+  } else {
+    pts.push('Low-fat, high-protein — a clean reward for training or everyday snacking');
+  }
+  pts.push('Made in an FSSAI-compliant facility and batch lab-tested for safety');
+
+  el.innerHTML = `
+    <div style="background:var(--cream);border:1px solid var(--cream-mid);padding:18px;border-radius:4px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <span style="font-size:22px">🛡️</span>
+        <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dark)">Why ${p.name} Is Safe</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:9px">
+        ${pts.map(function(pt){ return '<div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--teal);font-size:13px;flex-shrink:0;margin-top:1px">✓</span><span style="font-size:12px;color:var(--muted);line-height:1.55">' + pt + '</span></div>'; }).join('')}
+      </div>
+    </div>
+  `;
 }
 
 function renderRelatedProducts(currentIdx) {
@@ -9264,8 +9304,9 @@ function renderRelatedProducts(currentIdx) {
   // Display initial set
   updateRelatedProductsDisplay();
   
-  // Start auto-rotate if more than 2 products
-  if (related.length > 2) {
+  // Only rotate if there are MORE related products than fit in one page —
+  // otherwise rotating would just show the exact same set over and over.
+  if (related.length > 5) {
     startRelatedCarouselAutoRotate();
   }
   
@@ -9279,8 +9320,9 @@ function updateRelatedProductsDisplay() {
   const related = window.currentRelatedProducts;
   const idx = window.relatedCarouselIdx || 0;
   
-  // Show 5 products at a time
-  const itemsPerPage = 5;
+  // Never show more items than actually exist, and never repeat a product
+  // within the same visible set — cap itemsPerPage at related.length.
+  const itemsPerPage = Math.min(5, related.length);
   const displayProducts = [];
   for (let i = 0; i < itemsPerPage; i++) {
     displayProducts.push(related[(idx + i) % related.length]);
@@ -11223,41 +11265,44 @@ function loadBlogsFromDB() {
 
     // Match every existing blog card/mini-post on the page by title text and swap in the real cover image
     document.querySelectorAll('.blog-card, .mini-post, [onclick*="openArt"]').forEach(function(card) {
-      var titleEl = card.querySelector('.blog-title, .mini-title, h3');
-      if (!titleEl) return;
-      var titleText = titleEl.textContent.trim();
-      var match = blogs.find(function(b) { return norm(b.title) === norm(titleText); });
-      if (!match || !match.cover_image) return;
+      try {
+        var titleEl = card.querySelector('.blog-title, .mini-title, h3');
+        if (!titleEl) return;
+        var titleText = titleEl.textContent.trim();
+        var match = blogs.find(function(b) { return norm(b.title) === norm(titleText); });
+        if (!match || !match.cover_image) return;
 
-      // Replace whichever icon container this card uses
-      var iconBox = card.querySelector('.blog-card-img-inner, .mini-post-img, [style*="font-size:48px"], [style*="font-size:60px"]');
-      if (iconBox) {
-        var img = document.createElement('img');
-        img.src = match.cover_image;
-        img.alt = match.title;
-        var isMini = iconBox.classList.contains('mini-post-img');
-        img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block';
-        iconBox.innerHTML = '';
-        iconBox.appendChild(img);
-        iconBox.style.fontSize = '0';
-        iconBox.style.padding = '0';
-        if (isMini) {
-          iconBox.style.height = '90px';
-          iconBox.style.minHeight = '90px';
-        } else {
-          // Let the parent .blog-card-img aspect-ratio:16/9 control height
-          iconBox.style.height = '100%';
-          iconBox.style.minHeight = '';
-          iconBox.style.position = 'absolute';
-          iconBox.style.inset = '0';
+        // Replace whichever icon container this card uses
+        var iconBox = card.querySelector('.blog-card-img-inner, .mini-post-img, [style*="font-size:48px"], [style*="font-size:60px"]');
+        if (iconBox) {
+          var img = document.createElement('img');
+          img.src = match.cover_image;
+          img.alt = match.title;
+          var isMini = iconBox.classList.contains('mini-post-img');
+          img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block';
+          iconBox.innerHTML = '';
+          iconBox.appendChild(img);
+          iconBox.style.fontSize = '0';
+          iconBox.style.padding = '0';
+          if (isMini) {
+            iconBox.style.height = '90px';
+            iconBox.style.minHeight = '90px';
+          } else {
+            // Let the parent .blog-card-img aspect-ratio:16/9 control height
+            iconBox.style.height = '100%';
+            iconBox.style.minHeight = '';
+            iconBox.style.position = 'absolute';
+            iconBox.style.inset = '0';
+          }
+          iconBox.style.overflow = 'hidden';
         }
-        iconBox.style.maxHeight = fixedHeight;
-        iconBox.style.overflow = 'hidden';
+        // Rewire click to open the full DB article (with body content) instead of the static reader
+        card.onclick = function(e) { if (e) e.stopPropagation(); openDbBlog(match.slug); };
+        var readBtn = card.querySelector('.blog-read');
+        if (readBtn) readBtn.onclick = function(e) { e.stopPropagation(); openDbBlog(match.slug); };
+      } catch (cardErr) {
+        console.error('Blog card update skipped due to error:', cardErr);
       }
-      // Rewire click to open the full DB article (with body content) instead of the static reader
-      card.onclick = function(e) { if (e) e.stopPropagation(); openDbBlog(match.slug); };
-      var readBtn = card.querySelector('.blog-read');
-      if (readBtn) readBtn.onclick = function(e) { e.stopPropagation(); openDbBlog(match.slug); };
     });
   })
   .catch(function(e) { console.log('Blogs skip:', e.message); });
@@ -11317,17 +11362,9 @@ function loadSiteContent() {
     var bySection = {};
     items.forEach(function(it) { if (it.image_url) bySection[it.section] = it.image_url; });
 
-    // Hero image
-    if (bySection.hero_image) {
-      var heroWrap = document.getElementById('hero-img-wrap');
-      var heroPlaceholder = document.getElementById('hero-prod-placeholder');
-      if (heroWrap && heroPlaceholder) {
-        var img = document.createElement('img');
-        img.src = bySection.hero_image;
-        img.alt = 'Game of Bones';
-        heroPlaceholder.replaceWith(img);
-      }
-    }
+    // Hero product image box was removed from the layout — never inject one back in,
+    // even if a hero_image is still set in site_content from an earlier upload.
+    // (Intentionally does nothing.)
 
     // Foods to Never Give infographic (Feeders page)
     if (bySection.foods_to_avoid_infographic) {
