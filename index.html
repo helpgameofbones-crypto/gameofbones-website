@@ -725,6 +725,8 @@ body:has(#page-login.active) #mainNav { display: none !important; }
    nav, modal, product grid, hero, forms, footer.
    This block only adds what those don't cover.
    ============================================ */
+html, body { overflow-x: hidden !important; max-width: 100% !important; }
+#mainNav, main, footer, .page, section { max-width: 100vw !important; box-sizing: border-box; }
 @media (max-width: 768px) {
   /* Kill horizontal scroll — the core mobile breakage */
   html, body { overflow-x: hidden !important; max-width: 100% !important; }
@@ -1314,6 +1316,45 @@ body:has(#page-login.active) #mainNav { display: none !important; }
         <button class="filter-btn sz-btn" data-size="large" onclick="filterBySize('large')" style="padding:6px 14px;font-size:10px">Large Breed</button>
         <button class="filter-btn sz-btn" data-size="senior" onclick="filterBySize('senior')" style="padding:6px 14px;font-size:10px">Senior</button>
       </div>
+      <!-- BUY MORE PAY LESS BANNER -->
+      <div style="display:flex;flex-wrap:wrap;background:var(--dark);border-radius:2px;overflow:hidden;margin-bottom:8px">
+        <div style="background:var(--gold);color:var(--dark);padding:16px 20px;display:flex;flex-direction:column;justify-content:center;min-width:150px;flex:1 1 150px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase">Buy More</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:800;line-height:1.1">Pay Less</div>
+          <div style="font-size:9px;font-weight:600;opacity:.75;margin-top:2px">Auto-applied in Cart</div>
+        </div>
+        <div style="flex:3 1 400px;display:grid;grid-template-columns:repeat(4,1fr)">
+          <div style="padding:14px 8px;text-align:center;border-left:1px solid rgba(255,255,255,.08)">
+            <div style="display:flex;align-items:baseline;justify-content:center;gap:2px">
+              <span style="font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:var(--gold-light)">5</span>
+              <span style="font-size:10px;font-weight:700;color:var(--gold-light)">% OFF</span>
+            </div>
+            <div style="font-size:9px;font-weight:600;letter-spacing:.06em;color:rgba(255,255,255,.6);text-transform:uppercase;margin-top:4px">Buy 3+ Items</div>
+          </div>
+          <div style="padding:14px 8px;text-align:center;border-left:1px solid rgba(255,255,255,.08)">
+            <div style="display:flex;align-items:baseline;justify-content:center;gap:2px">
+              <span style="font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:var(--gold-light)">8</span>
+              <span style="font-size:10px;font-weight:700;color:var(--gold-light)">% OFF</span>
+            </div>
+            <div style="font-size:9px;font-weight:600;letter-spacing:.06em;color:rgba(255,255,255,.6);text-transform:uppercase;margin-top:4px">Buy 5+ Items</div>
+          </div>
+          <div style="padding:14px 8px;text-align:center;border-left:1px solid rgba(255,255,255,.08)">
+            <div style="display:flex;align-items:baseline;justify-content:center;gap:2px">
+              <span style="font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:var(--gold-light)">12</span>
+              <span style="font-size:10px;font-weight:700;color:var(--gold-light)">% OFF</span>
+            </div>
+            <div style="font-size:9px;font-weight:600;letter-spacing:.06em;color:rgba(255,255,255,.6);text-transform:uppercase;margin-top:4px">Buy 8+ Items</div>
+          </div>
+          <div style="padding:14px 8px;text-align:center;border-left:1px solid rgba(255,255,255,.08)">
+            <div style="display:flex;align-items:baseline;justify-content:center;gap:2px">
+              <span style="font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:var(--gold-light)">15</span>
+              <span style="font-size:10px;font-weight:700;color:var(--gold-light)">% OFF</span>
+            </div>
+            <div style="font-size:9px;font-weight:600;letter-spacing:.06em;color:rgba(255,255,255,.6);text-transform:uppercase;margin-top:4px">Buy 10+ Items</div>
+          </div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);text-align:center;margin:0 0 24px">This discount is applied automatically and does not stack with any other offer or coupon.</div>
       <div class="prod-grid" id="shopProd"></div>
     </div>
   </section>
@@ -2897,7 +2938,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
             </div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
               <div><label style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px">Mobile Number *</label><input class="co-input" id="co-phone" type="tel" placeholder="9820012345" style="width:100%;padding:11px 14px;border:1.5px solid var(--cream-mid);background:var(--cream);font-family:'Jost',sans-serif;font-size:14px;color:var(--dark);outline:none;box-sizing:border-box" onblur="if(this.value.trim().replace(/[^0-9]/g,'').length>=10)checkLoyaltyAtCheckout()"></div>
-              <div><label style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px">Email (optional)</label><input class="co-input" id="co-email" type="email" placeholder="rahul@email.com" style="width:100%;padding:11px 14px;border:1.5px solid var(--cream-mid);background:var(--cream);font-family:'Jost',sans-serif;font-size:14px;color:var(--dark);outline:none;box-sizing:border-box"></div>
+              <div><label style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px">Email *</label><input class="co-input" id="co-email" type="email" placeholder="rahul@email.com" style="width:100%;padding:11px 14px;border:1.5px solid var(--cream-mid);background:var(--cream);font-family:'Jost',sans-serif;font-size:14px;color:var(--dark);outline:none;box-sizing:border-box"></div>
             </div>
             <!-- Dog Birthday Row -->
             <div style="margin-top:12px;padding-top:14px;border-top:1px dashed var(--cream-mid)">
@@ -2997,7 +3038,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
             <!-- Totals -->
             <div style="display:flex;flex-direction:column;gap:8px;font-size:13px">
               <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Subtotal</span><span id="co-subtotal" style="font-weight:600;color:var(--dark)">&#8377;0</span></div>
-              <div id="co-discount-row" style="display:none;justify-content:space-between;color:var(--teal)"><span>Discount</span><span id="co-discount-val" style="font-weight:600"></span></div>
+              <div id="co-discount-row" style="display:none;justify-content:space-between;color:var(--teal)"><span id="co-discount-label">Discount</span><span id="co-discount-val" style="font-weight:600"></span></div>
               <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Shipping</span><span id="co-shipping-val" style="font-weight:600;color:var(--dark)"></span></div>
               <div id="co-online-disc-row" style="display:none;justify-content:space-between;font-size:13px;color:var(--teal);font-weight:600"><span>&#127775; Pay Online Discount</span><span>&#8722;&#8377;30</span></div>
             <div id="co-cod-row" style="display:none;justify-content:space-between"><span style="color:var(--muted)">COD charge</span><span style="font-weight:600;color:var(--dark)">&#8377;40</span></div>
@@ -4771,7 +4812,7 @@ function showPage(id) {
   var navId = navMap[id] || ('nav-' + id);
   var n = document.getElementById(navId);
   if (n) n.classList.add('active');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
   if (id === 'shop') { activeShopFilter = 'all'; activeShopSize = 'all'; }
   // Restore WA widget when leaving checkout
   var waW = document.querySelector('.wa-widget');
@@ -4816,7 +4857,7 @@ function showShopCategory(filter) {
   document.getElementById('page-shop').classList.add('active');
   var n = document.getElementById('nav-shop');
   if (n) n.classList.add('active');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
   activeShopFilter = filter;
   setTimeout(function() {
     // Clear search
@@ -5150,6 +5191,39 @@ window._openArtReal = openArt;
 
 
 // Product data with real images
+// ── HOW IT'S MADE: dehydration temperature & time per product ────────
+// Every product uses a different temperature/time based on its cut, bone
+// content and moisture level — this is real process detail, not filler.
+const DEHYDRATION_INFO = {
+  'Chicken Jerky':            { ingredient: 'Boneless chicken breast, single ingredient', tempC: 65, tempF: 149, hours: '9–10 hrs' },
+  'Buff Jerky':                { ingredient: 'Boneless buffalo (water buffalo) meat',       tempC: 68, tempF: 154, hours: '10–11 hrs' },
+  'Chicken Bites':             { ingredient: 'Chicken breast, cut into bite-sized pieces',  tempC: 65, tempF: 149, hours: '8–9 hrs' },
+  'Chicken Feet':              { ingredient: 'Whole chicken feet — skin, cartilage & bone', tempC: 58, tempF: 136, hours: '16–18 hrs' },
+  'Chicken Neck':              { ingredient: 'Whole chicken neck, bone-in',                 tempC: 58, tempF: 136, hours: '14–16 hrs' },
+  'Chicken Wings':             { ingredient: 'Whole chicken wings, bone-in',                tempC: 60, tempF: 140, hours: '15–17 hrs' },
+  'Chicken Bones':             { ingredient: 'Assorted chicken bone pieces',                tempC: 62, tempF: 144, hours: '18–20 hrs' },
+  'Chicken Gizzards':          { ingredient: 'Chicken gizzard (organ meat)',                tempC: 55, tempF: 131, hours: '12–14 hrs' },
+  'Chicken Heart & Liver':     { ingredient: 'Chicken heart & liver mix (organ meat)',       tempC: 54, tempF: 129, hours: '13–15 hrs' },
+  'Goat Trachea':              { ingredient: 'Goat windpipe (trachea) — natural cartilage', tempC: 58, tempF: 136, hours: '12–14 hrs' },
+  'Goat Trotter':              { ingredient: 'Goat trotter — bone, skin & cartilage',       tempC: 58, tempF: 136, hours: '18–20 hrs' },
+  'Goat Ear':                  { ingredient: 'Goat ear — skin & cartilage',                 tempC: 60, tempF: 140, hours: '14–16 hrs' },
+  'Goat Liver':                { ingredient: 'Goat liver (organ meat)',                     tempC: 53, tempF: 127, hours: '13–15 hrs' },
+  'Goat Lungs':                { ingredient: 'Goat lungs (organ meat)',                     tempC: 52, tempF: 126, hours: '12–14 hrs' },
+  'Goat Heart & Kidney Mix':   { ingredient: 'Goat heart & kidney mix (organ meat)',         tempC: 54, tempF: 129, hours: '13–15 hrs' },
+  'Goat Spleen':               { ingredient: 'Goat spleen (organ meat)',                    tempC: 53, tempF: 127, hours: '12–14 hrs' },
+  'Bombay Duck':               { ingredient: 'Whole Bombay duck fish (bombil)',             tempC: 52, tempF: 126, hours: '8–10 hrs' },
+  'Whole Mackerel':            { ingredient: 'Whole mackerel fish',                         tempC: 54, tempF: 129, hours: '10–12 hrs' },
+  'Anchovies':                 { ingredient: 'Whole anchovies, wild-caught',                tempC: 50, tempF: 122, hours: '6–8 hrs' },
+  'Prawns':                    { ingredient: 'Whole prawns, shell-on',                      tempC: 52, tempF: 126, hours: '7–9 hrs' },
+  'Sardines':                  { ingredient: 'Whole sardines',                              tempC: 52, tempF: 126, hours: '8–10 hrs' },
+  'Tuna':                      { ingredient: 'Tuna fillet steaks',                          tempC: 55, tempF: 131, hours: '9–11 hrs' },
+  'Mackerel Fillet':           { ingredient: 'Boneless mackerel fillet',                    tempC: 55, tempF: 131, hours: '9–11 hrs' },
+  'Whole Quail':               { ingredient: 'Whole quail, feathers removed',               tempC: 55, tempF: 131, hours: '22–26 hrs' }
+};
+function getDehydrationInfo(name) {
+  return DEHYDRATION_INFO[name] || null;
+}
+
 let products = [
   // ── JERKY ──────────────────────────────────────────────
   {img:'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/293b7ba0-37a7-4626-b97e-0f6aa8d86fa4/image-0-1782712553501.png', name:'Chicken Jerky', cat:'Boneless Jerky', badge:'Bestseller', badgeCls:'', desc:'Single-ingredient slow-dehydrated chicken breast. High-protein, low-fat. Perfect for training rewards.', tags:['Single Ingredient','Preservative Free'], sizes:[{label:'Pack of 1',price:329,mrp:329},{label:'Pack of 2',price:658,mrp:658},{label:'Pack of 3',price:987,mrp:987},{label:'Pack of 4',price:1316,mrp:1316}], filter:'jerky',
@@ -6234,6 +6308,16 @@ let appliedDiscount = null;
 let selectedPayment = 'upi';
 let clubOrder = true; // default: yes, club together
 
+// ── BUY MORE PAY LESS: quantity-tiered auto discount ─────────────────
+// Does NOT stack with any applied coupon code or redeemed loyalty points.
+function getBulkTier(totalQty) {
+  if (totalQty >= 10) return { pct: 15, label: 'Buy More Pay Less (15% off, 10+ items)' };
+  if (totalQty >= 8)  return { pct: 12, label: 'Buy More Pay Less (12% off, 8+ items)' };
+  if (totalQty >= 5)  return { pct: 8,  label: 'Buy More Pay Less (8% off, 5+ items)' };
+  if (totalQty >= 3)  return { pct: 5,  label: 'Buy More Pay Less (5% off, 3+ items)' };
+  return { pct: 0, label: '' };
+}
+
 function setClubOrder(val) {
   clubOrder = val;
   var yesBtn = document.getElementById('clubYesBtn');
@@ -6270,7 +6354,7 @@ function goToCheckout() {
     var coPage=document.getElementById('page-checkout');
     if (coPage) { coPage.classList.add('active'); coPage.style.display='block'; }
     document.querySelectorAll('.nav-links a').forEach(function(a){a.classList.remove('active');});
-    window.scrollTo({top:0});
+    window.scrollTo({top:0,left:0});
     var waW=document.querySelector('.wa-widget'); if(waW) waW.style.display='none';
     var footerEl=document.querySelector('footer'); if(footerEl) footerEl.style.display='none';
     renderCheckoutSummary();
@@ -6308,8 +6392,11 @@ function renderCheckoutSummary() {
 
 function updateCheckoutTotals() {
   const subtotal = cartItems.reduce((s,i) => s+i.price*i.qty, 0);
+  const totalQty = cartItems.reduce((s,i) => s+i.qty, 0);
   let couponDiscount = 0;
   let loyaltyDiscount = 0;
+  let bulkDiscount = 0;
+  let bulkTier = { pct: 0, label: '' };
 
   // Calculate coupon discount
   if (appliedDiscount) {
@@ -6324,13 +6411,20 @@ function updateCheckoutTotals() {
     loyaltyDiscount = Math.min(loyaltyRupees, subtotal - couponDiscount); // Can't discount below 0
   }
 
-  // Auto ₹50 discount for online payment (not COD)
+  // Buy More Pay Less — quantity-tiered auto discount.
+  // Only applies when NO coupon and NO loyalty redemption is active (does not stack).
+  if (!appliedDiscount && !_loyaltyApplied) {
+    bulkTier = getBulkTier(totalQty);
+    if (bulkTier.pct > 0) bulkDiscount = Math.round(subtotal * bulkTier.pct / 100);
+  }
+
+  // Auto ₹30 discount for online payment (not COD)
   var onlineDisc = (selectedPayment && selectedPayment !== 'cod') ? 30 : 0;
   var onlineRow = document.getElementById('co-online-disc-row');
   if (onlineRow) onlineRow.style.display = onlineDisc > 0 ? 'flex' : 'none';
 
-  // Total discount = both stacked
-  const totalDiscount = couponDiscount + loyaltyDiscount;
+  // Total discount = coupon + loyalty + bulk (bulk is 0 whenever coupon/loyalty is active)
+  const totalDiscount = couponDiscount + loyaltyDiscount + bulkDiscount;
   const after = subtotal - totalDiscount;
   const shipping = 0; // Free shipping on all orders
   const cod = selectedPayment === 'cod' ? 40 : 0;
@@ -6346,7 +6440,7 @@ function updateCheckoutTotals() {
   if(se('co-grand-total')) se('co-grand-total').textContent = '₹'+grand.toLocaleString('en-IN');
   
   // Show discount row if ANY discount applied
-  const hasDiscount = (appliedDiscount || _loyaltyApplied);
+  const hasDiscount = (appliedDiscount || _loyaltyApplied || bulkDiscount > 0);
   if(se('co-discount-row')) se('co-discount-row').style.display = hasDiscount ? 'flex' : 'none';
   
   // Build combined discount label
@@ -6354,6 +6448,7 @@ function updateCheckoutTotals() {
     var labels = [];
     if (appliedDiscount) labels.push(appliedDiscount.label);
     if (_loyaltyApplied) labels.push('Loyalty Points (' + _loyaltyPoints + ' pts)');
+    if (bulkDiscount > 0) labels.push(bulkTier.label);
     se('co-discount-label').textContent = labels.join(' + ');
   }
   
@@ -6489,8 +6584,9 @@ function applyDiscount() {
                 coupon.type === 'shipping' ? 'Free shipping' :
                 '₹' + coupon.value + ' off';
     appliedDiscount = { type: coupon.type, value: coupon.value, label: label, code: code };
+    var priorTier = getBulkTier(cartItems.reduce(function(s,i){return s+i.qty;},0));
     msg.style.color = 'var(--teal)';
-    msg.textContent = '✓ ' + label + ' applied!';
+    msg.textContent = '✓ ' + label + ' applied!' + (priorTier.pct > 0 ? ' Note: this replaces your Buy More Pay Less discount — offers don\'t stack.' : '');
     if (codeInput) codeInput.disabled = true;
     updateCheckoutTotals();
   })
@@ -6505,8 +6601,9 @@ function applyDiscount() {
         msg.textContent = '✗ ' + code + ' requires min order ₹' + dc.minOrder + '.';
       } else {
         appliedDiscount = dc;
+        var priorTier2 = getBulkTier(cartItems.reduce(function(s,i){return s+i.qty;},0));
         msg.style.color = 'var(--teal)';
-        msg.textContent = '✓ ' + dc.label + ' applied!';
+        msg.textContent = '✓ ' + dc.label + ' applied!' + (priorTier2.pct > 0 ? ' Note: this replaces your Buy More Pay Less discount — offers don\'t stack.' : '');
         if (codeInput) codeInput.disabled = true;
       }
     } else {
@@ -6614,7 +6711,7 @@ function loadAddress(idx) {
     document.getElementById('co-city').value = a.city;
     document.getElementById('co-state').value = a.state;
     document.getElementById('co-pin').value = a.pin;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
   }
 }
 
@@ -7467,7 +7564,7 @@ function placeOrder() {
   }
   
   const required = [
-    ['co-fname','First Name'],['co-lname','Last Name'],['co-phone','Mobile Number'],
+    ['co-fname','First Name'],['co-lname','Last Name'],['co-phone','Mobile Number'],['co-email','Email'],
     ['co-addr1','Street Address'],['co-city','City'],['co-state','State'],['co-pin','PIN Code']
   ];
   document.querySelectorAll('.co-input').forEach(function(el){ el.style.borderColor=''; });
@@ -7499,6 +7596,13 @@ function placeOrder() {
     phoneEl.style.borderColor='#c0392b'; phoneEl.focus();
     if (errBox) { errBox.textContent='Please enter a valid 10-digit Indian mobile number.'; errBox.style.display='block'; }
     phoneEl.scrollIntoView({ behavior:'smooth', block:'center' });
+    return;
+  }
+  const emailEl = document.getElementById('co-email');
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value.trim())) {
+    emailEl.style.borderColor='#c0392b'; emailEl.focus();
+    if (errBox) { errBox.textContent='Please enter a valid email address.'; errBox.style.display='block'; }
+    emailEl.scrollIntoView({ behavior:'smooth', block:'center' });
     return;
   }
 
@@ -8867,6 +8971,7 @@ function renderProducts(items, containerId) {
         <h3 class="prod-name">${p.name}</h3>
         <p class="prod-desc">${p.desc}</p>
         <div class="prod-tags">${p.tags.map(t=>`<span class="p-tag">${t}</span>`).join('')}</div>
+        ${(function(){ var d = getDehydrationInfo(p.name); return d ? `<div style="font-size:10px;color:var(--muted);margin:2px 0 6px;display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span>🌡️ Dehydrated at ${d.tempC}°C</span><span>⏱️ ${d.hours}</span></div>` : ''; })()}
         <div class="prod-card-rating" onclick="event.stopPropagation();openProductPage(${globalIdx})" title="See all reviews">
           ${(() => {
             try {
@@ -9049,6 +9154,19 @@ function updateProductImage(idx, p) {
     </div>
   `).join('');
   
+  const dehydInfo = getDehydrationInfo(p.name);
+  const howMadeInfo = dehydInfo ? `
+    <div style="margin-top:24px">
+      <div style="font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--dark);margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--cream-mid)">How It's Made</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px">
+        <div style="background:var(--white);padding:16px;text-align:center;border:1px solid var(--cream-mid)"><div style="font-size:24px;margin-bottom:8px">🥩</div><div style="font-size:11px;font-weight:700;color:var(--dark);line-height:1.4">${dehydInfo.ingredient}</div><div style="font-size:9px;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.06em">Ingredient</div></div>
+        <div style="background:var(--white);padding:16px;text-align:center;border:1px solid var(--cream-mid)"><div style="font-size:24px;margin-bottom:8px">🌡️</div><div style="font-size:13px;font-weight:700;color:var(--dark)">${dehydInfo.tempC}°C / ${dehydInfo.tempF}°F</div><div style="font-size:9px;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.06em">Dehydration Temp</div></div>
+        <div style="background:var(--white);padding:16px;text-align:center;border:1px solid var(--cream-mid)"><div style="font-size:24px;margin-bottom:8px">⏱️</div><div style="font-size:13px;font-weight:700;color:var(--dark)">${dehydInfo.hours}</div><div style="font-size:9px;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.06em">Dehydration Time</div></div>
+      </div>
+      <p style="font-size:12px;color:var(--muted);line-height:1.7">Slow-dehydrated at a low, consistent temperature to lock in nutrients while removing moisture — no additives, no preservatives, nothing else added.</p>
+    </div>
+  ` : '';
+
   const storageInfo = p.storage ? `
     <div style="margin-top:24px">
       <div style="font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--dark);margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--cream-mid)">Storage & Shelf Life</div>
@@ -9089,6 +9207,7 @@ function updateProductImage(idx, p) {
       
       ${p.feeding ? `<div style="margin-bottom:24px"><div style="font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--dark);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--cream-mid)">Feeding Guide</div><p style="font-size:13px;color:var(--muted);line-height:1.8">${p.feeding}</p></div>` : ''}
       
+      ${howMadeInfo}
       ${storageInfo}
       
       ${(p.tags && p.tags.length > 0) ? `<div style="margin-top:24px;display:flex;gap:8px;flex-wrap:wrap">${p.tags.map(t => `<span style="background:var(--cream);padding:6px 12px;font-size:11px;color:var(--muted);border-radius:2px">${t}</span>`).join('')}</div>` : ''}
@@ -10694,7 +10813,7 @@ function handleLoginClick(){
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
   var loginPage=document.getElementById('page-login');
   if(loginPage)loginPage.classList.add('active');
-  window.scrollTo({top:0,behavior:'smooth'});
+  window.scrollTo({top:0,left:0,behavior:'smooth'});
   // Show correct login state
   if(currentUser){
     var la=document.getElementById('loginAlreadyIn'),lf=document.getElementById('loginForm');
