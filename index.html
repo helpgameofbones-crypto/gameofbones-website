@@ -924,7 +924,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
   window.loadProductsFromDatabase = async function() {
     try {
       const res = await fetch(
-        SUPABASE_URL + '/rest/v1/products?select=name,image_url,images,price,compare_price,sizes,is_active,is_bestseller&order=name&_cb=' + Date.now(),
+        SUPABASE_URL + '/rest/v1/products?select=name,image_url,images,price,compare_price,sizes,is_active,is_bestseller&order=name',
         { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY } }
       );
       const dbProducts = await res.json();
@@ -8676,7 +8676,7 @@ function renderBundleCard(p, globalIdx) {
     <div style="background:${accentColor};padding:18px 18px 14px;position:relative">
       <div style="display:flex;align-items:center;justify-content:space-between">
         <span style="font-size:36px;line-height:1">${headerIcon}</span>
-        <span style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;background:rgba(255,255,255,.25);color:var(--white);padding:4px 10px;border-radius:20px">${p.badge}</span>
+        <span style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;background:rgba(255,255,255,.25);color:var(--white);padding:4px 10px;border-radius:20px">${p.badge !== 'Bestseller' ? p.badge : ''}</span>
       </div>
       <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--white);margin-top:10px;line-height:1.2">${p.name}</div>
       <button class="prod-fav" onclick="event.stopPropagation();toggleWishlist(this,${globalIdx})" style="opacity:1;background:rgba(255,255,255,.2);top:10px;right:10px">${isWishlisted(globalIdx)?'♥':'♡'}</button>
@@ -9064,7 +9064,7 @@ function updateProductImage(idx, p) {
     <div>
       <div style="font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">${p.cat}</div>
       <h1 style="font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:700;color:var(--dark);margin-bottom:12px;line-height:1.1">${p.name}</h1>
-      <div style="display:inline-block;background:var(--gold);color:var(--dark);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;margin-bottom:16px;border-radius:2px">${p.badge}</div>
+      ${(p.badge && p.badge !== "Bestseller") ? `<div style="display:inline-block;background:var(--gold);color:var(--dark);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;margin-bottom:16px;border-radius:2px">${p.badge}</div>` : ""}
       
       ${p.tagline ? `<p style="font-size:13px;color:var(--muted);line-height:1.7;font-style:italic;margin-bottom:20px;padding:14px 16px;border-left:3px solid var(--gold);background:var(--white)">${p.tagline}</p>` : ''}
       
