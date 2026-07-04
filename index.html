@@ -996,13 +996,13 @@ body:has(#page-login.active) #mainNav { display: none !important; }
     <span style="font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:.08em;color:var(--white)">
       &#127881; FREE SHIPPING on ALL orders &nbsp;&nbsp;&bull;&nbsp;&nbsp;
       &#127873; Use code <span style="color:var(--gold)">FIRSTBITE</span> for 15% off your first order &nbsp;&nbsp;&bull;&nbsp;&nbsp;
-      &#128176; Pay online &amp; get &#8377;50 OFF &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+      &#128176; Pay online &amp; get &#8377;30 OFF &nbsp;&nbsp;&bull;&nbsp;&nbsp;
       &#128666; PAN India delivery via Delhivery &nbsp;&nbsp;&bull;&nbsp;&nbsp;
       &#127775; 100% Natural &#8212; Zero Preservatives &#8212; Single Ingredient &nbsp;&nbsp;&bull;&nbsp;&nbsp;
       &#128062; Trusted by 5000+ dog parents across India &nbsp;&nbsp;&bull;&nbsp;&nbsp;
       &#127881; FREE SHIPPING on ALL orders &nbsp;&nbsp;&bull;&nbsp;&nbsp;
       &#127873; Use code <span style="color:var(--gold)">FIRSTBITE</span> for 15% off your first order &nbsp;&nbsp;&bull;&nbsp;&nbsp;
-      &#128176; Pay online &amp; get &#8377;50 OFF
+      &#128176; Pay online &amp; get &#8377;30 OFF
     </span>
   </div>
 </div>
@@ -2915,6 +2915,14 @@ body:has(#page-login.active) #mainNav { display: none !important; }
               <div><label style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px">Mobile Number *</label><input class="co-input" id="co-phone" type="tel" placeholder="9820012345" style="width:100%;padding:11px 14px;border:1.5px solid var(--cream-mid);background:var(--cream);font-family:'Jost',sans-serif;font-size:14px;color:var(--dark);outline:none;box-sizing:border-box" onblur="if(this.value.trim().replace(/[^0-9]/g,'').length>=10)checkLoyaltyAtCheckout()"></div>
               <div><label style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px">Email (optional)</label><input class="co-input" id="co-email" type="email" placeholder="rahul@email.com" style="width:100%;padding:11px 14px;border:1.5px solid var(--cream-mid);background:var(--cream);font-family:'Jost',sans-serif;font-size:14px;color:var(--dark);outline:none;box-sizing:border-box"></div>
             </div>
+            <!-- Dog Birthday Row -->
+            <div style="margin-top:12px;padding-top:14px;border-top:1px dashed var(--cream-mid)">
+              <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:10px">&#127881; Your Dog's Birthday <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(optional — we'll send a treat discount every year!)</span></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                <div><label style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px">Dog's Name</label><input class="co-input" id="co-dog-name" type="text" placeholder="Bruno, Coco, Luna…" style="width:100%;padding:11px 14px;border:1.5px solid var(--cream-mid);background:var(--cream);font-family:'Jost',sans-serif;font-size:14px;color:var(--dark);outline:none;box-sizing:border-box"></div>
+                <div><label style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px">Birthday (DD/MM)</label><input class="co-input" id="co-dog-bday" type="text" placeholder="15/08" maxlength="5" style="width:100%;padding:11px 14px;border:1.5px solid var(--cream-mid);background:var(--cream);font-family:'Jost',sans-serif;font-size:14px;color:var(--dark);outline:none;box-sizing:border-box" oninput="this.value=this.value.replace(/[^0-9/]/g,'')"></div>
+              </div>
+            </div>
           </div>
 
           <!-- Delivery address -->
@@ -3007,7 +3015,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
               <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Subtotal</span><span id="co-subtotal" style="font-weight:600;color:var(--dark)">&#8377;0</span></div>
               <div id="co-discount-row" style="display:none;justify-content:space-between;color:var(--teal)"><span>Discount</span><span id="co-discount-val" style="font-weight:600"></span></div>
               <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Shipping</span><span id="co-shipping-val" style="font-weight:600;color:var(--dark)"></span></div>
-              <div id="co-online-disc-row" style="display:none;justify-content:space-between;font-size:13px;color:var(--teal);font-weight:600"><span>&#127775; Pay Online Discount</span><span>&#8722;&#8377;50</span></div>
+              <div id="co-online-disc-row" style="display:none;justify-content:space-between;font-size:13px;color:var(--teal);font-weight:600"><span>&#127775; Pay Online Discount</span><span>&#8722;&#8377;30</span></div>
             <div id="co-cod-row" style="display:none;justify-content:space-between"><span style="color:var(--muted)">COD charge</span><span style="font-weight:600;color:var(--dark)">&#8377;40</span></div>
               <div style="display:flex;justify-content:space-between;padding-top:10px;border-top:1px solid var(--cream-mid);margin-top:4px">
                 <span style="font-weight:700;font-size:15px;color:var(--dark)">Total</span>
@@ -6232,7 +6240,7 @@ function addTrialBox(size) {
 // ── CHECKOUT ────────────────────────────────────────────────────────────
 const DISCOUNT_CODES = {
   'FIRST10': { type:'percent', value:10, label:'10% off (First Order)' },
-  'SAVE50':  { type:'fixed',   value:50, label:'₹50 off' },
+  'SAVE50':  { type:'fixed',   value:30, label:'₹30 off' },
   'SAVE100': { type:'fixed',   value:100, label:'₹100 off', minOrder:999 },
   'BULK15':  { type:'percent', value:15,  label:'15% off', minOrder:1499 },
   'MEGA20':  { type:'percent', value:20,  label:'20% off', minOrder:2499 },
@@ -6333,7 +6341,7 @@ function updateCheckoutTotals() {
   }
 
   // Auto ₹50 discount for online payment (not COD)
-  var onlineDisc = (selectedPayment && selectedPayment !== 'cod') ? 50 : 0;
+  var onlineDisc = (selectedPayment && selectedPayment !== 'cod') ? 30 : 0;
   var onlineRow = document.getElementById('co-online-disc-row');
   if (onlineRow) onlineRow.style.display = onlineDisc > 0 ? 'flex' : 'none';
 
@@ -6383,7 +6391,7 @@ function showDiscountPanel() {
   // Only show user-facing codes (not internal spin codes)
   var visibleCodes = [
     { code:'FIRST10', desc:'10% off your first order',          minOrder:0    },
-    { code:'SAVE50',  desc:'₹50 off',                           minOrder:0    },
+    { code:'SAVE50',  desc:'₹30 off',                           minOrder:0    },
     { code:'SAVE100', desc:'₹100 off',                          minOrder:999  },
     { code:'BULK15',  desc:'15% off',                           minOrder:1499 },
     { code:'MEGA20',  desc:'20% off',                           minOrder:2499 },
@@ -6529,10 +6537,10 @@ function applyDiscount() {
 function selectPayment(method) {
   selectedPayment = method;
   const notes = {
-    upi:'💡 Pay online and get ₹50 off! You\'ll be redirected to our secure Razorpay gateway.',
-    card:'💳 Pay online and get ₹50 off! Secure payment via Razorpay.',
+    upi:'💡 Pay online and get ₹30 off! You\'ll be redirected to our secure Razorpay gateway.',
+    card:'💳 Pay online and get ₹30 off! Secure payment via Razorpay.',
     netbanking:'🏦 You\'ll be redirected to your bank\'s net banking portal after placing the order.',
-    cod:'💵 Pay cash on delivery. ₹40 handling fee applies. Save ₹50 by paying online!'
+    cod:'💵 Pay cash on delivery. ₹40 handling fee applies. Save ₹30 by paying online!'
   };
   const n = document.getElementById('co-pay-note');
   if(n) { n.textContent = notes[method]||''; n.style.display = notes[method] ? 'block' : 'none'; }
@@ -7304,6 +7312,25 @@ function _finaliseOrder(ref, phoneVal, orderItems) {
     referrer_points_credited: false,
     created_at: new Date().toISOString()
   };
+  // Save dog birthday if provided
+  (function() {
+    var dogName = (document.getElementById('co-dog-name') && document.getElementById('co-dog-name').value.trim()) || '';
+    var bday = (document.getElementById('co-dog-bday') && document.getElementById('co-dog-bday').value.trim()) || '';
+    var ownerName = (fname + ' ' + lname).trim();
+    var phone = document.getElementById('co-phone') ? document.getElementById('co-phone').value.trim() : '';
+    var email = (document.getElementById('co-email') && document.getElementById('co-email').value.trim()) || '';
+    if (dogName && bday && bday.indexOf('/') > -1) {
+      var parts = bday.split('/');
+      var dd = (parts[0]||'').padStart(2,'0');
+      var mm = (parts[1]||'').padStart(2,'0');
+      var bdayISO = '2000-' + mm + '-' + dd;
+      fetch(SUPABASE_URL + '/rest/v1/dog_birthdays', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY, 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ dog_name: dogName, customer_name: ownerName, customer_email: email, customer_phone: phone, birthday: bdayISO })
+      }).catch(function(){});
+    }
+  })();
   
   // ═══════════════════════ SAVE TO SUPABASE ═══════════════════════
   fetch(SUPABASE_URL + '/rest/v1/orders', {
@@ -11391,7 +11418,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (typeof syncProductsFromSupabase === 'function') syncProductsFromSupabase();
   }, 60000);
 
-  showBirthdayPopup();
 });
 // ═══════════════════ END SUPABASE PRODUCT SYNC ═══════════════════
 
