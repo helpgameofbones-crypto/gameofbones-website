@@ -8702,7 +8702,7 @@ function renderBundleCard(p, globalIdx) {
       <div class="prod-tags" style="margin-bottom:8px">${p.tags.map(t=>`<span class="p-tag">${t}</span>`).join('')}</div>
       ${p.noOrdersBadge ? '' : `<div class="orders-badge"><span class="ob-dot"></span>${getOrdersThisWeek(globalIdx)} orders this week</div>`}
       ${p.sizes.length > 1
-        ? `<select class="size-select" id="sel-${globalIdx}" onclick="event.stopPropagation()" onchange="var _si=this.value;var _pr=${JSON.stringify(p.sizes.map(s=>s.price))}[_si];var _mr=${JSON.stringify(p.sizes.map(s=>s.mrp||0))}[_si];var _ft=this.closest('.prod-card').querySelector('.prod-footer>div');_ft.innerHTML=((_mr&&_mr>_pr)?'<span style=\"font-size:11px;color:var(--muted);text-decoration:line-through;font-weight:400;margin-right:4px\">₹'+_mr+'</span>':'')+' <span class=\"prod-price\">₹'+_pr+'</span>'+((_mr&&_mr>_pr)?'<span style=\"background:var(--teal);color:#fff;font-size:8px;font-weight:700;padding:2px 6px;margin-left:6px;letter-spacing:.04em;vertical-align:middle;border-radius:2px\">'+Math.round((_mr-_pr)/_mr*100)+'% OFF</span>':'')" style="width:100%;padding:7px 10px;border:1px solid ${accentColor}44;background:var(--white);font-family:'Jost',sans-serif;font-size:12px;font-weight:500;color:var(--text);margin:10px 0 4px;cursor:pointer;outline:none">${sizeOpts}</select>`
+        ? `<select class="size-select" id="sel-${globalIdx}" onclick="event.stopPropagation()" onchange="var _si=this.value;var _pr=${JSON.stringify(p.sizes.map(s=>s.price))}[_si];var _mr=${JSON.stringify(p.sizes.map(s=>s.mrp||0))}[_si];var _ft=this.closest('.prod-card').querySelector('.prod-footer>div');_ft.innerHTML=((_mr&&_mr>_pr)?'<span style=\"font-size:11px;color:var(--muted);text-decoration:line-through;font-weight:400;margin-right:4px\">₹'+_mr+'</span>':'')+' <span class=\"prod-price\">₹'+_pr+'</span>'+((_mr&&_mr>_pr)?'<span style=\"display:inline-block;background:var(--teal);color:#fff;font-size:9px;font-weight:700;padding:2px 7px;letter-spacing:.04em;border-radius:2px;margin-top:4px\">'+Math.round((_mr-_pr)/_mr*100)+'% OFF</span>':'')" style="width:100%;padding:7px 10px;border:1px solid ${accentColor}44;background:var(--white);font-family:'Jost',sans-serif;font-size:12px;font-weight:500;color:var(--text);margin:10px 0 4px;cursor:pointer;outline:none">${sizeOpts}</select>`
         : `<div style="font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.06em;margin:10px 0 4px;text-transform:uppercase">${p.sizes[0].label}</div>`}
       <div class="prod-footer">
         <div>
@@ -8899,9 +8899,9 @@ function renderProducts(items, containerId) {
           })()}
         </div>
         ${p.noOrdersBadge ? '' : `<div class="orders-badge"><span class="ob-dot"></span>${getOrdersThisWeek(globalIdx)} orders this week</div>`}
-        ${p.sizes.length > 1 ? `<select class="size-select" id="sel-${globalIdx}" onclick="event.stopPropagation()" onchange="var _si=this.value;var _pr=${JSON.stringify(p.sizes.map(s=>s.price))}[_si];var _mr=${JSON.stringify(p.sizes.map(s=>s.mrp||0))}[_si];var _ft=this.closest('.prod-card').querySelector('.prod-footer>div');_ft.innerHTML=((_mr&&_mr>_pr)?'<span style=\"font-size:11px;color:var(--muted);text-decoration:line-through;font-weight:400;margin-right:4px\">₹'+_mr+'</span>':'')+' <span class=\"prod-price\">₹'+_pr+'</span>'+((_mr&&_mr>_pr)?'<span style=\"background:var(--teal);color:#fff;font-size:8px;font-weight:700;padding:2px 6px;margin-left:6px;letter-spacing:.04em;vertical-align:middle;border-radius:2px\">'+Math.round((_mr-_pr)/_mr*100)+'% OFF</span>':'')" style="width:100%;padding:7px 10px;border:1px solid var(--cream-mid);background:var(--cream);font-family:'Jost',sans-serif;font-size:12px;font-weight:500;color:var(--text);margin:10px 0 4px;cursor:pointer;outline:none">${sizeOpts}</select>` : `<div style="font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.06em;margin:10px 0 4px;text-transform:uppercase">${p.sizes[0].label}</div>`}
+        ${p.sizes.length > 1 ? `<select class="size-select" id="sel-${globalIdx}" onclick="event.stopPropagation()" onchange="var _si=this.value;var _pr=${JSON.stringify(p.sizes.map(s=>s.price))}[_si];var _mr=${JSON.stringify(p.sizes.map(s=>s.mrp||0))}[_si];var _ft=this.closest('.prod-card').querySelector('.prod-footer>div');_ft.innerHTML=((_mr&&_mr>_pr)?'<span style=\"font-size:11px;color:var(--muted);text-decoration:line-through;font-weight:400;margin-right:4px\">₹'+_mr+'</span>':'')+' <span class=\"prod-price\">₹'+_pr+'</span>'+((_mr&&_mr>_pr)?'<span style=\"display:inline-block;background:var(--teal);color:#fff;font-size:9px;font-weight:700;padding:2px 7px;letter-spacing:.04em;border-radius:2px;margin-top:4px\">'+Math.round((_mr-_pr)/_mr*100)+'% OFF</span>':'')" style="width:100%;padding:7px 10px;border:1px solid var(--cream-mid);background:var(--cream);font-family:'Jost',sans-serif;font-size:12px;font-weight:500;color:var(--text);margin:10px 0 4px;cursor:pointer;outline:none">${sizeOpts}</select>` : `<div style="font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.06em;margin:10px 0 4px;text-transform:uppercase">${p.sizes[0].label}</div>`}
         <div class="prod-footer">
-          <div>${(firstSize.mrp && firstSize.mrp > firstSize.price) ? `<span style="font-size:11px;color:var(--muted);text-decoration:line-through;font-weight:400;margin-right:4px">₹${firstSize.mrp}</span>` : ''}<span class="prod-price">₹${firstSize.price}</span>${(firstSize.mrp && firstSize.mrp > firstSize.price) ? `<span style="background:var(--teal);color:#fff;font-size:8px;font-weight:700;padding:2px 6px;margin-left:6px;letter-spacing:.04em;vertical-align:middle;border-radius:2px">${Math.round((firstSize.mrp-firstSize.price)/firstSize.mrp*100)}% OFF</span>` : ''}</div>
+          <div>${(firstSize.mrp && firstSize.mrp > firstSize.price) ? `<span style="font-size:11px;color:var(--muted);text-decoration:line-through;font-weight:400;margin-right:4px">₹${firstSize.mrp}</span>` : ''}<span class="prod-price">₹${firstSize.price}</span>${(firstSize.mrp && firstSize.mrp > firstSize.price) ? `<span style="display:inline-block;background:var(--teal);color:#fff;font-size:9px;font-weight:700;padding:2px 7px;letter-spacing:.04em;border-radius:2px;margin-top:4px">${Math.round((firstSize.mrp-firstSize.price)/firstSize.mrp*100)}% OFF</span>` : ''}</div>
           <div style="display:flex;align-items:center;gap:6px">
             <button class="view-cart-btn" id="vc-${globalIdx}" onclick="event.stopPropagation();showPage('cart')" style="display:none">View Cart →</button>
             <button class="add-btn" id="ab-${globalIdx}" onclick="event.stopPropagation();addCart(this,${globalIdx},document.getElementById('sel-${globalIdx}')?+document.getElementById('sel-${globalIdx}').value:0)">+</button>
@@ -11132,17 +11132,22 @@ function loadBlogsFromDB() {
         var img = document.createElement('img');
         img.src = match.cover_image;
         img.alt = match.title;
-        img.style.cssText = 'width:100%;height:100%;object-fit:contain;display:block;background:var(--cream)';
+        var isMini = iconBox.classList.contains('mini-post-img');
+        img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block';
         iconBox.innerHTML = '';
         iconBox.appendChild(img);
         iconBox.style.fontSize = '0';
         iconBox.style.padding = '0';
-        // Container needs an explicit fixed height — without it, height:100% on the
-        // image has nothing to size against and renders at its huge natural size.
-        var isMini = iconBox.classList.contains('mini-post-img');
-        var fixedHeight = isMini ? '90px' : '160px';
-        iconBox.style.height = fixedHeight;
-        iconBox.style.minHeight = fixedHeight;
+        if (isMini) {
+          iconBox.style.height = '90px';
+          iconBox.style.minHeight = '90px';
+        } else {
+          // Let the parent .blog-card-img aspect-ratio:16/9 control height
+          iconBox.style.height = '100%';
+          iconBox.style.minHeight = '';
+          iconBox.style.position = 'absolute';
+          iconBox.style.inset = '0';
+        }
         iconBox.style.maxHeight = fixedHeight;
         iconBox.style.overflow = 'hidden';
       }
