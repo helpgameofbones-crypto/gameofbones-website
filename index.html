@@ -1056,7 +1056,6 @@ body:has(#page-login.active) #mainNav { display: none !important; }
       <div class="hero-visual">
         <div class="hero-img-wrap" id="hero-img-wrap">
           <div class="hero-prod-placeholder" id="hero-prod-placeholder">&#127831;</div>
-          <div class="hero-badge">Best<br>Seller</div>
         </div>
       </div>
     </div>
@@ -11568,19 +11567,19 @@ document.addEventListener('DOMContentLoaded', function(){
 window.addEventListener('load', function() {
   setTimeout(function() {
     if (typeof renderProducts === 'function' && typeof products !== 'undefined') {
-      try {
-        console.log('🔍 Rendering products...');
-        console.log('Products array length:', products.length);
-        console.log('getProductRating function:', typeof getProductRating);
-        console.log('First product:', products[0]);
-        console.log('First product rating:', getProductRating(products[0].name));
-        
-        renderProducts(products.slice(0,4), 'homeProd');
-        renderProducts(products, 'shopProd');
-        console.log('✓ Products rendered successfully');
-      } catch(e) {
-        console.error('❌ Error rendering products:', e);
-        console.error('Stack:', e.stack);
+      function doInitialRender() {
+        try {
+          renderProducts(products.slice(0,4), 'homeProd');
+          renderProducts(products, 'shopProd');
+        } catch(e) {
+          console.error('Error rendering products:', e);
+        }
+      }
+      // Fetch live DB prices FIRST, then render — so cards never flash hardcoded prices
+      if (window.loadProductsFromDatabase) {
+        window.loadProductsFromDatabase().then(doInitialRender).catch(doInitialRender);
+      } else {
+        doInitialRender();
       }
     }
   }, 500);
