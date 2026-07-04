@@ -1033,7 +1033,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
     </ul>
     <div class="nav-actions">
       <button id="loginNavBtn" class="nav-icon" onclick="handleLoginClick()" title="Sign In / Account" style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;position:relative">&#128100;</button>
-      <button class="nav-icon" onclick="toggleCart()">&#128722;<span class="cart-badge" id="cartCount">0</span></button>
+      <button class="nav-icon" onclick="showPage('cart')">&#128722;<span class="cart-badge" id="cartCount">0</span></button>
     </div>
     <button class="hamburger-btn" onclick="toggleMobileMenu()">
       <span></span>
@@ -2879,7 +2879,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:32px;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">
         <a onclick="navigateTo('shop')" style="cursor:pointer;color:var(--muted)">Shop</a>
         <span>›</span>
-        <a onclick="toggleCart()" style="cursor:pointer;color:var(--muted)">Cart</a>
+        <a onclick="showPage('cart')" style="cursor:pointer;color:var(--muted)">Cart</a>
         <span>›</span>
         <span style="color:var(--dark)">Checkout</span>
       </div>
@@ -2899,7 +2899,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
         <!-- LEFT: Customer & Delivery Form -->
         <div>
           <!-- Edit cart link -->
-          <div style="margin-bottom:20px"><a onclick="toggleCart()" style="font-size:12px;font-weight:600;color:var(--teal);letter-spacing:.06em;text-transform:uppercase;cursor:pointer">← Edit Cart</a></div>
+          <div style="margin-bottom:20px"><a onclick="showPage('cart')" style="font-size:12px;font-weight:600;color:var(--teal);letter-spacing:.06em;text-transform:uppercase;cursor:pointer">← Edit Cart</a></div>
 
           <!-- Error box -->
           <div id="co-form-error" style="display:none;background:#fdf0f0;border:1px solid #e74c3c;color:#c0392b;padding:12px 16px;font-size:13px;font-weight:600;margin-bottom:20px;border-radius:2px"></div>
@@ -3027,6 +3027,74 @@ body:has(#page-login.active) #mainNav { display: none !important; }
     </div>
   </section>
 </div><!-- end page-checkout -->
+
+<!-- ── CART PAGE ─────────────────────────────────────────────────────────── -->
+<div id="page-cart" class="page">
+  <section style="background:var(--cream);padding:32px 6% 80px;min-height:80vh">
+    <div style="max-width:1160px;margin:0 auto">
+
+      <!-- Breadcrumb -->
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:32px;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">
+        <a onclick="showPage('shop')" style="cursor:pointer;color:var(--muted)">Shop</a>
+        <span>›</span>
+        <span style="color:var(--dark)">Your Bowl</span>
+      </div>
+
+      <h1 style="font-family:'Playfair Display',serif;font-size:clamp(26px,4vw,40px);font-weight:900;text-transform:uppercase;letter-spacing:.04em;color:var(--dark);margin-bottom:28px">Your Bowl</h1>
+
+      <!-- Empty state -->
+      <div id="cartPageEmpty" style="display:none;text-align:center;padding:70px 20px;background:var(--white);border:1px solid var(--cream-mid)">
+        <div style="font-size:56px;margin-bottom:16px">🛒</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--dark);margin-bottom:10px">Your cart is empty</div>
+        <p style="font-size:14px;color:var(--muted);margin-bottom:28px">Add some treats to get started.</p>
+        <button class="btn-gold" onclick="showPage('shop')" style="font-size:12px;padding:14px 32px">Browse Treats</button>
+      </div>
+
+      <!-- Cart content -->
+      <div id="cartPageContent" style="display:none;grid-template-columns:1fr 380px;gap:28px;align-items:start">
+
+        <!-- LEFT: items table -->
+        <div>
+          <div style="background:var(--white);border:1px solid var(--cream-mid)">
+            <div style="display:grid;grid-template-columns:1fr 140px 110px;padding:14px 20px;border-bottom:1px solid var(--cream-mid);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">
+              <div>Product</div><div style="text-align:center">Quantity</div><div style="text-align:right">Total</div>
+            </div>
+            <div id="cartPageItems"></div>
+          </div>
+
+          <div style="margin-top:20px">
+            <label style="font-size:12px;font-weight:600;color:var(--muted);display:block;margin-bottom:8px">Gift for a pupper? Allergies? Sneaky notes? Drop them here 🐾</label>
+            <textarea id="cartPageNote" rows="3" placeholder="e.g. Please pack it as a gift, my dog is allergic to chicken..." style="width:100%;padding:12px 14px;border:1.5px solid var(--cream-mid);background:var(--white);font-family:'Jost',sans-serif;font-size:13px;color:var(--dark);outline:none;box-sizing:border-box;resize:vertical"></textarea>
+          </div>
+        </div>
+
+        <!-- RIGHT: order summary -->
+        <div style="position:sticky;top:90px">
+          <div style="background:var(--white);border:1px solid var(--cream-mid);padding:24px">
+            <h3 style="font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--dark);margin-bottom:18px">Order Summary</h3>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+              <span style="font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)">Subtotal</span>
+              <span id="cartPageTotal" style="font-size:18px;font-weight:700;color:var(--dark);font-family:'Cormorant Garamond',serif">₹0</span>
+            </div>
+            <div id="cartPageShipBar" style="margin-bottom:18px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+                <span id="cartPageShipMsg" style="font-size:11px;color:var(--muted);font-weight:600"></span>
+                <span id="cartPageShipAmt" style="font-size:11px;color:var(--muted);font-weight:600"></span>
+              </div>
+              <div style="height:5px;background:var(--cream-mid);border-radius:3px;overflow:hidden">
+                <div id="cartPageShipFill" style="height:100%;background:var(--gold);border-radius:3px;width:0%;transition:width .4s"></div>
+              </div>
+            </div>
+            <p style="font-size:11px;color:var(--muted);margin-bottom:16px">Taxes and discounts calculated at checkout.</p>
+            <button class="btn-gold" onclick="goToCheckout()" style="width:100%;padding:15px;font-size:13px;letter-spacing:.1em">Proceed to Checkout →</button>
+            <button onclick="showPage('shop')" style="width:100%;background:none;border:none;color:var(--muted);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;padding:10px;margin-top:6px">← Continue Shopping</button>
+          </div>
+        </div>
+
+      </div><!-- end cartPageContent -->
+    </div>
+  </section>
+</div><!-- end page-cart -->
 
 <!-- ── LOGIN PAGE ────────────────────────────────────────────────────────── -->
 <div id="page-login" class="page">
@@ -4741,6 +4809,7 @@ function showPage(id) {
     }
   }
   if (id === 'reviews' && typeof renderReviews === 'function') { setTimeout(renderReviews, 50); }
+  if (id === 'cart' && typeof renderCartPage === 'function') { renderCartPage(); }
   
   // PHASE 3: Initialize checkout features
   if (id === 'checkout') {
@@ -5089,7 +5158,7 @@ window._openArtReal = openArt;
 
 
 // Product data with real images
-const products = [
+let products = [
   // ── JERKY ──────────────────────────────────────────────
   {img:'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/293b7ba0-37a7-4626-b97e-0f6aa8d86fa4/image-0-1782712553501.png', name:'Chicken Jerky', cat:'Boneless Jerky', badge:'Bestseller', badgeCls:'', desc:'Single-ingredient slow-dehydrated chicken breast. High-protein, low-fat. Perfect for training rewards.', tags:['Single Ingredient','Preservative Free'], sizes:[{label:'Pack of 1',price:329,mrp:379},{label:'Pack of 2',price:658,mrp:749},{label:'Pack of 3',price:987,mrp:1129},{label:'Pack of 4',price:1316,mrp:1499}], filter:'jerky',
     tagline:'Pure dehydrated chicken breast — nothing added, nothing removed. One ingredient, complete nutrition.',
@@ -6157,7 +6226,7 @@ function addTrialBox(size) {
   });
   renderCartDrawer();
   updateCartBadge();
-  toggleCart();
+  showPage('cart');
 }
 
 // ── CHECKOUT ────────────────────────────────────────────────────────────
@@ -7688,6 +7757,7 @@ function changeQty(idx, delta) {
     _saveCart();
     updateCartBadge();
     renderCartDrawer();
+    if (typeof renderCartPage === 'function') renderCartPage();
     showCartToast('Item removed from cart');
     return;
   }
@@ -7696,6 +7766,7 @@ function changeQty(idx, delta) {
   _saveCart();
   updateCartBadge();
   renderCartDrawer();
+  if (typeof renderCartPage === 'function') renderCartPage();
 }
 
 // ── WISHLIST (session-persistent) ────────────────────────────────────────
@@ -7755,7 +7826,7 @@ function showCartToast(msg, type) {
     var viewBtn = document.createElement('button');
     viewBtn.textContent = 'View Cart →';
     viewBtn.style.cssText = 'background:var(--gold);color:var(--dark);border:none;padding:5px 12px;font-size:11px;font-weight:700;letter-spacing:.04em;cursor:pointer;border-radius:2px;font-family:\'Jost\',sans-serif;flex-shrink:0';
-    viewBtn.onclick = function(e) { e.stopPropagation(); t.remove(); toggleCart(); };
+    viewBtn.onclick = function(e) { e.stopPropagation(); t.remove(); showPage('cart'); };
     t.appendChild(viewBtn);
   }
   document.body.appendChild(t);
@@ -7803,6 +7874,67 @@ function renderCartDrawer() {
   // Show upsell
   renderCartUpsell();
   if(typeof renderRecentlyViewed==="function")renderRecentlyViewed();
+}
+
+function renderCartPage() {
+  const empty = document.getElementById('cartPageEmpty');
+  const content = document.getElementById('cartPageContent');
+  if (!empty || !content) return;
+  if (cartItems.length === 0) {
+    empty.style.display = 'block';
+    content.style.display = 'none';
+    return;
+  }
+  empty.style.display = 'none';
+  content.style.display = 'grid';
+  const total = cartItems.reduce((s, i) => s + i.price * i.qty, 0);
+  var ctEl = document.getElementById('cartPageTotal'); if (ctEl) ctEl.textContent = '₹' + total.toLocaleString('en-IN');
+  updateShipBarPage();
+  const itemsEl = document.getElementById('cartPageItems');
+  if (itemsEl) {
+    itemsEl.innerHTML = cartItems.map((item, idx) => `
+      <div style="display:grid;grid-template-columns:1fr 140px 110px;align-items:center;padding:18px 20px;border-bottom:1px solid var(--cream-mid)">
+        <div style="display:flex;gap:14px;align-items:center;min-width:0">
+          <img src="${item.img}" alt="${item.name}" style="width:64px;height:64px;object-fit:cover;border-radius:4px;background:var(--cream-mid);flex-shrink:0" onerror="this.style.display='none'">
+          <div style="min-width:0">
+            <div style="font-weight:600;font-size:14px;color:var(--dark)">${item.name}</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px">${item.sizeLabel || item.size || ''}</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px">₹${item.price.toLocaleString('en-IN')} each${item.fbtDiscount ? `<span style="margin-left:6px;background:var(--teal);color:#fff;font-size:8px;font-weight:700;padding:2px 6px;letter-spacing:.06em;text-transform:uppercase;vertical-align:middle">Bundle</span>` : ''}</div>
+            <button onclick="changeQty(${idx},-${item.qty})" style="margin-top:6px;background:none;border:none;color:var(--muted);font-size:11px;text-decoration:underline;cursor:pointer;padding:0">Remove</button>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:center">
+          <div class="cart-item-qty" style="display:inline-flex;align-items:center;border:1px solid var(--cream-mid)">
+            <button class="qty-btn" onclick="changeQty(${idx},-1)" title="${item.qty===1?'Remove item':'Decrease quantity'}">${item.qty===1?'🗑':'−'}</button>
+            <span class="qty-num" style="padding:0 12px">${item.qty}</span>
+            <button class="qty-btn" onclick="changeQty(${idx},1)">+</button>
+          </div>
+        </div>
+        <div style="text-align:right;font-weight:700;color:var(--dark)">${item.origPrice ? `<span style="display:block;font-size:11px;color:var(--muted);text-decoration:line-through;font-family:'Jost',sans-serif;font-weight:400">₹${(item.origPrice * item.qty).toLocaleString('en-IN')}</span>` : ''}₹${(item.price * item.qty).toLocaleString('en-IN')}</div>
+      </div>`).join('');
+  }
+}
+
+function updateShipBarPage() {
+  var total = cartItems.reduce(function(s,i){return s+i.price*i.qty;},0);
+  var threshold = FREE_SHIP_THRESHOLD || 599;
+  var msg = document.getElementById('cartPageShipMsg');
+  var fill = document.getElementById('cartPageShipFill');
+  var amt = document.getElementById('cartPageShipAmt');
+  if (!msg) return;
+  if (total >= threshold) {
+    msg.textContent = "You've unlocked free shipping!";
+    msg.style.color = 'var(--teal)';
+    if (fill) { fill.style.width = '100%'; fill.style.background = 'var(--teal)'; }
+    if (amt) amt.textContent = '';
+  } else {
+    var rem = threshold - total;
+    msg.textContent = 'Add ₹' + rem + ' more for free shipping';
+    msg.style.color = 'var(--muted)';
+    var pct = Math.min(Math.round((total / threshold) * 100), 100);
+    if (fill) { fill.style.width = pct + '%'; fill.style.background = pct > 70 ? 'var(--teal)' : 'var(--gold)'; }
+    if (amt) amt.textContent = pct + '%';
+  }
 }
 
 var _cartUpsellProduct = null;
@@ -8551,7 +8683,7 @@ function renderBundleCard(p, globalIdx) {
           <span class="prod-price">₹${firstSize.price}</span>
         </div>
         <div style="display:flex;align-items:center;gap:6px">
-          <button class="view-cart-btn" id="vc-${globalIdx}" onclick="event.stopPropagation();toggleCart()" style="display:none">View Cart →</button>
+          <button class="view-cart-btn" id="vc-${globalIdx}" onclick="event.stopPropagation();showPage('cart')" style="display:none">View Cart →</button>
           <button class="add-btn" id="ab-${globalIdx}" onclick="event.stopPropagation();addCart(this,${globalIdx},document.getElementById('sel-${globalIdx}')?+document.getElementById('sel-${globalIdx}').value:0)" style="background:${accentColor}">+</button>
         </div>
       </div>
@@ -8744,7 +8876,7 @@ function renderProducts(items, containerId) {
         <div class="prod-footer">
           <div>${firstSize.mrp ? `<span style="font-size:11px;color:var(--muted);text-decoration:line-through;font-weight:400;margin-right:4px">₹${firstSize.mrp}</span>` : ''}<span class="prod-price">₹${firstSize.price}</span>${firstSize.mrp ? `<span style="background:var(--teal);color:#fff;font-size:8px;font-weight:700;padding:2px 6px;margin-left:6px;letter-spacing:.04em;vertical-align:middle;border-radius:2px">${Math.round((firstSize.mrp-firstSize.price)/firstSize.mrp*100)}% OFF</span>` : ''}</div>
           <div style="display:flex;align-items:center;gap:6px">
-            <button class="view-cart-btn" id="vc-${globalIdx}" onclick="event.stopPropagation();toggleCart()" style="display:none">View Cart →</button>
+            <button class="view-cart-btn" id="vc-${globalIdx}" onclick="event.stopPropagation();showPage('cart')" style="display:none">View Cart →</button>
             <button class="add-btn" id="ab-${globalIdx}" onclick="event.stopPropagation();addCart(this,${globalIdx},document.getElementById('sel-${globalIdx}')?+document.getElementById('sel-${globalIdx}').value:0)">+</button>
           </div>
         </div>
