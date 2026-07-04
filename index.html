@@ -923,66 +923,51 @@ body:has(#page-login.active) #mainNav { display: none !important; }
   // Load product images from admin database
   window.loadProductsFromDatabase = async function() {
     try {
-      console.log('📦 Loading product images from database...');
-      
-      const { data: dbProducts, error } = await supabase
-        .from('products')
-        .select('name, image_url, images')
-        .eq('is_active', true);
-      
-      console.log('🔍 Supabase response:', { dbProducts, error });
-      
-      if (error) {
-        console.error('❌ Supabase error:', error);
-        return;
+      const res = await fetch(
+        SUPABASE_URL + '/rest/v1/products?select=name,image_url,images,price,compare_price,sizes,is_active,is_bestseller&order=name&_cb=' + Date.now(),
+        { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY } }
+      );
+      const dbProducts = await res.json();
+      if (!Array.isArray(dbProducts) || dbProducts.length === 0) return;
+
+      // Remove inactive products
+      var inactiveNames = dbProducts.filter(function(p){ return p.is_active === false; }).map(function(p){ return (p.name||'').toLowerCase().trim(); });
+      if (inactiveNames.length > 0) {
+        products = products.filter(function(p){ return inactiveNames.indexOf(p.name.toLowerCase().trim()) === -1; });
       }
-      
-      if (!dbProducts || !Array.isArray(dbProducts)) {
-        console.log('⚠️ No products or invalid format, using storage images');
-        return;
-      }
-      
-      console.log(`✓ Got ${dbProducts.length} products from database`);
-      console.log('First product structure:', dbProducts[0]);
-      
-      // Update hardcoded products with database images
-      let updated = 0;
-      if (typeof products !== 'undefined' && Array.isArray(products)) {
-        dbProducts.forEach(dbProd => {
-          const idx = products.findIndex(p => 
-            p.name.toLowerCase() === dbProd.name.toLowerCase()
-          );
-          if (idx >= 0 && dbProd.image_url) {
-            // Use the FULL image URL from database (already includes full path)
-            products[idx].img = dbProd.image_url;
-            // Store all images array for carousel
-            if (dbProd.images && Array.isArray(dbProd.images) && dbProd.images.length > 0) {
-              products[idx].images = dbProd.images;
-              console.log(`✓ ${dbProd.name} → ${dbProd.images.length} images for carousel`);
+
+      // Apply DB prices + images to products[]
+      dbProducts.forEach(function(dbP) {
+        if (dbP.is_active === false) return;
+        var match = products.find(function(p){ return p.name.toLowerCase().trim() === (dbP.name||'').toLowerCase().trim(); });
+        if (!match) return;
+
+        // Images
+        if (dbP.image_url) match.img = dbP.image_url;
+        else if (dbP.images && dbP.images.length > 0) match.img = dbP.images[0];
+        if (dbP.images && dbP.images.length > 0) match.allImages = dbP.images;
+
+        // Prices — per-size is the source of truth
+        if (dbP.sizes && Array.isArray(dbP.sizes) && dbP.sizes.length > 0) {
+          dbP.sizes.forEach(function(dbSize) {
+            var sizeMatch = match.sizes.find(function(ms){ return ms.label === dbSize.label; });
+            if (!sizeMatch) sizeMatch = match.sizes[dbP.sizes.indexOf(dbSize)];
+            if (sizeMatch) {
+              if (dbSize.price)         sizeMatch.price = Math.round(dbSize.price);
+              if (dbSize.compare_price !== undefined) sizeMatch.mrp = Math.round(dbSize.compare_price);
             }
-            products[idx].fromDatabase = true;
-            updated++;
-          }
-        });
-      }
-      
-      console.log(`✓ Updated ${updated} products from database`);
-      
-      // Remove products that are NOT in the active DB list (hidden/deactivated in admin)
-      if (data && data.length > 0) {
-        var activeNames = data.map(function(p) { return p.name.toLowerCase(); });
-        var before = products.length;
-        products = products.filter(function(p) {
-          return activeNames.indexOf(p.name.toLowerCase()) > -1;
-        });
-        if (products.length < before) {
-          console.log('✓ Filtered out ' + (before - products.length) + ' hidden products');
+          });
+        } else {
+          // Fallback: headline price
+          if (dbP.price && dbP.price > 0 && match.sizes && match.sizes.length > 0) match.sizes[0].price = Math.round(dbP.price);
+          if (dbP.compare_price !== undefined && match.sizes && match.sizes.length > 0) match.sizes[0].mrp = Math.round(dbP.compare_price);
         }
-      }
-      
+
+        if (dbP.is_bestseller && !match.badge) match.badge = 'Bestseller';
+      });
+
     } catch (e) {
-      console.error('💥 Exception in loadProductsFromDatabase:', e);
-      console.error('Stack:', e.stack);
+      console.error('loadProductsFromDatabase failed:', e);
     }
   };
 
@@ -11335,80 +11320,17 @@ function submitBirthday() {
 
 
 function syncProductsFromSupabase() {
-  fetch(SUPABASE_URL + '/rest/v1/products?select=name,image_url,images,price,compare_price,sizes,description,category,filter,is_active,is_bestseller,tags&order=name&_cb=' + Date.now(), {
-    headers: {
-      'apikey': SUPABASE_ANON_KEY,
-      'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
-    }
-  })
-  .then(function(res) { return res.json(); })
-  .then(function(dbProducts) {
-    if (!dbProducts || !Array.isArray(dbProducts) || dbProducts.length === 0) return;
-    var updated = 0;
-    // First: hide products that are marked inactive in Supabase
-    var inactiveNames = dbProducts.filter(function(p){ return p.is_active === false; }).map(function(p){ return (p.name||'').toLowerCase().trim(); });
-    if (inactiveNames.length > 0) {
-      products = products.filter(function(p) {
-        return inactiveNames.indexOf(p.name.toLowerCase().trim()) === -1;
-      });
-    }
-    // Then: enrich active products with DB data
-    dbProducts.forEach(function(dbP) {
-      if (dbP.is_active === false) return; // skip inactive
-      var match = products.find(function(p) {
-        return p.name.toLowerCase().trim() === (dbP.name||'').toLowerCase().trim();
-      });
-      if (match) {
-        if (dbP.image_url) {
-          match.img = dbP.image_url;
-        } else if (dbP.images && dbP.images.length > 0) {
-          match.img = dbP.images[0];
-        }
-        // Store all images for carousel
-        if (dbP.images && dbP.images.length > 0) {
-          match.allImages = dbP.images;
-        }
-        if (dbP.price && dbP.price > 0 && match.sizes && match.sizes.length > 0) {
-          match.sizes[0].price = Math.round(dbP.price);
-        }
-        // Inject MRP (compare_price) into sizes for strikethrough display
-        if (dbP.compare_price) {
-          match.compare_price = Math.round(dbP.compare_price);
-          if (match.sizes && match.sizes.length > 0) match.sizes[0].mrp = Math.round(dbP.compare_price);
-        }
-        if (dbP.sizes && Array.isArray(dbP.sizes) && dbP.sizes.length > 0) {
-          dbP.sizes.forEach(function(dbSize) {
-            var sizeMatch = match.sizes.find(function(ms){ return ms.label === dbSize.label; });
-            if (!sizeMatch && dbP.sizes.indexOf(dbSize) < match.sizes.length) {
-              sizeMatch = match.sizes[dbP.sizes.indexOf(dbSize)]; // fallback to index if label doesn't match
-            }
-            if (sizeMatch) {
-              if (dbSize.compare_price) sizeMatch.mrp = Math.round(dbSize.compare_price);
-              if (dbSize.price) sizeMatch.price = Math.round(dbSize.price);
-            }
-          });
-        }
-        if (dbP.is_bestseller && !match.badge) {
-          match.badge = 'Bestseller';
-        }
-        updated++;
-      }
-    });
-    // Re-render with updated images and filtered products
+  if (!window.loadProductsFromDatabase) return;
+  window.loadProductsFromDatabase().then(function() {
     var homeProd = document.getElementById('homeProd');
     var shopProd = document.getElementById('shopProd');
-    if (homeProd && typeof renderProducts === 'function') renderProducts(products.slice(0,4), 'homeProd');
-    if (shopProd && typeof renderProducts === 'function') renderProducts(products, 'shopProd');
+    if (homeProd && homeProd.children.length > 0 && typeof renderProducts === 'function') renderProducts(products.slice(0,4), 'homeProd');
+    if (shopProd && shopProd.children.length > 0 && typeof renderProducts === 'function') renderProducts(products, 'shopProd');
     if (typeof restoreViewCartBtns === 'function') restoreViewCartBtns();
-    // If user is currently viewing a product detail page, refresh it so MRP shows without needing a reload
     var pdPage = document.getElementById('page-product');
     if (pdPage && pdPage.classList.contains('active') && typeof currentProductIdx === 'number' && typeof openProductPage === 'function') {
       openProductPage(currentProductIdx);
     }
-  })
-  .catch(function(e) {
-    // Silently fail - hardcoded products still show
-    console.error('Product price sync failed — website may show outdated prices. Error:', e);
   });
 }
 
