@@ -848,8 +848,17 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
   // Initialize Supabase client
   const SUPABASE_URL = 'https://syuostlqzzinigqwjzap.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5dW9zdGxxenppbmlncXdqemFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NTA3MzIsImV4cCI6MjA4OTQyNjczMn0.BKf4EF2QhNcW_u1SVVbtiGdlnzdthiptlVcNk3gP2KU';
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  console.log('✓ Supabase initialized');
+  let supabase = null;
+  try {
+    if (window.supabase && typeof window.supabase.createClient === 'function') {
+      supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      console.log('✓ Supabase initialized');
+    } else {
+      console.warn('⚠️ Supabase JS library did not load from CDN — falling back to direct REST calls for anything that needs it. Product data, prices and images (which use fetch() directly, not this client) are unaffected.');
+    }
+  } catch (e) {
+    console.error('Supabase client init failed (continuing without it):', e);
+  }
   
   // ===== SECURITY: CSRF TOKEN GENERATION =====
   let csrfToken = null;
@@ -954,7 +963,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
         // Images
         if (dbP.image_url) match.img = dbP.image_url;
         else if (dbP.images && dbP.images.length > 0) match.img = dbP.images[0];
-        if (dbP.images && dbP.images.length > 0) match.allImages = dbP.images;
+        if (dbP.images && dbP.images.length > 0) match.images = dbP.images;
 
         // Prices — per-size is the source of truth
         if (dbP.sizes && Array.isArray(dbP.sizes) && dbP.sizes.length > 0) {
@@ -989,13 +998,13 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
   <div style="display:inline-block;animation:scrollBanner 30s linear infinite;padding-left:100%">
     <span style="font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:.08em;color:var(--white)">
       &#127881; FREE SHIPPING on ALL orders &nbsp;&nbsp;&bull;&nbsp;&nbsp;
-      &#127873; Use code <span style="color:var(--gold)">FIRSTBITE</span> for 15% off your first order &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+      &#127873; Use code <span style="color:var(--gold)">FIRST10</span> for 10% off your first order &nbsp;&nbsp;&bull;&nbsp;&nbsp;
       &#128176; Pay online &amp; get &#8377;30 OFF &nbsp;&nbsp;&bull;&nbsp;&nbsp;
       &#128666; PAN India delivery via Delhivery &nbsp;&nbsp;&bull;&nbsp;&nbsp;
       &#127775; 100% Natural &#8212; Zero Preservatives &#8212; Single Ingredient &nbsp;&nbsp;&bull;&nbsp;&nbsp;
       &#128062; Trusted by 5000+ dog parents across India &nbsp;&nbsp;&bull;&nbsp;&nbsp;
       &#127881; FREE SHIPPING on ALL orders &nbsp;&nbsp;&bull;&nbsp;&nbsp;
-      &#127873; Use code <span style="color:var(--gold)">FIRSTBITE</span> for 15% off your first order &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+      &#127873; Use code <span style="color:var(--gold)">FIRST10</span> for 10% off your first order &nbsp;&nbsp;&bull;&nbsp;&nbsp;
       &#128176; Pay online &amp; get &#8377;30 OFF
     </span>
   </div>
@@ -1117,7 +1126,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
           <div class="process-step-num">01</div>
           <div class="process-step-tag">Step One</div>
           <div class="process-step-title">Source</div>
-          <div class="process-step-body">Human-grade ingredients from FSSAI-certified suppliers. Single origin, traceable, fresh-delivered within 48 hours.</div>
+          <div class="process-step-body">Human-grade ingredients from trusted suppliers. Single origin, traceable, fresh-delivered within 48 hours.</div>
         </div>
         <div class="process-step">
           <div class="process-step-visual" style="font-size:52px;display:flex;align-items:center;justify-content:center">&#9999;&#65039;</div>
@@ -1214,7 +1223,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
 
   <div class="cta-banner">
     <h2>Ready to Make Your Dog&rsquo;s Day? <em>Order Today.</em></h2>
-    <p>First order? Use code <strong style="color:var(--gold-light)">FIRSTBITE</strong> for 15% off. Free shipping on all orders. COD available.</p>
+    <p>First order? Use code <strong style="color:var(--gold-light)">FIRST10</strong> for 10% off. Free shipping on all orders. COD available.</p>
     <div class="cta-btns">
       <a class="btn-gold" onclick="navigateTo('shop')">Shop All Treats &rarr;</a>
       <button class="btn-gold-outline" onclick="openWA()">WhatsApp Us &#128172;</button>
@@ -1399,6 +1408,9 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
 
         <!-- WHY THIS TREAT IS SAFE — per-product infographic card -->
         <div id="product-detail-safety"></div>
+
+        <!-- THE LABEL TEST — typical treat vs ours, per product -->
+        <div id="product-detail-label-test"></div>
       </div>
       
       <!-- RIGHT: PRODUCT INFO -->
@@ -1596,7 +1608,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
           <div style="position:absolute;left:-44px;top:2px;width:30px;height:30px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--dark)">4</div>
           <div style="font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:5px">Early 2025</div>
           <h3 style="font-family:'Cormorant Garamond',serif;font-size:21px;color:var(--white);margin-bottom:7px">Game of Bones launches</h3>
-          <p style="font-size:14px;color:rgba(255,255,255,.55);line-height:1.75">Official launch with 2 products: Chicken Jerky and Buff Jerky. FSSAI registered. Humidity-resistant zip-lock packaging. Same rule as day one &mdash; one ingredient, nothing else.</p>
+          <p style="font-size:14px;color:rgba(255,255,255,.55);line-height:1.75">Official launch with 2 products: Chicken Jerky and Buff Jerky. Humidity-resistant zip-lock packaging. Same rule as day one &mdash; one ingredient, nothing else.</p>
         </div>
 
         <div style="position:relative">
@@ -1928,7 +1940,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
           <div class="process-step-num">01</div>
           <div class="process-step-tag">Sourcing</div>
           <div class="process-step-title">Human-Grade Ingredients Only</div>
-          <div class="process-step-body">We source exclusively from FSSAI-certified suppliers. Every ingredient meets human consumption standards &mdash; the same quality you&rsquo;d find at your butcher or fish market. Single origin, traceable, fresh. We visit suppliers personally and will not compromise on source quality regardless of cost.</div>
+          <div class="process-step-body">We source exclusively from trusted suppliers. Every ingredient meets human consumption standards &mdash; the same quality you&rsquo;d find at your butcher or fish market. Single origin, traceable, fresh. We visit suppliers personally and will not compromise on source quality regardless of cost.</div>
         </div>
         <div class="process-step-visual">&#129385;</div>
       </div>
@@ -2049,12 +2061,11 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
           <tr><th>Order Value</th><th>Shipping Charge</th></tr>
           <tr><td>All orders</td><td><strong style="color:var(--teal)">FREE</strong></td></tr>
         </table>
-        <p>Shipping charges are calculated based on the actual weight of your order and your delivery PIN code. The exact charge is shown at checkout before you pay.</p>
+        <p>Shipping is free on every order, regardless of order value, weight, or delivery location — no minimum spend required.</p>
 
         <h3>Cash on Delivery (COD)</h3>
-        <p>COD is available on most PIN codes across India for orders up to <strong>&#8377;2,000</strong>. A COD handling fee of <strong>&#8377;40</strong> is added to your order total at checkout. COD is not available for:</p>
+        <p>COD is available on most PIN codes across India, with a COD handling fee of <strong>&#8377;40</strong> added to your order total at checkout. COD is not available for:</p>
         <ul>
-          <li>Orders above &#8377;2,000 (prepaid only)</li>
           <li>Remote or restricted PIN codes where the courier does not offer COD</li>
           <li>Northeast states and island territories in some cases</li>
         </ul>
@@ -2208,7 +2219,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
         <p>Prepaid cancellations are refunded in full to the original payment method within 3&ndash;5 business days. COD cancellations do not attract any charge.</p>
 
         <h3>Quality Guarantee</h3>
-        <p>Every batch of Game of Bones treats is prepared with human-grade ingredients sourced from FSSAI-certified suppliers. If you ever feel that a product does not meet the quality you expected &mdash; even for a reason not covered above &mdash; please reach out to us. We would rather know and fix it than lose your trust.</p>
+        <p>Every batch of Game of Bones treats is prepared with human-grade ingredients sourced from trusted suppliers. If you ever feel that a product does not meet the quality you expected &mdash; even for a reason not covered above &mdash; please reach out to us. We would rather know and fix it than lose your trust.</p>
 
         <div style="background:var(--dark);padding:24px;margin-top:32px;display:flex;align-items:center;gap:20px;flex-wrap:wrap">
           <div style="flex:1;min-width:200px">
@@ -3211,7 +3222,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
         <div class="faq-item" data-cat="returns"><button class="faq-q" onclick="toggleFaq(this)">My dog didn't like the treat. Can I return it?</button><div class="faq-a"><p>We understand every dog is different! If your dog doesn't take to a treat, WhatsApp us — we'll recommend an alternative and work something out. Our goal is a happy dog, not a completed sale.</p></div></div>
         <div class="faq-item" data-cat="safety"><button class="faq-q" onclick="toggleFaq(this)">Are dehydrated bones safe? I've heard cooked bones are dangerous.</button><div class="faq-a"><p>Dehydrated (low-heat dried) bones are very different from cooked bones. Cooking makes bones brittle and likely to splinter dangerously. Dehydration keeps the bone pliable and fully digestible. All our bone products are dehydrated, not cooked.</p></div></div>
         <div class="faq-item" data-cat="safety"><button class="faq-q" onclick="toggleFaq(this)">My dog has allergies. Which treats are safe?</button><div class="faq-a"><p>Because every treat is single-ingredient, you know exactly what your dog is eating. For chicken-sensitive dogs, try Buff Jerky, Sardines, Mackerel, Bombay Duck or Goat products — none of these contain chicken. Use the Treat Finder Quiz on the Shop page for personalised recommendations.</p></div></div>
-        <div class="faq-item" data-cat="safety"><button class="faq-q" onclick="toggleFaq(this)">Are your products FSSAI certified?</button><div class="faq-a"><p>All ingredients are sourced from FSSAI-certified suppliers. Our facility in Kalyan, Maharashtra follows food-grade hygiene standards. We test every batch for moisture content and microbial safety.</p></div></div>
+        <div class="faq-item" data-cat="safety"><button class="faq-q" onclick="toggleFaq(this)">What quality and hygiene standards do you follow?</button><div class="faq-a"><p>All ingredients are sourced from trusted, human-grade suppliers. Our facility in Kalyan, Maharashtra follows food-grade hygiene standards. We test every batch for moisture content and microbial safety.</p></div></div>
       </div>
       <div id="faqNoResults" style="display:none;text-align:center;padding:40px 0;font-size:14px;color:var(--muted)">No questions match your search. <a onclick="filterFaq('')" style="color:var(--teal);cursor:pointer;font-weight:600">Clear</a></div>
     </div>
@@ -5065,7 +5076,7 @@ const articles = [
   {
     emoji:'🥇', tag:'Why Single Ingredient', date:'June 2025 · 7 min read',
     title:'Why Single-Ingredient Treats Are the Only Treats Worth Giving Your Dog',
-    body:'<h3>The Problem With Most Dog Treats on the Market</h3><p>Walk into any pet store in India and the shelves are lined with colourful packets making bold claims — <em>"enriched with vitamins"</em>, <em>"natural flavour"</em>, <em>"balanced nutrition"</em>. Flip the packet over and read the actual ingredient list. You will find: <strong>corn starch, soy flour, meat and bone meal, sodium tripolyphosphate, BHA, BHT, artificial colour E129, flavour enhancer E621</strong>. This is not food. This is an industrial formulation designed to look and smell like food.</p><p>The Indian pet treat market is worth over ₹900 crore and growing — but the majority of products in it are built around cheap grain fillers, chemical preservatives, and synthetic flavour enhancers that make low-quality protein palatable. Your dog cannot read the label. You have to do it for them.</p><div style="background:var(--dark);padding:28px 24px;margin:24px 0"><div style="text-align:center;margin-bottom:20px"><div style="font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px">THE REAL COMPARISON</div><div style="font-family:\'Cormorant Garamond\',serif;font-size:22px;color:var(--white);font-weight:700">Single Ingredient vs Multi-Ingredient Commercial Treats</div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:2px"><div style="background:rgba(255,255,255,.05);padding:20px"><div style="font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#e05555;margin-bottom:14px">❌ Typical Commercial Treat</div><ul style="font-size:12px;color:rgba(255,255,255,.65);line-height:2.1;margin:0;padding-left:18px"><li>7–22 ingredients on average</li><li>Grain or starch as primary filler</li><li>Chemical preservatives (BHA/BHT)</li><li>Artificial colours and flavours</li><li>Protein from "meal" — rendered byproducts</li><li>High sugar content for palatability</li><li>Nutrients destroyed by high-heat baking</li><li>Impossible to use in elimination diets</li></ul></div><div style="background:rgba(200,151,58,.1);padding:20px;border:1px solid rgba(200,151,58,.3)"><div style="font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:14px">✓ Single Ingredient Treat</div><ul style="font-size:12px;color:rgba(255,255,255,.8);line-height:2.1;margin:0;padding-left:18px"><li>1 ingredient — what you see is all there is</li><li>Pure animal protein, no fillers</li><li>Moisture removal = natural preservation</li><li>Zero artificial anything</li><li>Whole muscle, organ or bone — real food</li><li>Naturally palatable — no enhancers needed</li><li>Nutrients intact via low-heat dehydration</li><li>Safe for elimination diets and allergies</li></ul></div></div></div><h3>What "Single Ingredient" Actually Means</h3><p>A single-ingredient treat is exactly what it sounds like — <strong>one ingredient, nothing else</strong>. Chicken jerky made from chicken breast. Fish treats made from whole anchovies. Goat liver made from goat liver. The ingredient list has one item. The product is that item, dehydrated.</p><p>This simplicity is not a limitation — it is the point. When you know exactly what is in your dog\'s treat, you know exactly what you are feeding. There is no guesswork, no hidden allergens, no mystery "natural flavour" that could mean almost anything under food labelling regulations.</p><div class="art-callout">Under Indian FSSAI regulations, "natural flavour" on a pet food label can legally include chemically extracted flavour compounds, rendering byproducts, and enzymatically treated proteins. It does not have to mean what most pet owners assume it means.</div><h3>5 Reasons Single-Ingredient Treats Are Superior</h3><div style="display:flex;flex-direction:column;gap:12px;margin:20px 0"><div style="display:flex;gap:16px;align-items:flex-start;background:var(--cream);padding:18px;border-left:4px solid var(--gold)"><div style="width:32px;height:32px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:var(--dark);flex-shrink:0">1</div><div><strong style="color:var(--dark);display:block;margin-bottom:6px;font-size:14px">You Know Exactly What You\'re Feeding</strong><span style="font-size:13px;color:var(--muted);line-height:1.7">With a multi-ingredient commercial treat, even a careful label reader cannot always identify what every ingredient is or where it came from. With a single-ingredient treat, the entire product is the ingredient. Chicken breast from Indian farms. That is it. No ambiguity, no asterisks, no fine print.</span></div></div><div style="display:flex;gap:16px;align-items:flex-start;background:var(--cream);padding:18px;border-left:4px solid var(--gold)"><div style="width:32px;height:32px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:var(--dark);flex-shrink:0">2</div><div><strong style="color:var(--dark);display:block;margin-bottom:6px;font-size:14px">Essential for Dogs With Allergies or Sensitivities</strong><span style="font-size:13px;color:var(--muted);line-height:1.7">Food elimination trials — the gold standard method for identifying dog food allergies — require that every single thing your dog eats during the trial period is a novel protein they have never encountered. Multi-ingredient treats immediately invalidate a trial because they contain hidden proteins. Single-ingredient treats are the only treats vets and veterinary nutritionists recommend during elimination protocols.</span></div></div><div style="display:flex;gap:16px;align-items:flex-start;background:var(--cream);padding:18px;border-left:4px solid var(--gold)"><div style="width:32px;height:32px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:var(--dark);flex-shrink:0">3</div><div><strong style="color:var(--dark);display:block;margin-bottom:6px;font-size:14px">Higher Nutritional Value — Nothing Diluted</strong><span style="font-size:13px;color:var(--muted);line-height:1.7">Commercial treats pad out their protein content with grain starch and plant-based fillers. A treat that lists "chicken" as ingredient three (behind corn starch and soy flour) is mostly corn and soy with a small amount of chicken for flavour. A single-ingredient chicken treat is 100% chicken — all the protein, amino acids, and micronutrients with nothing diluted by cheap fillers.</span></div></div><div style="display:flex;gap:16px;align-items:flex-start;background:var(--cream);padding:18px;border-left:4px solid var(--gold)"><div style="width:32px;height:32px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:var(--dark);flex-shrink:0">4</div><div><strong style="color:var(--dark);display:block;margin-bottom:6px;font-size:14px">No Chemical Preservatives Required</strong><span style="font-size:13px;color:var(--muted);line-height:1.7">BHA and BHT — the chemical preservatives found in most commercial dog treats — are added to prevent fat rancidity during long shelf storage. Dehydrated single-ingredient treats do not need these chemicals because removing moisture is itself a natural preservation method. Water activity below 0.6 prevents bacterial and fungal growth entirely. The treat is shelf-stable for 6–12 months with zero chemical intervention.</span></div></div><div style="display:flex;gap:16px;align-items:flex-start;background:var(--cream);padding:18px;border-left:4px solid var(--gold)"><div style="width:32px;height:32px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:var(--dark);flex-shrink:0">5</div><div><strong style="color:var(--dark);display:block;margin-bottom:6px;font-size:14px">Dogs Simply Respond Better to Real Food</strong><span style="font-size:13px;color:var(--muted);line-height:1.7">Commercial treats use artificial flavour enhancers to compensate for low-quality base ingredients. Single-ingredient dehydrated meat has an intense, concentrated aroma — the water has been removed but all the volatile flavour compounds remain. Dog trainers and behaviourists consistently rate real meat treats as significantly higher value rewards than commercial treats, meaning better training results and stronger motivation.</span></div></div></div><h3>The Label Test — How to Spot the Difference in 10 Seconds</h3><div style="background:var(--dark);padding:24px;margin:20px 0"><div style="font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;text-align:center">READ THE INGREDIENT LIST — NOT THE FRONT OF THE PACK</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div style="background:rgba(224,85,85,.12);border:1px solid rgba(224,85,85,.3);padding:16px"><div style="font-size:10px;font-weight:700;color:#e05555;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px">🚫 Red Flags</div><div style="font-size:12px;color:rgba(255,255,255,.7);line-height:2">• More than 3 ingredients<br>• Corn, wheat, or soy near the top<br>• "Meal" after any protein (e.g. chicken meal)<br>• BHA, BHT, or ethoxyquin listed<br>• Any colour codes (E102, E129, etc.)<br>• "Natural flavour" or "flavour enhancer"<br>• Sugar, glucose syrup, or molasses</div></div><div style="background:rgba(200,151,58,.1);border:1px solid rgba(200,151,58,.3);padding:16px"><div style="font-size:10px;font-weight:700;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px">✓ Green Flags</div><div style="font-size:12px;color:rgba(255,255,255,.8);line-height:2">• One ingredient only<br>• That ingredient is a whole named protein<br>• No preservatives listed at all<br>• No colours or flavour compounds<br>• Country and source of meat specified<br>• Dehydrated or air-dried (not baked)<br>• Short shelf life without refrigeration</div></div></div></div><h3>What About Price?</h3><p>Single-ingredient treats from quality sources cost more than mass-produced commercial treats. This is real and worth addressing directly. The reasons are straightforward: better quality meat, lower volume production, no cheap fillers to pad weight, and honest processing rather than industrial manufacturing shortcuts.</p><p>But the comparison is not ₹X per packet vs ₹Y per packet. The real comparison is <strong>cost per gram of actual usable protein</strong>. When you strip out the corn starch, soy flour, and water added back into commercial treats during manufacturing, the actual protein content per rupee spent is often lower than a single-ingredient treat.</p><p>Beyond cost-per-nutrient, consider the downstream costs — vet bills for skin conditions, ear infections, and digestive issues that are frequently triggered or worsened by the additives in commercial treats. The upfront cost of a better treat is almost always lower than the total cost of managing the conditions a poor-quality treat can cause.</p><div style="background:var(--cream);padding:20px;border:1px solid var(--cream-mid);margin:20px 0;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;text-align:center"><div><div style="font-size:28px;font-weight:800;color:var(--gold);font-family:\'Cormorant Garamond\',serif">1</div><div style="font-size:11px;color:var(--dark);font-weight:700;margin-top:4px">Ingredient</div><div style="font-size:11px;color:var(--muted);margin-top:4px">Total. Nothing hidden.</div></div><div><div style="font-size:28px;font-weight:800;color:var(--gold);font-family:\'Cormorant Garamond\',serif">0</div><div style="font-size:11px;color:var(--dark);font-weight:700;margin-top:4px">Chemicals</div><div style="font-size:11px;color:var(--muted);margin-top:4px">No preservatives, colours or enhancers</div></div><div><div style="font-size:28px;font-weight:800;color:var(--gold);font-family:\'Cormorant Garamond\',serif">100%</div><div style="font-size:11px;color:var(--dark);font-weight:700;margin-top:4px">Real Protein</div><div style="font-size:11px;color:var(--muted);margin-top:4px">No fillers diluting nutritional value</div></div></div><div class="art-tip"><strong>Our commitment at Game of Bones:</strong> Every treat we make is a single-ingredient product sourced from Indian farms and processed at low temperature to preserve nutritional integrity. The ingredient list on every packet is exactly one item long — because that is the only standard we consider acceptable for the dogs of the people who trust us.</div>'
+    body:'<h3>The Problem With Most Dog Treats on the Market</h3><p>Walk into any pet store in India and the shelves are lined with colourful packets making bold claims — <em>"enriched with vitamins"</em>, <em>"natural flavour"</em>, <em>"balanced nutrition"</em>. Flip the packet over and read the actual ingredient list. You will find: <strong>corn starch, soy flour, meat and bone meal, sodium tripolyphosphate, BHA, BHT, artificial colour E129, flavour enhancer E621</strong>. This is not food. This is an industrial formulation designed to look and smell like food.</p><p>The Indian pet treat market is worth over ₹900 crore and growing — but the majority of products in it are built around cheap grain fillers, chemical preservatives, and synthetic flavour enhancers that make low-quality protein palatable. Your dog cannot read the label. You have to do it for them.</p><div style="background:var(--dark);padding:28px 24px;margin:24px 0"><div style="text-align:center;margin-bottom:20px"><div style="font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px">THE REAL COMPARISON</div><div style="font-family:\'Cormorant Garamond\',serif;font-size:22px;color:var(--white);font-weight:700">Single Ingredient vs Multi-Ingredient Commercial Treats</div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:2px"><div style="background:rgba(255,255,255,.05);padding:20px"><div style="font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#e05555;margin-bottom:14px">❌ Typical Commercial Treat</div><ul style="font-size:12px;color:rgba(255,255,255,.65);line-height:2.1;margin:0;padding-left:18px"><li>7–22 ingredients on average</li><li>Grain or starch as primary filler</li><li>Chemical preservatives (BHA/BHT)</li><li>Artificial colours and flavours</li><li>Protein from "meal" — rendered byproducts</li><li>High sugar content for palatability</li><li>Nutrients destroyed by high-heat baking</li><li>Impossible to use in elimination diets</li></ul></div><div style="background:rgba(200,151,58,.1);padding:20px;border:1px solid rgba(200,151,58,.3)"><div style="font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:14px">✓ Single Ingredient Treat</div><ul style="font-size:12px;color:rgba(255,255,255,.8);line-height:2.1;margin:0;padding-left:18px"><li>1 ingredient — what you see is all there is</li><li>Pure animal protein, no fillers</li><li>Moisture removal = natural preservation</li><li>Zero artificial anything</li><li>Whole muscle, organ or bone — real food</li><li>Naturally palatable — no enhancers needed</li><li>Nutrients intact via low-heat dehydration</li><li>Safe for elimination diets and allergies</li></ul></div></div></div><h3>What "Single Ingredient" Actually Means</h3><p>A single-ingredient treat is exactly what it sounds like — <strong>one ingredient, nothing else</strong>. Chicken jerky made from chicken breast. Fish treats made from whole anchovies. Goat liver made from goat liver. The ingredient list has one item. The product is that item, dehydrated.</p><p>This simplicity is not a limitation — it is the point. When you know exactly what is in your dog\'s treat, you know exactly what you are feeding. There is no guesswork, no hidden allergens, no mystery "natural flavour" that could mean almost anything under food labelling regulations.</p><div class="art-callout">Under Indian pet food labelling regulations, "natural flavour" on a pet food label can legally include chemically extracted flavour compounds, rendering byproducts, and enzymatically treated proteins. It does not have to mean what most pet owners assume it means.</div><h3>5 Reasons Single-Ingredient Treats Are Superior</h3><div style="display:flex;flex-direction:column;gap:12px;margin:20px 0"><div style="display:flex;gap:16px;align-items:flex-start;background:var(--cream);padding:18px;border-left:4px solid var(--gold)"><div style="width:32px;height:32px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:var(--dark);flex-shrink:0">1</div><div><strong style="color:var(--dark);display:block;margin-bottom:6px;font-size:14px">You Know Exactly What You\'re Feeding</strong><span style="font-size:13px;color:var(--muted);line-height:1.7">With a multi-ingredient commercial treat, even a careful label reader cannot always identify what every ingredient is or where it came from. With a single-ingredient treat, the entire product is the ingredient. Chicken breast from Indian farms. That is it. No ambiguity, no asterisks, no fine print.</span></div></div><div style="display:flex;gap:16px;align-items:flex-start;background:var(--cream);padding:18px;border-left:4px solid var(--gold)"><div style="width:32px;height:32px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:var(--dark);flex-shrink:0">2</div><div><strong style="color:var(--dark);display:block;margin-bottom:6px;font-size:14px">Essential for Dogs With Allergies or Sensitivities</strong><span style="font-size:13px;color:var(--muted);line-height:1.7">Food elimination trials — the gold standard method for identifying dog food allergies — require that every single thing your dog eats during the trial period is a novel protein they have never encountered. Multi-ingredient treats immediately invalidate a trial because they contain hidden proteins. Single-ingredient treats are the only treats vets and veterinary nutritionists recommend during elimination protocols.</span></div></div><div style="display:flex;gap:16px;align-items:flex-start;background:var(--cream);padding:18px;border-left:4px solid var(--gold)"><div style="width:32px;height:32px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:var(--dark);flex-shrink:0">3</div><div><strong style="color:var(--dark);display:block;margin-bottom:6px;font-size:14px">Higher Nutritional Value — Nothing Diluted</strong><span style="font-size:13px;color:var(--muted);line-height:1.7">Commercial treats pad out their protein content with grain starch and plant-based fillers. A treat that lists "chicken" as ingredient three (behind corn starch and soy flour) is mostly corn and soy with a small amount of chicken for flavour. A single-ingredient chicken treat is 100% chicken — all the protein, amino acids, and micronutrients with nothing diluted by cheap fillers.</span></div></div><div style="display:flex;gap:16px;align-items:flex-start;background:var(--cream);padding:18px;border-left:4px solid var(--gold)"><div style="width:32px;height:32px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:var(--dark);flex-shrink:0">4</div><div><strong style="color:var(--dark);display:block;margin-bottom:6px;font-size:14px">No Chemical Preservatives Required</strong><span style="font-size:13px;color:var(--muted);line-height:1.7">BHA and BHT — the chemical preservatives found in most commercial dog treats — are added to prevent fat rancidity during long shelf storage. Dehydrated single-ingredient treats do not need these chemicals because removing moisture is itself a natural preservation method. Water activity below 0.6 prevents bacterial and fungal growth entirely. The treat is shelf-stable for 6–12 months with zero chemical intervention.</span></div></div><div style="display:flex;gap:16px;align-items:flex-start;background:var(--cream);padding:18px;border-left:4px solid var(--gold)"><div style="width:32px;height:32px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:var(--dark);flex-shrink:0">5</div><div><strong style="color:var(--dark);display:block;margin-bottom:6px;font-size:14px">Dogs Simply Respond Better to Real Food</strong><span style="font-size:13px;color:var(--muted);line-height:1.7">Commercial treats use artificial flavour enhancers to compensate for low-quality base ingredients. Single-ingredient dehydrated meat has an intense, concentrated aroma — the water has been removed but all the volatile flavour compounds remain. Dog trainers and behaviourists consistently rate real meat treats as significantly higher value rewards than commercial treats, meaning better training results and stronger motivation.</span></div></div></div><h3>The Label Test — How to Spot the Difference in 10 Seconds</h3><div style="background:var(--dark);padding:24px;margin:20px 0"><div style="font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;text-align:center">READ THE INGREDIENT LIST — NOT THE FRONT OF THE PACK</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div style="background:rgba(224,85,85,.12);border:1px solid rgba(224,85,85,.3);padding:16px"><div style="font-size:10px;font-weight:700;color:#e05555;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px">🚫 Red Flags</div><div style="font-size:12px;color:rgba(255,255,255,.7);line-height:2">• More than 3 ingredients<br>• Corn, wheat, or soy near the top<br>• "Meal" after any protein (e.g. chicken meal)<br>• BHA, BHT, or ethoxyquin listed<br>• Any colour codes (E102, E129, etc.)<br>• "Natural flavour" or "flavour enhancer"<br>• Sugar, glucose syrup, or molasses</div></div><div style="background:rgba(200,151,58,.1);border:1px solid rgba(200,151,58,.3);padding:16px"><div style="font-size:10px;font-weight:700;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px">✓ Green Flags</div><div style="font-size:12px;color:rgba(255,255,255,.8);line-height:2">• One ingredient only<br>• That ingredient is a whole named protein<br>• No preservatives listed at all<br>• No colours or flavour compounds<br>• Country and source of meat specified<br>• Dehydrated or air-dried (not baked)<br>• Short shelf life without refrigeration</div></div></div></div><h3>What About Price?</h3><p>Single-ingredient treats from quality sources cost more than mass-produced commercial treats. This is real and worth addressing directly. The reasons are straightforward: better quality meat, lower volume production, no cheap fillers to pad weight, and honest processing rather than industrial manufacturing shortcuts.</p><p>But the comparison is not ₹X per packet vs ₹Y per packet. The real comparison is <strong>cost per gram of actual usable protein</strong>. When you strip out the corn starch, soy flour, and water added back into commercial treats during manufacturing, the actual protein content per rupee spent is often lower than a single-ingredient treat.</p><p>Beyond cost-per-nutrient, consider the downstream costs — vet bills for skin conditions, ear infections, and digestive issues that are frequently triggered or worsened by the additives in commercial treats. The upfront cost of a better treat is almost always lower than the total cost of managing the conditions a poor-quality treat can cause.</p><div style="background:var(--cream);padding:20px;border:1px solid var(--cream-mid);margin:20px 0;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;text-align:center"><div><div style="font-size:28px;font-weight:800;color:var(--gold);font-family:\'Cormorant Garamond\',serif">1</div><div style="font-size:11px;color:var(--dark);font-weight:700;margin-top:4px">Ingredient</div><div style="font-size:11px;color:var(--muted);margin-top:4px">Total. Nothing hidden.</div></div><div><div style="font-size:28px;font-weight:800;color:var(--gold);font-family:\'Cormorant Garamond\',serif">0</div><div style="font-size:11px;color:var(--dark);font-weight:700;margin-top:4px">Chemicals</div><div style="font-size:11px;color:var(--muted);margin-top:4px">No preservatives, colours or enhancers</div></div><div><div style="font-size:28px;font-weight:800;color:var(--gold);font-family:\'Cormorant Garamond\',serif">100%</div><div style="font-size:11px;color:var(--dark);font-weight:700;margin-top:4px">Real Protein</div><div style="font-size:11px;color:var(--muted);margin-top:4px">No fillers diluting nutritional value</div></div></div><div class="art-tip"><strong>Our commitment at Game of Bones:</strong> Every treat we make is a single-ingredient product sourced from Indian farms and processed at low temperature to preserve nutritional integrity. The ingredient list on every packet is exactly one item long — because that is the only standard we consider acceptable for the dogs of the people who trust us.</div>'
   },
   {
     emoji:'🏷️', tag:'Nutrition', date:'July 2025 · 6 min read',
@@ -6531,6 +6542,19 @@ function hideDiscountPanelOutside(e) {
   }
 }
 
+function finalizeCouponApply(coupon, code, msg, codeInput) {
+  var label = coupon.type === 'percent' ? coupon.value + '% off' :
+              coupon.type === 'free' ? 'Free item' :
+              coupon.type === 'shipping' ? 'Free shipping' :
+              '₹' + coupon.value + ' off';
+  appliedDiscount = { type: coupon.type, value: coupon.value, label: label, code: code };
+  var priorTier = getBulkTier(cartItems.reduce(function(s,i){return s+i.qty;},0));
+  msg.style.color = 'var(--teal)';
+  msg.textContent = '✓ ' + label + ' applied!' + (priorTier.pct > 0 ? ' Note: this replaces your Buy More Pay Less discount — offers don\'t stack.' : '');
+  if (codeInput) codeInput.disabled = true;
+  updateCheckoutTotals();
+}
+
 function applyDiscount() {
   var codeInput = document.getElementById('co-discount');
   var code = (codeInput ? codeInput.value : '').trim().toUpperCase();
@@ -6578,22 +6602,56 @@ function applyDiscount() {
     if (coupon.min_order && subtotal < coupon.min_order) {
       appliedDiscount = null;
       msg.style.color = '#c0392b';
-      msg.textContent = '✗ ' + code + ' requires a minimum order of ₹' + coupon.min_order + '.';
+      msg.textContent = '\u2717 ' + code + ' requires a minimum order of \u20b9' + coupon.min_order + '.';
       updateCheckoutTotals();
       return;
     }
 
-    // Apply
-    var label = coupon.type === 'percent' ? coupon.value + '% off' :
-                coupon.type === 'free' ? 'Free item' :
-                coupon.type === 'shipping' ? 'Free shipping' :
-                '₹' + coupon.value + ' off';
-    appliedDiscount = { type: coupon.type, value: coupon.value, label: label, code: code };
-    var priorTier = getBulkTier(cartItems.reduce(function(s,i){return s+i.qty;},0));
-    msg.style.color = 'var(--teal)';
-    msg.textContent = '✓ ' + label + ' applied!' + (priorTier.pct > 0 ? ' Note: this replaces your Buy More Pay Less discount — offers don\'t stack.' : '');
-    if (codeInput) codeInput.disabled = true;
-    updateCheckoutTotals();
+    // Enforce per-customer usage limit (e.g. FIRST10 = usagepercustomer:1) by checking
+    // past orders under this same phone/email. Phone & email are mandatory checkout
+    // fields, so we can check this before the coupon is even applied.
+    if (coupon.usagepercustomer) {
+      var phoneEl2 = document.getElementById('co-phone');
+      var emailEl2 = document.getElementById('co-email');
+      var phoneVal2 = phoneEl2 ? phoneEl2.value.trim() : '';
+      var emailVal2 = emailEl2 ? emailEl2.value.trim() : '';
+      if (!phoneVal2) {
+        appliedDiscount = null;
+        msg.style.color = '#c0392b';
+        msg.textContent = '\u2717 Please enter your mobile number above first, then apply ' + code + '.';
+        updateCheckoutTotals();
+        return;
+      }
+      var encPhone = encryptData(phoneVal2);
+      var encEmail = emailVal2 ? encryptData(emailVal2) : null;
+      var filterParts = ['customer_phone.eq.' + encodeURIComponent(encPhone)];
+      if (encEmail) filterParts.push('customer_email.eq.' + encodeURIComponent(encEmail));
+      var orFilter = 'or=(' + filterParts.join(',') + ')';
+      fetch(SUPABASE_URL + '/rest/v1/orders?select=id&coupon_code=eq.' + encodeURIComponent(code) + '&' + orFilter, {
+        headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(pastOrders) {
+        var usedCount = Array.isArray(pastOrders) ? pastOrders.length : 0;
+        if (usedCount >= coupon.usagepercustomer) {
+          appliedDiscount = null;
+          msg.style.color = '#c0392b';
+          msg.textContent = '\u2717 ' + code + ' has already been used on an order with this phone number or email \u2014 it\'s valid once per customer.';
+          updateCheckoutTotals();
+          return;
+        }
+        finalizeCouponApply(coupon, code, msg, codeInput);
+      })
+      .catch(function() {
+        appliedDiscount = null;
+        msg.style.color = '#c0392b';
+        msg.textContent = '\u2717 Could not verify coupon eligibility right now. Please try again.';
+        updateCheckoutTotals();
+      });
+      return;
+    }
+
+    finalizeCouponApply(coupon, code, msg, codeInput);
   })
   .catch(function() {
     // Network error — fall back to hardcoded
@@ -9237,6 +9295,7 @@ function updateProductImage(idx, p) {
   renderRelatedProducts(idx);
   renderBlogs();
   renderSafetyCard(p);
+  renderLabelTest(p);
   
   showPage('product');
   window.scrollTo(0, 0);
@@ -9270,6 +9329,42 @@ function renderSafetyCard(p) {
       </div>
       <div style="display:flex;flex-direction:column;gap:9px">
         ${pts.map(function(pt){ return '<div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--teal);font-size:13px;flex-shrink:0;margin-top:1px">✓</span><span style="font-size:12px;color:var(--muted);line-height:1.55">' + pt + '</span></div>'; }).join('')}
+      </div>
+    </div>
+  `;
+}
+
+// ── THE LABEL TEST — a typical commercial treat's ingredient list vs ours ──
+const TYPICAL_INGREDIENTS = {
+  jerky:     'Chicken meal, glycerin, sugar, salt, sodium tripolyphosphate, artificial smoke flavour, food colouring (Red 40, Yellow 5), potassium sorbate, propylene glycol, BHA, BHT, mixed tocopherols…',
+  chew:      'Rendered meat meal, animal fat (preserved with BHA/BHT), vegetable glycerin, cane sugar, salt, sodium tripolyphosphate, glucose syrup, food colouring (titanium dioxide, Red 40), potassium sorbate, propylene glycol, artificial smoke flavour, mixed tocopherols, phosphoric acid, citric acid…',
+  organ:     'Meat by-product meal, rendered animal fat, vegetable glycerin, salt, sugar, sodium metabisulphite, BHA, propylene glycol, artificial liver flavour, food colouring, mixed tocopherols…',
+  fish:      'Fish meal, fish oil (preserved with BHA/BHT), vegetable glycerin, salt, sugar, sodium tripolyphosphate, potassium sorbate, artificial fish flavour, food colouring, propylene glycol…',
+  wholeprey: 'Poultry by-product meal, rendered fat, vegetable glycerin, sugar, salt, sodium tripolyphosphate, artificial flavour, food colouring, BHA, BHT, potassium sorbate…',
+  default:   'Meat meal, rendered fat, vegetable glycerin, sugar, salt, sodium tripolyphosphate, artificial flavour, food colouring, BHA, BHT, potassium sorbate, propylene glycol…'
+};
+
+function renderLabelTest(p) {
+  var el = document.getElementById('product-detail-label-test');
+  if (!el) return;
+  var typical = TYPICAL_INGREDIENTS[p.filter] || TYPICAL_INGREDIENTS.default;
+  var oursLabel = p.name;
+
+  el.innerHTML = `
+    <div style="margin-top:16px">
+      <div style="text-align:center;margin-bottom:12px">
+        <div style="font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">The Label Test</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;color:var(--dark);font-style:italic">Read the back of the <em>other</em> bag.</div>
+      </div>
+      <div style="background:#e8ddd0;border:1px solid var(--cream-mid);padding:18px;border-radius:4px;margin-bottom:10px">
+        <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding-bottom:8px;border-bottom:1px dashed rgba(0,0,0,.15)">A Typical ${p.cat || 'Treat'}</div>
+        <div style="font-size:12px;color:#8a7358;line-height:1.9;text-decoration:line-through;text-decoration-color:rgba(138,115,88,.6)">${typical}</div>
+        <div style="font-size:11px;color:#8a7358;font-style:italic;margin-top:10px">…and that's the abridged version.</div>
+      </div>
+      <div style="background:var(--white);border:1px solid var(--cream-mid);padding:24px 18px;border-radius:4px;text-align:center">
+        <div style="font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding-bottom:8px;border-bottom:1px dashed var(--cream-mid)">Ours</div>
+        <div style="font-family:'Playfair Display',serif;font-size:30px;font-weight:900;color:var(--dark);line-height:1.1">${oursLabel}.</div>
+        <div style="font-size:11px;font-weight:600;color:var(--teal);margin-top:10px">1 ingredient. The whole label.</div>
       </div>
     </div>
   `;
