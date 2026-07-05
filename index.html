@@ -211,7 +211,7 @@ section{padding:90px 6%}
 .insta-overlay{position:absolute;inset:0;background:rgba(26,16,8,.5);display:flex;align-items:center;justify-content:center;font-size:24px;opacity:0;transition:opacity .2s}
 /* BLOG */
 .blog-layout{display:grid;grid-template-columns:2fr 1fr;gap:40px;max-width:1320px;margin:0 auto}
-.blog-main{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-content:start}
+.blog-main{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-content:start}
 .blog-aside{display:flex;flex-direction:column;gap:16px}
 .blog-card{background:var(--white);border:1px solid var(--cream-mid);cursor:pointer;transition:all .25s;overflow:hidden}
 .blog-card:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 12px 32px rgba(26,16,8,.08)}
@@ -429,6 +429,9 @@ footer{background:var(--dark);color:rgba(255,255,255,.6);padding:56px 6% 28px;ma
 .f-badges{display:flex;gap:16px}
 .f-badge{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);padding:4px 10px;border:1px solid rgba(255,255,255,.1)}
 /* RESPONSIVE */
+@media(max-width:1100px){
+  .blog-main{grid-template-columns:repeat(2,1fr)!important}
+}
 @media(max-width:1024px){
   .hero-content,.about-strip-inner,.about-grid{grid-template-columns:1fr;gap:40px}
   .hero-visual{display:none}
@@ -1863,6 +1866,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
   </section>
   <section style="background:var(--cream);padding:60px 6% 90px">
     <div class="blog-layout">
+      <div>
       <div class="blog-main" id="blog-main-grid">
         <div class="blog-card" data-article="0" onclick="window.openArt(1)" style="cursor:pointer"><div class="blog-card-img"><div class="blog-card-img-inner bci-1">&#127991;&#65039;</div><span class="blog-tag">Nutrition</span></div><div class="blog-card-body"><h2 class="blog-title">The Hidden Truth About What&rsquo;s Really in Your Dog&rsquo;s Treat</h2><p class="blog-excerpt">We decoded 12 popular Indian dog treat labels. Fillers, artificial colours, chemical preservatives &mdash; and why dehydrated treats are the answer.</p><div class="blog-meta"><span class="blog-date">March 2025 &middot; 6 min read</span><button class="blog-read" onclick="event.stopPropagation();window.openArt(1)">Read Article &rarr;</button></div></div></div>
         <div class="blog-card" data-article="1" onclick="window.openArt(2)" style="cursor:pointer"><div class="blog-card-img"><div class="blog-card-img-inner bci-2">&#129301;</div><span class="blog-tag">Nutrition</span></div><div class="blog-card-body"><h2 class="blog-title">10 Human Foods Your Dog Can Safely Eat (And 6 That Could Kill Them)</h2><p class="blog-excerpt">A vet-approved kitchen guide to what your dog can benefit from &mdash; plus the non-negotiable list of foods that must never reach their bowl.</p><div class="blog-meta"><span class="blog-date">February 2025 &middot; 5 min read</span><button class="blog-read" onclick="event.stopPropagation();window.openArt(2)">Read Article &rarr;</button></div></div></div>
@@ -1870,6 +1874,11 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
         <div class="blog-card" data-article="6" onclick="window.openArt(7)" style="cursor:pointer"><div class="blog-card-img"><div class="blog-card-img-inner bci-1">&#128054;</div><span class="blog-tag">Puppy Guide</span></div><div class="blog-card-body"><h2 class="blog-title">The New Dog Parent&rsquo;s Complete Guide to Treats</h2><p class="blog-excerpt">What to give, when to give it, and exactly how much &mdash; for puppies, adults, seniors and overweight dogs. Includes a 7-day rotation strategy.</p><div class="blog-meta"><span class="blog-date">September 2024 &middot; 4 min read</span><button class="blog-read" onclick="event.stopPropagation();window.openArt(7)">Read Article &rarr;</button></div></div></div>
         <div class="blog-card" data-article="7" onclick="window.openArt(8)" style="cursor:pointer"><div class="blog-card-img"><div class="blog-card-img-inner bci-2">&#127754;</div><span class="blog-tag">Ingredients</span></div><div class="blog-card-body"><h2 class="blog-title">Why Fish Treats Are the Most Underrated Thing You Can Feed Your Dog</h2><p class="blog-excerpt">Most Indian dog parents skip fish treats. This is a mistake. A full comparison of our fish range with omega-3 benefits and coat results.</p><div class="blog-meta"><span class="blog-date">August 2024 &middot; 4 min read</span><button class="blog-read" onclick="event.stopPropagation();window.openArt(8)">Read Article &rarr;</button></div></div></div>
         <div class="blog-card" data-article="8" onclick="window.openArt(9)" style="cursor:pointer"><div class="blog-card-img"><div class="blog-card-img-inner bci-3">&#127968;</div><span class="blog-tag">Storage</span></div><div class="blog-card-body"><h2 class="blog-title">How to Store Dehydrated Treats in Indian Humidity</h2><p class="blog-excerpt">Mumbai, Thane, Chennai &mdash; humidity is the enemy of shelf life. A complete storage guide by treat type with special monsoon rules.</p><div class="blog-meta"><span class="blog-date">July 2024 &middot; 3 min read</span><button class="blog-read" onclick="event.stopPropagation();window.openArt(9)">Read Article &rarr;</button></div></div></div>
+      </div>
+      <div id="blog-load-more-wrap" style="display:none;flex-direction:column;align-items:center;gap:10px;margin-top:28px">
+        <div id="blog-load-more-count" style="font-size:12px;color:var(--muted)"></div>
+        <button onclick="loadMoreBlogs()" style="background:var(--dark);color:var(--gold);border:none;padding:13px 32px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;font-family:'Jost',sans-serif">Load More Articles</button>
+      </div>
       </div>
       <aside class="blog-aside">
         <h3 style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--dark);margin-bottom:16px">Quick Reads</h3>
@@ -11372,28 +11381,51 @@ function loadBlogsFromDB() {
       return d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
     }
 
-    // ── MAIN GRID: fully dynamic, renders every published blog from the DB ──
-    var grid = document.getElementById('blog-main-grid');
-    if (grid) {
-      grid.innerHTML = blogs.map(function(b, i) {
-        var imgInner = b.cover_image
-          ? '<div class="blog-card-img-inner" style="position:absolute;inset:0;font-size:0;padding:0;overflow:hidden"><img src="' + b.cover_image + '" alt="' + b.title + '" style="width:100%;height:100%;object-fit:cover;display:block"></div>'
-          : '<div class="blog-card-img-inner ' + BCI_CLASSES[i % 3] + '">' + (CATEGORY_EMOJI[b.category] || '📄') + '</div>';
-        var dateLabel = formatBlogDate(b.created_at);
-        var metaLine = [dateLabel, b.read_time ? b.read_time + ' read' : ''].filter(Boolean).join(' &middot; ');
-        return '<div class="blog-card" onclick="openDbBlog(\'' + b.slug + '\')" style="cursor:pointer">' +
-          '<div class="blog-card-img">' + imgInner + '<span class="blog-tag">' + (b.category || 'Guide') + '</span></div>' +
-          '<div class="blog-card-body">' +
-            '<h2 class="blog-title">' + b.title + '</h2>' +
-            '<p class="blog-excerpt">' + (b.excerpt || '') + '</p>' +
-            '<div class="blog-meta">' +
-              '<span class="blog-date">' + metaLine + '</span>' +
-              '<button class="blog-read" onclick="event.stopPropagation();openDbBlog(\'' + b.slug + '\')">Read Article &rarr;</button>' +
-            '</div>' +
+    function buildBlogCard(b, i) {
+      var imgInner = b.cover_image
+        ? '<div class="blog-card-img-inner" style="position:absolute;inset:0;font-size:0;padding:0;overflow:hidden"><img src="' + b.cover_image + '" alt="' + b.title + '" style="width:100%;height:100%;object-fit:cover;display:block"></div>'
+        : '<div class="blog-card-img-inner ' + BCI_CLASSES[i % 3] + '">' + (CATEGORY_EMOJI[b.category] || '📄') + '</div>';
+      var dateLabel = formatBlogDate(b.created_at);
+      var metaLine = [dateLabel, b.read_time ? b.read_time + ' read' : ''].filter(Boolean).join(' &middot; ');
+      return '<div class="blog-card" onclick="openDbBlog(\'' + b.slug + '\')" style="cursor:pointer">' +
+        '<div class="blog-card-img">' + imgInner + '<span class="blog-tag">' + (b.category || 'Guide') + '</span></div>' +
+        '<div class="blog-card-body">' +
+          '<h2 class="blog-title">' + b.title + '</h2>' +
+          '<p class="blog-excerpt">' + (b.excerpt || '') + '</p>' +
+          '<div class="blog-meta">' +
+            '<span class="blog-date">' + metaLine + '</span>' +
+            '<button class="blog-read" onclick="event.stopPropagation();openDbBlog(\'' + b.slug + '\')">Read Article &rarr;</button>' +
           '</div>' +
-        '</div>';
-      }).join('');
+        '</div>' +
+      '</div>';
     }
+
+    // ── MAIN GRID: fully dynamic, paginated so the page doesn't load 3+ screens tall ──
+    window._blogGridAll = blogs;
+    window._blogGridShown = window._blogGridShown || 9; // 3 rows at 3-per-row initially
+    window.renderBlogGridPage = function() {
+      var grid = document.getElementById('blog-main-grid');
+      if (!grid) return;
+      var all = window._blogGridAll || [];
+      var shown = Math.min(window._blogGridShown, all.length);
+      grid.innerHTML = all.slice(0, shown).map(buildBlogCard).join('');
+
+      var moreWrap = document.getElementById('blog-load-more-wrap');
+      if (moreWrap) {
+        if (shown < all.length) {
+          moreWrap.style.display = 'flex';
+          var countLabel = document.getElementById('blog-load-more-count');
+          if (countLabel) countLabel.textContent = 'Showing ' + shown + ' of ' + all.length + ' articles';
+        } else {
+          moreWrap.style.display = 'none';
+        }
+      }
+    };
+    window.loadMoreBlogs = function() {
+      window._blogGridShown += 9;
+      window.renderBlogGridPage();
+    };
+    window.renderBlogGridPage();
 
     // ── QUICK READS SIDEBAR: enrich the curated mini-posts in place (unchanged) ──
     document.querySelectorAll('.mini-post').forEach(function(card) {
