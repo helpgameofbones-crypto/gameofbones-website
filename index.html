@@ -9261,8 +9261,7 @@ function renderSafetyCard(p) {
   } else {
     pts.push('Low-fat, high-protein — a clean reward for training or everyday snacking');
   }
-  pts.push('Made in an FSSAI-compliant facility and batch lab-tested for safety');
-
+  
   el.innerHTML = `
     <div style="background:var(--cream);border:1px solid var(--cream-mid);padding:18px;border-radius:4px">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
@@ -11270,10 +11269,10 @@ function loadBlogsFromDB() {
         if (!titleEl) return;
         var titleText = titleEl.textContent.trim();
         var match = blogs.find(function(b) { return norm(b.title) === norm(titleText); });
-        if (!match || !match.cover_image) return;
+        if (!match) return; // no matching DB article at all — leave this card alone
 
-        // Replace whichever icon container this card uses
-        var iconBox = card.querySelector('.blog-card-img-inner, .mini-post-img, [style*="font-size:48px"], [style*="font-size:60px"]');
+        // Replace whichever icon container this card uses — only if a cover image exists
+        var iconBox = match.cover_image ? card.querySelector('.blog-card-img-inner, .mini-post-img, [style*="font-size:48px"], [style*="font-size:60px"]') : null;
         if (iconBox) {
           var img = document.createElement('img');
           img.src = match.cover_image;
