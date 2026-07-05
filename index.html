@@ -7435,8 +7435,29 @@ function _finaliseOrder(ref, phoneVal, orderItems, razorpayPaymentId) {
   
   var shippingCharge = 0; // Free shipping on all orders
   var codCharge = selectedPayment === 'cod' ? 40 : 0;
-  var grandTotal = subtotal + shippingCharge + codCharge;
-  
+
+  // Use the SAME grand total that was actually shown on screen and charged via
+  // Razorpay (set in placeOrder() as _currentOrderTotal) — never recompute this
+  // independently, or the saved order can silently drift from what was charged.
+  var grandTotal = (typeof _currentOrderTotal === 'number' && _currentOrderTotal > 0)
+    ? _currentOrderTotal
+    : subtotal + shippingCharge + codCharge;
+
+  // Total discount = whatever gap exists between subtotal+charges and what was
+  // actually charged — this covers coupon, loyalty points, bulk discount, and
+  // the online-payment discount, however they combined for this specific order.
+  var totalDiscountApplied = Math.max(0, (subtotal + codCharge) - grandTotal);
+
+  // Build a human-readable breakdown for admin/invoice display
+  var discountNotes = [];
+  if (appliedDiscount && appliedDiscount.code) {
+    discountNotes.push('Coupon ' + appliedDiscount.code + ' applied');
+  }
+  if (selectedPayment !== 'cod') {
+    discountNotes.push('Online payment discount: -₹30');
+  }
+  var notesText = discountNotes.length > 0 ? discountNotes.join(' | ') : null;
+
   // Build order payload for Supabase
   var orderPayload = {
     ref: ref,
@@ -7451,7 +7472,7 @@ function _finaliseOrder(ref, phoneVal, orderItems, razorpayPaymentId) {
     },
     items: itemsWithDetails,
     subtotal: subtotal,
-    discount: 0,
+    discount: totalDiscountApplied,
     coupon_code: appliedDiscount && appliedDiscount.code ? appliedDiscount.code : null,
     shipping: shippingCharge,
     packaging: 0,
@@ -7461,7 +7482,7 @@ function _finaliseOrder(ref, phoneVal, orderItems, razorpayPaymentId) {
     payment_status: selectedPayment === 'cod' ? 'pending' : 'paid',
     transaction_id: razorpayPaymentId || null,
     status: 'placed',
-    notes: null,
+    notes: notesText,
     csrf_token: csrfToken,                                         // 🔐 CSRF TOKEN FOR VERIFICATION
     referrer_code: _referrerCode,
     referrer_phone: _referrerCode ? _referrerCode.replace('GOB', '').slice(-10) : null,
