@@ -11347,7 +11347,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // ── LOAD BLOGS FROM SUPABASE — replace hardcoded icons with real cover images ────────────
 function loadBlogsFromDB() {
-  fetch(SUPABASE_URL + '/rest/v1/blogs?select=id,title,slug,category,excerpt,body,cover_image,read_time,created_at&is_published=eq.true&order=created_at.desc&limit=30', {
+  fetch(SUPABASE_URL + '/rest/v1/blogs?select=id,title,slug,category,excerpt,body,cover_image,read_time,created_at&is_published=eq.true&order=created_at.desc&limit=50', {
     headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
   })
   .then(function(r) { return r.json(); })
@@ -11357,45 +11357,72 @@ function loadBlogsFromDB() {
 
     function norm(s) { return (s || '').toLowerCase().replace(/[^a-z0-9]/g, ''); }
 
-    // Match every existing blog card/mini-post on the page by title text and swap in the real cover image
-    document.querySelectorAll('.blog-card, .mini-post, [onclick*="openArt"]').forEach(function(card) {
+    var CATEGORY_EMOJI = {
+      'Nutrition': '🍖', 'Health': '⚕️', 'Behavior': '🐕', 'Safety': '⚠️',
+      'Puppy Guide': '🐶', 'Senior Care': '🦴', 'Cat Care': '🐱',
+      'Community Health': '💉', 'Ingredients': '🏷️', 'Training': '🎯',
+      'Chews & Bones': '🦴', 'Feeding Guide': '📅', 'Storage': '🏠'
+    };
+    var BCI_CLASSES = ['bci-1', 'bci-2', 'bci-3'];
+
+    function formatBlogDate(dateStr) {
+      if (!dateStr) return '';
+      var d = new Date(dateStr);
+      if (isNaN(d)) return '';
+      return d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    }
+
+    // ── MAIN GRID: fully dynamic, renders every published blog from the DB ──
+    var grid = document.getElementById('blog-main-grid');
+    if (grid) {
+      grid.innerHTML = blogs.map(function(b, i) {
+        var imgInner = b.cover_image
+          ? '<div class="blog-card-img-inner" style="position:absolute;inset:0;font-size:0;padding:0;overflow:hidden"><img src="' + b.cover_image + '" alt="' + b.title + '" style="width:100%;height:100%;object-fit:cover;display:block"></div>'
+          : '<div class="blog-card-img-inner ' + BCI_CLASSES[i % 3] + '">' + (CATEGORY_EMOJI[b.category] || '📄') + '</div>';
+        var dateLabel = formatBlogDate(b.created_at);
+        var metaLine = [dateLabel, b.read_time ? b.read_time + ' read' : ''].filter(Boolean).join(' &middot; ');
+        return '<div class="blog-card" onclick="openDbBlog(\'' + b.slug + '\')" style="cursor:pointer">' +
+          '<div class="blog-card-img">' + imgInner + '<span class="blog-tag">' + (b.category || 'Guide') + '</span></div>' +
+          '<div class="blog-card-body">' +
+            '<h2 class="blog-title">' + b.title + '</h2>' +
+            '<p class="blog-excerpt">' + (b.excerpt || '') + '</p>' +
+            '<div class="blog-meta">' +
+              '<span class="blog-date">' + metaLine + '</span>' +
+              '<button class="blog-read" onclick="event.stopPropagation();openDbBlog(\'' + b.slug + '\')">Read Article &rarr;</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    // ── QUICK READS SIDEBAR: enrich the curated mini-posts in place (unchanged) ──
+    document.querySelectorAll('.mini-post').forEach(function(card) {
       try {
-        var titleEl = card.querySelector('.blog-title, .mini-title, h3');
+        var titleEl = card.querySelector('.mini-title, h3');
         if (!titleEl) return;
         var titleText = titleEl.textContent.trim();
         var match = blogs.find(function(b) { return norm(b.title) === norm(titleText); });
-        if (!match) return; // no matching DB article at all — leave this card alone
+        if (!match) return;
 
-        // Replace whichever icon container this card uses — only if a cover image exists
-        var iconBox = match.cover_image ? card.querySelector('.blog-card-img-inner, .mini-post-img, [style*="font-size:48px"], [style*="font-size:60px"]') : null;
+        var iconBox = match.cover_image ? card.querySelector('.mini-post-img') : null;
         if (iconBox) {
           var img = document.createElement('img');
           img.src = match.cover_image;
           img.alt = match.title;
-          var isMini = iconBox.classList.contains('mini-post-img');
           img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block';
           iconBox.innerHTML = '';
           iconBox.appendChild(img);
           iconBox.style.fontSize = '0';
           iconBox.style.padding = '0';
-          if (isMini) {
-            iconBox.style.height = '90px';
-            iconBox.style.minHeight = '90px';
-          } else {
-            // Let the parent .blog-card-img aspect-ratio:16/9 control height
-            iconBox.style.height = '100%';
-            iconBox.style.minHeight = '';
-            iconBox.style.position = 'absolute';
-            iconBox.style.inset = '0';
-          }
+          iconBox.style.height = '90px';
+          iconBox.style.minHeight = '90px';
           iconBox.style.overflow = 'hidden';
         }
-        // Rewire click to open the full DB article (with body content) instead of the static reader
         card.onclick = function(e) { if (e) e.stopPropagation(); openDbBlog(match.slug); };
         var readBtn = card.querySelector('.blog-read');
         if (readBtn) readBtn.onclick = function(e) { e.stopPropagation(); openDbBlog(match.slug); };
       } catch (cardErr) {
-        console.error('Blog card update skipped due to error:', cardErr);
+        console.error('Mini-post update skipped due to error:', cardErr);
       }
     });
   })
