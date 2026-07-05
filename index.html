@@ -467,6 +467,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.6);padding:56px 6% 28px;ma
   #cartDrawer { width: 100vw !important; }
   /* Checkout grid single column on mobile */
   #co-layout-grid { grid-template-columns: 1fr !important; }
+  #co-layout-grid > div { min-width: 0 !important; }
   /* Checkout right panel unsticky on mobile */
   #co-layout-grid > div:last-child { position: static !important; }
   /* Product grid 2 cols on small screens */
@@ -625,7 +626,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
 .hamburger-btn { display: none; }
 #navOverlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); opacity: 0; visibility: hidden; transition: opacity .3s ease; z-index: 1900; }
 #navOverlay.open { opacity: 1; visibility: visible; }
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   /* Hamburger button (animates to an X when open) */
   .hamburger-btn {
     display: flex !important;
@@ -669,7 +670,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
     margin: 0 !important;
     padding: 76px 0 24px !important;
     background: var(--white) !important;
-    display: flex !important;
+    display: none !important;
     flex-direction: column !important;
     align-items: stretch !important;
     gap: 0 !important;
@@ -680,7 +681,7 @@ body:has(#page-login.active) #mainNav { display: none !important; }
     transition: transform .3s ease;
     z-index: 2000 !important;
   }
-  .nav-links.mobile-open { transform: translateX(0); }
+  .nav-links.mobile-open { display: flex !important; transform: translateX(0); }
   .nav-links li { display: block !important; margin: 0 !important; padding: 0 !important; list-style: none !important; }
   .nav-links a {
     display: flex !important;
@@ -860,7 +861,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
 #pmodal-upload-btn { display: none !important; }
 .prod-upload-btn { display: none !important; }
 /* CHECKOUT OPTIMIZATION */
-@media (max-width: 1024px) { #co-layout-grid { grid-template-columns: 1fr !important; } }
+@media (max-width: 1024px) { #co-layout-grid { grid-template-columns: 1fr !important; } #co-layout-grid > div { min-width: 0 !important; } }
 .checkout-progress { position: sticky; top: 68px; z-index: 50; background: var(--white); }
 /* PRODUCT RATINGS - DISPLAY STARS AND COUNTS */
 .prod-card-rating { font-size: 12px; color: var(--muted); margin: 10px 0 8px; display: flex; align-items: center; gap: 4px; cursor: pointer; }
@@ -2849,7 +2850,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
 <div id="cartOverlay" onclick="toggleCart()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1100;opacity:0;transition:opacity .3s"></div>
 
 <!-- ── CART DRAWER ───────────────────────────────────────────────────────── -->
-<div id="cartDrawer" style="position:fixed;top:0;right:0;width:min(420px,100vw);height:100%;background:var(--white);z-index:1200;transform:translateX(100%);transition:transform .32s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:-4px 0 32px rgba(0,0,0,.18)">
+<div id="cartDrawer" style="display:none;position:fixed;top:0;right:0;width:min(420px,100vw);height:100%;background:var(--white);z-index:1200;transform:translateX(100%);transition:transform .32s cubic-bezier(.4,0,.2,1);flex-direction:column;box-shadow:-4px 0 32px rgba(0,0,0,.18)">
   <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 22px 16px;border-bottom:1px solid var(--cream-mid)">
     <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:900;letter-spacing:.04em;color:var(--dark)">Your Cart</div>
     <button onclick="toggleCart()" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--muted);line-height:1;padding:4px">&#10005;</button>
@@ -3053,8 +3054,8 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
             <!-- Discount code -->
             <div style="margin-bottom:10px">
               <div style="display:flex;gap:8px">
-                <input id="co-discount" type="text" placeholder="Discount code" style="flex:1;padding:10px 12px;border:1.5px solid var(--cream-mid);background:var(--cream);font-family:'Jost',sans-serif;font-size:13px;color:var(--dark);outline:none">
-                <button onclick="applyDiscount()" style="background:var(--dark);color:var(--white);border:none;padding:10px 16px;font-family:'Jost',sans-serif;font-size:12px;font-weight:700;letter-spacing:.08em;cursor:pointer">Apply</button>
+                <input id="co-discount" type="text" placeholder="Discount code" style="flex:1;min-width:0;padding:10px 12px;border:1.5px solid var(--cream-mid);background:var(--cream);font-family:'Jost',sans-serif;font-size:13px;color:var(--dark);outline:none">
+                <button onclick="applyDiscount()" style="flex-shrink:0;background:var(--dark);color:var(--white);border:none;padding:10px 16px;font-family:'Jost',sans-serif;font-size:12px;font-weight:700;letter-spacing:.08em;cursor:pointer">Apply</button>
               </div>
               <div id="discountMsg" style="display:none;font-size:12px;margin-top:6px;padding:6px 10px"></div>
             </div>
@@ -5892,25 +5893,14 @@ function closeTreatInfo() {
 // ── FREE SHIPPING PROGRESS BAR ──────────────────────────────────────────
 const FREE_SHIP_THRESHOLD = 599;
 function updateShipBar() {
-  var total=cartItems.reduce(function(s,i){return s+i.price*i.qty;},0);
-  var threshold=FREE_SHIP_THRESHOLD||599;
   var msg=document.getElementById('cartShipMsg');
   var fill=document.getElementById('cartShipFill');
   var amt=document.getElementById('cartShipAmt');
   if(!msg)return;
-  if(total>=threshold){
-    msg.textContent="You've unlocked free shipping!";
-    msg.style.color='var(--teal)';
-    if(fill){fill.style.width='100%';fill.style.background='var(--teal)';}
-    if(amt)amt.textContent='';
-  }else{
-    var rem=threshold-total;
-    msg.textContent='Add ₹'+rem+' more for free shipping';
-    msg.style.color='var(--muted)';
-    var pct=Math.min(Math.round((total/threshold)*100),100);
-    if(fill){fill.style.width=pct+'%';fill.style.background=pct>70?'var(--teal)':'var(--gold)';}
-    if(amt)amt.textContent=pct+'%';
-  }
+  msg.textContent="You've unlocked free shipping!";
+  msg.style.color='var(--teal)';
+  if(fill){fill.style.width='100%';fill.style.background='var(--teal)';}
+  if(amt)amt.textContent='';
 }
 
 function filterBySize(size) {
@@ -8142,25 +8132,14 @@ function renderCartPage() {
 }
 
 function updateShipBarPage() {
-  var total = cartItems.reduce(function(s,i){return s+i.price*i.qty;},0);
-  var threshold = FREE_SHIP_THRESHOLD || 599;
   var msg = document.getElementById('cartPageShipMsg');
   var fill = document.getElementById('cartPageShipFill');
   var amt = document.getElementById('cartPageShipAmt');
   if (!msg) return;
-  if (total >= threshold) {
-    msg.textContent = "You've unlocked free shipping!";
-    msg.style.color = 'var(--teal)';
-    if (fill) { fill.style.width = '100%'; fill.style.background = 'var(--teal)'; }
-    if (amt) amt.textContent = '';
-  } else {
-    var rem = threshold - total;
-    msg.textContent = 'Add ₹' + rem + ' more for free shipping';
-    msg.style.color = 'var(--muted)';
-    var pct = Math.min(Math.round((total / threshold) * 100), 100);
-    if (fill) { fill.style.width = pct + '%'; fill.style.background = pct > 70 ? 'var(--teal)' : 'var(--gold)'; }
-    if (amt) amt.textContent = pct + '%';
-  }
+  msg.textContent = "You've unlocked free shipping!";
+  msg.style.color = 'var(--teal)';
+  if (fill) { fill.style.width = '100%'; fill.style.background = 'var(--teal)'; }
+  if (amt) amt.textContent = '';
 }
 
 var _cartUpsellProduct = null;
@@ -11866,7 +11845,12 @@ function openMobileMenu(){
   var menu=document.getElementById('mobileNavMenu');
   var btn=document.querySelector('.hamburger-btn');
   var ov=document.getElementById('navOverlay');
-  if(menu)menu.classList.add('mobile-open');
+  if(menu){
+    menu.style.setProperty('display','flex','important');
+    // Force a reflow so the transform transition actually animates from translateX(100%)
+    void menu.offsetWidth;
+    menu.classList.add('mobile-open');
+  }
   if(btn)btn.classList.add('open');
   if(ov)ov.classList.add('open');
   document.body.style.overflow='hidden';
@@ -11875,7 +11859,14 @@ function closeMobileMenu(){
   var menu=document.getElementById('mobileNavMenu');
   var btn=document.querySelector('.hamburger-btn');
   var ov=document.getElementById('navOverlay');
-  if(menu)menu.classList.remove('mobile-open');
+  if(menu){
+    menu.classList.remove('mobile-open');
+    // Wait for the slide-out transition to finish before removing from layout,
+    // otherwise it would vanish instantly instead of sliding away.
+    setTimeout(function(){
+      if(!menu.classList.contains('mobile-open')) menu.style.removeProperty('display');
+    }, 320);
+  }
   if(btn)btn.classList.remove('open');
   if(ov)ov.classList.remove('open');
   document.body.style.overflow='';
