@@ -756,15 +756,12 @@ body:has(#page-login.active) #mainNav { display: none !important; }
 html, body { overflow-x: hidden !important; max-width: 100% !important; }
 #mainNav, main, footer, .page, section { max-width: 100vw !important; box-sizing: border-box; }
 @media(min-width:769px){
-  .pg-image{grid-column:1;grid-row:1;position:sticky;top:80px}
-  .pg-share{grid-column:1;grid-row:2}
-  .pg-safety{grid-column:1;grid-row:3}
-  .pg-labeltest{grid-column:1;grid-row:4}
-  .pg-buybox{grid-column:2;grid-row:1}
-  .pg-details{grid-column:2;grid-row:2}
+  .pg-left,.pg-right{display:flex;flex-direction:column}
+  .pg-image{position:sticky;top:80px}
 }
 @media (max-width: 768px) {
   .pg-grid{gap:20px!important}
+  .pg-left,.pg-right{display:contents}
   /* Kill horizontal scroll — the core mobile breakage */
   html, body { overflow-x: hidden !important; max-width: 100% !important; }
   #mainNav, main, footer, .page, section { max-width: 100vw !important; }
@@ -1403,8 +1400,8 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
   </section>
   <section style="background:var(--cream);padding:60px 6%;min-height:auto">
     <div class="pg-grid" style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start">
-      <!-- IMAGE & CAROUSEL -->
-      <div class="pg-image" style="order:1">
+      <div class="pg-left">
+        <div class="pg-image" style="order:1">
         <div style="aspect-ratio:1;max-width:440px;max-height:440px;width:100%;margin:0 auto 20px;background:var(--white);border:1px solid var(--cream-mid);overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative">
           <img id="product-detail-img" src="" alt="" style="width:100%;height:100%;object-fit:cover;display:none">
           <div id="product-detail-img-placeholder" style="text-align:center;color:var(--muted)"><div style="font-size:60px;margin-bottom:10px">🐾</div><div style="font-size:13px">Loading image...</div></div>
@@ -1415,27 +1412,19 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
           </div>
         </div>
       </div>
-
-      <!-- CHOOSE SIZE + ADD TO CART — right after the image on mobile, right column on desktop -->
-      <div class="pg-buybox" id="product-detail-buybox" style="order:2"></div>
-
-      <!-- SHARE BUTTONS -->
-      <div class="pg-share" style="order:3;display:flex;gap:8px;background:var(--white);padding:12px;border:1px solid var(--cream-mid);border-radius:2px;margin-bottom:20px">
+        <div class="pg-share" style="order:3;display:flex;gap:8px;background:var(--white);padding:12px;border:1px solid var(--cream-mid);border-radius:2px;margin-bottom:20px">
         <span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;margin-right:4px">Share:</span>
         <button onclick="shareProduct('whatsapp')" title="Share on WhatsApp" style="background:none;border:none;font-size:18px;cursor:pointer;opacity:.6;transition:opacity .2s;padding:4px 6px" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.6'">💬</button>
         <button onclick="shareProduct('facebook')" title="Share on Facebook" style="background:none;border:none;font-size:18px;cursor:pointer;opacity:.6;transition:opacity .2s;padding:4px 6px" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.6'">👍</button>
         <button onclick="shareProduct('twitter')" title="Share on Twitter" style="background:none;border:none;font-size:18px;cursor:pointer;opacity:.6;transition:opacity .2s;padding:4px 6px" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.6'">𝕏</button>
         <button onclick="shareProduct('copy')" title="Copy link" style="background:none;border:none;font-size:18px;cursor:pointer;opacity:.6;transition:opacity .2s;padding:4px 6px" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.6'">🔗</button>
       </div>
-
-      <!-- WHY THIS TREAT IS SAFE — per-product infographic card -->
-      <div class="pg-safety" id="product-detail-safety" style="order:4"></div>
-
-      <!-- THE LABEL TEST — typical treat vs ours, per product -->
-      <div class="pg-labeltest" id="product-detail-label-test" style="order:5"></div>
-
-      <!-- PRODUCT INFO (description, benefits, feeding guide, how it's made, storage, reviews) -->
-      <div class="pg-details" style="order:6">
+        <div class="pg-safety" id="product-detail-safety" style="order:4"></div>
+        <div class="pg-labeltest" id="product-detail-label-test" style="order:5"></div>
+      </div>
+      <div class="pg-right">
+        <div class="pg-buybox" id="product-detail-buybox" style="order:2"></div>
+        <div class="pg-details" style="order:6">
         <div id="product-detail-content"></div>
 
         <!-- REVIEWS SECTION -->
@@ -1448,10 +1437,12 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
           <button onclick="openReviewForm(currentProductIdx)" style="width:100%;background:none;border:1px solid var(--cream-mid);color:var(--muted);padding:12px;font-family:'Jost',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all .2s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--brown)'" onmouseout="this.style.borderColor='var(--cream-mid)';this.style.color='var(--muted)'">✎ Write a Review</button>
         </div>
       </div>
+      </div>
     </div>
   </section>
   
-  <!-- YOU MAY ALSO LIKE SECTION -->
+  
+<!-- YOU MAY ALSO LIKE SECTION -->
   <section style="background:var(--cream);padding:60px 6%;border-top:1px solid var(--cream-mid)">
     <div style="max-width:1200px;margin:0 auto">
       <h2 style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:var(--dark);margin-bottom:40px">You may also like</h2>
