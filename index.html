@@ -7147,7 +7147,7 @@ function submitReviewData(productId, dogName, productName, reviewText, photoUrl,
   .then(r => {
     if (r.status === 201) {
       // Review saved successfully - award points
-      awardReviewPoints(_currentCustomerPhone);
+      awardReviewPoints(_currentCustomerPhone, dogName);
       
       // Show success message
       document.getElementById('reviewSuccess').style.display = 'block';
@@ -7184,37 +7184,38 @@ function submitReviewData(productId, dogName, productName, reviewText, photoUrl,
   });
 }
 
-function awardReviewPoints(phone) {
-  // Award 50 points for writing a review
+function awardReviewPoints(phone, customerName) {
+  // Award 50 points for writing a review — logged in the rewards table,
+  // which checkRewards()/checkLoyaltyAtCheckout() both read from.
   if (!phone) return;
-  
-  // Method 1: Save to loyalty_points table (if you have it)
-  // OR store in localStorage for now until backend is ready
-  
   try {
-    var pointsRecord = {
+    var rewardRecord = {
       customer_phone: phone,
-      points: REVIEW_POINTS,
+      customer_name: customerName || null,
       type: 'review',
-      created_at: new Date().toISOString()
+      description: REVIEW_POINTS + ' points earned for writing a review',
+      coupon_code: null,
+      discount_value: REVIEW_POINTS,
+      is_used: false,
+      expires_at: new Date(Date.now() + 365*24*60*60*1000).toISOString()
     };
-    
-    // Try to save to Supabase
-    fetch(SUPABASE_URL + '/rest/v1/loyalty_points', {
+    fetch(SUPABASE_URL + '/rest/v1/rewards', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'apikey': SUPABASE_ANON_KEY,
         'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
       },
-      body: JSON.stringify(pointsRecord)
+      body: JSON.stringify(rewardRecord)
     })
     .then(r => {
       if (r.status === 201) {
         console.log('✓ Awarded 50 review points to', phone);
+      } else {
+        console.warn('Review points award failed, status:', r.status);
       }
     })
-    .catch(err => console.log('Note: Points stored locally (backend pending)'));
+    .catch(err => console.warn('Review points award failed:', err.message));
   } catch(e) {
     console.log('Could not award points:', e);
   }
@@ -7512,6 +7513,32 @@ function _finaliseOrder(ref, phoneVal, orderItems) {
   })
   .then(function(data) {
     console.log('Order saved to Supabase:', data);
+
+    // ═══════════════════════ CREDIT REFERRAL BONUS (non-blocking) ═══════════════════════
+    try {
+      var newOrderId = (Array.isArray(data) && data[0] && data[0].id) ? data[0].id : null;
+      if (_referrerCode && newOrderId) {
+        var last4 = _referrerCode.replace('GOB', '').slice(-4);
+        // Look up the referrer's real phone number via the last 4 digits encoded in the code
+        fetch(SUPABASE_URL + '/rest/v1/customers?select=phone,name&phone=like.*' + last4, {
+          headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(matches) {
+          if (!Array.isArray(matches) || matches.length === 0) return;
+          var referrerPhone = matches[0].phone;
+          if (referrerPhone === phoneVal) return; // can't refer yourself
+          fetch(SUPABASE_URL + '/rest/v1/referrals', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY },
+            body: JSON.stringify({ referrer_phone: referrerPhone, referred_phone: phoneVal, order_id: newOrderId, points_awarded: 300 })
+          }).then(function(rr) { console.log('Referral bonus credited:', rr.status === 201); })
+            .catch(function(e) { console.warn('Referral credit skipped:', e.message); });
+        })
+        .catch(function(e) { console.warn('Referral lookup skipped:', e.message); });
+      }
+    } catch(e) { console.warn('Referral block skipped:', e.message); }
+
     // Send purchase event to Google Analytics
     if (typeof gtag !== 'undefined') {
       gtag('event', 'purchase', {
@@ -10560,6 +10587,16 @@ function swSpin() {
     usedEmails.push(email.toLowerCase());
     sessionStorage.setItem('swUsedEmails', JSON.stringify(usedEmails));
     errEl.style.display = 'none';
+
+    // Save to backend so this shows up in admin (email_captures table)
+    try {
+      fetch(SUPABASE_URL + '/rest/v1/email_captures', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY },
+        body: JSON.stringify({ email: email, source: 'spin_wheel', status: 'active' })
+      }).then(function(r) { console.log('Spin wheel email captured:', r.status === 201); })
+        .catch(function(e) { console.warn('Spin wheel email capture failed:', e.message); });
+    } catch(e) { console.warn('Spin wheel email capture skipped:', e.message); }
   }
   // Show spinning panel
   if (pre) pre.style.display = 'none';
@@ -11122,24 +11159,34 @@ function checkRewards() {
 
   var phoneLast10 = phone.slice(-10);
 
-  fetch(SUPABASE_URL + '/rest/v1/orders?select=id,grand_total,total_amount,status,created_at&customer_phone=ilike.*' + phoneLast10 + '&status=neq.cancelled&order=created_at.desc', {
-    headers: {
-      'apikey': SUPABASE_ANON_KEY,
-      'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
-    }
-  })
-  .then(function(res) { return res.json(); })
-  .then(function(orders) {
+  Promise.all([
+    fetch(SUPABASE_URL + '/rest/v1/orders?select=id,grand_total,total_amount,status,created_at&customer_phone=ilike.*' + phoneLast10 + '&status=neq.cancelled&order=created_at.desc', {
+      headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
+    }).then(function(r){ return r.json(); }).catch(function(){ return []; }),
+    fetch(SUPABASE_URL + '/rest/v1/referrals?select=points_awarded&referrer_phone=eq.' + phoneLast10, {
+      headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
+    }).then(function(r){ return r.json(); }).catch(function(){ return []; }),
+    fetch(SUPABASE_URL + '/rest/v1/rewards?select=discount_value&customer_phone=eq.' + phoneLast10 + '&type=eq.review', {
+      headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
+    }).then(function(r){ return r.json(); }).catch(function(){ return []; })
+  ])
+  .then(function(results) {
+    var orders = results[0];
+    var referrals = Array.isArray(results[1]) ? results[1] : [];
+    var reviewBonuses = Array.isArray(results[2]) ? results[2] : [];
     var myOrders = Array.isArray(orders) ? orders : [];
     var totalSpent = myOrders.reduce(function(s,o){ return s + (o.grand_total || o.total_amount || 0); }, 0);
-    var totalPoints = Math.floor(totalSpent / 10); // 1 point per Rs.10
+    var spendPoints = Math.floor(totalSpent / 10); // 1 point per Rs.10
+    var referralPoints = referrals.reduce(function(s,r){ return s + (r.points_awarded || 0); }, 0);
+    var reviewPoints = reviewBonuses.reduce(function(s,r){ return s + (r.discount_value || 0); }, 0);
+    var totalPoints = spendPoints + referralPoints + reviewPoints;
     var redeemableRupees = Math.floor(totalPoints / 100) * 30; // 100 points = Rs.30
     var nextTierPoints = ((Math.floor(totalPoints / 100) + 1) * 100); // Next redemption tier
 
     var el = document.getElementById("rewardsResult");
     el.innerHTML = "";
 
-    if (myOrders.length === 0) {
+    if (myOrders.length === 0 && totalPoints === 0) {
       var noOrd = document.createElement("div");
       noOrd.style.cssText = "background:rgba(255,255,255,.05);border:1px solid rgba(200,151,58,.2);padding:32px;text-align:center;border-radius:4px;backdrop-filter:blur(10px)";
       noOrd.innerHTML = "<div style='font-size:48px;margin-bottom:16px'>🎯</div>" +
@@ -11690,14 +11737,27 @@ function checkLoyaltyAtCheckout() {
   _loyaltyPhone = phone;
   var phoneLast10 = phone.slice(-10);
 
-  fetch(SUPABASE_URL + '/rest/v1/orders?select=grand_total,total_amount,status&customer_phone=ilike.*' + phoneLast10 + '&status=neq.cancelled', {
-    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
-  })
-  .then(function(res){ return res.json(); })
-  .then(function(orders) {
-    if (!Array.isArray(orders) || orders.length === 0) return;
+  Promise.all([
+    fetch(SUPABASE_URL + '/rest/v1/orders?select=grand_total,total_amount,status&customer_phone=ilike.*' + phoneLast10 + '&status=neq.cancelled', {
+      headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
+    }).then(function(r){ return r.json(); }).catch(function(){ return []; }),
+    fetch(SUPABASE_URL + '/rest/v1/referrals?select=points_awarded&referrer_phone=eq.' + phoneLast10, {
+      headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
+    }).then(function(r){ return r.json(); }).catch(function(){ return []; }),
+    fetch(SUPABASE_URL + '/rest/v1/rewards?select=discount_value&customer_phone=eq.' + phoneLast10 + '&type=eq.review', {
+      headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
+    }).then(function(r){ return r.json(); }).catch(function(){ return []; })
+  ])
+  .then(function(results) {
+    var orders = Array.isArray(results[0]) ? results[0] : [];
+    var referrals = Array.isArray(results[1]) ? results[1] : [];
+    var reviewBonuses = Array.isArray(results[2]) ? results[2] : [];
     var totalSpent = orders.reduce(function(s,o){ return s + (o.grand_total||o.total_amount||0); }, 0);
-    _loyaltyPoints = Math.floor(totalSpent / 10);
+    var spendPoints = Math.floor(totalSpent / 10);
+    var referralPoints = referrals.reduce(function(s,r){ return s + (r.points_awarded || 0); }, 0);
+    var reviewPoints = reviewBonuses.reduce(function(s,r){ return s + (r.discount_value || 0); }, 0);
+    _loyaltyPoints = spendPoints + referralPoints + reviewPoints;
+    if (_loyaltyPoints === 0) return;
     var rupees = Math.floor(_loyaltyPoints / 100) * 30;
     if (rupees > 0 && !_loyaltyApplied) {
       var section = document.getElementById('loyaltyPointsSection');
