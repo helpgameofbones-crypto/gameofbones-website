@@ -4892,7 +4892,7 @@ function showPage(id) {
     stopRelatedCarouselAutoRotate();
   }
   
-  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); p.style.display=''; });
   document.querySelectorAll('.nav-links a[id]').forEach(function(a){ a.classList.remove('active'); });
   var pg = document.getElementById('page-' + id);
   if (pg) pg.classList.add('active');
@@ -4941,7 +4941,7 @@ function showPage(id) {
   }
 }
 function showShopCategory(filter) {
-  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); p.style.display=''; });
   document.querySelectorAll('.nav-links a[id]').forEach(function(a){ a.classList.remove('active'); });
   document.getElementById('page-shop').classList.add('active');
   var n = document.getElementById('nav-shop');
@@ -6428,9 +6428,9 @@ function goToCheckout() {
   setTimeout(function() {
     if (overlay) { overlay.style.display='none'; overlay.style.opacity=''; }
     appliedDiscount=null; selectedPayment='upi';
-    document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+    document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active'); p.style.display='';});
     var coPage=document.getElementById('page-checkout');
-    if (coPage) { coPage.classList.add('active'); coPage.style.display='block'; }
+    if (coPage) { coPage.classList.add('active'); }
     document.querySelectorAll('.nav-links a').forEach(function(a){a.classList.remove('active');});
     window.scrollTo({top:0,left:0});
     var waW=document.querySelector('.wa-widget'); if(waW) waW.style.display='none';
