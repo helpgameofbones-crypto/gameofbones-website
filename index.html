@@ -1051,6 +1051,9 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
             if (sizeMatch) {
               if (dbSize.price)         sizeMatch.price = Math.round(dbSize.price);
               if (dbSize.compare_price !== undefined) sizeMatch.mrp = Math.round(dbSize.compare_price);
+              // Needed for Delhivery shipment weight calculation at checkout —
+              // set per-size in the admin Products page.
+              if (dbSize.weight_grams !== undefined) sizeMatch.weight_grams = dbSize.weight_grams;
             }
           });
         } else {
@@ -7472,11 +7475,17 @@ function _finaliseOrder(ref, phoneVal, orderItems, razorpayPaymentId) {
   
   // Build items array with full details
   var itemsWithDetails = cartItems.map(function(item) {
+    // Look up the packed weight for this exact product+size from the live
+    // product catalog (set per-size in the admin Products page) so Delhivery
+    // shipment creation has a real weight instead of falling back to 100g.
+    var _prod = (typeof products !== 'undefined') ? products.find(function(p){ return p.name === item.name; }) : null;
+    var _sizeObj = _prod && _prod.sizes ? _prod.sizes.find(function(s){ return s.label === item.sizeLabel; }) : null;
     return {
       product_name: item.name,
-      pack_label: item.size,
+      pack_label: item.sizeLabel,
       pack_price: item.price,
-      quantity: item.qty || 1
+      quantity: item.qty || 1,
+      weight_grams: (_sizeObj && _sizeObj.weight_grams) || item.weight || 0
     };
   });
   
