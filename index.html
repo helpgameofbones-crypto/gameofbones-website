@@ -939,7 +939,12 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
     console.error('Supabase client init failed (continuing without it):', e);
   }
   
-  // ===== SECURITY: CSRF TOKEN GENERATION =====
+  // ===== CSRF-STYLE TOKEN (NOT REAL CSRF PROTECTION) =====
+  // NOTE: this token is generated and stored entirely client-side and is never
+  // validated against anything server-side (there is no session-based backend
+  // here — this is a static site talking directly to Supabase with an anon key).
+  // It does NOT provide real CSRF protection; it is left in place only because
+  // other code reads/writes it, not because it is a meaningful security control.
   let csrfToken = null;
   function generateCSRFToken() {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -952,17 +957,22 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
     return token;
   }
   
-  // Generate CSRF token on page load
+  // Generate token on page load (see note above — not real CSRF protection)
   generateCSRFToken();
-  console.log('🔐 CSRF token generated:', csrfToken.substring(0, 8) + '...');
   
-  // ===== SECURITY: DATA ENCRYPTION =====
+  // ===== DATA OBFUSCATION (NOT REAL ENCRYPTION) =====
+  // NOTE: this is a reversible XOR obfuscation with a hardcoded key that ships
+  // in this public file (and is shared with the sibling admin repo) — it is
+  // NOT cryptographically secure encryption and should not be relied on to
+  // actually protect this data from anyone who can read the client source.
+  // Kept as-is (key unchanged) because other code depends on it to read/write
+  // fields that are already stored in this obfuscated form.
   const ENCRYPTION_KEY = 'gob_secret_2024_gameofbones_in_kalyan';
   
   function encryptData(data) {
     try {
       if (!data) return '';
-      // Simple but secure encryption using XOR with key
+      // XOR obfuscation with key — see NOTE above, this is not real encryption
       return btoa(String.fromCharCode.apply(null, 
         data.split('').map((c, i) => c.charCodeAt(0) ^ ENCRYPTION_KEY.charCodeAt(i % ENCRYPTION_KEY.length))));
     } catch(e) {
@@ -981,8 +991,6 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
       return encrypted;
     }
   }
-  
-  console.log('🔒 Encryption system loaded');
   
   // ===== SECURITY: GDPR CONSENT =====
   function showGDPRBanner() {
@@ -1203,28 +1211,62 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
       <p class="sec-sub" style="color:rgba(255,255,255,.6)">Four careful steps from farm to your dog&rsquo;s bowl. No shortcuts. No secrets.</p>
       <div class="process-steps">
         <div class="process-step">
-          <div class="process-step-visual" style="font-size:52px;display:flex;align-items:center;justify-content:center">&#127807;</div>
+          <div class="process-step-visual" style="display:flex;align-items:center;justify-content:center;color:var(--gold)">
+            <svg width="46" height="46" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M24 42C24 42 10 36 10 20C10 10 18 6 24 6C30 6 38 10 38 20C38 36 24 42 24 42Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+              <path d="M24 42V14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              <path d="M24 22C24 22 18 20 16 15" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+              <path d="M24 30C24 30 30 28 32 23" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+            </svg>
+          </div>
           <div class="process-step-num">01</div>
           <div class="process-step-tag">Step One</div>
           <div class="process-step-title">Source</div>
           <div class="process-step-body">Human-grade ingredients from trusted suppliers. Single origin, traceable, fresh-delivered within 48 hours.</div>
         </div>
         <div class="process-step">
-          <div class="process-step-visual" style="font-size:52px;display:flex;align-items:center;justify-content:center">&#9999;&#65039;</div>
+          <div class="process-step-visual" style="display:flex;align-items:center;justify-content:center;color:var(--gold)">
+            <svg width="46" height="46" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="4" y="16" width="40" height="24" rx="4" stroke="currentColor" stroke-width="1.4"/>
+              <circle cx="10.5" cy="22.5" r="1.5" fill="currentColor"/>
+              <g transform="rotate(-38 24 28)">
+                <rect x="3" y="25" width="11" height="6" rx="2" stroke="currentColor" stroke-width="1.3"/>
+                <path d="M14 25.5H16.5V30.5H14V25.5Z" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/>
+                <path d="M16.5 26L42 28L16.5 31V26Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+              </g>
+            </svg>
+          </div>
           <div class="process-step-num">02</div>
           <div class="process-step-tag">Step Two</div>
           <div class="process-step-title">Prepare</div>
           <div class="process-step-body">Cleaned and trimmed by hand in our Kalyan facility. No bleach, no chemical treatment, no shortcuts — ever.</div>
         </div>
         <div class="process-step">
-          <div class="process-step-visual" style="font-size:52px;display:flex;align-items:center;justify-content:center">&#127777;&#65039;</div>
+          <div class="process-step-visual" style="display:flex;align-items:center;justify-content:center;color:var(--gold)">
+            <svg width="46" height="46" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M21 8C21 6.34 22.34 5 24 5C25.66 5 27 6.34 27 8V26.28C29.36 27.63 31 30.14 31 33C31 37.42 27.42 41 23 41C18.9 41 15.5 37.9 15.06 33.94C14.72 30.9 16.15 28.06 18.5 26.28V8H21Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+              <circle cx="24" cy="33" r="3.5" fill="currentColor"/>
+              <path d="M6 15C7.5 13.5 9.5 13.5 11 15" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+              <path d="M6 21C7.5 19.5 9.5 19.5 11 21" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+              <path d="M6 27C7.5 25.5 9.5 25.5 11 27" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+            </svg>
+          </div>
           <div class="process-step-num">03</div>
           <div class="process-step-tag">Step Three</div>
           <div class="process-step-title">Dehydrate</div>
           <div class="process-step-body">Slow-dehydrated at 55–70°C for 12–24 hours. Low heat preserves the nutrition that high-heat baking destroys.</div>
         </div>
         <div class="process-step">
-          <div class="process-step-visual" style="font-size:52px;display:flex;align-items:center;justify-content:center">&#128230;</div>
+          <div class="process-step-visual" style="display:flex;align-items:center;justify-content:center;color:var(--gold)">
+            <svg width="46" height="46" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 16L24 8L42 16V32L24 40L6 32V16Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+              <path d="M6 16L24 24L42 16" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+              <path d="M24 24V40" stroke="currentColor" stroke-width="1.4"/>
+              <path d="M15 12L33 20" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+              <circle cx="37" cy="11" r="7" stroke="currentColor" stroke-width="1.3"/>
+              <path d="M33.8 11L36 13.2L40.2 9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
           <div class="process-step-num">04</div>
           <div class="process-step-tag">Step Four</div>
           <div class="process-step-title">Test &amp; Pack</div>
@@ -2015,7 +2057,14 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
           <div class="process-step-title">Human-Grade Ingredients Only</div>
           <div class="process-step-body">We source exclusively from trusted suppliers. Every ingredient meets human consumption standards &mdash; the same quality you&rsquo;d find at your butcher or fish market. Single origin, traceable, fresh. We visit suppliers personally and will not compromise on source quality regardless of cost.</div>
         </div>
-        <div class="process-step-visual">&#129385;</div>
+        <div class="process-step-visual" style="color:var(--gold)">
+          <svg width="56" height="56" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M24 42C24 42 10 36 10 20C10 10 18 6 24 6C30 6 38 10 38 20C38 36 24 42 24 42Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+            <path d="M24 42V14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            <path d="M24 22C24 22 18 20 16 15" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+            <path d="M24 30C24 30 30 28 32 23" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+        </div>
       </div>
       <div class="process-page-step">
         <div>
@@ -2024,7 +2073,17 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
           <div class="process-step-title">Hand-Prepared, Zero Chemicals</div>
           <div class="process-step-body">Every piece is cleaned and prepared by hand. No bleach wash. No chemical treatment. No preservative spray. We clean with plain water and prepare each batch fresh on the day it goes into the dehydrator. For fish, we debone where required. For organs, we trim excess fat for ideal texture after dehydration.</div>
         </div>
-        <div class="process-step-visual">&#128298;</div>
+        <div class="process-step-visual" style="color:var(--gold)">
+          <svg width="56" height="56" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="16" width="40" height="24" rx="4" stroke="currentColor" stroke-width="1.4"/>
+            <circle cx="10.5" cy="22.5" r="1.5" fill="currentColor"/>
+            <g transform="rotate(-38 24 28)">
+              <rect x="3" y="25" width="11" height="6" rx="2" stroke="currentColor" stroke-width="1.3"/>
+              <path d="M14 25.5H16.5V30.5H14V25.5Z" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/>
+              <path d="M16.5 26L42 28L16.5 31V26Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+            </g>
+          </svg>
+        </div>
       </div>
       <div class="process-page-step">
         <div>
@@ -2033,7 +2092,15 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
           <div class="process-step-title">Slow-Dried at 55&ndash;70&deg;C</div>
           <div class="process-step-body">This is where we differ from most commercial treats. Our dehydration runs at 55&ndash;70&deg;C for 12&ndash;24 hours depending on the ingredient. This low, slow temperature removes moisture completely while preserving enzymes, amino acids, and micronutrients that high-heat baking destroys. The result is up to 95% nutrient retention versus around 50% for baked treats.</div>
         </div>
-        <div class="process-step-visual">&#127777;&#65039;</div>
+        <div class="process-step-visual" style="color:var(--gold)">
+          <svg width="56" height="56" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21 8C21 6.34 22.34 5 24 5C25.66 5 27 6.34 27 8V26.28C29.36 27.63 31 30.14 31 33C31 37.42 27.42 41 23 41C18.9 41 15.5 37.9 15.06 33.94C14.72 30.9 16.15 28.06 18.5 26.28V8H21Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+            <circle cx="24" cy="33" r="3.5" fill="currentColor"/>
+            <path d="M6 15C7.5 13.5 9.5 13.5 11 15" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+            <path d="M6 21C7.5 19.5 9.5 19.5 11 21" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+            <path d="M6 27C7.5 25.5 9.5 25.5 11 27" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+        </div>
       </div>
       <div class="process-page-step">
         <div>
@@ -2042,7 +2109,16 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
           <div class="process-step-title">Tested, Weighed, Sealed</div>
           <div class="process-step-body">Every batch is visually inspected before packing. We check for texture, colour consistency, and complete moisture removal. Treats are weighed accurately for each size. Packed in resealable, humidity-resistant zip-lock pouches designed for India&rsquo;s monsoon climate. Each pouch carries a production date and best-before date.</div>
         </div>
-        <div class="process-step-visual">&#128230;</div>
+        <div class="process-step-visual" style="color:var(--gold)">
+          <svg width="56" height="56" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 16L24 8L42 16V32L24 40L6 32V16Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+            <path d="M6 16L24 24L42 16" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+            <path d="M24 24V40" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M15 12L33 20" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+            <circle cx="37" cy="11" r="7" stroke="currentColor" stroke-width="1.3"/>
+            <path d="M33.8 11L36 13.2L40.2 9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
       </div>
     </div>
   </section>
@@ -5026,18 +5102,18 @@ function trackByPhone() {
       var date = new Date(o.created_at).toLocaleDateString('en-IN', {day:'numeric',month:'short',year:'numeric'});
       var itemsList = '';
       if (o.items && Array.isArray(o.items)) {
-        itemsList = o.items.map(function(it){ return typeof it === 'string' ? it : (it.name || it.product || JSON.stringify(it)); }).join(', ');
+        itemsList = escapeHtml(o.items.map(function(it){ return typeof it === 'string' ? it : (it.name || it.product || JSON.stringify(it)); }).join(', '));
       }
       html += '<div style="background:var(--white);border:1px solid var(--cream-mid);padding:20px;border-radius:2px">';
       html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">';
-      html += '<div style="display:flex;align-items:center;gap:8px"><span style="font-size:18px">' + icon + '</span><span style="font-size:12px;font-weight:700;color:var(--dark)">Order #' + (o.ref || '') + '</span></div>';
-      html += '<span style="background:' + col + '18;color:' + col + ';font-size:10px;font-weight:700;padding:4px 12px;text-transform:uppercase;letter-spacing:.08em;border-radius:20px">' + (o.status || 'placed') + '</span>';
+      html += '<div style="display:flex;align-items:center;gap:8px"><span style="font-size:18px">' + icon + '</span><span style="font-size:12px;font-weight:700;color:var(--dark)">Order #' + escapeHtml(o.ref || '') + '</span></div>';
+      html += '<span style="background:' + col + '18;color:' + col + ';font-size:10px;font-weight:700;padding:4px 12px;text-transform:uppercase;letter-spacing:.08em;border-radius:20px">' + escapeHtml(o.status || 'placed') + '</span>';
       html += '</div>';
       if (itemsList) html += '<div style="font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.5">' + itemsList + '</div>';
       html += '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">';
       html += '<div><span style="font-size:16px;font-weight:700;color:var(--dark);font-family:Cormorant Garamond,serif">&#8377;' + amt.toLocaleString('en-IN') + '</span><span style="font-size:11px;color:var(--muted);margin-left:8px">' + date + '</span></div>';
       if (o.delhivery_awb) {
-        html += '<a href="https://www.delhivery.com/track/package/' + o.delhivery_awb + '" target="_blank" rel="noopener" style="font-size:11px;font-weight:700;color:var(--teal);text-decoration:none;letter-spacing:.05em">Track Shipment &#8594;</a>';
+        html += '<a href="https://www.delhivery.com/track/package/' + escapeHtml(o.delhivery_awb) + '" target="_blank" rel="noopener" style="font-size:11px;font-weight:700;color:var(--teal);text-decoration:none;letter-spacing:.05em">Track Shipment &#8594;</a>';
       } else if (o.status === 'placed' || o.status === 'confirmed') {
         html += '<span style="font-size:11px;color:var(--muted);font-style:italic">Preparing to ship</span>';
       }
@@ -7314,10 +7390,10 @@ function loadExistingReviews(productName) {
       reviewEl.style.cssText = 'padding:16px;background:rgba(255,255,255,.5);border-radius:2px;border-left:3px solid var(--gold)';
       reviewEl.innerHTML = `
         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
-          <div style="font-weight:700;color:var(--dark);font-size:13px">${review.dog_name}</div>
+          <div style="font-weight:700;color:var(--dark);font-size:13px">${escapeHtml(review.dog_name)}</div>
           <div style="color:var(--gold);font-size:14px;letter-spacing:2px">${stars}</div>
         </div>
-        <div style="font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.4">${review.review_text}</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.4">${escapeHtml(review.review_text)}</div>
         <div style="font-size:10px;color:rgba(0,0,0,.3);text-transform:uppercase;font-weight:600">${new Date(review.created_at).toLocaleDateString()}</div>
       `;
       listEl.appendChild(reviewEl);
@@ -7550,7 +7626,14 @@ function _finaliseOrder(ref, phoneVal, orderItems, razorpayPaymentId) {
     grand_total: grandTotal,
     total_amount: grandTotal,
     payment_method: selectedPayment === 'cod' ? 'cod' : 'razorpay',
-    payment_status: selectedPayment === 'cod' ? 'pending' : 'paid',
+    // SECURITY: never let the browser self-certify a prepaid order as "paid" —
+    // the client cannot be trusted to confirm its own Razorpay payment succeeded.
+    // COD orders start 'pending' (collected on delivery); prepaid orders also
+    // start 'pending' and the server-side Razorpay webhook (in the admin repo)
+    // verifies the payment signature and flips this to 'paid'/'failed' by
+    // matching on the order `ref` (also sent as notes.order_ref to Razorpay
+    // when the checkout modal is opened).
+    payment_status: 'pending',
     transaction_id: razorpayPaymentId || null,
     status: 'placed',
     notes: notesText,
@@ -7744,7 +7827,10 @@ function _finaliseOrder(ref, phoneVal, orderItems, razorpayPaymentId) {
 var _currentOrderTotal = 0;
 
 function placeOrder() {
-  // ===== SECURITY: CSRF VALIDATION (FIRST CHECK) =====
+  // NOTE: this only checks that a client-generated token exists in localStorage;
+  // it is NOT validated against anything server-side and does not provide real
+  // CSRF protection (see generateCSRFToken() above). It is kept only as a basic
+  // "did the page load normally" sanity check, not a security control.
   const storedToken = localStorage.getItem('csrf_token');
   if (!storedToken) {
     const errBox = document.getElementById('co-form-error');
@@ -9042,17 +9128,17 @@ function renderTestimonials() {
   container.innerHTML = testiSlice.map(t => {
     const starsHtml = '&#9733;'.repeat(t.rating || 5) + '&#9734;'.repeat(5 - (t.rating || 5));
     const emoji = t.emoji || '🐕';
-    const dogType = t.dog_type || 'Dog';
+    const dogType = escapeHtml(t.dog_type || 'Dog');
     return `
       <div class="testi-card" style="opacity:0;animation:fadeIn .6s ease-out forwards">
         <div class="testi-quote">&ldquo;</div>
         <div class="testi-stars">${starsHtml}</div>
-        <p class="testi-text">${t.review || t.text}</p>
+        <p class="testi-text">${escapeHtml(t.review || t.text)}</p>
         <div class="testi-author">
           <div class="testi-av">${emoji}</div>
           <div>
-            <div class="testi-name">${t.customer_name}</div>
-            <div class="testi-dog">${t.dog_name} • ${dogType}</div>
+            <div class="testi-name">${escapeHtml(t.customer_name)}</div>
+            <div class="testi-dog">${escapeHtml(t.dog_name)} • ${dogType}</div>
           </div>
         </div>
       </div>
@@ -10180,7 +10266,12 @@ function submitNewsletter() {
 }
 
 // ── AUTH SYSTEM ──────────────────────────────────────────────────────
-// Demo "database" of registered users (email → {name,dog,purchased:[]})
+// NOTE: this is a placeholder login with no real auth — it is an in-memory,
+// client-side-only object that accepts any email with no real password check
+// and resets on every page load. It does NOT gate access to any real customer
+// data (orders/rewards/tracking all query Supabase directly by phone number,
+// independent of this "login"). Do not use this to protect real customer data,
+// and do not treat doSignIn()/doRegister() below as real authentication.
 var DEMO_USERS = {
   'priya@example.com': {name:'Priya Sharma',dog:'Milo',city:'Mumbai',purchased:['Chicken Jerky']},
 };
@@ -11469,10 +11560,10 @@ function renderReviews() {
     for (var i=0;i<5;i++) stars += i < r.rating ? "&#9733;" : "&#9734;";
     return "<div class='testi-card'><div class='testi-quote'>&ldquo;</div>" +
       "<div class='testi-stars' style='color:var(--gold)'>" + stars + "</div>" +
-      "<p class='testi-text'>" + r.text + "</p>" +
+      "<p class='testi-text'>" + escapeHtml(r.text) + "</p>" +
       "<div class='testi-author'><div class='testi-av'>&#128062;</div><div>" +
-      "<div class='testi-name'>" + r.name + "</div>" +
-      "<div class='testi-dog'>" + r.product + " - " + r.date + "</div>" +
+      "<div class='testi-name'>" + escapeHtml(r.name) + "</div>" +
+      "<div class='testi-dog'>" + escapeHtml(r.product) + " - " + escapeHtml(r.date) + "</div>" +
       "</div></div></div>";
   }).join("") + "</div>";
 }
@@ -11525,19 +11616,20 @@ function loadBlogsFromDB() {
     }
 
     function buildBlogCard(b, i) {
+      var safeSlug = encodeURIComponent(b.slug || '');
       var imgInner = b.cover_image
-        ? '<div class="blog-card-img-inner" style="position:absolute;inset:0;font-size:0;padding:0;overflow:hidden"><img src="' + b.cover_image + '" alt="' + b.title + '" style="width:100%;height:100%;object-fit:cover;display:block"></div>'
+        ? '<div class="blog-card-img-inner" style="position:absolute;inset:0;font-size:0;padding:0;overflow:hidden"><img src="' + escapeHtml(b.cover_image) + '" alt="' + escapeHtml(b.title) + '" style="width:100%;height:100%;object-fit:cover;display:block"></div>'
         : '<div class="blog-card-img-inner ' + BCI_CLASSES[i % 3] + '">' + (CATEGORY_EMOJI[b.category] || '📄') + '</div>';
       var dateLabel = formatBlogDate(b.created_at);
-      var metaLine = [dateLabel, b.read_time ? b.read_time + ' read' : ''].filter(Boolean).join(' &middot; ');
-      return '<div class="blog-card" onclick="openDbBlog(\'' + b.slug + '\')" style="cursor:pointer">' +
-        '<div class="blog-card-img">' + imgInner + '<span class="blog-tag">' + (b.category || 'Guide') + '</span></div>' +
+      var metaLine = [dateLabel, b.read_time ? escapeHtml(b.read_time) + ' read' : ''].filter(Boolean).join(' &middot; ');
+      return '<div class="blog-card" onclick="openDbBlog(\'' + safeSlug + '\')" style="cursor:pointer">' +
+        '<div class="blog-card-img">' + imgInner + '<span class="blog-tag">' + escapeHtml(b.category || 'Guide') + '</span></div>' +
         '<div class="blog-card-body">' +
-          '<h2 class="blog-title">' + b.title + '</h2>' +
-          '<p class="blog-excerpt">' + (b.excerpt || '') + '</p>' +
+          '<h2 class="blog-title">' + escapeHtml(b.title) + '</h2>' +
+          '<p class="blog-excerpt">' + escapeHtml(b.excerpt || '') + '</p>' +
           '<div class="blog-meta">' +
             '<span class="blog-date">' + metaLine + '</span>' +
-            '<button class="blog-read" onclick="event.stopPropagation();openDbBlog(\'' + b.slug + '\')">Read Article &rarr;</button>' +
+            '<button class="blog-read" onclick="event.stopPropagation();openDbBlog(\'' + safeSlug + '\')">Read Article &rarr;</button>' +
           '</div>' +
         '</div>' +
       '</div>';
@@ -11623,12 +11715,12 @@ function openDbBlog(slug) {
   overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);display:flex;align-items:flex-start;justify-content:center;z-index:2003;padding:40px 16px;overflow-y:auto';
   overlay.innerHTML = '<div style="background:var(--white);max-width:720px;width:100%;border-radius:8px;overflow:hidden;margin-bottom:40px">' +
     '<div style="position:relative">' +
-    (blog.cover_image ? '<div style="width:100%;aspect-ratio:16/9;overflow:hidden;background:var(--dark)"><img src="'+blog.cover_image+'" style="width:100%;height:100%;object-fit:contain;display:block"></div>' : '') +
+    (blog.cover_image ? '<div style="width:100%;aspect-ratio:16/9;overflow:hidden;background:var(--dark)"><img src="'+escapeHtml(blog.cover_image)+'" style="width:100%;height:100%;object-fit:contain;display:block"></div>' : '') +
     '<button onclick="closeDbBlog()" style="position:absolute;top:16px;right:16px;background:rgba(0,0,0,.6);color:#fff;border:none;border-radius:50%;width:36px;height:36px;font-size:18px;cursor:pointer">&#10005;</button>' +
     '</div>' +
     '<div style="padding:40px">' +
-    '<div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:12px">'+(blog.category||'')+'</div>' +
-    '<h1 style="font-family:\'Cormorant Garamond\',serif;font-size:32px;color:var(--dark);margin-bottom:20px;line-height:1.2">'+blog.title+'</h1>' +
+    '<div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:12px">'+escapeHtml(blog.category||'')+'</div>' +
+    '<h1 style="font-family:\'Cormorant Garamond\',serif;font-size:32px;color:var(--dark);margin-bottom:20px;line-height:1.2">'+escapeHtml(blog.title)+'</h1>' +
     '<div style="font-size:15px;color:var(--dark);line-height:1.8">'+(blog.body || blog.excerpt || '')+'</div>' +
     '</div></div>';
   document.body.appendChild(overlay);
@@ -11825,10 +11917,14 @@ function loadDogGallery() {
     if (!section || !grid) return;
     section.style.display = '';
     grid.innerHTML = dogs.map(function(d) {
+      var safeMediaUrl = escapeHtml(d.media_url || '');
+      var safeDogName = escapeHtml(d.dog_name || '');
+      var safeBreed = escapeHtml(d.breed || '');
+      var safeCaption = escapeHtml(d.caption || '');
       if (d.media_type === 'video') {
-        return '<div style="border-radius:8px;overflow:hidden;background:var(--white);border:1px solid var(--cream-mid)"><video src="'+d.media_url+'" style="width:100%;aspect-ratio:1;object-fit:cover" autoplay muted loop playsinline></video>'+(d.dog_name?'<div style="padding:10px"><div style="font-weight:700;font-size:13px">'+d.dog_name+'</div>'+(d.breed?'<div style="font-size:11px;color:var(--muted)">'+d.breed+'</div>':'')+(d.caption?'<div style="font-size:11px;color:var(--muted);margin-top:4px">'+d.caption+'</div>':'')+'</div>':'')+'</div>';
+        return '<div style="border-radius:8px;overflow:hidden;background:var(--white);border:1px solid var(--cream-mid)"><video src="'+safeMediaUrl+'" style="width:100%;aspect-ratio:1;object-fit:cover" autoplay muted loop playsinline></video>'+(d.dog_name?'<div style="padding:10px"><div style="font-weight:700;font-size:13px">'+safeDogName+'</div>'+(d.breed?'<div style="font-size:11px;color:var(--muted)">'+safeBreed+'</div>':'')+(d.caption?'<div style="font-size:11px;color:var(--muted);margin-top:4px">'+safeCaption+'</div>':'')+'</div>':'')+'</div>';
       }
-      return '<div style="border-radius:8px;overflow:hidden;background:var(--white);border:1px solid var(--cream-mid)"><img src="'+d.media_url+'" alt="'+(d.dog_name||'')+'" style="width:100%;aspect-ratio:1;object-fit:cover" loading="lazy">'+(d.dog_name?'<div style="padding:10px"><div style="font-weight:700;font-size:13px">'+d.dog_name+'</div>'+(d.breed?'<div style="font-size:11px;color:var(--muted)">'+d.breed+'</div>':'')+(d.caption?'<div style="font-size:11px;color:var(--muted);margin-top:4px">'+d.caption+'</div>':'')+'</div>':'')+'</div>';
+      return '<div style="border-radius:8px;overflow:hidden;background:var(--white);border:1px solid var(--cream-mid)"><img src="'+safeMediaUrl+'" alt="'+safeDogName+'" style="width:100%;aspect-ratio:1;object-fit:cover" loading="lazy">'+(d.dog_name?'<div style="padding:10px"><div style="font-weight:700;font-size:13px">'+safeDogName+'</div>'+(d.breed?'<div style="font-size:11px;color:var(--muted)">'+safeBreed+'</div>':'')+(d.caption?'<div style="font-size:11px;color:var(--muted);margin-top:4px">'+safeCaption+'</div>':'')+'</div>':'')+'</div>';
     }).join('');
   })
   .catch(function(e) { console.log('Dog gallery skip:', e.message); });
@@ -11878,12 +11974,13 @@ function loadStrays() {
     if (!container) return;
     container.innerHTML = strays.map(function(s) {
       var img = (s.images && s.images.length > 0) ? s.images[0] : '';
-      var moreImgs = (s.images && s.images.length > 1) ? '<div style="display:flex;gap:4px;margin-top:8px">' + s.images.slice(1,4).map(function(u){ return '<img src="'+u+'" style="width:48px;height:48px;object-fit:cover;border-radius:4px">'; }).join('') + '</div>' : '';
+      var safeName = escapeHtml(s.name || '');
+      var moreImgs = (s.images && s.images.length > 1) ? '<div style="display:flex;gap:4px;margin-top:8px">' + s.images.slice(1,4).map(function(u){ return '<img src="'+escapeHtml(u)+'" style="width:48px;height:48px;object-fit:cover;border-radius:4px">'; }).join('') + '</div>' : '';
       return '<div style="background:var(--white);border:1px solid var(--cream-mid);border-radius:8px;overflow:hidden">' +
-        (img ? '<img src="'+img+'" alt="'+s.name+'" style="width:100%;height:200px;object-fit:cover">' : '<div style="width:100%;height:200px;background:var(--cream);display:flex;align-items:center;justify-content:center;font-size:48px">&#128054;</div>') +
-        '<div style="padding:16px"><h4 style="font-size:16px;font-weight:700;margin:0 0 4px">' + s.name + '</h4>' +
-        '<div style="font-size:12px;color:var(--teal);font-weight:600;margin-bottom:8px">' + (s.location||'') + '</div>' +
-        '<div style="font-size:13px;color:var(--muted);line-height:1.5">' + (s.description||'') + '</div>' +
+        (img ? '<img src="'+escapeHtml(img)+'" alt="'+safeName+'" style="width:100%;height:200px;object-fit:cover">' : '<div style="width:100%;height:200px;background:var(--cream);display:flex;align-items:center;justify-content:center;font-size:48px">&#128054;</div>') +
+        '<div style="padding:16px"><h4 style="font-size:16px;font-weight:700;margin:0 0 4px">' + safeName + '</h4>' +
+        '<div style="font-size:12px;color:var(--teal);font-weight:600;margin-bottom:8px">' + escapeHtml(s.location||'') + '</div>' +
+        '<div style="font-size:13px;color:var(--muted);line-height:1.5">' + escapeHtml(s.description||'') + '</div>' +
         moreImgs + '</div></div>';
     }).join('');
   })
@@ -11949,7 +12046,7 @@ function submitBirthday() {
       return res.text().then(function(t) { throw new Error('Save failed (' + res.status + '): ' + t); });
     }
     var popup = document.getElementById('birthday-popup');
-    if (popup) popup.innerHTML = '<div style="background:var(--white);padding:40px;max-width:380px;width:100%;border-radius:8px;text-align:center"><div style="font-size:48px;margin-bottom:16px">&#127881;</div><h3 style="font-family:\'Cormorant Garamond\',serif;font-size:24px;color:var(--dark);margin-bottom:8px">Thank you!</h3><p style="font-size:14px;color:var(--muted)">We\'ll send ' + petName + ' a special birthday treat! &#128054;</p><button onclick="this.closest(\'#birthday-popup\').remove()" style="margin-top:16px;padding:10px 24px;background:var(--gold);color:var(--dark);border:none;font-family:\'Jost\',sans-serif;font-weight:700;cursor:pointer">Close</button></div>';
+    if (popup) popup.innerHTML = '<div style="background:var(--white);padding:40px;max-width:380px;width:100%;border-radius:8px;text-align:center"><div style="font-size:48px;margin-bottom:16px">&#127881;</div><h3 style="font-family:\'Cormorant Garamond\',serif;font-size:24px;color:var(--dark);margin-bottom:8px">Thank you!</h3><p style="font-size:14px;color:var(--muted)">We\'ll send ' + escapeHtml(petName) + ' a special birthday treat! &#128054;</p><button onclick="this.closest(\'#birthday-popup\').remove()" style="margin-top:16px;padding:10px 24px;background:var(--gold);color:var(--dark);border:none;font-family:\'Jost\',sans-serif;font-weight:700;cursor:pointer">Close</button></div>';
     localStorage.setItem('gobBirthdayDismissed', '1');
   }).catch(function(e) {
     console.error('Birthday submission failed:', e);
@@ -12365,19 +12462,32 @@ window.addEventListener('popstate', function(event) {
       return;
     }
     
-    // Get phone from form
+    // Get phone AND email from form. Requiring both raises the bar from
+    // "guess any 10-digit number" to "know both the phone and email tied to a real account."
+    // NOTE: phone+email matching is a stopgap; consider Supabase OTP (auth.signInWithOtp) for real ownership verification.
     const phone = document.getElementById('co-phone')?.value;
+    const email = (document.getElementById('co-email')?.value || '').trim().toLowerCase();
     if (!phone) {
       alert('❌ Please enter your phone number in the form first');
       return;
     }
+    if (!email) {
+      alert('❌ Please also enter the email address on your order(s). We require both phone and email to verify ownership before exporting data.');
+      return;
+    }
     
     try {
-      // Fetch orders by phone
+      // Fetch orders that match BOTH phone AND email (not phone alone)
       const { data: orders } = await supabase
         .from('orders')
         .select('*')
-        .eq('customer_phone', encryptData(phone));
+        .eq('customer_phone', encryptData(phone))
+        .eq('customer_email', encryptData(email));
+
+      if (!orders || orders.length === 0) {
+        alert('❌ No matching account found for that phone number and email combination. Please double-check both fields.');
+        return;
+      }
       
       // Prepare export data
       const exportData = {
@@ -12409,10 +12519,16 @@ window.addEventListener('popstate', function(event) {
   };
   
   // ===== DATA DELETION (GDPR Right to Erasure) =====
+  // NOTE: phone+email matching is a stopgap; consider Supabase OTP (auth.signInWithOtp) for real ownership verification.
   window.deleteMyData = async function() {
     const phone = document.getElementById('co-phone')?.value;
+    const email = (document.getElementById('co-email')?.value || '').trim().toLowerCase();
     if (!phone) {
       alert('❌ Please enter your phone number first');
+      return;
+    }
+    if (!email) {
+      alert('❌ Please also enter the email address on your order(s). We require both phone and email to verify ownership before deleting data.');
       return;
     }
     
@@ -12431,8 +12547,24 @@ window.addEventListener('popstate', function(event) {
     if (!doubleConfirm) return;
     
     try {
-      // Anonymize orders (delete sensitive fields)
+      // Anonymize orders (delete sensitive fields) — only rows matching BOTH
+      // the encrypted phone AND encrypted email, not phone alone.
       const encryptedPhone = encryptData(phone);
+      const encryptedEmail = encryptData(email);
+
+      // First confirm a matching record actually exists before mutating anything.
+      const { data: matchingOrders, error: lookupError } = await supabase
+        .from('orders')
+        .select('id')
+        .eq('customer_phone', encryptedPhone)
+        .eq('customer_email', encryptedEmail);
+
+      if (lookupError) throw lookupError;
+      if (!matchingOrders || matchingOrders.length === 0) {
+        alert('❌ No matching account found for that phone number and email combination. Please double-check both fields.');
+        return;
+      }
+
       const { error: updateError } = await supabase
         .from('orders')
         .update({
@@ -12442,7 +12574,8 @@ window.addEventListener('popstate', function(event) {
           csrf_token: null,
           status: 'deleted'
         })
-        .eq('customer_phone', encryptedPhone);
+        .eq('customer_phone', encryptedPhone)
+        .eq('customer_email', encryptedEmail);
       
       if (updateError) throw updateError;
       
@@ -12461,10 +12594,11 @@ window.addEventListener('popstate', function(event) {
   };
   
   // ===== GDPR MESSAGE ON PAGE LOAD =====
-  console.log('%c🔐 SECURITY LOADED', 'color:green;font-weight:bold;font-size:14px');
-  console.log('%c✅ CSRF Token Protection: Active', 'color:green');
-  console.log('%c✅ Data Encryption: Active', 'color:green');
-  console.log('%c✅ GDPR Compliance: Active', 'color:green');
+  // NOTE: the previous console banner here claimed "CSRF Token Protection: Active" and
+  // "Data Encryption: Active" — neither claim was accurate (the CSRF token is never
+  // validated server-side, and the "encryption" is a reversible XOR obfuscation, not
+  // real encryption) so those misleading lines have been removed rather than left to
+  // give a false sense of security.
   console.log('%c💬 Privacy Policy available at: https://gameofbones.in/?page=privacy', 'color:blue');
 </script>
 
