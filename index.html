@@ -11317,6 +11317,46 @@ function trackOrders() {
   result.innerHTML = html;
 }
 
+// Direct order lookup by ref (used by "VIEW ORDER" links in emails) — queries
+// Supabase live, unlike trackOrders() which only checks THIS device's local
+// order cache. This is what makes the email link work on any phone/computer.
+function trackOrderByRef(ref) {
+  var result = document.getElementById("trackResult");
+  if (!result) return;
+  result.innerHTML = "<p style='color:var(--muted);font-size:13px'>Loading your order...</p>";
+  fetch(SUPABASE_URL + '/rest/v1/orders?select=ref,status,grand_total,total_amount,items,created_at,delhivery_awb,payment_method&ref=eq.' + encodeURIComponent(ref), {
+    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(orders) {
+    if (!Array.isArray(orders) || orders.length === 0) {
+      result.innerHTML = "<div style='background:var(--cream-mid);padding:20px;text-align:center'><p style='font-size:14px;color:var(--muted)'>Order " + escapeHtml(ref) + " not found.</p><p style='font-size:12px;margin-top:8px'>Need help? <button onclick='openWA()' style='background:none;border:none;color:var(--teal);cursor:pointer;font-weight:600;font-size:12px;font-family:Jost,sans-serif'>Chat on WhatsApp</button></p></div>";
+      return;
+    }
+    var o = orders[0];
+    var statusColors = {placed:"#f59e0b",confirmed:"#3b82f6",dispatched:"#10b981",delivered:"#16a34a",cancelled:"#ef4444"};
+    var col = statusColors[o.status] || "#6b7280";
+    var itemsLine = (o.items || []).map(function(i){
+      var name = i.name || i.product_name || 'Item';
+      var qty = i.qty || i.quantity || 1;
+      return name + ' x' + qty;
+    }).join(', ');
+    var html = "<div style='background:var(--white);border:1px solid var(--cream-mid);padding:20px'>";
+    html += "<div style='display:flex;justify-content:space-between;align-items:center;margin-bottom:10px'>";
+    html += "<div style='font-size:12px;font-weight:700;color:var(--muted)'>Order #" + escapeHtml(o.ref) + "</div>";
+    html += "<span style='background:" + col + "20;color:" + col + ";font-size:11px;font-weight:700;padding:3px 10px;text-transform:uppercase'>" + escapeHtml(o.status||"placed") + "</span>";
+    html += "</div>";
+    if (itemsLine) html += "<div style='font-size:12px;color:var(--muted);margin-bottom:8px'>" + escapeHtml(itemsLine) + "</div>";
+    html += "<div style='font-size:15px;font-weight:700;color:var(--dark)'>Rs." + ((o.grand_total || o.total_amount || 0)).toLocaleString("en-IN") + "</div>";
+    if (o.delhivery_awb) html += "<div style='font-size:12px;color:var(--teal);margin-top:8px'>Tracking AWB: " + escapeHtml(o.delhivery_awb) + "</div>";
+    html += "</div>";
+    result.innerHTML = html;
+  })
+  .catch(function() {
+    result.innerHTML = "<p style='color:#c0392b;font-size:13px'>Could not load order right now. Please try again or contact us on WhatsApp.</p>";
+  });
+}
+
 // Loyalty Points - fetches real order history from Supabase
 function checkRewards() {
   var phone = document.getElementById("rewardsPhone").value.replace(/\D/g,"");
@@ -12361,7 +12401,8 @@ window.addEventListener('popstate', function(event) {
 (function() {
   var params = new URLSearchParams(window.location.search);
   var pageParam = params.get('page');
-  
+  var orderRefParam = params.get('ref') || params.get('order');
+
   if (pageParam) {
     // Handle blog slug URLs - convert slug to index and open article
     if (pageParam.startsWith('blog-')) {
@@ -12378,11 +12419,24 @@ window.addEventListener('popstate', function(event) {
       setTimeout(function() {
         try {
           showPage(pageParam);
+          if (pageParam === 'track' && orderRefParam) {
+            setTimeout(function(){ trackOrderByRef(orderRefParam); }, 50);
+          }
         } catch (e) {
           console.error('Error loading page:', pageParam, e);
         }
       }, 100);
     }
+  } else if (orderRefParam) {
+    // Older/direct order links with no ?page= param
+    setTimeout(function() {
+      try {
+        showPage('track');
+        setTimeout(function(){ trackOrderByRef(orderRefParam); }, 50);
+      } catch (e) {
+        console.error('Error loading order:', orderRefParam, e);
+      }
+    }, 100);
   }
   
   // Handle product URLs (?p=product-name)
