@@ -7736,7 +7736,7 @@ function _finaliseOrder(ref, phoneVal, orderItems, razorpayPaymentId) {
             return { name: it.product_name, size: it.pack_label, qty: it.quantity, price: it.pack_price };
           }),
           subtotal: subtotal,
-          discount: discount,
+          discount: totalDiscountApplied,
           shipping: shippingCost,
           grand_total: grandTotal,
           shipping_address: { line1: addr1, line2: addr2, city: city, state: state, pincode: pin }
