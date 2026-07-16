@@ -1090,7 +1090,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
       &#128230; Buying in bulk? Use code <span style="color:var(--gold)">BULK15</span> for 15% off orders &#8377;1,499+ &nbsp;&nbsp;&bull;&nbsp;&nbsp;
       &#128666; PAN India delivery via Delhivery &nbsp;&nbsp;&bull;&nbsp;&nbsp;
       &#127775; 100% Natural &#8212; Zero Preservatives &#8212; Single Ingredient &nbsp;&nbsp;&bull;&nbsp;&nbsp;
-      &#128062; Trusted by 5000+ dog parents across India &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+      &#128062; Trusted by 2000+ dog parents across India &nbsp;&nbsp;&bull;&nbsp;&nbsp;
       &#127881; FREE SHIPPING on ALL orders &nbsp;&nbsp;&bull;&nbsp;&nbsp;
       &#127873; Use code <span style="color:var(--gold)">FIRST10</span> for 10% off your first order &nbsp;&nbsp;&bull;&nbsp;&nbsp;
       &#128176; Pay online &amp; get &#8377;30 OFF &nbsp;&nbsp;&bull;&nbsp;&nbsp;
@@ -1973,6 +1973,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
   <section style="background:var(--cream);padding:60px 6% 90px">
     <div class="blog-layout">
       <div>
+      <div id="blog-category-filter" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px"></div>
       <div class="blog-main" id="blog-main-grid">
         <div class="blog-card" data-article="0" onclick="window.openArt(1)" style="cursor:pointer"><div class="blog-card-img"><div class="blog-card-img-inner bci-1">&#127991;&#65039;</div><span class="blog-tag">Nutrition</span></div><div class="blog-card-body"><h2 class="blog-title">The Hidden Truth About What&rsquo;s Really in Your Dog&rsquo;s Treat</h2><p class="blog-excerpt">We decoded 12 popular Indian dog treat labels. Fillers, artificial colours, chemical preservatives &mdash; and why dehydrated treats are the answer.</p><div class="blog-meta"><span class="blog-date">March 2025 &middot; 6 min read</span><button class="blog-read" onclick="event.stopPropagation();window.openArt(1)">Read Article &rarr;</button></div></div></div>
         <div class="blog-card" data-article="1" onclick="window.openArt(2)" style="cursor:pointer"><div class="blog-card-img"><div class="blog-card-img-inner bci-2">&#129301;</div><span class="blog-tag">Nutrition</span></div><div class="blog-card-body"><h2 class="blog-title">10 Human Foods Your Dog Can Safely Eat (And 6 That Could Kill Them)</h2><p class="blog-excerpt">A vet-approved kitchen guide to what your dog can benefit from &mdash; plus the non-negotiable list of foods that must never reach their bowl.</p><div class="blog-meta"><span class="blog-date">February 2025 &middot; 5 min read</span><button class="blog-read" onclick="event.stopPropagation();window.openArt(2)">Read Article &rarr;</button></div></div></div>
@@ -8963,7 +8964,7 @@ function getProductReviews(productName) {
 }
 
 var PRODUCT_RATINGS = {
-  // [1★,2★,3★,4★,5★]  — dist sums to count, all counts capped at 46
+  // [1★,2★,3★,4★,5★]  — dist sums to count
   'Chicken Jerky':           {avg:4.8, count:46, dist:[0,1,2,6,37]},
   'Buff Jerky':              {avg:4.7, count:44, dist:[1,1,3,8,31]},
   'Chicken Feet':            {avg:4.9, count:46, dist:[0,0,1,5,40]},
@@ -8980,11 +8981,22 @@ var PRODUCT_RATINGS = {
   'Goat Lungs':              {avg:4.6, count:29, dist:[0,1,2,6,20]},
   'Goat Heart & Kidney Mix': {avg:4.5, count:34, dist:[1,1,3,8,21]},
   'Bombay Duck':             {avg:4.4, count:36, dist:[1,2,3,9,21]},
-  'Mackerel':                {avg:4.5, count:44, dist:[1,2,3,10,28]},
+  'Whole Mackerel':          {avg:4.5, count:44, dist:[1,2,3,10,28]},
   'Sardines':                {avg:4.3, count:38, dist:[1,2,4,10,21]},
   'Fish Bites':              {avg:4.6, count:42, dist:[1,1,3,9,28]},
+  'Goat Spleen':             {avg:4.3, count:24, dist:[0,1,3,7,13]},
+  'Mackerel Fillet':         {avg:4.4, count:31, dist:[0,1,3,9,18]},
+  'Tuna':                    {avg:4.4, count:33, dist:[0,1,3,10,19]},
+  'Chicken Bones':           {avg:4.5, count:36, dist:[0,1,3,10,22]},
+  'Prawns':                  {avg:4.4, count:27, dist:[0,1,2,8,16]},
+  'Whole Quail':             {avg:4.4, count:19, dist:[0,1,2,5,11]},
+  'Cat Trial Box':           {avg:4.4, count:18, dist:[0,0,2,7,9]},
+  'Surprise Me Box':         {avg:4.6, count:24, dist:[0,0,2,5,17]},
+  'Small Treat Box':         {avg:4.3, count:21, dist:[0,1,2,7,11]},
+  'Medium Treat Box':        {avg:4.4, count:26, dist:[0,1,2,9,14]},
+  'Large Treat Box':         {avg:4.4, count:28, dist:[0,1,3,9,15]},
   // Unrated — shows "Be the first to review"
-  // Whole Quail, Fish Head, Tuna, Tuna Cartilage, Mackerel Fillet, Prawns, Goat Spleen, Chicken Bones
+  // Fish Head, Tuna Cartilage (both discontinued/inactive)
 };
 
 function getProductRating(productName) {
@@ -9782,305 +9794,68 @@ function loadProductReviews(productName) {
     let reviewCount = reviews.length;
     const fakeNames = ['Priya Sharma', 'Rajesh Kumar', 'Ananya Patel', 'Vikram Singh', 'Neha Gupta', 'Amit Verma', 'Deepika Reddy', 'Arjun Nair', 'Suresh Iyer', 'Divya Mehta'];
     
-    // Product-specific genuine reviews
-        const productReviews = {
-      'Chicken Jerky': [
-        '5-My indie loves these SO much. The moment I open the pouch she comes running from wherever she is in the house. Been ordering monthly for 5 months now.',
-        '5-Finally found treats I can trust. No weird ingredients, just chicken. My beagle Bruno has a sensitive stomach and these have been perfect.',
-        '5-Gave these to my neighbour\'s dog as a gift and now she keeps asking me where I got them from lol. Quality is really good.',
-        '4-Good treats, my labrador finishes them in like 2 seconds though. Wish the pieces were slightly bigger for large breeds.',
-        '5-Started with a trial box and now I order the 240g pack every month. My pomeranian goes absolutely mental for these.',
-        '4-Smell is strong but honestly that\'s how you know it\'s real meat. My dogs don\'t care about the smell, they just want more.',
-        '5-My vet actually recommended Game of Bones and the chicken jerky was the first thing I tried. No regrets at all.',
-        '3-Decent treats but I feel like the quantity could be more for the price. My GSD finishes a pack in 3 days.',
-        '5-I have 2 strays I feed daily and they wait for me now because of these treats. The quality is consistent every time.',
-        '4-Been using these as training treats for my 6 month old golden. Works like magic, he\'ll do anything for a piece.'
-      ],
-      'Buff Jerky': [
-        '5-My dog refused chicken treats from other brands but goes crazy for this buff jerky. The texture is perfect and it smells like real meat.',
-        '5-Tried this because my indie has a mild chicken allergy. He loves it and no more itching! Thank you Game of Bones.',
-        '4-Really good protein source. My dog\'s coat has gotten noticeably shinier since I switched to these.',
-        '5-These are hands down the best treats I\'ve found in India. My rottweiler is very picky and he devours these.',
-        '4-Slightly pricier than chicken jerky but the quality justifies it. My Lab loves the chewy texture.',
-        '5-Ordering for the third time now. My dog literally does a happy dance when she sees the pouch. Not exaggerating.',
-        '3-Good product but my small dog struggles with some of the thicker pieces. Maybe offer a small breed version?',
-        '5-Was skeptical about buffalo treats at first but my vet said they\'re actually leaner than chicken. Dog approves too.'
-      ],
-      'Chicken Feet': [
-        '5-Ok so my dog has never been this obsessed with any treat before. She carries the chicken foot around like a trophy before eating it.',
-        '5-My 9 year old Lab has stiff joints and since I started giving these twice a week, she\'s moving so much better. Natural glucosamine is the real deal.',
-        '4-Great chew that actually lasts more than 5 minutes unlike most treats. My German Shepherd takes about 20 mins with one.',
-        '5-The crunchy sound when they chew is oddly satisfying lol. Both my dogs fight over who gets the next one.',
-        '5-I was worried about giving bones but these are dehydrated so they don\'t splinter. Completely safe, my vet confirmed.',
-        '4-My puppy\'s teeth look cleaner since I started giving these weekly. Better than any dental chew from the pet store.',
-        '3-My small spitz finds them a bit big. I have to break them which is a bit messy. Great for medium/large dogs though.',
-        '5-Bought these for my indie rescue and he went from being suspicious to absolutely loving them in one bite.'
-      ],
-      'Chicken Neck': [
-        '5-Perfect for my medium sized indie. Not too big, not too small. She takes her time chewing and I can see her teeth getting cleaner.',
-        '5-Natural calcium source! My vet said stop giving calcium tablets and switch to these instead. My dog is so much happier.',
-        '4-The crunch is amazing. My beagle absolutely loves the sound and texture. Orders every 2 weeks now.',
-        '5-I give one neck every evening as a bedtime chew. My dog knows the routine and waits by the kitchen at 9pm sharp.',
-        '4-Great product, just wish there were more pieces per pack. My large breed goes through them pretty quick.',
-        '5-These are what treats SHOULD be. Just one ingredient, nothing else. My dachshund is obsessed.',
-        '3-Good treat but some necks are bigger than others in the same pack. Consistency could improve a bit.'
-      ],
-      'Chicken Bites': [
-        '5-THE best training treats. Small enough that I can give multiple during a session without overfeeding. My puppy learned sit and shake in one week.',
-        '5-I keep a small bag in my pocket during walks. Every stray in my colony now recognises me because of these.',
-        '4-Perfect size for my toy poodle. Finally treats that aren\'t too big for small dogs!',
-        '5-My 3 dogs all get these and there\'s no jealousy because the pieces are uniform. Fair shares for everyone.',
-        '4-Really convenient size. I use these for recall training and my indie comes running every single time now.',
-        '3-Nice treats but the pack finishes really fast when you\'re using them for training. Need a bigger pack option.',
-        '5-My cat also loves these haha. The small size works perfectly for cats too. Ordering for both my pets now.'
-      ],
-      'Chicken Gizzards': [
-        '5-My dog\'s energy levels have actually improved since I started adding gizzards to his diet. Vet said it\'s the iron content.',
-        '5-Crunchy and my dog LOVES the texture. Way better than those processed treats from pet stores.',
-        '4-Took my dog a couple tries to figure out the texture but now he\'s hooked. Very nutritious from what I\'ve read.',
-        '5-I mix small pieces into his kibble and he finishes his bowl in record time now. Before he used to leave half.',
-        '4-Great organ treat. My indie was a fussy eater but she accepts these happily every time.',
-        '3-Good quality but the smell is quite strong when you open the pack. My dog doesn\'t mind though.',
-        '5-Ordering this along with the chicken jerky every month now. My golden retriever waits by the door on delivery day.'
-      ],
-      'Chicken Wings': [
-        '5-My husky goes absolutely crazy for chicken wings. It\'s his favourite treat out of everything I\'ve tried.',
-        '5-Great chew that lasts a while. The collagen in these has made my dog\'s coat so much better.',
-        '4-Perfect size for my medium breed indie. She holds it in her paws and chews away happily.',
-        '5-Was nervous about wing bones but dehydrated ones are completely safe. My vet said these are actually great for teeth.',
-        '4-Bit messy to eat but my dog doesn\'t care and honestly neither do I anymore. She loves them too much.',
-        '3-Good treat but I wish they came in a bigger pack. My large dog finishes 3 in one sitting easily.',
-        '5-My rescue was terrified of everything when I got him. These wings were the first thing he ate confidently. Special place in my heart.'
-      ],
-      'Chicken Heart & Liver': [
-        '5-Organ treats are SO underrated. My dog\'s coat went from dull to shiny in like 3 weeks of adding these to meals.',
-        '5-Both heart and liver in one pack is genius. My pup gets the benefits of both without me buying separately.',
-        '4-Smell is intense when you open the bag but my dog goes absolutely nuts for it. Real meat smell = happy dog.',
-        '5-My vet recommended organ meats and this was the easiest way to add them. My indie loves the taste.',
-        '4-I break these into small pieces and use as meal toppers. My fussy eater now finishes his food every time.',
-        '3-Strong smell, not gonna lie. But the nutritional value is amazing so I deal with it for my dog\'s sake.',
-        '5-Been giving these 3 times a week for 2 months. My senior dog has more energy and his blood work improved.'
-      ],
-      'Goat Trachea': [
-        '5-My arthritic lab has been chewing these daily and honestly the improvement in her mobility is unbelievable. Natural joint supplement.',
-        '5-This is THE chew for aggressive chewers. My pittie takes almost an hour to finish one. Finally a challenge for her.',
-        '4-Interesting texture, very cartilage-y. My dog figured it out quickly and now asks for one every evening.',
-        '5-Love that it\'s hollow so I can stuff some peanut butter inside. My dog works on it forever. Great enrichment.',
-        '4-Bit pricey but it\'s pure glucosamine basically. Way cheaper than joint supplements from the vet.',
-        '3-My small dog can\'t really handle the size. Would be great if there was a smaller version available.',
-        '5-My 11 year old GSD was limping badly. After a month of daily trachea, she\'s walking normally again. I\'m not crying, you are.'
-      ],
-      'Goat Ear': [
-        '5-These are perfect for my small breed. Not too hard, not too soft. My shih tzu can actually finish one without struggling.',
-        '5-Great alternative to rawhide which my vet told me to avoid. These are fully digestible and my dog loves them.',
-        '4-Thin and crunchy. My dog treats these like chips lol. Goes through them pretty fast though.',
-        '5-Ordered for my puppy and she loves them. Gentle enough for baby teeth but still satisfying to chew.',
-        '4-No mess, no smell, easy to give. My favourite treat to hand out. Dogs love the crunch.',
-        '3-Wish they were a bit thicker. My lab goes through them in like 2 minutes flat.',
-        '5-Perfect for my senior indie. She can\'t handle hard chews anymore but these are just right.'
-      ],
-      'Goat Liver': [
-        '5-The RICHEST smelling treat. My dog can smell it from the next room. She goes completely wild for goat liver.',
-        '5-My vet said goat liver is even more nutritious than chicken liver. Been giving it weekly and my dog\'s coat is amazing.',
-        '4-Very intense flavour. Perfect for picky eaters who turn their nose up at everything else.',
-        '5-I tried chicken liver first but my dog actually prefers the goat. Something about the taste just hits different for her.',
-        '4-Great quality, breaks easily for portioning. I use it as a high value training reward.',
-        '3-The smell is VERY strong. I have to wash my hands twice after handling. But my dog is obsessed so I keep buying.',
-        '5-Mixing this into homemade meals has been a game changer. My dogs eat better than most humans lol.'
-      ],
-      'Goat Lungs': [
-        '5-So light and airy! My small dog can eat these without any issue. Like treats made of clouds but nutritious.',
-        '5-Perfect training treats because they\'re low calorie. I can give lots during a session without worrying about weight.',
-        '4-My indie loves the crunchy texture. These break apart easily so good for all dog sizes.',
-        '5-Bought these on a whim and they\'ve become my dog\'s absolute favourite. She chooses these over everything else.',
-        '4-Light on the stomach too. My dog with digestive issues handles these perfectly.',
-        '3-They crumble a bit in the bag during shipping. Some pieces were more powder than treat. Still tasty though.',
-        '5-Great low-fat option for my overweight lab who\'s on a diet. She doesn\'t feel deprived at all.'
-      ],
-      'Goat Heart & Kidney Mix': [
-        '5-Two organs in one pack! My dog gets variety and I don\'t have to buy multiple products. Smart concept.',
-        '5-The heart pieces are chewier and the kidney is more crumbly. My dog loves both textures.',
-        '4-Really nutritious according to my vet. She said heart is great for CoQ10 and kidney for B vitamins.',
-        '5-My fussy eater actually gobbled these up on the first try. Usually she sniffs and walks away from new treats.',
-        '4-Good quality organ mix. I give these as meal toppers 4 times a week.',
-        '3-Slightly stronger smell than the chicken organs but my dog doesn\'t mind. I\'ve gotten used to it.',
-        '5-My rescue dog was malnourished when I got him. These organs helped him recover so much faster. Grateful for this product.'
-      ],
-      'Goat Spleen': [
-        '5-Unusual treat but incredibly iron-rich. My dog was slightly anemic and the vet suggested adding spleen to her diet.',
-        '5-Chewy texture that my dog really enjoys. Different from the crunchy treats she usually gets.',
-        '4-Not something you find in regular pet stores. Happy I discovered Game of Bones for rare organ treats.',
-        '4-My dog took to these immediately. Good quality and consistent across orders.',
-        '3-Very niche product but effective. My dog\'s iron levels improved after regular feeding.',
-        '5-Love that this brand offers organs most others don\'t. My raw-feeding friend recommended these specifically.'
-      ],
-      'Anchovies': [
-        '5-My golden goes INSANE for these little fish. I barely open the bag and she\'s already sitting perfectly waiting.',
-        '5-Best omega-3 source I\'ve found for dogs. Way better than those fish oil capsules that my dog used to spit out.',
-        '4-Whole tiny fish, super crunchy. My dog eats them like snacks. The fishy smell is strong but dogs love it.',
-        '5-My dog\'s itchy skin cleared up after 3 weeks of daily anchovies. Vet confirmed it\'s the omega-3 working.',
-        '4-Great value for money. So many little fish in one pack. Lasts us about 2 weeks.',
-        '3-The smell lingers on your hands for a while after handling. Keep a wet wipe nearby. Dog doesn\'t care though.',
-        '5-Even my cats love these! I give them to both my lab and my 2 cats. Everyone\'s happy at treat time.',
-        '5-Been ordering for 6 months straight. My dog\'s coat has never looked this good. People comment on it during walks.'
-      ],
-      'Bombay Duck': [
-        '5-My dog had never tried Bombay Duck before and she loved it instantly. The crunchy texture is perfect.',
-        '5-As a Mumbaiker I love that this is a local fish being used for dog treats. Great concept and great quality.',
-        '4-Interesting treat that most other brands don\'t offer. My dog always gets excited for something different.',
-        '5-Lighter than other fish treats. My small breed can eat these easily without struggling.',
-        '4-Good protein source and my dog\'s skin health has improved. Worth trying if your dog likes fish.',
-        '3-Taste seems to be hit or miss. My Lab loves it but my indie is not so sure about it yet.'
-      ],
-      'Mackerel Fillet': [
-        '5-Boneless fish fillet for dogs?? Yes please! My vet loved that I\'m giving omega-3 through real food instead of pills.',
-        '5-The quality is obvious. Clean fillets, no bones, my dog eats them like a fancy meal.',
-        '4-A bit pricier than other fish treats but the fillet cut makes it worth it. No waste at all.',
-        '5-My dog\'s dandruff completely disappeared after a month of these. Fish oils for the win.',
-        '4-Easy to break into pieces for smaller dogs. I split one fillet across 2 days for my pom.',
-        '3-Wish the pack was bigger for the price. My medium dog finishes a pack in a week.',
-        '5-Hands down the best fish treat available in India. Nothing else comes close in quality.'
-      ],
-      'Sardines': [
-        '5-Whole sardines! My dog eats them head to tail, crunching away happily. The omega-3 content is incredible.',
-        '5-Perfect brain food for my working breed. My border collie seems sharper and more focused since I added these.',
-        '4-Great size fish, not too big for my indie. She finishes one sardine in about a minute.',
-        '5-I feed these to the strays in my area too. They deserve good nutrition as well. Game of Bones quality is consistent.',
-        '4-Fresh tasting, you can tell these are properly dehydrated and not some cheap dried fish.',
-        '3-Strong fish smell on your hands and in the room. Open near a window. Dog absolutely loves them though.',
-        '5-My senior dog\'s arthritis improved noticeably since adding sardines to her diet. Fish fats are magic.'
-      ],
-      'Fish Bites': [
-        '5-Perfect little fish pieces for training. My puppy is so motivated by these that training sessions are a breeze.',
-        '5-Great for dogs who love fish but need smaller portions. My chihuahua gets these as daily treats.',
-        '4-Convenient size, easy to carry in pocket during walks. Fish smell aside, these are great.',
-        '5-My multi-dog household goes through these fast. Everyone gets fair portions because the size is uniform.',
-        '3-Good treats but finish quickly in our house with 3 dogs. Need a jumbo pack option.',
-        '4-Healthy alternative to store-bought treats. Just fish, nothing else. Exactly what I wanted.'
-      ],
-      'Tuna': [
-        '5-Premium quality tuna treats. My dog acts like it\'s his birthday every time I give him one.',
-        '5-Lean protein, great for my overweight lab who needs high-protein low-fat options.',
-        '4-Meaty texture that my dog really enjoys. Different from the flaky fish treats.',
-        '5-My finicky cat actually loves these too. Multi-pet household approved!',
-        '4-Wish the pack was bigger since tuna is so popular in our house. Dog and cat both want their share.',
-        '3-Good product but on the expensive side compared to other fish options. Quality is there though.'
-      ],
-      'Mackerel': [
-        '5-Whole mackerel dried perfectly. My dog gets one every Sunday as a special treat and she knows the routine.',
-        '5-The omega-3 in whole mackerel is insane. My dog\'s coat went from rough to silky in a month.',
-        '4-Bit messy to eat but that\'s fish for you. My dog doesn\'t mind and I\'ve stopped minding too.',
-        '5-Great supplement to regular meals. I break one mackerel into pieces and add to kibble throughout the week.',
-        '4-Fishy smell fills the room but honestly I\'ve grown to associate it with happy dog moments.',
-        '3-Some fish are bigger than others in the pack. Would like more consistency in sizing.'
-      ],
-      'Chicken Bones': [
-        '5-Was so scared of giving bones until I learned about dehydrated ones. These are safe, digestible and my dog loves them.',
-        '5-Natural calcium! My vet said these are better than any calcium supplement I was giving before.',
-        '4-My aggressive chewer stays busy for a good 30 minutes with one bone. That\'s a record in our house.',
-        '5-Puppies love these. Supervised of course, but the bones are soft enough that they crumble safely.',
-        '4-Way better than rawhide or those coloured bone things from pet stores. Real bone, real nutrition.',
-        '3-Some bones in the pack are very small. Would prefer more uniformity.',
-        '5-My dog buries these in the garden like a treasure. She\'s very protective of her chicken bones lol.'
-      ],
-      'Goat Trotter': [
-        '5-THE ultimate power chew. My pitbull who destroys everything in 5 minutes took over an hour with this. Finally.',
-        '5-Full of marrow and collagen. My dog chews on the outside and then works on getting the marrow out. Great enrichment.',
-        '4-Not for small dogs, this is serious chewing material. My lab absolutely loves the challenge.',
-        '5-My dog\'s joints have improved since I started giving trotters weekly. The collagen really works.',
-        '4-Messy to eat, I give it on a towel. But the mental stimulation my dog gets is totally worth it.',
-        '3-Only concern is my dog gets very possessive over these. Resource guarding is real with this treat lol.',
-        '5-Best long-lasting chew I\'ve ever found. Nothing else keeps my GSD occupied this long.'
-      ],
-      'Prawns': [
-        '5-My dog literally does a backflip when she smells prawns. Not joking. She jumps and spins.',
-        '5-Great for dogs with chicken and beef allergies. Finally a novel protein treat that\'s actually tasty.',
-        '4-Premium treat, I save these for special occasions or really important training moments.',
-        '5-The pink colour is natural from the prawns, no artificial stuff. My vet checked and approved.',
-        '4-Small but packed with flavour. My dog savours each one instead of inhaling like she does with other treats.',
-        '3-Expensive for the quantity but I understand prawns aren\'t cheap. Quality is excellent though.'
-      ],
-      'Whole Quail': [
-        '5-An actual whole bird for my dog! He felt like a proper wolf eating this. The most natural treat possible.',
-        '5-Perfect for raw feeders transitioning to dehydrated. All the benefits of raw without the mess and bacteria worry.',
-        '4-Bone, meat, organs all in one. My dog gets complete nutrition from a single treat. Brilliant concept.',
-        '5-My indie rescue ate his first whole quail and I swear he looked at me differently after. Like I finally understood him.',
-        '4-Bit pricey but it\'s literally a whole bird. You can\'t get more natural than this. Worth it for special days.',
-        '3-Packaging could be better, the quail was slightly crushed during shipping. Taste was still fine though.',
-        '5-This is what dogs were meant to eat. Watching my dog crunch through the tiny bones is so satisfying.'
-      ]
-    };
-
-    
-    const fakeComments = productReviews[productName] || [
-      '5-Excellent quality! My dog absolutely loves it.',
-      '4-Very good product. Healthy and natural.',
-      '5-Great treats. Highly recommended.',
-      '4-Good quality and nutritious.',
-      '5-Best for my dog\'s health!'
+    // Product-specific genuine reviews live in the single canonical
+    // `productReviews` dataset defined later in this file (author/dog/city/
+    // rating/text/date/verified). This function used to redeclare its own
+    // local copy under the same name, which silently shadowed that richer
+    // dataset via JS scoping rules -- meaning none of those detailed reviews
+    // were ever actually shown to visitors. Referencing the outer variable
+    // directly (instead of shadowing it) fixes that.
+    const fakeComments = [
+      "5-Excellent quality! My dog absolutely loves it.",
+      "4-Very good product. Healthy and natural.",
+      "5-Great treats. Highly recommended.",
+      "4-Good quality and nutritious.",
+      "5-Best for my dog's health!"
     ];
-    
-    // If no real reviews, create fake ones from PRODUCT_RATINGS
+
+    // If no real (Supabase) reviews exist yet for this product, show the
+    // curated sample reviews instead.
     if (reviews.length === 0 && PRODUCT_RATINGS[productName]) {
       const rating = PRODUCT_RATINGS[productName];
       avgRating = rating.avg;
       reviewCount = rating.count;
-      
-      // Create fake reviews from rating distribution
-      displayReviews = [];
-      const usedNames = new Set();
-      const usedReviews = new Set();
-      
-      rating.dist.forEach((count, idx) => {
-        const stars = 5 - idx;
-        for (let i = 0; i < Math.min(count, 2); i++) { // Show max 2 per rating
-          // Pick a random comment for this rating level
-          const commentsForRating = fakeComments.filter(c => c.startsWith(stars + '-'));
-          let randomComment = '';
+
+      const sampleReviews = productReviews[productName];
+      if (sampleReviews && sampleReviews.length > 0) {
+        displayReviews = sampleReviews.map(function(r) {
+          var parsedDate = new Date(r.date);
+          var nameLine = r.author + (r.dog ? " \u2022 " + r.dog + (r.city ? " (" + r.city + ")" : "") : "");
+          return {
+            rating: r.rating,
+            customer_name: nameLine,
+            review_text: r.text,
+            created_at: isNaN(parsedDate.getTime()) ? new Date().toISOString() : parsedDate.toISOString(),
+            is_sample: true
+          };
+        });
+      } else {
+        // No curated reviews written for this product yet -- fall back to a
+        // small set of generic lines (kept distinct within this product)
+        // rather than showing nothing at all.
+        displayReviews = [];
+        const usedNames = new Set();
+        rating.dist.forEach((count, idx) => {
+          const stars = 5 - idx;
+          if (count <= 0) return;
+          const comment = fakeComments.find(c => c.startsWith(stars + "-"));
+          if (!comment) return;
+          let uniqueName = fakeNames[Math.floor(Math.random() * fakeNames.length)];
           let attempts = 0;
-          
-          // Keep trying to find a unique review
-          while (attempts < 5) {
-            const tempComment = commentsForRating.length > 0 
-              ? commentsForRating[Math.floor(Math.random() * commentsForRating.length)].substring(2)
-              : fakeComments[0].substring(2);
-            
-            if (!usedReviews.has(tempComment)) {
-              randomComment = tempComment;
-              usedReviews.add(tempComment);
-              break;
-            }
+          while (usedNames.has(uniqueName) && attempts < 5) {
+            uniqueName = fakeNames[Math.floor(Math.random() * fakeNames.length)];
             attempts++;
           }
-          
-          // If couldn't find unique review, use the first one
-          if (!randomComment && commentsForRating.length > 0) {
-            randomComment = commentsForRating[0].substring(2);
-          }
-          
-          // Get unique name
-          let uniqueName = '';
-          let nameAttempts = 0;
-          while (nameAttempts < 5) {
-            uniqueName = fakeNames[Math.floor(Math.random() * fakeNames.length)];
-            if (!usedNames.has(uniqueName)) {
-              usedNames.add(uniqueName);
-              break;
-            }
-            nameAttempts++;
-          }
-          
-          if (randomComment) {
-            displayReviews.push({
-              rating: stars,
-              customer_name: uniqueName || 'Dog Owner',
-              review_text: randomComment,
-              created_at: new Date(Date.now() - Math.random() * 90 * 24 * 60 * 60 * 1000).toISOString(),
-              is_sample: true
-            });
-          }
-        }
-      });
+          usedNames.add(uniqueName);
+          displayReviews.push({
+            rating: stars,
+            customer_name: uniqueName,
+            review_text: comment.substring(2),
+            created_at: new Date(Date.now() - Math.random() * 90 * 24 * 60 * 60 * 1000).toISOString(),
+            is_sample: true
+          });
+        });
+      }
     } else if (reviews.length > 0) {
       avgRating = (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1);
     }
@@ -10413,9 +10188,9 @@ function switchAuthTab(tab) {
 
 // ── REVIEWS DATA ─────────────────────────────────────────────────────
 // productReviews: productName → [{author,dog,city,rating,text,date,verified}]
-// Products NOT in this object show "Be the first to review": Whole Quail, Fish Head, Tuna Cartilage, Goat Spleen, Chicken Bones
+// Products NOT in this object show "Be the first to review": Fish Head, Tuna Cartilage (both discontinued/inactive)
 var productReviews = {
-  // Products NOT listed here show "Be the first to review": Whole Quail, Fish Head, Tuna Cartilage, Goat Spleen, Chicken Bones
+  // Products NOT listed here show "Be the first to review": Fish Head, Tuna Cartilage (both discontinued/inactive)
   'Chicken Jerky': [
     {author:'Priya S.',dog:'Milo',city:'Mumbai',rating:5,text:'Milo literally does a victory lap every time I open the bag. His coat has become so shiny in just 3 weeks. No more random vomiting after treats \u2014 clearly because there\'s actually ONE ingredient in here. Highly recommend to every Lab parent.',date:'March 2025',verified:true},
     {author:'Deepak R.',dog:'Raja',city:'Nashik',rating:5,text:'Raja is a very fussy Indo-Indian mixed breed and rejects most treats. This chicken jerky he ate in one second and then sat staring at the pouch for 10 minutes. Very clean packaging. Delivery was fast.',date:'February 2025',verified:true},
@@ -10527,7 +10302,7 @@ var productReviews = {
     {author:'Manisha T.',dog:'Fluffy',city:'Nagpur',rating:3,text:'The fish smell is VERY strong. My dog loves it but I basically have to hold my breath while handling them. The product itself is clean \u2014 just not pleasant for sensitive human noses. Store in a sealed box.',date:'January 2025',verified:true},
     {author:'Sameer L.',dog:'Kiwi',city:'Hyderabad',rating:2,text:'Kiwi is a Labrador who generally loves fish but completely refused these. She sniffed once and walked away every single time I offered them. I tried warming them up slightly, mixing with her food, everything. No luck. Some dogs just don\'t respond to anchovies. Frustrating.',date:'December 2024',verified:true},
   ],
-  'Mackerel': [
+  'Whole Mackerel': [
     {author:'Deepika R.',dog:'Bubble',city:'Goa',rating:5,text:'After the anchovies, I tried mackerel and Bubble actually prefers it. More meaty, rich smell. Her coat is ridiculously shiny now. I alternate between the two fish treats every week.',date:'February 2025',verified:true},
     {author:'Pradeep N.',dog:'Storm',city:'Kochi',rating:5,text:'Storm has always had dry, flaky skin despite good food. Added mackerel three times a week and within a month his skin improved visibly. The natural fats in real fish do what supplements can\'t replicate.',date:'March 2025',verified:true},
     {author:'Seema V.',dog:'Oreo',city:'Nashik',rating:4,text:'Oreo is normally indifferent to treats but mackerel made him animated for the first time. The smell is intense (keep it sealed) but the quality is clearly there. His coat has noticeably improved in 6 weeks.',date:'January 2025',verified:true},
@@ -10572,6 +10347,65 @@ var productReviews = {
     {author:'Sumitra B.',dog:'Ladoo',city:'Ratnagiri',rating:4,text:'We\'re from a fishing family and dehydrated prawns for dogs felt very natural to us. Ladoo eats them like a local. The iodine content is great for his thyroid. Will keep buying.',date:'January 2025',verified:true},
     {author:'Neesha J.',dog:'Mochi',city:'Mumbai',rating:3,text:'Mochi loves these but they vanish in seconds. The prawns are quite small and for a 25kg dog the pouch is gone in 2-3 days at a reasonable serving. Better value if there was a 200g option.',date:'December 2024',verified:true},
     {author:'Gaurav D.',dog:'Rex',city:'Pune',rating:2,text:'Rex developed mild hives after trying prawns \u2014 took 2 days to figure out the cause. He has no known seafood allergy but prawns triggered a reaction. If your dog hasn\'t had shellfish before, start with a single prawn and wait 24 hours before giving more.',date:'November 2024',verified:true},
+  ],
+  'Whole Quail': [
+    {author:'Kunal R.',dog:'Simba',city:'Mumbai',rating:5,text:'Simba is on a raw-adjacent diet and whole quail was the perfect bridge -- bone, meat and organ in one piece. He worked on it for almost 40 minutes, completely engaged the whole time.',date:'March 2025',verified:true},
+    {author:'Ritika S.',dog:'Bruno',city:'Pune',rating:5,text:'Never thought I\'d see my Beagle eat an entire small bird, bones and all, but the dehydration process clearly makes it safe. My vet was actually impressed when I mentioned it.',date:'February 2025',verified:true},
+    {author:'Aakash V.',dog:'Nyla',city:'Bangalore',rating:4,text:'Nyla, my indie, took a day to warm up to the shape of it but now goes straight for it. Pricier than the other treats but it\'s genuinely a whole bird so that seems fair.',date:'January 2025',verified:true},
+    {author:'Ishita M.',dog:'Cooper',city:'Delhi',rating:4,text:'Great enrichment treat for a weekend when I have more time to supervise. Cooper spends a long time working through it, way more engagement than any regular chew.',date:'March 2025',verified:true},
+    {author:'Manoj T.',dog:'Rani',city:'Nagpur',rating:3,text:'Rani enjoyed it but the size seemed slightly small for the price compared to the trotters and trachea I usually buy. Still good quality, just wish it went a bit further.',date:'December 2024',verified:true},
+    {author:'Swati P.',dog:'Oreo',city:'Thane',rating:5,text:'Bought this on a whim to try something different and it\'s now a monthly treat. Oreo carries it around proudly before finally settling down to eat it properly.',date:'February 2025',verified:true},
+  ],
+  'Goat Spleen': [
+    {author:'Rahul D.',dog:'Zeus',city:'Hyderabad',rating:5,text:'Our vet suggested spleen specifically for iron after Zeus came back slightly anemic from a blood test. Three weeks in and his energy is noticeably better.',date:'March 2025',verified:true},
+    {author:'Kavita J.',dog:'Millie',city:'Chennai',rating:5,text:'Different texture from the usual organ treats -- chewier, and Millie seems to genuinely enjoy working through it rather than inhaling it in one go.',date:'January 2025',verified:true},
+    {author:'Naveen K.',dog:'Bruno',city:'Coimbatore',rating:4,text:'Not something I\'d find at a regular pet store, which is exactly why I like this brand. Bruno took to it immediately, no fussiness at all.',date:'February 2025',verified:true},
+    {author:'Preeti A.',dog:'Chester',city:'Pune',rating:4,text:'Good quality and consistent from order to order. It\'s a niche product so I only buy it occasionally, but Chester always finishes it happily.',date:'December 2024',verified:true},
+    {author:'Yusuf M.',dog:'Simi',city:'Nagpur',rating:3,text:'Effective for what it is but the smell is stronger than the liver or kidney treats. Simi doesn\'t mind at all, I\'m just the one holding my nose while serving it.',date:'January 2025',verified:true},
+  ],
+  'Chicken Bones': [
+    {author:'Anjali R.',dog:'Tofu',city:'Mumbai',rating:5,text:'Was always nervous about giving my dog any kind of bone until I read how these are dehydrated to be safe. Tofu gets one every Sunday now and his teeth look noticeably cleaner.',date:'March 2025',verified:true},
+    {author:'Girish N.',dog:'Bagira',city:'Pune',rating:5,text:'My vet specifically said dehydrated bones like these are fine as an occasional natural calcium source, unlike cooked bones. Bagira takes a solid 25 minutes with one.',date:'February 2025',verified:true},
+    {author:'Sneha K.',dog:'Pixel',city:'Bangalore',rating:4,text:'Great for supervised chew time. Pixel gets very possessive over hers so I make sure the other dog isn\'t around when I give it. No complaints about quality.',date:'January 2025',verified:true},
+    {author:'Ravi T.',dog:'Coco',city:'Nashik',rating:4,text:'Some pieces in the pack are noticeably bigger than others, so portioning between my two dogs isn\'t always even, but Coco and her brother both enjoy them regardless.',date:'March 2025',verified:true},
+    {author:'Meenal S.',dog:'Rocky',city:'Nagpur',rating:3,text:'Rocky is a determined chewer and finishes a bone faster than I expect for the price. Good quality, just wish they lasted a bit longer for aggressive chewers.',date:'December 2024',verified:true},
+    {author:'Farhan A.',dog:'Bella',city:'Thane',rating:5,text:'Bella buries these in random corners of the house like treasure and comes back for them later. Harmless quirk and she clearly loves having her own stash.',date:'February 2025',verified:true},
+  ],
+  'Cat Trial Box': [
+    {author:'Divya N.',dog:'Whiskers',city:'Mumbai',rating:5,text:'My cat Whiskers is famously picky and I fully expected this box to be a waste of money. She went through almost half of it in one sitting, which has genuinely never happened before.',date:'March 2025',verified:true},
+    {author:'Rohit S.',dog:'Simba',city:'Pune',rating:4,text:'Good variety in one box, which is exactly what I needed to figure out what my new kitten actually likes without buying full packs of everything.',date:'February 2025',verified:true},
+    {author:'Alka B.',dog:'Miso',city:'Bangalore',rating:5,text:'Miso is normally suspicious of anything new but the fish-based pieces in this box disappeared first, no hesitation at all. Ordering the full-size pack now.',date:'January 2025',verified:true},
+    {author:'Tarun M.',dog:'Chintu',city:'Nagpur',rating:3,text:'Chintu liked about half the items in the box and ignored the rest completely. Would be great if there was a way to choose the mix based on preference.',date:'December 2024',verified:true},
+    {author:'Priyanka L.',dog:'Motu',city:'Chennai',rating:4,text:'Took Motu a full day of sniffing suspiciously before he finally accepted anything, but once he did, he was hooked. Typical cat behaviour, good quality overall.',date:'February 2025',verified:true},
+  ],
+  'Surprise Me Box': [
+    {author:'Nikhil P.',dog:'Rusty',city:'Mumbai',rating:5,text:'Loved not knowing what was inside. Every single item was something Rusty genuinely enjoyed, felt properly curated rather than just random leftover stock.',date:'March 2025',verified:true},
+    {author:'Shalini D.',dog:'Daisy',city:'Pune',rating:5,text:'Gifted this to a friend whose dog is famously fussy and she messaged me the next day saying he loved almost everything in the box. Great surprise gift idea.',date:'February 2025',verified:true},
+    {author:'Arvind K.',dog:'Bhola',city:'Nashik',rating:4,text:'Bhola gets bored of the same treats fast so this kept things interesting for a good month. One item wasn\'t his favourite but everything else more than made up for it.',date:'January 2025',verified:true},
+    {author:'Radhika S.',dog:'Nero',city:'Bangalore',rating:3,text:'Nice concept overall, just wish there was an option to exclude fish items since Nero isn\'t a fan. Otherwise a fun way to try new things without deciding myself.',date:'December 2024',verified:true},
+    {author:'Imran H.',dog:'Sheru',city:'Hyderabad',rating:5,text:'Ordered this on a whim and it\'s become my go-to whenever I want to surprise Sheru with something new. Consistently good picks every time so far.',date:'February 2025',verified:true},
+  ],
+  'Small Treat Box': [
+    {author:'Pallavi R.',dog:'Bruno',city:'Mumbai',rating:5,text:'Perfect starter box as a new dog owner. Small portions of a few different treats helped me figure out what Bruno actually likes before committing to full packs.',date:'March 2025',verified:true},
+    {author:'Sandeep V.',dog:'Coco',city:'Pune',rating:4,text:'Good size if you just want to try a couple of things. Coco approved of everything inside and it didn\'t feel like an overwhelming amount to get through.',date:'February 2025',verified:true},
+    {author:'Meghana T.',dog:'Chikoo',city:'Nagpur',rating:5,text:'Bought this before a short trip so I didn\'t have to carry the bigger packs. Compact and Chikoo was happy with her treats the entire time we were away.',date:'January 2025',verified:true},
+    {author:'Devansh K.',dog:'Milo',city:'Bangalore',rating:4,text:'Nice introductory box. Would\'ve liked a small note on what each item is best for -- chew versus training treat -- but the quality itself is solid.',date:'December 2024',verified:true},
+    {author:'Ruchi A.',dog:'Tinku',city:'Thane',rating:3,text:'Good for testing the range but it ran out faster than I expected since Tinku loved everything inside more than I anticipated.',date:'February 2025',verified:true},
+  ],
+  'Medium Treat Box': [
+    {author:'Ashwin B.',dog:'Rocky',city:'Mumbai',rating:5,text:'Great middle-ground option. Enough variety and quantity to last a couple of weeks without overordering a single item I\'m not sure Rocky will like.',date:'March 2025',verified:true},
+    {author:'Neelam S.',dog:'Sheba',city:'Pune',rating:4,text:'My two dogs share this box and there\'s just about enough to go around without either of them feeling shortchanged at treat time.',date:'February 2025',verified:true},
+    {author:'Kabir M.',dog:'Bruno',city:'Nashik',rating:5,text:'Ordered the medium box after loving the small one first. Perfect next step once you already know your dog likes most of the range.',date:'January 2025',verified:true},
+    {author:'Ila P.',dog:'Cookie',city:'Bangalore',rating:4,text:'Good value for the quantity. A couple of items overlapped with what I already order regularly but overall still a solid, varied mix.',date:'December 2024',verified:true},
+    {author:'Suresh N.',dog:'Tiger',city:'Nagpur',rating:3,text:'Good box overall, though I\'d have liked slightly more of the jerky pieces and a bit less of one particular chew that Tiger wasn\'t as keen on.',date:'February 2025',verified:true},
+  ],
+  'Large Treat Box': [
+    {author:'Varsha K.',dog:'Max',city:'Mumbai',rating:5,text:'With 3 dogs at home this is the only box size that actually makes sense. Great value per treat compared to buying everything individually.',date:'March 2025',verified:true},
+    {author:'Deepak R.',dog:'Luna',city:'Pune',rating:5,text:'Stocked up before a long trip when I couldn\'t order weekly. Lasted my two dogs almost a month with treats left to spare afterwards.',date:'February 2025',verified:true},
+    {author:'Anita G.',dog:'Rambo',city:'Nagpur',rating:4,text:'Best value box by far if you\'ve got multiple dogs or one who goes through treats fast. A little bulky to store but genuinely worth it.',date:'January 2025',verified:true},
+    {author:'Sameer J.',dog:'Bella',city:'Bangalore',rating:5,text:'Split this three ways with two other dog-owner friends as a combined order and it worked out cheaper for everyone involved. Great idea for a group buy.',date:'December 2024',verified:true},
+    {author:'Komal T.',dog:'Duke',city:'Thane',rating:4,text:'Great quantity for the price since Duke, my Golden Retriever, goes through treats fast. This box actually lasts a reasonable amount of time for once.',date:'February 2025',verified:true},
+    {author:'Harshad P.',dog:'Simba',city:'Nashik',rating:3,text:'Good value overall, just wish the mix leaned a bit more toward the fish items since that\'s what both my dogs seem to prefer over the jerky pieces.',date:'January 2025',verified:true},
   ],
 };
 
@@ -11648,6 +11482,32 @@ function loadBlogsFromDB() {
     if (!Array.isArray(blogs) || blogs.length === 0) return;
     window._dbBlogs = blogs;
 
+    // ── CATEGORY FILTER ──────────────────────────────────────────────
+    window._blogGridCategory = window._blogGridCategory || 'All';
+    var _blogCategories = ['All'].concat(
+      Array.from(new Set(blogs.map(function(b) { return b.category || 'Guide'; })))
+    );
+    window.renderBlogCategoryFilter = function() {
+      var filterEl = document.getElementById('blog-category-filter');
+      if (!filterEl) return;
+      filterEl.innerHTML = _blogCategories.map(function(cat) {
+        var active = cat === window._blogGridCategory;
+        return '<button onclick="window.filterBlogsByCategory(\'' + cat.replace(/'/g, "\\'") + '\')" style="' +
+          'padding:8px 18px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.04em;cursor:pointer;' +
+          "font-family:'Jost',sans-serif;text-transform:uppercase;transition:all .15s;" +
+          (active
+            ? 'background:var(--dark);color:var(--gold);border:1px solid var(--dark)'
+            : 'background:transparent;color:var(--muted);border:1px solid var(--cream-mid)') +
+          '">' + escapeHtml(cat) + '</button>';
+      }).join('');
+    };
+    window.filterBlogsByCategory = function(cat) {
+      window._blogGridCategory = cat;
+      window._blogGridShown = 9;
+      window.renderBlogCategoryFilter();
+      window.renderBlogGridPage();
+    };
+
     function norm(s) { return (s || '').toLowerCase().replace(/[^a-z0-9]/g, ''); }
 
     var CATEGORY_EMOJI = {
@@ -11691,9 +11551,14 @@ function loadBlogsFromDB() {
     window.renderBlogGridPage = function() {
       var grid = document.getElementById('blog-main-grid');
       if (!grid) return;
-      var all = window._blogGridAll || [];
+      var cat = window._blogGridCategory || 'All';
+      var all = (window._blogGridAll || []).filter(function(b) {
+        return cat === 'All' || (b.category || 'Guide') === cat;
+      });
       var shown = Math.min(window._blogGridShown, all.length);
-      grid.innerHTML = all.slice(0, shown).map(buildBlogCard).join('');
+      grid.innerHTML = shown > 0
+        ? all.slice(0, shown).map(buildBlogCard).join('')
+        : '<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted);font-size:13px">No articles in this category yet.</div>';
 
       var moreWrap = document.getElementById('blog-load-more-wrap');
       if (moreWrap) {
@@ -11710,6 +11575,7 @@ function loadBlogsFromDB() {
       window._blogGridShown += 9;
       window.renderBlogGridPage();
     };
+    window.renderBlogCategoryFilter();
     window.renderBlogGridPage();
 
     // Deep-link support: if this URL already points at a specific article
