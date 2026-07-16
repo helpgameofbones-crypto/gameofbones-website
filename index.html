@@ -5713,7 +5713,7 @@ let products = [
   {img:'', name:'Cat Trial Box', cat:'Bundle', badge:'For Cats', badgeCls:'teal',
     desc:'A curated tasting box of 5 single-ingredient treats designed for cats. Fish-forward, protein-rich, zero fillers — perfect for picky eaters.',
     tags:['Cats','Fish','Single Ingredient','Trial'],
-    sizes:[{label:'Trial Box (5 treats × 20g)',price:729, mrp:849}], filter:'bundle',
+    sizes:[{label:'Trial Box (5 treats × 100g)',price:729, mrp:849}], filter:'bundle',
     tagline:'Every treat in this box was selected for a cat\'s biology — obligate carnivores who need high animal protein, zero carbs, and intense aromas. All single ingredient. All safe.',
     benefits:[
       {icon:'🐟',title:'Fish-First, Cat-Approved',text:'Cats are drawn to intense marine aromas. Anchovies, Mackerel, Sardines and Tuna are irresistible to even the fussiest cats — and pack natural omega-3s for a glossy coat.'},
@@ -5725,20 +5725,20 @@ let products = [
     feeding:'Offer 1–3 small pieces per day as a treat or crumbled as a meal topper. For cats new to natural treats, start with one piece and observe for 24 hours. Break into smaller pieces for kittens.',
     storage:{tiles:[{icon:'🫙',val:'6 Months',label:'Unopened'},{icon:'❄️',val:'4 Weeks',label:'After Opening'},{icon:'🌡️',val:'Cool & Dry',label:'Store At'}],note:'Store in a cool dry place away from direct sunlight. Fish treats absorb moisture quickly — seal tightly after opening or transfer to an airtight container. Refrigerate after opening in warm or humid weather.'},
     bundleItems:[
-      {emoji:'🐠',name:'Anchovies',qty:'20g'},
-      {emoji:'🐟',name:'Mackerel Fillet',qty:'20g'},
-      {emoji:'🐡',name:'Tuna',qty:'20g'},
-      {emoji:'🦈',name:'Sardines',qty:'20g'},
-      {emoji:'🍗',name:'Chicken Bites',qty:'20g'},
+      {emoji:'🐠',name:'Anchovies',qty:'100g'},
+      {emoji:'🐟',name:'Mackerel Fillet',qty:'100g'},
+      {emoji:'🍣',name:'Tuna',qty:'100g'},
+      {emoji:'🐟',name:'Sardines',qty:'100g'},
+      {emoji:'🍗',name:'Chicken Bites',qty:'100g'},
     ],
     isBundle:true,
     isCatBox:true,
   },
 
   {img:'', name:'Surprise Me Box', cat:'Bundle', badge:'Mystery', badgeCls:'',
-    desc:'Let us pick for you. A curated selection of our best-sellers — different proteins, different textures, maximum excitement. No two boxes are the same.',
+    desc:'Let us pick for you. A curated selection of our best-sellers — different proteins, different textures, maximum excitement. No two boxes are the same. You\'ll get 200g of assorted treats, hand-picked by our team.',
     tags:['Mystery Box','Best Sellers','Mixed Proteins','Gift'],
-    sizes:[{label:'Pack of 1',price:699,mrp:799},{label:'Pack of 2',price:1299,mrp:1479},{label:'Pack of 3',price:1899,mrp:2159}], filter:'bundle',
+    sizes:[{label:'Surprise Box (200g assorted treats)',price:1299,mrp:1479}], filter:'bundle',
     tagline:'Hand-curated by the Game of Bones team. We pick a balanced mix across proteins — jerky, organs, fish and a chew — so your dog discovers something new every time.',
     benefits:[
       {icon:'🎁',title:'Handpicked By Us',text:'Our team selects the best in-season, freshest treats across the full range. Balanced across proteins and textures.'},
@@ -5746,7 +5746,7 @@ let products = [
       {icon:'🎀',title:'Makes a Great Gift',text:'Beautifully packed and ready to gift. Add a message at checkout and we\'ll include a personal note card.'},
       {icon:'♻️',title:'Rotate Every Order',text:'We intentionally vary each box — so if you order monthly, your dog gets a fresh rotation of proteins and never develops sensitivity to any single ingredient.'},
     ],
-    nutrients:[{val:'Mixed',label:'Proteins'},{val:'Varied',label:'Textures'},{val:'Fresh',label:'Batch'}],
+    nutrients:[{val:'200g',label:'Total Weight'},{val:'Mixed',label:'Proteins'},{val:'Varied',label:'Textures'}],
     feeding:'Portions vary by treat type included. As a guide, use the treats across the week — one protein type per day — to give your dog a full rotation without overfeeding any single protein.',
     storage:{tiles:[{icon:'🫙',val:'Varies',label:'By Treat'},{icon:'🌡️',val:'Cool & Dry',label:'Store At'},{icon:'📦',label:'Sealed',val:'Until Use'}],note:'Individual treats inside the Surprise Box have their own shelf life. Keep them in a cool dry place. Fish and organ treats should be refrigerated after opening. Jerky strips can be kept in a sealed pouch at room temperature for up to 6 weeks after opening.'},
     bundleItems:[],
@@ -5755,7 +5755,7 @@ let products = [
   },
   // ── TRIAL BOXES ──────────────────────────────────────────────────────
   {img:'', name:'Small Treat Box', cat:'Bundle', badge:'Try Everything', badgeCls:'',
-    desc:'9 carefully chosen treats across all categories — jerky, chews, organs and fish. Perfect for dogs new to Game of Bones.',
+    desc:'9 carefully chosen treats across all categories — jerky, chews, organs and fish. Perfect for dogs new to Game of Bones. All treats arrive mixed together in a single bag, ready to serve.',
     tags:['Starter','Mixed Proteins','9 Treats','120g+'],
     sizes:[{label:'Small — 9 treats (120g+)', price:699}],
     filter:'bundle', isBundle:true, isTrialBox:true, trialBoxSize:'small',
@@ -7603,6 +7603,15 @@ function _finaliseOrder(ref, phoneVal, orderItems, razorpayPaymentId) {
   }
   if (selectedPayment !== 'cod') {
     discountNotes.push('Online payment discount: -₹30');
+  }
+  // Customer's own free-text note from the cart page (gift instructions,
+  // allergies, special requests, etc.) -- previously typed into this box but
+  // never actually read or saved anywhere. Now folded into orders.notes so
+  // it shows up on the Orders page / Order Notes admin view like any other note.
+  var customerNoteEl = document.getElementById('cartPageNote');
+  var customerNote = customerNoteEl ? customerNoteEl.value.trim() : '';
+  if (customerNote) {
+    discountNotes.push('Customer note: ' + customerNote);
   }
   var notesText = discountNotes.length > 0 ? discountNotes.join(' | ') : null;
 
@@ -11482,6 +11491,7 @@ function loadBlogsFromDB() {
     if (!Array.isArray(blogs) || blogs.length === 0) return;
     window._dbBlogs = blogs;
 
+
     // ── CATEGORY FILTER ──────────────────────────────────────────────
     window._blogGridCategory = window._blogGridCategory || 'All';
     var _blogCategories = ['All'].concat(
@@ -11517,6 +11527,33 @@ function loadBlogsFromDB() {
       'Chews & Bones': '🦴', 'Feeding Guide': '📅', 'Storage': '🏠'
     };
     var BCI_CLASSES = ['bci-1', 'bci-2', 'bci-3'];
+
+    // ── HOMEPAGE "FEATURED BLOGS" TEASER ──────────────────────────────
+    // This section shipped as 3 hardcoded cards with placeholder emoji
+    // (🏷️ 🥕 📅) instead of real cover images, and was never wired up to
+    // the live blogs data the way the full /blog page is. Populate it here
+    // with the 3 most recent published posts and their real cover images.
+    (function renderHomeBlogTeaser() {
+      var homeGrid = document.getElementById('home-blog-grid');
+      if (!homeGrid) return;
+      var featured = blogs.slice(0, 3);
+      if (featured.length === 0) return;
+      homeGrid.innerHTML = featured.map(function(b) {
+        var safeSlug = encodeURIComponent(b.slug || '');
+        var imgInner = b.cover_image
+          ? '<img src="' + escapeHtml(b.cover_image) + '" alt="' + escapeHtml(b.title) + '" style="width:100%;height:100%;object-fit:cover;display:block">'
+          : (CATEGORY_EMOJI[b.category] || '📄');
+        return '<div style="background:var(--cream);border-radius:8px;overflow:hidden;border:1px solid rgba(200,151,58,.2);transition:all .3s;cursor:pointer" onclick="openDbBlog(\'' + safeSlug + '\')" onmouseover="this.style.boxShadow=\'0 12px 32px rgba(0,0,0,.12)\';this.style.transform=\'translateY(-4px)\'" onmouseout="this.style.boxShadow=\'none\';this.style.transform=\'translateY(0)\'">' +
+          '<div style="background:rgba(200,151,58,.08);min-height:160px;display:flex;align-items:center;justify-content:center;font-size:48px;overflow:hidden">' + imgInner + '</div>' +
+          '<div style="padding:24px">' +
+            '<div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:8px">' + escapeHtml(b.category || 'Guide') + '</div>' +
+            '<h3 style="font-family:\'Cormorant Garamond\',serif;font-size:20px;font-weight:700;color:var(--dark);margin-bottom:12px;line-height:1.3">' + escapeHtml(b.title) + '</h3>' +
+            '<p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px">' + escapeHtml(b.excerpt || '') + '</p>' +
+            '<div style="font-size:11px;color:var(--gold);font-weight:600">Read Article \u2192</div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    })();
 
     function formatBlogDate(dateStr) {
       if (!dateStr) return '';
