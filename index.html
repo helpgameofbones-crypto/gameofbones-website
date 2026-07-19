@@ -1564,6 +1564,12 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
       </div>
       <div style="font-size:11px;color:var(--muted);text-align:center;margin:0 0 8px">This discount is applied automatically and does not stack with any other offer or coupon.</div>
       <div style="font-size:12px;color:var(--dark);text-align:center;margin:0 0 24px">Fewer, pricier items instead? Use code <strong style="color:var(--gold-dark,#a97c1f);letter-spacing:.03em">BULK15</strong> for 15% off orders ₹1,499+.</div>
+
+      <!-- Bundle Deals — populated from the admin Promotions > Bundles tab
+           (Supabase `product_bundles` table). Hidden entirely when there are
+           no active bundles, same pattern as the promo banner strip. -->
+      <div id="bundlesStrip" style="display:none;margin-bottom:28px"></div>
+
       <div class="prod-grid" id="shopProd"></div>
     </div>
   </section>
@@ -7457,91 +7463,127 @@ function awardReviewPoints(phone, customerName) {
   }
 }
 
-function loadExistingReviews(productName) {
-  // Fetch and display existing reviews for this product
-  fetch(SUPABASE_URL + '/rest/v1/product_reviews?product_name=eq.' + encodeURIComponent(productName) + '&order=created_at.desc&limit=50', {
-    method: 'GET',
-    headers: {
-      'apikey': SUPABASE_ANON_KEY,
-      'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
-    }
-  })
-  .then(r => r.json())
-  .then(reviews => {
-    var listEl = document.getElementById('pmodal-review-list');
-    if (!listEl) return;
-    
-    if (!reviews || reviews.length === 0) {
-      listEl.innerHTML = '<div style="text-align:center;color:var(--muted);font-size:12px;padding:20px">No reviews yet. Be the first to review!</div>';
-      updateReviewStats([]);
-      return;
-    }
-    
-    // Update stats
-    updateReviewStats(reviews);
-    
-    // Render reviews
-    listEl.innerHTML = '';
-    reviews.forEach(function(review) {
-      var stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
-      var reviewEl = document.createElement('div');
-      reviewEl.style.cssText = 'padding:16px;background:rgba(255,255,255,.5);border-radius:2px;border-left:3px solid var(--gold)';
-      reviewEl.innerHTML = `
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
-          <div style="font-weight:700;color:var(--dark);font-size:13px">${escapeHtml(review.dog_name)}</div>
-          <div style="color:var(--gold);font-size:14px;letter-spacing:2px">${stars}</div>
-        </div>
-        <div style="font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.4">${escapeHtml(review.review_text)}</div>
-        <div style="font-size:10px;color:rgba(0,0,0,.3);text-transform:uppercase;font-weight:600">${new Date(review.created_at).toLocaleDateString()}</div>
-      `;
-      listEl.appendChild(reviewEl);
+// loadExistingReviews()/updateReviewStats() removed (2026-07-19): dead code,
+// never called from anywhere in the file. They targeted the #pmodal-review-list
+// / #pmodal-avg-score / #pmodal-bar-chart elements, but the product modal's
+// actual review data comes from loadProductReviews() -> #product-reviews-list
+// instead, which has populated the modal correctly all along.
+
+// ── BUNDLE DEALS (admin Promotions > Bundles tab -> product_bundles) ──────
+window.activeBundles = [];
+
+window.loadBundles = async function() {
+  try {
+    var res = await fetch(SUPABASE_URL + '/rest/v1/product_bundles?select=id,name,description,bundle_price,original_price,discount_percent,items&is_active=eq.true&order=created_at.desc', {
+      headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
     });
-  })
-  .catch(err => console.log('Error loading reviews:', err));
+    var bundles = await res.json();
+    window.activeBundles = Array.isArray(bundles) ? bundles : [];
+    renderBundlesStrip();
+  } catch (e) {
+    console.error('loadBundles failed:', e);
+  }
+};
+
+function renderBundlesStrip() {
+  var strip = document.getElementById('bundlesStrip');
+  if (!strip) return;
+  var bundles = window.activeBundles || [];
+  if (bundles.length === 0) { strip.style.display = 'none'; strip.innerHTML = ''; return; }
+
+  strip.innerHTML = '<div style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:12px">🎁 Bundle Deals</div>' +
+    '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">' +
+    bundles.map(function(b) {
+      var items = b.items || [];
+      var itemsHtml = items.map(function(it) {
+        var safeName = escapeHtml(it.name || '');
+        var safeSize = it.size ? ' (' + escapeHtml(it.size) + ')' : '';
+        return '<div style="font-size:11px;color:var(--muted);padding:2px 0">' + (it.qty || 1) + '&times; ' + safeName + safeSize + '</div>';
+      }).join('');
+      var safeBName = escapeHtml(b.name || 'Bundle');
+      var safeBDesc = b.description ? escapeHtml(b.description) : '';
+      var hasDiscount = b.original_price && b.original_price > b.bundle_price;
+      return '<div style="background:var(--white);border:1px solid var(--cream-mid);padding:20px;position:relative">' +
+        (b.discount_percent > 0 ? '<span style="position:absolute;top:12px;right:12px;background:var(--teal);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:2px">' + b.discount_percent + '% OFF</span>' : '') +
+        '<div style="font-size:28px;margin-bottom:8px">🎁</div>' +
+        '<div style="font-family:\'Cormorant Garamond\',serif;font-size:20px;font-weight:800;color:var(--dark);margin-bottom:4px">' + safeBName + '</div>' +
+        (safeBDesc ? '<div style="font-size:12px;color:var(--muted);margin-bottom:12px">' + safeBDesc + '</div>' : '') +
+        '<div style="margin-bottom:14px">' + itemsHtml + '</div>' +
+        '<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:14px">' +
+        (hasDiscount ? '<span style="font-size:12px;color:var(--muted);text-decoration:line-through">₹' + b.original_price + '</span>' : '') +
+        '<span style="font-size:22px;font-weight:900;color:var(--dark);font-family:\'Cormorant Garamond\',serif">₹' + b.bundle_price + '</span>' +
+        '</div>' +
+        '<button onclick="addBundleToCart(\'' + b.id + '\')" style="width:100%;background:var(--dark);color:var(--white);border:none;padding:11px;font-family:\'Jost\',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer">Add Bundle to Cart +</button>' +
+        '</div>';
+    }).join('') +
+    '</div>';
+  strip.style.display = 'block';
 }
 
-function updateReviewStats(reviews) {
-  if (!reviews || reviews.length === 0) {
-    document.getElementById('pmodal-avg-score').textContent = '—';
-    document.getElementById('pmodal-avg-stars').innerHTML = '';
-    document.getElementById('pmodal-review-count').textContent = '';
+function addBundleToCart(bundleId) {
+  var bundle = (window.activeBundles || []).find(function(b) { return b.id === bundleId; });
+  if (!bundle) return;
+  var items = bundle.items || [];
+  if (!items.length) return;
+
+  // Resolve each bundle line to a real product + size from the live catalog,
+  // then distribute the bundle's total discount proportionally across those
+  // lines (same technique as the Frequently Bought Together bundler below)
+  // so cartItems stays a flat list of real products/sizes/prices -- checkout
+  // totals, coupons, and order recording all need zero special-casing.
+  var resolved = [];
+  var origTotal = 0;
+  items.forEach(function(it) {
+    var prod = products.find(function(p) { return p.name === it.name; });
+    if (!prod || !prod.sizes || !prod.sizes.length) return;
+    var size = prod.sizes.find(function(s) { return s.label === it.size; }) || prod.sizes[0];
+    var qty = it.qty || 1;
+    resolved.push({ prod: prod, size: size, qty: qty });
+    origTotal += size.price * qty;
+  });
+  if (!resolved.length) {
+    showCartToast('Sorry, this bundle is temporarily unavailable.', 'error');
     return;
   }
-  
-  var totalRating = 0;
-  var starCounts = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0};
-  
-  reviews.forEach(function(review) {
-    totalRating += review.rating;
-    starCounts[review.rating] = (starCounts[review.rating] || 0) + 1;
-  });
-  
-  var avgRating = (totalRating / reviews.length).toFixed(1);
-  var avgStars = '★'.repeat(Math.round(avgRating)) + '☆'.repeat(5 - Math.round(avgRating));
-  
-  document.getElementById('pmodal-avg-score').textContent = avgRating;
-  document.getElementById('pmodal-avg-stars').innerHTML = avgStars;
-  document.getElementById('pmodal-review-count').textContent = reviews.length + ' review' + (reviews.length !== 1 ? 's' : '');
-  
-  // Show bar chart
-  var barChart = document.getElementById('pmodal-bar-chart');
-  if (barChart) {
-    barChart.innerHTML = '';
-    for (var i = 5; i >= 1; i--) {
-      var count = starCounts[i] || 0;
-      var percent = (count / reviews.length) * 100;
-      var barEl = document.createElement('div');
-      barEl.style.cssText = 'display:flex;align-items:center;gap:8px;font-size:11px';
-      barEl.innerHTML = `
-        <span style="min-width:30px">${i} ★</span>
-        <div style="flex:1;height:6px;background:var(--cream-mid);border-radius:2px;overflow:hidden">
-          <div style="height:100%;background:var(--gold);width:${percent}%"></div>
-        </div>
-        <span style="min-width:30px;text-align:right;color:var(--muted)">${count}</span>
-      `;
-      barChart.appendChild(barEl);
+
+  var bundlePrice  = bundle.bundle_price || origTotal;
+  var discFactor   = origTotal > 0 ? bundlePrice / origTotal : 1;
+  var runningTotal = 0;
+
+  resolved.forEach(function(r, idx) {
+    var isLast   = idx === resolved.length - 1;
+    var lineOrig = r.size.price * r.qty;
+    // Round every line normally, but let the LAST line absorb whatever
+    // rounding remainder is left so the bundle always totals to exactly
+    // bundle_price, never a rupee more or less.
+    var lineDisc = isLast ? (bundlePrice - runningTotal) : Math.round(lineOrig * discFactor);
+    runningTotal += lineDisc;
+    var perUnit = Math.round(lineDisc / r.qty);
+
+    var existing = cartItems.find(function(c) {
+      return c.bundleId === bundle.id && c.name === r.prod.name && c.sizeLabel === r.size.label;
+    });
+    if (existing) {
+      existing.qty += r.qty;
+    } else {
+      cartItems.push({
+        name: r.prod.name,
+        sizeLabel: r.size.label,
+        img: r.prod.img || '',
+        price: perUnit,
+        origPrice: r.size.price,
+        qty: r.qty,
+        bundleId: bundle.id,
+        bundleName: bundle.name,
+        fbtDiscount: true // reuses the existing cart "Bundle" badge styling
+      });
     }
-  }
+  });
+
+  _saveCart();
+  updateCartBadge();
+  renderCartDrawer();
+  showCartToast('🎁 ' + bundle.name + ' added to cart!', 'success');
 }
 
 // ── REVIEW PHOTO UPLOAD ──────────────────────────────────────
@@ -7667,9 +7709,18 @@ function _finaliseOrder(ref, phoneVal, orderItems, razorpayPaymentId) {
   var itemsWithDetails = cartItems.map(function(item) {
     return {
       product_name: item.name,
-      pack_label: item.size,
+      // Cart items store the size under `sizeLabel` (see addCart/addCartModal)
+      // -- `item.size` is never actually set, so this was always saving
+      // pack_label:null to every order ever placed. Falling back to `size`
+      // too, matching the same defensive pattern already used when
+      // *displaying* cart items (renderCartDrawer/renderCartPage).
+      pack_label: item.sizeLabel || item.size,
       pack_price: item.price,
-      quantity: item.qty || 1
+      quantity: item.qty || 1,
+      // Present only for bundle-expanded lines (see addBundleToCart) so admin
+      // order views can see which bundle a line came from.
+      bundle_id: item.bundleId || undefined,
+      bundle_name: item.bundleName || undefined
     };
   });
   
@@ -10566,7 +10617,6 @@ var SW = {
 // Add spin codes to DISCOUNT_CODES
 DISCOUNT_CODES['SPIN25']    = { type:'percent', value:25, label:'25% off (Jackpot!)' };
 DISCOUNT_CODES['SHIPFREE']  = { type:'fixed',   value:70, label:'Free Shipping' };
-DISCOUNT_CODES['SPIN5']     = { type:'percent', value:5,  label:'5% off' };
 DISCOUNT_CODES['SPIN75']    = { type:'fixed',   value:75, label:'₹75 off' };
 
 function swDrawWheel() {
@@ -12470,6 +12520,7 @@ document.addEventListener('DOMContentLoaded', function(){
 // Render products on page load (after DOM is ready)
 window.addEventListener('load', function() {
   if (window.loadPromoBanners) window.loadPromoBanners();
+  if (window.loadBundles) window.loadBundles();
   setTimeout(function() {
     if (typeof renderProducts === 'function' && typeof products !== 'undefined') {
       function doInitialRender() {
