@@ -183,6 +183,14 @@ section{padding:90px 6%}
 @media(max-width:768px){.prod-grid-home{grid-template-columns:repeat(2,1fr)!important}}
 @media(max-width:1024px){.prod-grid{grid-template-columns:repeat(3,1fr);gap:12px;row-gap:16px}}
 @media(max-width:768px){.prod-grid{grid-template-columns:repeat(2,1fr);gap:12px;row-gap:16px}}
+@media(max-width:768px){
+  #cartPageContent{grid-template-columns:1fr!important;gap:20px!important}
+  #cartPageContent>div:last-child{position:static!important}
+  #cartPageHeadRow{display:none!important}
+  #cartPageItems>div{grid-template-columns:1fr!important;gap:10px!important;padding:14px!important}
+  #cartPageItems>div>div:nth-child(2){justify-content:flex-start!important;margin:4px 0!important}
+  #cartPageItems>div>div:last-child{text-align:left!important}
+}
 @media(max-width:480px){.prod-grid{grid-template-columns:repeat(2,1fr);gap:10px;row-gap:14px}}
 .prod-card{background:var(--white);cursor:pointer;transition:transform .25s,box-shadow .25s;position:relative;overflow:hidden;border-radius:2px}
 .prod-card:hover{transform:translateY(-4px);box-shadow:0 20px 40px rgba(26,16,8,.12)}
@@ -3343,7 +3351,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
         <!-- LEFT: items table -->
         <div>
           <div style="background:var(--white);border:1px solid var(--cream-mid)">
-            <div style="display:grid;grid-template-columns:1fr 140px 110px;padding:14px 20px;border-bottom:1px solid var(--cream-mid);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">
+            <div id="cartPageHeadRow" style="display:grid;grid-template-columns:1fr 140px 110px;padding:14px 20px;border-bottom:1px solid var(--cream-mid);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">
               <div>Product</div><div style="text-align:center">Quantity</div><div style="text-align:right">Total</div>
             </div>
             <div id="cartPageItems"></div>
