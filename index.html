@@ -1046,7 +1046,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
   window.loadProductsFromDatabase = async function() {
     try {
       const res = await fetch(
-        SUPABASE_URL + '/rest/v1/products?select=name,image_url,images,price,compare_price,sizes,is_active,is_bestseller&order=name',
+        SUPABASE_URL + '/rest/v1/products?select=name,image_url,images,price,compare_price,sizes,is_active,is_bestseller,flash_sale_price,flash_sale_start,flash_sale_end&order=name',
         { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY } }
       );
       const dbProducts = await res.json();
@@ -1086,10 +1086,73 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
         }
 
         if (dbP.is_bestseller && !match.badge) match.badge = 'Bestseller';
+
+        // Flash sale — admin schedules a temporary price on the `products`
+        // table (flash_sale_price/start/end). Reuse the site's existing
+        // price/mrp strikethrough mechanic instead of adding new UI: while
+        // the sale window is active, the size's price drops to the flash
+        // price and mrp becomes the normal price, so every place that
+        // already renders price-vs-mrp (shop grid, product modal, cart)
+        // shows the discount automatically with zero new render code.
+        if (dbP.flash_sale_price && dbP.flash_sale_start && dbP.flash_sale_end) {
+          var fsNow = new Date();
+          var fsStart = new Date(dbP.flash_sale_start);
+          var fsEnd = new Date(dbP.flash_sale_end);
+          if (fsNow >= fsStart && fsNow <= fsEnd && match.sizes && match.sizes.length > 0) {
+            var normalPrice = match.sizes[0].price;
+            match.sizes[0].mrp = normalPrice;
+            match.sizes[0].price = Math.round(dbP.flash_sale_price);
+            match.badge = 'Flash Sale';
+          }
+        }
       });
 
     } catch (e) {
       console.error('loadProductsFromDatabase failed:', e);
+    }
+  };
+
+  window.loadPromoBanners = async function() {
+    try {
+      var res = await fetch(SUPABASE_URL + '/rest/v1/banners?select=id,title,subtitle,image_url,link_page,position&is_active=eq.true&order=position.asc', {
+        headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
+      });
+      var banners = await res.json();
+      if (!Array.isArray(banners) || banners.length === 0) return;
+
+      var strip = document.getElementById('promoBannerStrip');
+      if (!strip) return;
+
+      strip.innerHTML = banners.map(function(b, i) {
+        var safeTitle = (typeof escapeHtml === 'function') ? escapeHtml(b.title || '') : (b.title || '');
+        var safeSub   = (typeof escapeHtml === 'function') ? escapeHtml(b.subtitle || '') : (b.subtitle || '');
+        var safePage  = (b.link_page || 'shop').replace(/[^a-z]/gi, '') || 'shop';
+        var imgHtml   = b.image_url
+          ? '<img src="' + String(b.image_url).replace(/"/g, '&quot;') + '" alt="' + safeTitle + '" style="width:56px;height:56px;object-fit:cover;border-radius:4px;flex-shrink:0" onerror="this.style.display=\'none\'">'
+          : '';
+        return '<div class="promoBannerSlide" data-idx="' + i + '" onclick="navigateTo(\'' + safePage + '\')" ' +
+          'style="cursor:pointer;display:' + (i === 0 ? 'flex' : 'none') + ';align-items:center;justify-content:center;gap:16px;padding:12px 6%;background:var(--dark)">' +
+          imgHtml +
+          '<div style="min-width:0;text-align:center">' +
+          (safeTitle ? '<div style="font-family:\'Jost\',sans-serif;font-weight:700;font-size:13px;color:var(--gold);letter-spacing:.03em">' + safeTitle + '</div>' : '') +
+          (safeSub ? '<div style="font-family:\'Jost\',sans-serif;font-size:11px;color:rgba(255,255,255,.75);margin-top:2px">' + safeSub + '</div>' : '') +
+          '</div></div>';
+      }).join('');
+
+      strip.style.display = 'block';
+
+      if (banners.length > 1) {
+        var promoBannerIdx = 0;
+        setInterval(function() {
+          var slides = strip.querySelectorAll('.promoBannerSlide');
+          if (slides.length < 2) return;
+          slides[promoBannerIdx].style.display = 'none';
+          promoBannerIdx = (promoBannerIdx + 1) % slides.length;
+          slides[promoBannerIdx].style.display = 'flex';
+        }, 5000);
+      }
+    } catch (e) {
+      console.error('loadPromoBanners failed:', e);
     }
   };
 
@@ -1115,6 +1178,12 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
     </span>
   </div>
 </div>
+
+<!-- Promo Banners — populated from the admin Banners page (Supabase `banners`
+     table). Simple auto-rotating strip; hidden entirely if there are no
+     active banners so it never leaves an empty gap. -->
+<div id="promoBannerStrip" style="display:none;position:relative;overflow:hidden"></div>
+
 <style>
 
 @media(max-width:768px){
@@ -6778,39 +6847,54 @@ function applyDiscount() {
       return;
     }
 
-    // Enforce per-customer usage limit (e.g. FIRST10 = usagepercustomer:1) by checking
-    // past orders under this same phone/email. Phone & email are mandatory checkout
-    // fields, so we can check this before the coupon is even applied.
-    if (coupon.usagepercustomer) {
+    // Enforce usage caps: max_uses (total uses across ALL customers, e.g.
+    // FIRST10 = max_uses:1 for a true single-use-ever code) and
+    // usagepercustomer (uses by this one phone/email, e.g. usagepercustomer:1).
+    // Both are checked from a single query of past orders using this code —
+    // max_uses just needs the total count, usagepercustomer needs phone/email
+    // which are mandatory checkout fields we can check before applying.
+    if (coupon.max_uses || coupon.usagepercustomer) {
       var phoneEl2 = document.getElementById('co-phone');
       var emailEl2 = document.getElementById('co-email');
       var phoneVal2 = phoneEl2 ? phoneEl2.value.trim() : '';
       var emailVal2 = emailEl2 ? emailEl2.value.trim() : '';
-      if (!phoneVal2) {
+      if (coupon.usagepercustomer && !phoneVal2) {
         appliedDiscount = null;
         msg.style.color = '#c0392b';
         msg.textContent = '\u2717 Please enter your mobile number above first, then apply ' + code + '.';
         updateCheckoutTotals();
         return;
       }
-      var encPhone = encryptData(phoneVal2);
-      var encEmail = emailVal2 ? encryptData(emailVal2) : null;
-      var filterParts = ['customer_phone.eq.' + encodeURIComponent(encPhone)];
-      if (encEmail) filterParts.push('customer_email.eq.' + encodeURIComponent(encEmail));
-      var orFilter = 'or=(' + filterParts.join(',') + ')';
-      fetch(SUPABASE_URL + '/rest/v1/orders?select=id&coupon_code=eq.' + encodeURIComponent(code) + '&' + orFilter, {
+      fetch(SUPABASE_URL + '/rest/v1/orders?select=id,customer_phone,customer_email&coupon_code=eq.' + encodeURIComponent(code), {
         headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
       })
       .then(function(r) { return r.json(); })
       .then(function(pastOrders) {
-        var usedCount = Array.isArray(pastOrders) ? pastOrders.length : 0;
-        if (usedCount >= coupon.usagepercustomer) {
+        var allOrders = Array.isArray(pastOrders) ? pastOrders : [];
+
+        if (coupon.max_uses && allOrders.length >= coupon.max_uses) {
           appliedDiscount = null;
           msg.style.color = '#c0392b';
-          msg.textContent = '\u2717 ' + code + ' has already been used on an order with this phone number or email \u2014 it\'s valid once per customer.';
+          msg.textContent = '\u2717 ' + code + ' has reached its usage limit and is no longer available.';
           updateCheckoutTotals();
           return;
         }
+
+        if (coupon.usagepercustomer) {
+          var encPhone = encryptData(phoneVal2);
+          var encEmail = emailVal2 ? encryptData(emailVal2) : null;
+          var usedCount = allOrders.filter(function(o) {
+            return o.customer_phone === encPhone || (encEmail && o.customer_email === encEmail);
+          }).length;
+          if (usedCount >= coupon.usagepercustomer) {
+            appliedDiscount = null;
+            msg.style.color = '#c0392b';
+            msg.textContent = '\u2717 ' + code + ' has already been used on an order with this phone number or email \u2014 it\'s valid once per customer.';
+            updateCheckoutTotals();
+            return;
+          }
+        }
+
         finalizeCouponApply(coupon, code, msg, codeInput);
       })
       .catch(function() {
@@ -12385,6 +12469,7 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 // Render products on page load (after DOM is ready)
 window.addEventListener('load', function() {
+  if (window.loadPromoBanners) window.loadPromoBanners();
   setTimeout(function() {
     if (typeof renderProducts === 'function' && typeof products !== 'undefined') {
       function doInitialRender() {
