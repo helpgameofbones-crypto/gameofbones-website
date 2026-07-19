@@ -2805,9 +2805,9 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
           </div>
           <div>
             <label style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px">Your Review</label>
-            <textarea id="reviewText" rows="4" placeholder="Tell us what your dog thought..." style="width:100%;padding:10px 14px;border:1.5px solid var(--cream-mid);background:var(--cream);font-family:Jost,sans-serif;font-size:14px;color:var(--dark);outline:none;resize:vertical;box-sizing:border-box"></textarea>
+            <textarea id="reviewTextStandalone" rows="4" placeholder="Tell us what your dog thought..." style="width:100%;padding:10px 14px;border:1.5px solid var(--cream-mid);background:var(--cream);font-family:Jost,sans-serif;font-size:14px;color:var(--dark);outline:none;resize:vertical;box-sizing:border-box"></textarea>
           </div>
-          <button onclick="submitReview()" class="btn-gold" style="align-self:flex-start;padding:12px 32px">Submit Review</button>
+          <button onclick="submitStandaloneReview()" class="btn-gold" style="align-self:flex-start;padding:12px 32px">Submit Review</button>
           <div id="reviewSubmitMsg"></div>
         </div>
       </div>
@@ -8699,7 +8699,7 @@ function openPModal(idx) {
     if (stickyPrice) stickyPrice.textContent = '₹' + p.sizes[0].price.toLocaleString('en-IN');
   }
   // Reset review form state
-  currentPickedStar = 0;
+  _currentReviewStar = 0;
   document.querySelectorAll('.star-pick').forEach(function(s){s.textContent='☆';s.classList.remove('active');});
   if(document.getElementById('reviewText')) document.getElementById('reviewText').value='';
   if(document.getElementById('reviewSuccess')) document.getElementById('reviewSuccess').style.display='none';
@@ -10450,18 +10450,11 @@ var sessionReviews = {};
 
 
 
-var currentPickedStar = 0;
-var currentReviewProductName = '';
-
-function pickStar(val) {
-  currentPickedStar = val;
-  document.querySelectorAll('.star-pick').forEach(function(s,i){
-    if (i < val) { s.textContent='★'; s.classList.add('active'); }
-    else { s.textContent='☆'; s.classList.remove('active'); }
-  });
-}
-
-
+// NOTE: pickStar() used to be defined a second time right here, which
+// silently shadowed the real one (line ~7078) that submitReview() actually
+// reads from (_currentReviewStar). That meant clicking a star always looked
+// like it worked but the rating never reached the submit payload. Removed —
+// the single definition above is now the only one.
 
 // Nav scroll shadow
 window.addEventListener('scroll', function() {
@@ -11480,6 +11473,72 @@ function setReviewStar(n) {
   document.querySelectorAll(".rstarinput").forEach(function(s,i){
     s.innerHTML = i < n ? "&#9733;" : "&#9734;";
     s.style.color = i < n ? "var(--gold)" : "var(--cream-dark)";
+  });
+}
+
+// The standalone "Write a Review" section on the Reviews page (#page-reviews)
+// used to call submitReview() — the SAME function used by the product-modal
+// review form. That function reads modal-only elements (#pmodal-name,
+// #reviewDogName, _currentCustomerPhone) which don't exist in this page's
+// context, so it silently always failed. This page also collects different
+// fields (name typed in free text, a product dropdown, its own star widget)
+// and isn't gated on a verified purchase, so it gets its own submit path
+// instead of trying to force it through the purchase-verified one.
+function submitStandaloneReview() {
+  var msgEl = document.getElementById('reviewSubmitMsg');
+  function showMsg(text, isError) {
+    if (!msgEl) return;
+    msgEl.style.display = 'block';
+    msgEl.style.marginTop = '4px';
+    msgEl.style.fontSize = '13px';
+    msgEl.style.color = isError ? '#c0392b' : 'var(--teal)';
+    msgEl.textContent = text;
+  }
+
+  if (reviewRating === 0) { showMsg('Please select a star rating.', true); return; }
+
+  var textEl = document.getElementById('reviewTextStandalone');
+  var reviewText = textEl ? textEl.value.trim() : '';
+  if (!reviewText || reviewText.length < 10) { showMsg('Review must be at least 10 characters.', true); return; }
+
+  var nameEl = document.getElementById('reviewName');
+  var reviewerName = (nameEl && nameEl.value.trim()) || 'Loyal Customer';
+
+  var productSel = document.getElementById('reviewProduct');
+  var productName = productSel ? productSel.value : '';
+  if (!productName || productName === 'Other') {
+    showMsg('Please pick the specific product you\'re reviewing from the list.', true);
+    return;
+  }
+
+  var productIndex = products.findIndex(function(p) { return p.name === productName; });
+  if (productIndex === -1) { showMsg('Could not match that product — please try again.', true); return; }
+  var productId = productIndex + 1;
+
+  fetch(SUPABASE_URL + '/rest/v1/reviews', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY },
+    body: JSON.stringify({
+      product_id: productId,
+      rating: reviewRating,
+      review_text: reviewText,
+      customer_name: reviewerName,
+      customer_phone: null,
+      photo_url: null,
+      created_at: new Date().toISOString()
+    })
+  }).then(function(r) {
+    if (r.status === 201) {
+      showMsg('Thanks! Your review has been submitted.', false);
+      if (textEl) textEl.value = '';
+      if (nameEl) nameEl.value = '';
+      reviewRating = 0;
+      document.querySelectorAll('.rstarinput').forEach(function(s) { s.innerHTML = '&#9734;'; s.style.color = 'var(--cream-dark)'; });
+    } else {
+      showMsg('Something went wrong — please try again.', true);
+    }
+  }).catch(function() {
+    showMsg('Something went wrong — please try again.', true);
   });
 }
 
