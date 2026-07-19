@@ -7752,18 +7752,57 @@ function _finaliseOrder(ref, phoneVal, orderItems, razorpayPaymentId) {
   // the online-payment discount, however they combined for this specific order.
   var totalDiscountApplied = Math.max(0, (subtotal + codCharge) - grandTotal);
 
-  // Build a human-readable breakdown for admin/invoice display
+  // Build a human-readable breakdown for admin/invoice display. Every
+  // adjustment gets its own named, amount-labeled line -- coupon, loyalty
+  // points, the automatic bulk-quantity discount, the online-payment
+  // discount, and the COD handling surcharge -- mirroring the exact math in
+  // updateCheckoutTotals() so the figures shown to admin always match what
+  // the customer actually saw at checkout. Previously only the coupon and
+  // online-payment discount were ever logged here; loyalty-point redemptions
+  // and the bulk discount folded invisibly into the aggregate `discount`
+  // number with no breakdown, and the COD surcharge wasn't recorded anywhere
+  // at all.
+  var totalQtyForNotes = cartItems.reduce(function(s, i) { return s + i.qty; }, 0);
+  var couponAmtForNotes = 0, loyaltyAmtForNotes = 0, bulkAmtForNotes = 0;
+  if (appliedDiscount) {
+    couponAmtForNotes = appliedDiscount.type === 'percent'
+      ? Math.round(subtotal * appliedDiscount.value / 100)
+      : Math.min(appliedDiscount.value, subtotal);
+  }
+  if (_loyaltyApplied && _loyaltyPoints > 0) {
+    loyaltyAmtForNotes = Math.min(Math.floor(_loyaltyPoints / 100) * 30, subtotal - couponAmtForNotes);
+  }
+  var bulkTierForNotes = { pct: 0, label: '' };
+  if (!appliedDiscount && !_loyaltyApplied) {
+    bulkTierForNotes = getBulkTier(totalQtyForNotes);
+    if (bulkTierForNotes.pct > 0) bulkAmtForNotes = Math.round(subtotal * bulkTierForNotes.pct / 100);
+  }
+  var onlineDiscForNotes = (selectedPayment && selectedPayment !== 'cod') ? 30 : 0;
+
   var discountNotes = [];
-  if (appliedDiscount && appliedDiscount.code) {
+  if (appliedDiscount && appliedDiscount.code && couponAmtForNotes > 0) {
+    discountNotes.push('Coupon ' + appliedDiscount.code + ' (' + appliedDiscount.label + '): -₹' + couponAmtForNotes);
+  } else if (appliedDiscount && appliedDiscount.code) {
     discountNotes.push('Coupon ' + appliedDiscount.code + ' applied');
   }
-  if (selectedPayment !== 'cod') {
-    discountNotes.push('Online payment discount: -₹30');
+  if (loyaltyAmtForNotes > 0) {
+    discountNotes.push('Loyalty points redeemed (' + _loyaltyPoints + ' pts): -₹' + loyaltyAmtForNotes);
+  }
+  if (bulkAmtForNotes > 0) {
+    discountNotes.push(bulkTierForNotes.label + ': -₹' + bulkAmtForNotes);
+  }
+  if (onlineDiscForNotes > 0) {
+    discountNotes.push('Online payment discount: -₹' + onlineDiscForNotes);
+  }
+  if (codCharge > 0) {
+    discountNotes.push('COD handling charge: +₹' + codCharge);
   }
   // Customer's own free-text note from the cart page (gift instructions,
-  // allergies, special requests, etc.) -- previously typed into this box but
-  // never actually read or saved anywhere. Now folded into orders.notes so
-  // it shows up on the Orders page / Order Notes admin view like any other note.
+  // allergies, special requests, etc.) -- always included when present,
+  // independent of whether any discount/charge line above fired, so it can
+  // never silently disappear on a plain COD order with no discount (the
+  // admin Orders page previously nested this whole block behind a
+  // discount>0 check -- see orders/page.tsx parseOrderNoteLines()).
   var customerNoteEl = document.getElementById('cartPageNote');
   var customerNote = customerNoteEl ? customerNoteEl.value.trim() : '';
   if (customerNote) {
