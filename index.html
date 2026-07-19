@@ -6485,11 +6485,11 @@ function addTrialBox(size) {
 // ── CHECKOUT ────────────────────────────────────────────────────────────
 const DISCOUNT_CODES = {
   'FIRST10': { type:'percent', value:10, label:'10% off (First Order)' },
-  'SAVE50':  { type:'fixed',   value:30, label:'₹30 off' },
+  'SAVE50':  { type:'fixed',   value:50, label:'₹50 off' },
   'SAVE100': { type:'fixed',   value:100, label:'₹100 off', minOrder:999 },
   'BULK15':  { type:'percent', value:15,  label:'15% off', minOrder:1499 },
   'MEGA20':  { type:'percent', value:20,  label:'20% off', minOrder:2499 },
-  'FREEFEET': { type:'free',    value:0,   label:'Free Chicken Feet pack (60g)' },
+  'FREEFEET': { type:'free',    value:0,   label:'Free Chicken Feet pack (60g)', minOrder:749 },
 };
 let appliedDiscount = null;
 let selectedPayment = 'upi';
@@ -6657,7 +6657,7 @@ function showDiscountPanel() {
   // Only show user-facing codes (not internal spin codes)
   var visibleCodes = [
     { code:'FIRST10', desc:'10% off your first order',          minOrder:0    },
-    { code:'SAVE50',  desc:'₹30 off',                           minOrder:0    },
+    { code:'SAVE50',  desc:'₹50 off',                           minOrder:0    },
     { code:'SAVE100', desc:'₹100 off',                          minOrder:999  },
     { code:'BULK15',  desc:'15% off',                           minOrder:1499 },
     { code:'MEGA20',  desc:'20% off',                           minOrder:2499 },
