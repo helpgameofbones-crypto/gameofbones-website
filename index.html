@@ -10594,6 +10594,8 @@ function swDrawWheel() {
   ctx.fill();
 }
 
+var _swEmailCaptureId = null;
+
 function swPickSegment() {
   var r = Math.random(), cumul = 0;
   for (var i = 0; i < SW.segments.length; i++) {
@@ -10628,13 +10630,17 @@ function swSpin() {
     sessionStorage.setItem('swUsedEmails', JSON.stringify(usedEmails));
     errEl.style.display = 'none';
 
-    // Save to backend so this shows up in admin (email_captures table)
+    // Save to backend so this shows up in admin (email_captures table).
+    // Capture the inserted row's id so we can attach the prize once the
+    // wheel finishes spinning (see showSpinResult below).
+    _swEmailCaptureId = null;
     try {
       fetch(SUPABASE_URL + '/rest/v1/email_captures', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY },
+        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY, 'Prefer': 'return=representation' },
         body: JSON.stringify({ email: email, source: 'spin_wheel', status: 'active' })
-      }).then(function(r) { console.log('Spin wheel email captured:', r.status === 201); })
+      }).then(function(r) { return r.json().then(function(d) { return { ok: r.status === 201, d: d }; }); })
+        .then(function(res) { console.log('Spin wheel email captured:', res.ok); if (res.ok && Array.isArray(res.d) && res.d[0] && res.d[0].id) _swEmailCaptureId = res.d[0].id; })
         .catch(function(e) { console.warn('Spin wheel email capture failed:', e.message); });
     } catch(e) { console.warn('Spin wheel email capture skipped:', e.message); }
   }
@@ -10713,6 +10719,19 @@ function showSpinResult(idx) {
     if (minOrderEl) minOrderEl.style.display = seg.type === 'free' ? 'block' : 'none';
   }
   var srs = document.getElementById('spinResultSub'); if (srs) srs.textContent = sub;
+
+  // Attach the prize won to the email_captures row created in swSpin(),
+  // so the admin's Email Captures Dashboard can show what each person won.
+  if (_swEmailCaptureId) {
+    try {
+      fetch(SUPABASE_URL + '/rest/v1/email_captures?id=eq.' + _swEmailCaptureId, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY },
+        body: JSON.stringify({ prize: seg.label, coupon_code: seg.code || null })
+      }).catch(function(e) { console.warn('Spin wheel prize save failed:', e.message); });
+    } catch(e) { /* silent */ }
+    _swEmailCaptureId = null;
+  }
 }
 
 function spinCopyCode() {
