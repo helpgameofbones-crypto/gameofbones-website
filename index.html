@@ -2754,7 +2754,8 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
 
       <!-- REDEMPTION TIERS -->
       <div style="margin-top:60px">
-        <h3 style="font-family:Cormorant Garamond,serif;font-size:28px;color:var(--white);margin-bottom:32px">Redeem Your Points</h3>
+        <h3 style="font-family:Cormorant Garamond,serif;font-size:28px;color:var(--white);margin-bottom:12px">Redeem Your Points</h3>
+        <p style="font-size:13px;color:rgba(255,255,255,.6);margin-bottom:20px">Every point is worth ₹0.30 — redeem any amount at checkout, no minimum required. A few examples:</p>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px">
           <div style="background:linear-gradient(135deg,rgba(200,151,58,.15) 0%,rgba(200,151,58,.05) 100%);border:1.5px solid rgba(200,151,58,.3);padding:20px;text-align:center;border-radius:4px">
             <div style="font-size:24px;font-weight:700;color:var(--gold);font-family:Cormorant Garamond,serif">100</div>
@@ -6677,7 +6678,7 @@ function updateCheckoutTotals() {
 
   // Calculate loyalty discount
   if (_loyaltyApplied && _loyaltyPoints > 0) {
-    var loyaltyRupees = Math.floor(_loyaltyPoints / 100) * 30; // 100 points = Rs.30
+    var loyaltyRupees = Math.round(_loyaltyPoints * 0.3); // Rs.0.30 per point, no minimum
     loyaltyDiscount = Math.min(loyaltyRupees, subtotal - couponDiscount); // Can't discount below 0
   }
 
@@ -7770,7 +7771,7 @@ function _finaliseOrder(ref, phoneVal, orderItems, razorpayPaymentId) {
       : Math.min(appliedDiscount.value, subtotal);
   }
   if (_loyaltyApplied && _loyaltyPoints > 0) {
-    loyaltyAmtForNotes = Math.min(Math.floor(_loyaltyPoints / 100) * 30, subtotal - couponAmtForNotes);
+    loyaltyAmtForNotes = Math.min(Math.round(_loyaltyPoints * 0.3), subtotal - couponAmtForNotes);
   }
   var bulkTierForNotes = { pct: 0, label: '' };
   if (!appliedDiscount && !_loyaltyApplied) {
@@ -11463,8 +11464,7 @@ function checkRewards() {
     var referralPoints = referrals.reduce(function(s,r){ return s + (r.points_awarded || 0); }, 0);
     var reviewPoints = reviewBonuses.reduce(function(s,r){ return s + (r.discount_value || 0); }, 0);
     var totalPoints = spendPoints + referralPoints + reviewPoints;
-    var redeemableRupees = Math.floor(totalPoints / 100) * 30; // 100 points = Rs.30
-    var nextTierPoints = ((Math.floor(totalPoints / 100) + 1) * 100); // Next redemption tier
+    var redeemableRupees = Math.round(totalPoints * 0.3); // Rs.0.30 per point, no minimum
 
     var el = document.getElementById("rewardsResult");
     el.innerHTML = "";
@@ -11501,12 +11501,12 @@ function checkRewards() {
       redeemDiv.innerHTML =
         "<div style='font-size:12px;color:var(--teal);text-transform:uppercase;font-weight:700;letter-spacing:.05em;margin-bottom:8px'>Ready to Redeem</div>" +
         "<div style='font-size:28px;font-weight:700;color:var(--teal);margin-bottom:8px'>₹" + redeemableRupees + " Off</div>" +
-        "<div style='font-size:12px;color:rgba(255,255,255,.6)'>Use " + (Math.floor(totalPoints/100)*100) + " points at checkout</div>";
+        "<div style='font-size:12px;color:rgba(255,255,255,.6)'>Use all " + totalPoints + " points at checkout</div>";
       el.appendChild(redeemDiv);
     } else {
       var needDiv = document.createElement("div");
       needDiv.style.cssText = "background:rgba(200,151,58,.08);border:1px solid rgba(200,151,58,.2);padding:16px;border-radius:4px;text-align:center;margin-bottom:28px;font-size:12px;color:rgba(255,255,255,.7)";
-      needDiv.innerHTML = "💡 Earn " + (100 - (totalPoints % 100)) + " more points to unlock your first Rs.30 redemption";
+      needDiv.innerHTML = "💡 You don't have any points yet — place an order to start earning, no minimum needed to redeem";
       el.appendChild(needDiv);
     }
 
@@ -11547,16 +11547,6 @@ function checkRewards() {
       histDiv.appendChild(row);
     });
     el.appendChild(histDiv);
-
-    // NEXT MILESTONE
-    var milestoneDiv = document.createElement("div");
-    var pointsNeeded = nextTierPoints - totalPoints;
-    milestoneDiv.style.cssText = "background:rgba(255,255,255,.03);border:1px solid rgba(200,151,58,.1);padding:20px;border-radius:4px;text-align:center";
-    milestoneDiv.innerHTML =
-      "<div style='font-size:11px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.05em;font-weight:600;margin-bottom:8px'>Next Reward Tier</div>" +
-      "<div style='font-size:28px;font-weight:700;color:var(--gold);font-family:Cormorant Garamond,serif'>" + nextTierPoints + "</div>" +
-      "<div style='font-size:12px;color:rgba(255,255,255,.6);margin-top:8px'>Earn <strong style=\"color:var(--gold)\">" + pointsNeeded + " more points</strong> to unlock Rs." + ((Math.floor(nextTierPoints/100)*30)) + " off</div>";
-    el.appendChild(milestoneDiv);
 
   }).catch(function(e) {
     console.error("Rewards fetch error:", e);
@@ -12361,7 +12351,7 @@ function checkLoyaltyAtCheckout() {
     var reviewPoints = reviewBonuses.reduce(function(s,r){ return s + (r.discount_value || 0); }, 0);
     _loyaltyPoints = spendPoints + referralPoints + reviewPoints;
     if (_loyaltyPoints === 0) return;
-    var rupees = Math.floor(_loyaltyPoints / 100) * 30;
+    var rupees = Math.round(_loyaltyPoints * 0.3);
     if (rupees > 0 && !_loyaltyApplied) {
       var section = document.getElementById('loyaltyPointsSection');
       var msg = document.getElementById('loyaltyPointsMsg');
@@ -12375,7 +12365,7 @@ function checkLoyaltyAtCheckout() {
 }
 
 function applyLoyaltyPoints() {
-  var rupees = Math.floor(_loyaltyPoints / 100) * 30; // 100 points = Rs.30
+  var rupees = Math.round(_loyaltyPoints * 0.3); // Rs.0.30 per point, no minimum
   if (rupees <= 0) return;
 
   // Mark as applied (stacks with any existing coupon)
