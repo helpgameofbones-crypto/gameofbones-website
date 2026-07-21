@@ -4871,126 +4871,6 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
 
 <script>
 
-// Feeder signup modal
-function openFeederSignup() {
-  const modal = document.createElement('div');
-  modal.id = 'feeder-signup-modal';
-  modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:2001;padding:16px';
-  modal.innerHTML = `<div style="background:var(--white);padding:32px;max-width:420px;width:100%;border-radius:4px;max-height:90vh;overflow-y:auto">
-    <button onclick="this.closest('[id]').remove()" style="float:right;background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted)">✕</button>
-    <h2 style="font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--dark);margin-bottom:8px;margin-top:0;clear:both">Become a Feeder</h2>
-    <p style="font-size:13px;color:var(--muted);margin-bottom:20px">Help us feed strays. Join our community network.</p>
-    
-    <div style="margin-bottom:16px">
-      <label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;color:var(--dark);margin-bottom:6px">Your Name *</label>
-      <input type="text" id="feeder-name" placeholder="Full name" style="width:100%;padding:10px 12px;border:1px solid var(--cream-mid);background:var(--cream);font-size:13px;color:var(--dark);box-sizing:border-box">
-    </div>
-
-    <div style="margin-bottom:16px">
-      <label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;color:var(--dark);margin-bottom:6px">Phone *</label>
-      <input type="tel" id="feeder-phone" placeholder="10 digits" maxlength="10" style="width:100%;padding:10px 12px;border:1px solid var(--cream-mid);background:var(--cream);font-size:13px;color:var(--dark);box-sizing:border-box">
-    </div>
-
-    <div style="margin-bottom:16px">
-      <label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;color:var(--dark);margin-bottom:6px">Preferred Location *</label>
-      <select id="feeder-location" style="width:100%;padding:10px 12px;border:1px solid var(--cream-mid);background:var(--cream);font-size:13px;color:var(--dark);box-sizing:border-box;font-family:'Jost',sans-serif;cursor:pointer">
-        <option value="">Select location</option>
-        <option value="kalyan">Kalyan East - Navi Peth</option>
-        <option value="thane">Thane - Majiwada</option>
-        <option value="mumbai">Mumbai Central - Fort</option>
-        <option value="navi">Navi Mumbai - Vashi</option>
-        <option value="other">Other (please mention)</option>
-      </select>
-    </div>
-
-    <div style="margin-bottom:16px">
-      <label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;color:var(--dark);margin-bottom:6px">Days Available (select all that apply)</label>
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px">
-          <input type="checkbox" value="mon" style="cursor:pointer"> Monday
-        </label>
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px">
-          <input type="checkbox" value="wed" style="cursor:pointer"> Wednesday
-        </label>
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px">
-          <input type="checkbox" value="fri" style="cursor:pointer"> Friday
-        </label>
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px">
-          <input type="checkbox" value="sat" style="cursor:pointer"> Saturday
-        </label>
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px">
-          <input type="checkbox" value="sun" style="cursor:pointer"> Sunday
-        </label>
-      </div>
-    </div>
-
-    <div style="margin-bottom:16px">
-      <label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;font-size:12px">
-        <input type="checkbox" id="feeder-confirm" style="margin-top:3px;cursor:pointer">
-        <span>I understand I'm volunteering and agree to our <a href="#" style="color:var(--teal);text-decoration:none">Feeder Code of Conduct</a></span>
-      </label>
-    </div>
-
-    <div id="feeder-error" style="display:none;background:#ffebee;color:#c0392b;padding:10px 12px;border-radius:2px;font-size:12px;margin-bottom:16px"></div>
-    <div id="feeder-success" style="display:none;background:#e8f5e9;color:var(--teal);padding:10px 12px;border-radius:2px;font-size:12px;margin-bottom:16px"></div>
-
-    <button onclick="submitFeederSignup()" style="width:100%;background:var(--teal);color:var(--white);border:none;padding:12px;font-size:12px;font-weight:700;text-transform:uppercase;cursor:pointer;border-radius:2px;font-family:'Jost',sans-serif;margin-bottom:8px">Join the Feeders ✓</button>
-    <button onclick="this.closest('[id]').remove()" style="width:100%;background:var(--cream-mid);color:var(--dark);border:none;padding:12px;font-size:12px;font-weight:600;text-transform:uppercase;cursor:pointer;border-radius:2px;font-family:'Jost',sans-serif">Cancel</button>
-  </div>`;
-  document.body.appendChild(modal);
-}
-
-function submitFeederSignup() {
-  const name = document.getElementById('feeder-name').value.trim();
-  const phone = document.getElementById('feeder-phone').value.trim();
-  const location = document.getElementById('feeder-location').value;
-  const confirmed = document.getElementById('feeder-confirm').checked;
-  const errorEl = document.getElementById('feeder-error');
-  const successEl = document.getElementById('feeder-success');
-  
-  errorEl.style.display = 'none';
-  successEl.style.display = 'none';
-  
-  if (!name) { errorEl.textContent = 'Name required'; errorEl.style.display = 'block'; return; }
-  if (!phone || phone.length !== 10) { errorEl.textContent = 'Valid phone required'; errorEl.style.display = 'block'; return; }
-  if (!location) { errorEl.textContent = 'Select a location'; errorEl.style.display = 'block'; return; }
-  if (!confirmed) { errorEl.textContent = 'Please agree to the Feeder Code of Conduct'; errorEl.style.display = 'block'; return; }
-  
-  // Save to Supabase (create feeders table if it doesn't exist)
-  const feederData = {
-    name: name,
-    phone: phone,
-    location: location,
-    status: 'pending',
-    created_at: new Date().toISOString()
-  };
-  
-  fetch(SUPABASE_URL + '/rest/v1/feeders', {
-    method: 'POST',
-    headers: {
-      'apikey': SUPABASE_ANON_KEY,
-      'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(feederData)
-  })
-  .then(res => res.json())
-  .then(data => {
-    successEl.textContent = '✓ Welcome to the feeders! We\'ll contact you soon on WhatsApp.';
-    successEl.style.display = 'block';
-    setTimeout(() => { document.getElementById('feeder-signup-modal').remove(); }, 2000);
-  })
-  .catch(err => {
-    console.log('Error:', err);
-    successEl.textContent = '✓ Thanks for signing up! We\'ll contact you soon.';
-    successEl.style.display = 'block';
-    setTimeout(() => { document.getElementById('feeder-signup-modal').remove(); }, 2000);
-  });
-}
-
-</script>
-<script>
-
 // Global WA functions — defined early so inline onclicks always work
 var WA_NUMBER = '919082503295';
 
@@ -10202,18 +10082,28 @@ function verifyReviewPurchase() {
   document.getElementById('review-phone-error').textContent = '';
   document.getElementById('review-verify-status').textContent = '';
   if (phone.length < 10) { document.getElementById('review-phone-error').textContent = 'Enter valid 10-digit number'; reviewVerified = false; return; }
-  const phoneLast10 = phone.slice(-10), productId = currentReviewIdx + 1;
+  const phoneLast10 = phone.slice(-10);
+  const productName = (products[currentReviewIdx] && products[currentReviewIdx].name) || '';
   document.getElementById('review-verify-status').textContent = 'Verifying...';
-  fetch('https://syuostlqzzinigqwjzap.supabase.co/rest/v1/orders?select=id&customer_phone=ilike.*' + phoneLast10 + '&status=neq.cancelled', {
-    headers: { 'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5dW9zdGxxenppbmlncXdqemFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NTA3MzIsImV4cCI6MjA4OTQyNjczMn0.BKf4EF2QhNcW_u1SVVbtiGdlnzdthiptlVcNk3gP2KU' }
-  }).then(r => r.json()).then(orders => {
-    if (!orders.length) { document.getElementById('review-phone-error').textContent = 'No purchase history'; return; }
-    fetch('https://syuostlqzzinigqwjzap.supabase.co/rest/v1/order_items?select=*&product_id=eq.' + productId + '&order_id=in.(' + orders.map(o => o.id).join(',') + ')', {
-      headers: { 'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5dW9zdGxxenppbmlncXdqemFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NTA3MzIsImV4cCI6MjA4OTQyNjczMn0.BKf4EF2QhNcW_u1SVVbtiGdlnzdthiptlVcNk3gP2KU' }
-    }).then(r => r.json()).then(items => {
-      if (items.length > 0) { reviewVerified = true; reviewVerifiedPhone = phoneLast10; document.getElementById('review-verify-status').textContent = '✓ Verified'; document.getElementById('review-phone-error').textContent = ''; }
-      else { document.getElementById('review-phone-error').textContent = 'Not purchased'; }
-    });
+  // Two bugs fixed here:
+  // 1) customer_phone is stored XOR+base64 encrypted, so a server-side ilike
+  //    filter against plaintext digits could never match a real order — fetch
+  //    recent orders and decrypt client-side instead (same pattern used
+  //    elsewhere in this file, e.g. checkLoyaltyAtCheckout/checkRewards).
+  // 2) There is no separate `order_items` table — line items live in the
+  //    `items` jsonb column on each order, keyed by `product_name` (not a
+  //    numeric product_id), so match against that instead.
+  fetch('https://syuostlqzzinigqwjzap.supabase.co/rest/v1/orders?select=id,customer_phone,items&status=neq.cancelled&order=created_at.desc&limit=1000', {
+    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
+  }).then(r => r.json()).then(allOrders => {
+    const orders = Array.isArray(allOrders) ? allOrders : [];
+    const myOrders = orders.filter(o => decryptPhone(o.customer_phone || '').replace(/\D/g,'').slice(-10) === phoneLast10);
+    if (!myOrders.length) { document.getElementById('review-phone-error').textContent = 'No purchase history'; return; }
+    const purchased = myOrders.some(o => (o.items || []).some(item =>
+      (item.product_name || '').trim().toLowerCase() === productName.trim().toLowerCase()
+    ));
+    if (purchased) { reviewVerified = true; reviewVerifiedPhone = phoneLast10; document.getElementById('review-verify-status').textContent = '✓ Verified'; document.getElementById('review-phone-error').textContent = ''; }
+    else { document.getElementById('review-phone-error').textContent = 'Not purchased'; }
   }).catch(() => document.getElementById('review-phone-error').textContent = 'Verification error');
 }
 
