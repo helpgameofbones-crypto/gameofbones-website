@@ -12331,9 +12331,21 @@ function checkLoyaltyAtCheckout() {
   var phoneLast10 = phone.slice(-10);
 
   Promise.all([
-    fetch(SUPABASE_URL + '/rest/v1/orders?select=grand_total,total_amount,status&customer_phone=ilike.*' + phoneLast10 + '&status=neq.cancelled', {
+    // customer_phone is stored ENCRYPTED (see encryptData()/decryptData() near the top
+    // of this file) — it can never be matched with a server-side ilike filter against
+    // plaintext digits (that was the bug: this always returned zero rows, so the
+    // "Loyalty Points Available" box never appeared at checkout). Fetch recent orders
+    // and filter client-side by decrypting each phone and comparing the last 10 digits,
+    // same approach already used in checkRewards() above.
+    fetch(SUPABASE_URL + '/rest/v1/orders?select=grand_total,total_amount,status,customer_phone&status=neq.cancelled&order=created_at.desc&limit=1000', {
       headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
-    }).then(function(r){ return r.json(); }).catch(function(){ return []; }),
+    }).then(function(r){ return r.json(); }).then(function(all){
+      var list = Array.isArray(all) ? all : [];
+      return list.filter(function(o){
+        var dec = decryptData(o.customer_phone || '').replace(/\D/g,'');
+        return dec.slice(-10) === phoneLast10;
+      });
+    }).catch(function(){ return []; }),
     fetch(SUPABASE_URL + '/rest/v1/referrals?select=points_awarded&referrer_phone=eq.' + phoneLast10, {
       headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
     }).then(function(r){ return r.json(); }).catch(function(){ return []; }),
