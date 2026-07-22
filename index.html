@@ -81,7 +81,7 @@ s.parentNode.insertBefore(t,s)}(window, document,'script',
 fbq('init', '209278950833218');
 fbq('track', 'PageView');
 </script>
-<noscript><img height="1" width="1" style="display:none"
+<noscript><img height="1" width="1" style="display:none" alt=""
 src="https://www.facebook.com/tr?id=209278950833218&ev=PageView&noscript=1"
 /></noscript>
 
@@ -832,6 +832,14 @@ body:has(#page-login.active) #mainNav { display: none !important; }
    ============================================ */
 html, body { overflow-x: hidden !important; max-width: 100% !important; }
 #mainNav, main, footer, .page, section { max-width: 100vw !important; box-sizing: border-box; }
+/* Dedicated, guaranteed-safe grid classes for product-detail info blocks —
+   explicit rules rather than relying only on the generic attribute-selector
+   catch-all further below, so these never render as cramped narrow columns. */
+.gob-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.gob-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+@media (max-width: 640px) {
+  .gob-grid-2, .gob-grid-3 { grid-template-columns: 1fr !important; }
+}
 @media(min-width:769px){
   .pg-left,.pg-right{display:flex;flex-direction:column}
   .pg-image{position:sticky;top:80px}
@@ -1616,12 +1624,13 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
         <button onclick="shareProduct('twitter')" title="Share on Twitter" style="background:none;border:none;font-size:18px;cursor:pointer;opacity:.6;transition:opacity .2s;padding:4px 6px" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.6'">𝕏</button>
         <button onclick="shareProduct('copy')" title="Copy link" style="background:none;border:none;font-size:18px;cursor:pointer;opacity:.6;transition:opacity .2s;padding:4px 6px" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.6'">🔗</button>
       </div>
-        <div class="pg-safety" id="product-detail-safety" style="order:4"></div>
-        <div class="pg-labeltest" id="product-detail-label-test" style="order:5"></div>
+        <div class="pg-specsheet" id="product-detail-specsheet" style="order:4"></div>
+        <div class="pg-safety" id="product-detail-safety" style="order:5"></div>
+        <div class="pg-labeltest" id="product-detail-label-test" style="order:6"></div>
       </div>
       <div class="pg-right">
         <div class="pg-buybox" id="product-detail-buybox" style="order:2"></div>
-        <div class="pg-details" style="order:6">
+        <div class="pg-details" style="order:7">
         <div id="product-detail-content"></div>
 
         <!-- REVIEWS SECTION -->
@@ -1652,7 +1661,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
   <!-- OUR BLOGS SECTION -->
   <section style="background:var(--white);padding:60px 6%">
     <div style="max-width:1200px;margin:0 auto">
-      <h2 style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:var(--dark);margin-bottom:40px">Our Blogs</h2>
+      <h2 id="blogs-heading" style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:var(--dark);margin-bottom:40px">Our Blogs</h2>
       <div id="blogs-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px">
         <!-- Populated by JavaScript -->
       </div>
@@ -4937,6 +4946,14 @@ function sendCustomWA() {
   }
 }
 function showPage(id) {
+  // Per-product SEO: set on product pages, reset elsewhere
+  if (id === 'product') {
+    if (typeof currentProductIdx === 'number' && typeof products !== 'undefined' && products[currentProductIdx] && typeof updateProductSEO === 'function') {
+      updateProductSEO(products[currentProductIdx]);
+    }
+  } else if (typeof resetPageSEO === 'function') {
+    resetPageSEO();
+  }
   // Always close the mobile drawer when navigating
   if (typeof closeMobileMenu === 'function') closeMobileMenu();
   // Stop carousel auto-rotate when leaving product page
@@ -5390,6 +5407,18 @@ let products = [
   // ── JERKY ──────────────────────────────────────────────
   {img:'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/293b7ba0-37a7-4626-b97e-0f6aa8d86fa4/image-0-1782712553501.png', name:'Chicken Jerky', cat:'Boneless Jerky', badge:'Bestseller', badgeCls:'', desc:'Single-ingredient slow-dehydrated chicken breast. High-protein, low-fat. Perfect for training rewards.', tags:['Single Ingredient','Preservative Free'], sizes:[{label:'Pack of 1',price:329,mrp:329},{label:'Pack of 2',price:658,mrp:658},{label:'Pack of 3',price:987,mrp:987},{label:'Pack of 4',price:1316,mrp:1316}], filter:'jerky', weight:'60 Grams',
     tagline:'Pure dehydrated chicken breast — nothing added, nothing removed. One ingredient, complete nutrition.',
+    subhead:'One ingredient. Real muscle. Nothing to hide.',
+    founderNote:'We check every batch for moisture and texture before it\'s sealed — if it\'s not right, it doesn\'t ship.',
+    health:'Many dogs struggle with upset stomachs on commercial treats loaded with grain fillers, sugar and artificial preservatives — chicken jerky has exactly one ingredient, so there\'s nothing for a sensitive gut to react to. Because it\'s slow-dehydrated rather than fried, the protein stays gentle and easy to digest, passing through comfortably even in dogs with a history of loose stools on rich foods. The lean, high-value protein also means it won\'t contribute to weight gain even when used often for training.',
+    healthPoints:['Single ingredient — nothing for a sensitive stomach to react to','Lean and low-calorie, safe to use often for training without weight gain','Slow-dehydrated, not fried — gentle, easy-to-digest protein'],
+    originStory:'Chicken breast is sourced from Indian poultry farms and brought in fresh before we do anything to it. We slice, slow-dehydrate and pack — no marinade, no smoke flavouring, no added salt. We lab-test periodically for quality, and every batch is vacuum-sealed so no air or moisture gets back in before it reaches your door.',
+    faqs:[
+      {icon:'🐶', q:'Is chicken jerky safe for puppies?',a:'Yes, from around 12 weeks, in small pieces appropriate to their size. Introduce any new treat gradually and watch for any reaction.'},
+      {icon:'⚖️', q:'Will this make my dog gain weight?',a:'Unlikely if fed within the usual 10% treat-calorie guideline — it\'s lean and low in fat, which is exactly why it works well for frequent training rewards.'},
+      {icon:'🔬', q:'How do I know the quality is consistent?',a:'We lab-test periodically for quality, and every batch is vacuum-sealed at our facility in Kalyan — nothing ships without that check.'},
+      {icon:'🥩', q:'Is this the same as store-bought chicken jerky?',a:'No — most commercial jerky adds sugar, salt, smoke flavouring and preservatives to extend shelf life. Ours is chicken breast and nothing else.'},
+      {icon:'📦', q:'How should I store it?',a:'Keep it in a cool, dry place. Once opened, reseal tightly or move it to an airtight container to keep it fresh for the full 4 weeks.'},
+    ],
     benefits:[
       {icon:'💪',title:'Lean Muscle Growth',text:'High biological value protein supports strong, healthy muscles in dogs of all ages.'},
       {icon:'🏋️',title:'Perfect Training Treat',text:'Low fat, high protein and easy to break into small pieces — ideal for reward-based training.'},
@@ -5402,6 +5431,18 @@ let products = [
   },
   {img:'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/5805f088-bda7-4070-9534-96fe4cfe77ef/image-0-1782140747762.png', name:'Buff Jerky', cat:'Boneless Jerky', badge:'Novel Protein', badgeCls:'brown', desc:'Premium buffalo jerky — rich in iron, zinc and amino acids. Ideal for dogs with chicken sensitivity.', tags:['Single Ingredient','Allergy Friendly'], sizes:[{label:'Pack of 1',price:449,mrp:449},{label:'Pack of 2',price:898,mrp:898},{label:'Pack of 3',price:1347,mrp:1347},{label:'Pack of 4',price:1796,mrp:1796}], filter:'jerky', weight:'60 Grams',
     tagline:'Buffalo is a novel protein most dogs haven\'t been exposed to — making it the ideal choice for allergy-prone dogs who need a break from chicken or beef.',
+    subhead:'A protein your dog has never met before.',
+    founderNote:'We keep buffalo completely separate from chicken during processing — genuinely novel means genuinely separate.',
+    health:'If your dog gets itchy skin, ear infections or loose stools after eating chicken or beef, the cause is often a food allergy — and the fix is switching to a protein they\'ve genuinely never had. Buffalo does exactly that. It\'s a single, easily digestible muscle meat with no fillers to trigger a reaction, so it can be used as a genuine elimination-diet treat while you and your vet identify the allergen, without adding a new problem to the mix.',
+    healthPoints:['A true novel protein for dogs with chicken or beef sensitivities','Single ingredient — nothing to complicate an elimination diet','Rich in iron and zinc for blood and immune health'],
+    originStory:'Buffalo meat comes from Indian livestock suppliers and is processed separately from our poultry lines to avoid any cross-contact — important for dogs on an elimination diet. We slow-dehydrate it whole, with no marinade or flavouring added. We lab-test periodically for quality, and every batch is vacuum-sealed at our Kalyan facility before it ships.',
+    faqs:[
+      {icon:'🧬', q:'Why would I choose buffalo over chicken?',a:'If your dog shows signs of a chicken or beef allergy — itching, ear infections, loose stools — buffalo is a genuinely new protein that hasn\'t had the chance to trigger a reaction yet.'},
+      {icon:'🔄', q:'Can I rotate this with chicken treats?',a:'Yes — rotating proteins weekly is a simple way to reduce the odds of your dog developing a new sensitivity over time.'},
+      {icon:'🐾', q:'Is it safe for all breeds?',a:'Yes, buffalo jerky is suitable for dogs of all sizes and life stages — adjust the number of strips to your dog\'s size using the feeding guide.'},
+      {icon:'🔬', q:'Is it lab-tested like your other treats?',a:'Yes — we lab-test periodically for quality, and every batch is vacuum-sealed at our Kalyan facility before it leaves.'},
+      {icon:'📦', q:'How long does it stay fresh once opened?',a:'About 4 weeks if resealed tightly in a cool, dry place after each use.'},
+    ],
     benefits:[
       {icon:'🧬',title:'Novel Protein Source',text:'Most dogs haven\'t eaten buffalo before — meaning zero prior allergy exposure. Perfect elimination diet treat.'},
       {icon:'🩸',title:'Iron & Zinc Rich',text:'Buffalo is naturally higher in iron and zinc than chicken, supporting healthy blood and immune function.'},
@@ -5415,6 +5456,18 @@ let products = [
   // ── CHEWS & BONES ──────────────────────────────────────
   {img:'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/cac553a3-463f-4cf6-92dd-48c054f82bfe/image-0-1782712513139.png', name:'Chicken Feet', cat:'Chews & Bones', badge:'Dental Health', badgeCls:'teal', desc:'Natural glucosamine & chondroitin source. Soft dehydrated bone scrapes plaque while your dog chews.', tags:['Joint Support','Dental','Glucosamine'], sizes:[{label:'Pack of 1',price:300,mrp:300},{label:'Pack of 2',price:600,mrp:600},{label:'Pack of 3',price:900,mrp:900},{label:'Pack of 4',price:1200,mrp:1200}], filter:'chew', weight:'70 Grams',
     tagline:'Chicken feet are one of nature\'s most complete functional treats — they clean teeth, support joints and keep dogs entertained, all from a single natural ingredient.',
+    subhead:'Nature\'s joint supplement, in a treat they beg for.',
+    founderNote:'Glucosamine supplements are hard to get dogs to take — we\'d rather feed the real thing.',
+    health:'Joint stiffness and early arthritis are common even in dogs under 7, especially active or heavier breeds — but daily glucosamine/chondroitin supplements are often unpalatable and expensive. Chicken feet deliver the same joint-supporting compounds naturally, in a soft, low-fat form that\'s gentle on digestion. The cartilage also breaks down easily in the stomach, so it won\'t sit heavy or cause the constipation sometimes seen with denser bone chews.',
+    healthPoints:['Natural glucosamine & chondroitin — the same compounds in joint supplements','Doubles as a natural toothbrush, scraping plaque as they chew','Soft and low-fat, gentle on digestion for seniors and puppies alike'],
+    originStory:'Chicken feet come from Indian poultry farms and are dehydrated whole — cartilage, skin and all, which is where the glucosamine and chondroitin live. Nothing is added in the process. We lab-test periodically for quality, and every batch is vacuum-sealed to keep it fresh until it\'s opened.',
+    faqs:[
+      {icon:'🦴', q:'How is this different from a joint supplement pill?',a:'The glucosamine and chondroitin are naturally present in the cartilage — no synthetic capsule, and dogs actually want to eat it.'},
+      {icon:'👴', q:'Is it suitable for older dogs?',a:'Yes — it\'s specifically valuable for seniors, since it\'s soft on worn teeth and gums while still delivering joint support.'},
+      {icon:'🦷', q:'Will it help with bad breath?',a:'The chewing action helps scrape plaque as they go, which can help with breath over time, though it\'s not a substitute for dental care.'},
+      {icon:'⚠️', q:'Is it safe compared to a cooked bone?',a:'Yes — dehydrated (not cooked) bone bends and breaks down safely when chewed, unlike cooked bone which can splinter.'},
+      {icon:'📦', q:'How long do they last once opened?',a:'Around 2–3 months in a sealed pouch or airtight container, stored somewhere cool and dry.'},
+    ],
     benefits:[
       {icon:'🦴',title:'Natural Joint Supplement',text:'Loaded with glucosamine and chondroitin — the same compounds in expensive joint supplements, but in a form dogs actually want to eat.'},
       {icon:'🦷',title:'Natural Toothbrush',text:'The cartilage and texture of dehydrated chicken feet acts as a natural scrubber, reducing plaque and tartar as your dog chews.'},
@@ -5427,6 +5480,18 @@ let products = [
   },
   {img:'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/373c6199-f75b-4294-8626-4f173fda9f5d/image-0-1782712577445.png', name:'Chicken Neck', cat:'Chews & Bones', badge:'Calcium Rich', badgeCls:'teal', desc:'Whole chicken neck — satisfying chew with natural calcium and phosphorus for strong bones.', tags:['Digestible Bone','Calcium','Natural'], sizes:[{label:'Pack of 1',price:300,mrp:300},{label:'Pack of 2',price:600,mrp:600},{label:'Pack of 3',price:900,mrp:900},{label:'Pack of 4',price:1200,mrp:1200}], filter:'chew', weight:'70 Grams',
     tagline:'A natural, digestible bone treat that delivers the calcium-phosphorus balance dogs need for strong bones — without the risks of cooked bones.',
+    subhead:'A natural toothbrush that tastes like dinner.',
+    founderNote:'We dehydrate, never cook the bone — that\'s the difference between safe and risky.',
+    health:'Bad breath and tartar build-up are usually early signs of dental disease, which left untreated can lead to tooth loss and infection. The mechanical chewing action of a chicken neck physically scrapes plaque off teeth as your dog gnaws — something no soft treat can do. Because it\'s dehydrated rather than cooked, the bone stays flexible and fully digestible, so it breaks down safely in the stomach instead of splintering the way a cooked bone would.',
+    healthPoints:['Mechanically scrapes plaque and tartar as your dog chews','Naturally bioavailable calcium and phosphorus for bone strength','Dehydrated, not cooked — fully digestible, won\'t splinter'],
+    originStory:'Chicken necks are sourced from Indian poultry farms and dehydrated whole, without any cooking. Cooking bone makes it brittle and prone to splintering; slow dehydration keeps it flexible enough to bend and break down safely when chewed. We lab-test periodically for quality, and every batch is vacuum-sealed at our facility in Kalyan before it ships.',
+    faqs:[
+      {icon:'🦷', q:'Will this actually help with my dog\'s teeth?',a:'The physical chewing action helps scrape plaque off teeth as they gnaw — it\'s one of the more effective natural dental chews for that reason.'},
+      {icon:'🐶', q:'Is it safe for puppies?',a:'Yes, from around 8 weeks — start with a smaller piece and supervise the first few times.'},
+      {icon:'⚠️', q:'Why is dehydrated bone safer than a cooked one?',a:'Cooking removes moisture in a way that makes bone brittle and likely to splinter. Dehydration keeps it flexible, so it bends and breaks down digestibly instead.'},
+      {icon:'🔬', q:'Is every batch checked?',a:'Yes — we lab-test periodically for quality, and every batch is vacuum-sealed in Kalyan before it leaves our facility.'},
+      {icon:'📦', q:'How should I store it?',a:'Cool, dry place; reseal tightly after opening. It keeps for about 2–3 months once opened.'},
+    ],
     benefits:[
       {icon:'🦴',title:'Natural Calcium Source',text:'Provides bioavailable calcium and phosphorus in the correct ratio for bone density and dental health.'},
       {icon:'✅',title:'Safe Digestible Bone',text:'Dehydrated, not cooked — unlike cooked bones that splinter dangerously, dehydrated bones are fully digestible and safe.'},
@@ -5439,6 +5504,18 @@ let products = [
   },
   {img:'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/2d733070-14d7-4d82-9ec4-4aa1548cbc35/image-0-1782712121099.png', name:'Chicken Bites', cat:'Boneless Jerky', badge:'Training Treat', badgeCls:'', desc:'Bite-sized dehydrated chicken pieces — perfect treat size for training. High protein, easy to carry.', tags:['Single Ingredient','Small Bites'], sizes:[{label:'Pack of 1',price:329,mrp:329},{label:'Pack of 2',price:658,mrp:658},{label:'Pack of 3',price:987,mrp:987},{label:'Pack of 4',price:1316,mrp:1316}], filter:'jerky', weight:'60 Grams',
     tagline:'Small, consistent pieces of dehydrated chicken designed for training sessions where you need to reward quickly and often without overfeeding.',
+    subhead:'Small enough for a hundred rewards a day.',
+    founderNote:'Consistent bite size matters more than people think — it\'s what makes training actually work.',
+    health:'Overfeeding treats is one of the most common causes of unplanned weight gain in dogs, especially during training when rewards happen dozens of times a day. Chicken Bites solve this with a lean, high-protein, low-calorie bite that\'s genuinely easy on the stomach — single ingredient, no starch or sugar to spike blood sugar — so you can reward generously without derailing your dog\'s weight or digestion.',
+    healthPoints:['Lean and low-calorie — reward generously without the weight gain','Single ingredient, no starch or sugar to spike blood sugar','Uniform bite size makes portion control genuinely easy'],
+    originStory:'Same chicken breast as our jerky strips, just cut and dehydrated into consistent bite-sized pieces built for training sessions. Nothing else is added. We lab-test periodically for quality, and every batch is vacuum-sealed to lock freshness in.',
+    faqs:[
+      {icon:'🎯', q:'Why are these better than treating with jerky strips?',a:'The uniform bite size means you don\'t need to tear pieces apart mid-session — useful when you\'re rewarding quickly and often.'},
+      {icon:'⚖️', q:'How many can I give per day?',a:'Keep treats to about 10% of daily calories — for a 10kg dog that\'s roughly 8–10 bites, adjusted for your dog\'s size and activity.'},
+      {icon:'🐶', q:'Suitable for puppies in training?',a:'Yes — the small size makes them easy to use with puppies just starting basic obedience training.'},
+      {icon:'🔬', q:'Are these lab-tested like the rest of the range?',a:'Yes, we lab-test periodically for quality, and every batch is vacuum-sealed at our Kalyan facility.'},
+      {icon:'📦', q:'Shelf life once opened?',a:'About 4 weeks, kept in a cool, dry place and resealed tightly after each use.'},
+    ],
     benefits:[
       {icon:'🎯',title:'Training Optimised',text:'Uniform bite-sized pieces allow precise portion control during reward-based training — no tearing required.'},
       {icon:'🎒',title:'Carry Anywhere',text:'Dry, mess-free and compact. Perfect for carrying in a treat pouch during walks, classes or outdoor activities.'},
@@ -5452,6 +5529,18 @@ let products = [
 
   {img:'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/ef9d3dbe-f6d7-4e59-b673-ffe451e0ab5a/image-0-1782712167008.png', name:'Chicken Wings', cat:'Chews & Bones', badge:'Fan Favourite', badgeCls:'', desc:'Crunchy dehydrated chicken wings — collagen-rich, great for coat health and a satisfying long chew.', tags:['Collagen Rich','Coat Health','Bone-In'], sizes:[{label:'Pack of 1',price:350,mrp:350},{label:'Pack of 2',price:700,mrp:700},{label:'Pack of 3',price:1050,mrp:1050}], filter:'chew', weight:'5 Pieces',
     tagline:'More skin, more cartilage, more collagen. Chicken wings are the coat and joint treat disguised as a delicious crunchy chew.',
+    subhead:'A crunchy chew with a coat-health bonus.',
+    founderNote:'Collagen from real cartilage does more for a coat than anything we could add from a bottle.',
+    health:'Dull coats, flaky skin and slow-healing joints are often signs a dog isn\'t getting enough usable collagen from its regular diet. The skin and cartilage in chicken wings are a direct, whole-food source of collagen — broken down through slow dehydration into a form that\'s genuinely absorbable, not just present on a label. Because it\'s fully natural with no added fat, it also won\'t upset stomachs the way fried or basted commercial wings can.',
+    healthPoints:['Natural collagen from skin & cartilage supports coat and joints','Larger size gives powerful chewers a proper, satisfying chew','No added fat — won\'t upset stomachs the way fried wings can'],
+    originStory:'Chicken wings are sourced from Indian poultry farms and slow-dehydrated whole — skin, cartilage and bone intact, which is exactly where the collagen lives. Nothing is fried or basted. We lab-test periodically for quality, and every batch is vacuum-sealed at our Kalyan facility before it ships.',
+    faqs:[
+      {icon:'✨', q:'Will I actually see a coat difference?',a:'Many pet parents notice a shinier coat within a few weeks of regular feeding, thanks to the natural collagen content.'},
+      {icon:'🦴', q:'Are the bones safe?',a:'Yes — they\'re dehydrated, not cooked, so they stay flexible and digestible rather than splintering.'},
+      {icon:'💪', q:'Good for aggressive chewers?',a:'Yes, wings are larger and give strong chewers more of a challenge than feet or necks.'},
+      {icon:'🔬', q:'Is quality checked before it ships?',a:'We lab-test periodically for quality, and every batch is vacuum-sealed at our facility in Kalyan.'},
+      {icon:'📦', q:'How long do they keep?',a:'Around 2–3 months once opened, stored in a cool, dry place.'},
+    ],
     benefits:[
       {icon:'✨',title:'Shiny Coat & Skin',text:'The high collagen content in skin and cartilage directly supports skin elasticity and a glossy, healthy coat.'},
       {icon:'🦴',title:'Joint Lubrication',text:'Natural collagen is a building block of joint cartilage and synovial fluid — keeping joints moving smoothly.'},
@@ -5464,6 +5553,18 @@ let products = [
   },
 {img:'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/937c9539-b00d-4e93-9291-1af00893a061/image-0-1782712130859.png', name:'Chicken Bones', cat:'Chews & Bones', badge:'High Value', badgeCls:'teal', desc:'Assorted dehydrated chicken bones — natural calcium source, safe digestible chew for all breeds.', tags:['Digestible','Calcium','Natural'], sizes:[{label:'Pack of 1',price:200,mrp:200},{label:'Pack of 2',price:400,mrp:400},{label:'Pack of 3',price:600,mrp:600},{label:'Pack of 4',price:800,mrp:800}], filter:'chew', weight:'100 Grams',
     tagline:'An assortment of dehydrated chicken bones — a natural, affordable calcium supplement that doubles as an enriching chew.',
+    subhead:'An affordable calcium top-up, one crunch at a time.',
+    founderNote:'If a dog won\'t take a supplement powder, feed them the real thing instead.',
+    health:'Calcium deficiency shows up as brittle nails, poor bone density and weak teeth over time, but many dogs won\'t take a chalky supplement powder willingly. Dehydrated chicken bones solve both problems: the calcium is naturally bioavailable and the bones themselves are soft enough to crumble and digest fully, unlike cooked bones which can splinter and cause internal injury. It\'s a gentle way to support skeletal health without any digestive downside.',
+    healthPoints:['Bioavailable calcium for bone, teeth and nerve health','Dehydrated, not cooked — bends and crumbles safely, won\'t splinter','Assorted sizes let you match the piece to your dog\'s size'],
+    originStory:'These are assorted dehydrated bones from Indian poultry farms — nothing cooked, nothing added. Slow dehydration is what keeps them safely crumbly instead of brittle. We lab-test periodically for quality, and every batch is vacuum-sealed to stay fresh.',
+    faqs:[
+      {icon:'🦴', q:'Are these safe compared to cooked bones?',a:'Yes — dehydrated bone crumbles and bends safely under chewing pressure, unlike cooked bone which can splinter dangerously. Never feed cooked bones.'},
+      {icon:'💊', q:'Can this replace a calcium supplement?',a:'Regular feeding can reduce or remove the need for a separate calcium powder for most dogs — check with your vet if your dog has specific dietary needs.'},
+      {icon:'🐕', q:'Do the pieces suit all breed sizes?',a:'Yes — it\'s an assortment, so you can pick smaller pieces for small breeds and larger ones for big dogs.'},
+      {icon:'🔬', q:'Lab-tested like everything else?',a:'Yes, we lab-test periodically for quality, and every batch is vacuum-sealed at our Kalyan facility.'},
+      {icon:'📦', q:'Storage?',a:'Cool, dry place; good for about 2–3 months once opened and resealed.'},
+    ],
     benefits:[
       {icon:'🦴',title:'Natural Calcium Supply',text:'Provides bioavailable calcium essential for strong bones, healthy teeth, nerve function and muscle contraction.'},
       {icon:'✅',title:'100% Safe — No Splintering',text:'Dehydrated bones bend and crumble safely when chewed. Never give cooked bones — these are completely different.'},
@@ -5476,6 +5577,18 @@ let products = [
   },
   {img:'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/cb465b52-4add-49b6-82be-b6f016d10b7c/image-0-1782795689958.png', name:'Goat Trachea', cat:'Chews & Bones', badge:'Joint Superfood', badgeCls:'teal', desc:'Natural cartilage-rich chew packed with glucosamine & chondroitin. Excellent for senior or active dogs.', tags:['Glucosamine','Cartilage','Joint Support'], sizes:[{label:'Pack of 1',price:100,mrp:100},{label:'Pack of 2',price:200,mrp:200},{label:'Pack of 3',price:300,mrp:300}], filter:'chew', weight:'1 Piece',
     tagline:'Goat trachea is almost pure cartilage — which means it is almost pure glucosamine and chondroitin. Nature\'s own joint supplement in a form dogs find delicious.',
+    subhead:'Almost pure cartilage. Almost pure joint support.',
+    founderNote:'A senior dog\'s stiffness often responds better to this than to a pill they refuse.',
+    health:'For senior dogs or breeds prone to hip and joint problems, mobility often declines quietly before an owner notices limping. Trachea is almost pure cartilage, meaning it delivers concentrated glucosamine and chondroitin directly — the same compounds vets recommend for joint pain, but in a treat dogs are eager to eat instead of a pill they fight. Its light, spongy texture also digests easily, making it safe for daily use even in older dogs with sensitive digestion.',
+    healthPoints:['Concentrated glucosamine & chondroitin — ideal for senior or active dogs','Light, spongy texture is easy on digestion, even daily','Hollow shape doubles as an enrichment chew when stuffed'],
+    originStory:'Goat trachea comes from Indian goat farms and is almost entirely cartilage by composition — which is exactly why it\'s such a concentrated joint-support treat. It\'s dehydrated whole with nothing added. We lab-test periodically for quality, and every batch is vacuum-sealed at our facility in Kalyan.',
+    faqs:[
+      {icon:'🏃', q:'Is this better than a glucosamine tablet?',a:'It delivers the same compounds in their natural food form, which many dogs take far more readily than a pill.'},
+      {icon:'👴', q:'How often should a senior dog get this?',a:'Daily is fine for most senior dogs as an ongoing joint-support routine — check the feeding guide for portion by size.'},
+      {icon:'🌀', q:'Can I stuff it with something?',a:'Yes — the hollow shape works well stuffed with a little wet food or peanut butter for extra enrichment.'},
+      {icon:'🔬', q:'Quality checked?',a:'Yes, we lab-test periodically for quality, and every batch is vacuum-sealed at our Kalyan facility before it ships.'},
+      {icon:'📦', q:'Shelf life?',a:'About 2–3 months once opened, kept cool and dry.'},
+    ],
     benefits:[
       {icon:'🏃',title:'Superior Joint Support',text:'Cartilage is the richest natural source of glucosamine and chondroitin — compounds proven to reduce joint inflammation and improve mobility.'},
       {icon:'👴',title:'Essential for Senior Dogs',text:'As dogs age, joint cartilage breaks down. Regular trachea treats help slow this process and reduce stiffness.'},
@@ -5488,6 +5601,18 @@ let products = [
   },
   {img:'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/abef0def-e2c9-4981-b6bc-80a079ed31eb/image-0-1782712288081.png', name:'Goat Trotter', cat:'Chews & Bones', badge:'Long Lasting', badgeCls:'', desc:'Hard-working chew for powerful chewers. Rich in collagen and marrow, keeps dogs engaged for hours.', tags:['Power Chewer','Collagen','Marrow'], sizes:[{label:'Pack of 1',price:225,mrp:225},{label:'Pack of 2',price:450,mrp:450},{label:'Pack of 3',price:675,mrp:675},{label:'Pack of 4',price:900,mrp:900}], filter:'chew', weight:'1 Piece',
     tagline:'Built for dogs that destroy every chew in minutes. Goat trotters are dense, durable and loaded with marrow and collagen — a true power chew.',
+    subhead:'For the dog that finishes every chew too fast.',
+    founderNote:'We hear this a lot: \'nothing lasts with my dog\' — this one does.',
+    health:'Powerful chewers often get bored of or destroy soft treats in seconds, leading to overeating and, in some dogs, anxious or destructive behaviour out of frustration. A trotter\'s dense structure gives them a long, satisfying chew that burns mental energy and calms restlessness. The marrow inside also supports joint and skin health, and because it\'s slow-dehydrated rather than raw, it\'s gentler on digestion — though portions should stay moderate since rich marrow can loosen stools if overfed.',
+    healthPoints:['Dense structure gives powerful chewers a genuinely long-lasting chew','Marrow and collagen support joints, skin and coat','Feed in moderation — rich marrow can loosen stools if overfed'],
+    originStory:'Goat trotters are sourced from Indian goat farms and slow-dehydrated whole, marrow and all — nothing added, nothing removed. The density comes naturally from the bone itself. We lab-test periodically for quality, and every batch is vacuum-sealed at our Kalyan facility before it ships.',
+    faqs:[
+      {icon:'💪', q:'Will this really last longer than other chews?',a:'Yes — the dense structure is built for dogs that destroy softer chews in minutes.'},
+      {icon:'💩', q:'Can it cause loose stools?',a:'If overfed, yes — the marrow is rich. Stick to the feeding guide (roughly one per week for large breeds) to avoid this.'},
+      {icon:'🐕', q:'Suitable for small dogs?',a:'Not recommended for toy breeds under 5kg — it\'s built for medium-large power chewers.'},
+      {icon:'🔬', q:'Is it lab-tested?',a:'Yes, we lab-test periodically for quality, and every batch is vacuum-sealed at our Kalyan facility.'},
+      {icon:'📦', q:'Storage?',a:'Cool, dry place; lasts about 2–3 months once opened.'},
+    ],
     benefits:[
       {icon:'💪',title:'Built for Power Chewers',text:'Dense bone structure withstands aggressive chewing — ideal for dogs that finish every other chew too quickly.'},
       {icon:'🫀',title:'Rich in Bone Marrow',text:'Marrow is packed with stem cells, iron, omega-3 fatty acids and fat-soluble vitamins that support overall health.'},
@@ -5500,6 +5625,18 @@ let products = [
   },
   {img:'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/9e4a7262-ad95-4076-a0ee-949f9582616f/image-0-1782712197998.png', name:'Goat Ear', cat:'Chews & Bones', badge:'Light Chew', badgeCls:'', desc:'Thin, crunchy goat ears — a lighter chew that is great for smaller breeds and senior dogs.', tags:['Light Chew','Small Breeds','Crunchy'], sizes:[{label:'Pack of 1',price:350,mrp:350},{label:'Pack of 2',price:700,mrp:700},{label:'Pack of 3',price:1050,mrp:1050},{label:'Pack of 4',price:1400,mrp:1400}], filter:'chew', weight:'6 Pieces',
     tagline:'Not every dog wants a dense, hours-long chew. Goat ears are the perfect light, satisfying crunch — crunchy, digestible and low in fat.',
+    subhead:'A lighter crunch for smaller jaws.',
+    founderNote:'Not every dog needs — or can handle — a heavy bone. This is our answer for them.',
+    health:'Not every dog can handle a dense bone — small breeds, senior dogs and those with worn teeth risk cracked teeth or gum injury on harder chews. Goat ears give the same daily dental-chewing benefit in a thin, crunchy, genuinely low-fat piece that\'s gentle on jaws and easy on digestion, making it one of the safest everyday treats for dogs prone to sensitive stomachs or weight issues.',
+    healthPoints:['Thin and light — gentle on small breeds, seniors and worn teeth','Genuinely low-fat, safe for daily feeding','Crunchy texture still supports everyday dental chewing'],
+    originStory:'Goat ears come from Indian goat farms and are dehydrated thin and whole, with nothing added. The natural leanness of the cut is what makes it such a low-fat option. We lab-test periodically for quality, and every batch is vacuum-sealed at our Kalyan facility before it ships.',
+    faqs:[
+      {icon:'🐩', q:'Good for small or toy breeds?',a:'Yes — it\'s specifically light and thin enough for small jaws that can\'t handle denser bones.'},
+      {icon:'👴', q:'Safe for senior dogs with weaker teeth?',a:'Yes, it\'s one of our gentler options for dogs with worn teeth or sensitive gums.'},
+      {icon:'⚖️', q:'Can I feed this every day?',a:'Yes — it\'s low enough in fat that daily feeding is generally fine within the usual treat-calorie guideline.'},
+      {icon:'🔬', q:'Quality checked before shipping?',a:'Yes, lab-tested and vacuum-sealed at our Kalyan facility.'},
+      {icon:'📦', q:'How long does it keep?',a:'About 2–3 months once opened, stored cool and dry.'},
+    ],
     benefits:[
       {icon:'🐩',title:'Perfect for Small Breeds',text:'Light, thin and not too hard — ideal for small or toy breeds whose jaws aren\'t built for heavy bones.'},
       {icon:'👴',title:'Gentle for Senior Dogs',text:'Elderly dogs with worn teeth or sensitive gums can enjoy goat ears without discomfort.'},
@@ -5514,6 +5651,18 @@ let products = [
   // ── ORGAN TREATS ───────────────────────────────────────
   {img:'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/5d4353a7-fd6c-4919-a32b-4d4c66fd44ab/image-0-1782712147567.png', name:'Chicken Gizzards', cat:'Organ Treats', badge:'B12 Powerhouse', badgeCls:'brown', desc:'Nutrient-dense gizzards packed with B12, iron, zinc and phosphorus. Nature\'s multivitamin for dogs.', tags:['B12','Iron Rich','Immune Support'], sizes:[{label:'Pack of 1',price:300,mrp:300},{label:'Pack of 2',price:600,mrp:600},{label:'Pack of 3',price:900,mrp:900},{label:'Pack of 4',price:1200,mrp:1200}], filter:'organ', weight:'60 Grams',
     tagline:'Gizzards are the hidden gem of organ meats — extremely nutrient-dense yet often overlooked. Think of them as a natural, whole-food multivitamin.',
+    subhead:'Nature\'s multivitamin, in a treat they\'ll fight for.',
+    founderNote:'Organ meat gets overlooked because it\'s not marketed well — not because it isn\'t good.',
+    health:'Low energy and a dull coat can sometimes point to a mild B12 or iron shortfall, particularly in dogs on lower-quality commercial food. Gizzards are naturally dense in both, in the same bioavailable animal form a dog\'s body evolved to absorb — meaning it\'s used efficiently rather than passing through unabsorbed the way synthetic supplements sometimes do. Fed in the recommended small portions, it digests easily and won\'t overload the stomach the way rich organ meat can if overfed.',
+    healthPoints:['Naturally dense in B12, iron and zinc — a real energy and immunity boost','Bioavailable nutrients the body actually absorbs, not just a label claim','Feed in moderation — organ meat is rich, small portions go far'],
+    originStory:'Chicken gizzards come from Indian poultry farms and are dehydrated whole, nothing added. Organ meat carries more moisture than jerky, so we monitor it closely at every step. We lab-test periodically for quality, and every batch is vacuum-sealed at our Kalyan facility to lock in freshness.',
+    faqs:[
+      {icon:'🧬', q:'Why organ meat instead of muscle meat?',a:'Organs like gizzards carry a much higher concentration of B12, iron and zinc than muscle meat — a genuine nutritional boost in small amounts.'},
+      {icon:'⚖️', q:'How much can I feed?',a:'Organ meats should stay under 10-15% of total diet — 2-3 times weekly is the general guide, see the feeding section for portions by size.'},
+      {icon:'🍽️', q:'Can I use this as a meal topper?',a:'Yes — crumbling it over kibble is a great way to add nutrition and get picky eaters to finish their bowl.'},
+      {icon:'🔬', q:'Lab-tested?',a:'Yes, we lab-test periodically for quality, and every batch is vacuum-sealed at our Kalyan facility.'},
+      {icon:'📦', q:'Storage once opened?',a:'About 3 weeks, ideally refrigerated in warm weather since organ treats are more moisture-sensitive than jerky.'},
+    ],
     benefits:[
       {icon:'🧬',title:'B12 for Nerve Health',text:'Chicken gizzards are exceptionally high in Vitamin B12, essential for healthy nerve function and red blood cell formation.'},
       {icon:'🩸',title:'Iron for Energy',text:'Rich in heme iron — the most bioavailable form — supporting oxygen transport and preventing fatigue and anaemia.'},
@@ -5526,6 +5675,18 @@ let products = [
   },
   {img:'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/b8ea22dc-d46f-4ee9-b779-8c1aacafd755/image-0-1782759470191.png', name:'Chicken Heart & Liver', cat:'Organ Treats', badge:'Superfood', badgeCls:'brown', desc:'Rich in Vitamin A, B12 and iron. One of the most nutrient-dense organ meats available.', tags:['Vitamin A','B12','Organ Meat'], sizes:[{label:'Pack of 1',price:300,mrp:300},{label:'Pack of 2',price:600,mrp:600},{label:'Pack of 3',price:900,mrp:900},{label:'Pack of 4',price:1200,mrp:1200}], filter:'organ', weight:'60 Grams',
     tagline:'Liver is the most nutrient-dense food on the planet — for humans and dogs alike. A small amount delivers an extraordinary range of vitamins and minerals.',
+    subhead:'Small pieces, serious nutrition.',
+    founderNote:'A little liver goes further than most people realise — that\'s why the portions are small.',
+    health:'Fatigue, poor coat quality and slow recovery after exercise are often linked to gaps in B-vitamins and iron. Liver is one of the most concentrated natural sources of both, and because it\'s a soft organ meat it digests quickly and gently — but that same richness means overfeeding can cause loose stools or, over time, Vitamin A excess, which is why we recommend small, moderate portions rather than daily heavy feeding.',
+    healthPoints:['Extremely rich in Vitamin A, B12 and iron — genuine nutrient density','Soft organ meat, gentle and quick to digest','Feed in strict moderation — richness can cause loose stools if overfed'],
+    originStory:'Chicken heart and liver are sourced from Indian poultry farms and dehydrated whole, without additives. Because organ meat is richer and more moisture-sensitive than muscle meat, we watch this line especially closely. We lab-test periodically for quality, and every batch is vacuum-sealed at our Kalyan facility.',
+    faqs:[
+      {icon:'👁️', q:'What does this actually do for my dog?',a:'Liver is one of the richest natural sources of Vitamin A and B12 — supporting vision, energy and nervous system health.'},
+      {icon:'⚠️', q:'Can I overfeed this?',a:'Yes — liver is rich enough that overfeeding can cause loose stools or, over time, Vitamin A excess. Stick to 2-3 times weekly in small portions.'},
+      {icon:'🩸', q:'Good for a dog recovering from anaemia?',a:'It\'s a strong natural source of iron and folate, often recommended alongside vet guidance for dogs needing an iron boost.'},
+      {icon:'🔬', q:'Quality checked?',a:'Yes, lab-tested and vacuum-sealed at our Kalyan facility before shipping.'},
+      {icon:'📦', q:'Storage?',a:'About 3 weeks once opened — refrigerate in warm weather for best freshness.'},
+    ],
     benefits:[
       {icon:'👁️',title:'Vitamin A for Vision',text:'Liver is the richest natural source of Vitamin A, essential for eye health, immune function and skin maintenance.'},
       {icon:'⚡',title:'Instant Energy Boost',text:'Dense in B vitamins (B1, B2, B6, B12, folate) that support energy metabolism and nervous system health.'},
@@ -5538,6 +5699,18 @@ let products = [
   },
   {img:'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/f804c0d1-0be7-4281-bc8a-c9dc6e8cfd50/image-0-1782712241277.png', name:'Goat Liver', cat:'Organ Treats', badge:'Premium Organ', badgeCls:'brown', desc:'Goat liver — richer and more intense than chicken. Exceptional source of Vitamin A, copper and folate.', tags:['Vitamin A','Copper','Rich Flavour'], sizes:[{label:'Pack of 1',price:450,mrp:450},{label:'Pack of 2',price:900,mrp:900},{label:'Pack of 3',price:1350,mrp:1350},{label:'Pack of 4',price:1800,mrp:1800}], filter:'organ', weight:'60 Grams',
     tagline:'Goat liver carries a richer, more intense nutritional profile than chicken liver — particularly in copper, folate and Vitamin A. Excellent for dogs needing a nutritional boost.',
+    subhead:'Richer than chicken liver, in the good way.',
+    founderNote:'Goat liver has a stronger flavour — dogs that ignore chicken liver often don\'t ignore this.',
+    health:'Dogs that seem sluggish, have a lacklustre coat or need extra support during growth or recovery benefit from concentrated Vitamin A, copper and folate — and goat liver delivers more of each than standard chicken liver. It\'s soft and easily broken down in digestion, but its richness means it should be fed in the same small, moderate portions as any organ meat to avoid stomach upset from overfeeding.',
+    healthPoints:['Higher Vitamin A, copper and folate than standard chicken liver','Soft and easy to digest in the recommended small portions','Feed in moderation — richness means small amounts go a long way'],
+    originStory:'Goat liver is sourced from Indian goat farms and dehydrated whole, with nothing added. It carries a more intense nutritional and flavour profile than chicken liver, which is why portions are smaller. We lab-test periodically for quality, and every batch is vacuum-sealed at our Kalyan facility.',
+    faqs:[
+      {icon:'🥇', q:'How is this different from chicken liver?',a:'Goat liver has a richer nutrient profile — particularly copper, folate and Vitamin A — and a stronger flavour many dogs find irresistible.'},
+      {icon:'⚖️', q:'How much should I feed?',a:'Slightly less than chicken liver given the higher density — 2-3 times weekly in small portions, see the feeding guide for exact amounts.'},
+      {icon:'🤰', q:'Good for pregnant or growing dogs?',a:'The folate content supports cell growth, making it a useful addition for pregnant dogs or growing puppies — always check with your vet on quantities.'},
+      {icon:'🔬', q:'Lab-tested?',a:'Yes, we lab-test periodically for quality, and every batch is vacuum-sealed at our Kalyan facility.'},
+      {icon:'📦', q:'Shelf life?',a:'About 3 weeks once opened — refrigerate in humid weather.'},
+    ],
     benefits:[
       {icon:'🥇',title:'Superior Vitamin A Density',text:'Goat liver contains even higher concentrations of Vitamin A than chicken liver — powerful immune and vision support.'},
       {icon:'🔩',title:'Copper for Enzyme Function',text:'Copper from goat liver supports iron absorption, coat pigmentation, bone formation and nerve health.'},
@@ -5550,6 +5723,18 @@ let products = [
   },
   {img:'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/39ac015f-9a37-49c4-b2df-34b29472eca7/image-0-1782712258742.png', name:'Goat Lungs', cat:'Organ Treats', badge:'Low Fat', badgeCls:'', desc:'Lightweight and crunchy dehydrated goat lungs. High protein, very low fat — great for weight-conscious dogs.', tags:['Low Fat','High Protein','Light'], sizes:[{label:'Pack of 1',price:450,mrp:450},{label:'Pack of 2',price:900,mrp:900},{label:'Pack of 3',price:1350,mrp:1350},{label:'Pack of 4',price:1800,mrp:1800}], filter:'organ', weight:'60 Grams',
     tagline:'Goat lungs are the rare organ treat that is genuinely low in fat — making them perfect for overweight dogs or breeds prone to pancreatitis who still deserve a delicious reward.',
+    subhead:'The organ treat that\'s actually low-fat.',
+    founderNote:'Weight management shouldn\'t mean giving up organ-meat nutrition altogether.',
+    health:'Overweight dogs and those prone to pancreatitis are usually told to avoid rich treats altogether — which often means missing out on organ-meat nutrition entirely. Goat lungs solve this with a genuinely low-fat, airy texture that\'s easy to digest and won\'t trigger the stomach upset or pancreatic stress that fattier treats can, while still delivering real protein. It\'s one of the few treats vets are comfortable recommending for dogs actively managing their weight.',
+    healthPoints:['Genuinely low-fat — safe for weight-conscious or pancreatitis-prone dogs','Still high in protein despite the low fat content','Light, airy texture that\'s easy on digestion'],
+    originStory:'Goat lungs come from Indian goat farms and are dehydrated whole into a light, airy texture — naturally low in fat, nothing added to change that. We lab-test periodically for quality, and every batch is vacuum-sealed at our Kalyan facility before it ships.',
+    faqs:[
+      {icon:'⚖️', q:'Is this really safe for an overweight dog?',a:'Yes — it\'s one of the few organ treats genuinely low enough in fat for dogs managing their weight or prone to pancreatitis.'},
+      {icon:'💪', q:'Does low fat mean low protein too?',a:'No — it\'s still a solid protein source, just without the fat load of richer organs like liver.'},
+      {icon:'👴', q:'Good for senior dogs?',a:'Yes, vets often favour low-fat treats for older or less active dogs, and this fits that need well.'},
+      {icon:'🔬', q:'Quality checked?',a:'Yes, lab-tested and vacuum-sealed at our Kalyan facility.'},
+      {icon:'📦', q:'Storage?',a:'About 3 weeks once opened, in a cool dry place or refrigerated in humid weather.'},
+    ],
     benefits:[
       {icon:'⚖️',title:'Ideal for Weight Management',text:'Very low fat content makes lungs one of the few organ treats that can be given to dogs on calorie-restricted diets.'},
       {icon:'💨',title:'Airy, Crunchy Texture',text:'The dehydrated lung structure is light and crispy — dogs love the unique crunch, and it\'s easy on teeth.'},
@@ -5562,6 +5747,18 @@ let products = [
   },
   {img:'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/007d8e1a-3640-4b75-b467-d27782f82855/image-0-1782712225799.png', name:'Goat Heart & Kidney Mix', cat:'Organ Treats', badge:'Heart Health', badgeCls:'', desc:'Goat heart and kidney — rich in taurine, CoQ10 and B vitamins. Supports cardiovascular health.', tags:['Taurine','Heart Health','B Vitamins'], sizes:[{label:'Pack of 1',price:499,mrp:499},{label:'Pack of 2',price:998,mrp:998},{label:'Pack of 3',price:1497,mrp:1497},{label:'Pack of 4',price:1996,mrp:1996}], filter:'organ', weight:'60 Grams',
     tagline:'Heart and kidney are muscle meat-adjacent organs packed with taurine and CoQ10 — two nutrients critical for cardiac health that are often deficient in grain-fed dogs.',
+    subhead:'Built around the nutrients a grain-fed diet misses.',
+    founderNote:'Taurine deficiency doesn\'t get talked about enough — this mix is our answer to it.',
+    health:'Taurine deficiency is an under-recognised cause of heart problems in dogs, particularly on home-cooked or grain-heavy diets — and it\'s not something most owners think to check for. Heart meat is one of the richest natural taurine sources available, and combined with kidney\'s detox-supporting compounds, this mix offers targeted cardiovascular support. Both organs are soft and gentle on digestion in the recommended portions, though as with all organ meat, moderation prevents any stomach upset from richness.',
+    healthPoints:['Rich in taurine and CoQ10 for cardiovascular health','Kidney adds enzymes that support natural detox pathways','Soft organ mix, gentle on digestion in moderate portions'],
+    originStory:'Heart and kidney are sourced from Indian goat farms and dehydrated together, nothing added. This combination is chosen deliberately for the taurine and CoQ10 concentration heart tissue carries. We lab-test periodically for quality, and every batch is vacuum-sealed at our Kalyan facility.',
+    faqs:[
+      {icon:'❤️', q:'Why does taurine matter for dogs?',a:'Taurine deficiency has been linked to heart problems in dogs, particularly on home-cooked or grain-heavy diets — heart meat is one of the best natural sources.'},
+      {icon:'🫘', q:'What does the kidney add?',a:'Kidney contributes enzymes and nutrients that support the body\'s own detox and urinary health processes.'},
+      {icon:'⚖️', q:'How much should I feed?',a:'2-3 times weekly in small portions — see the feeding guide for amounts by size. Combine with liver for a fuller organ rotation.'},
+      {icon:'🔬', q:'Lab-tested?',a:'Yes, we lab-test periodically for quality, and every batch is vacuum-sealed at our Kalyan facility.'},
+      {icon:'📦', q:'Storage?',a:'About 3 weeks once opened, refrigerate in warm or humid conditions.'},
+    ],
     benefits:[
       {icon:'❤️',title:'Taurine for Heart Health',text:'Taurine deficiency is linked to dilated cardiomyopathy in dogs. Heart organ meat is one of the best natural taurine sources.'},
       {icon:'⚡',title:'CoQ10 for Cellular Energy',text:'Coenzyme Q10 from heart tissue supports energy production at the cellular level and acts as a powerful antioxidant.'},
@@ -5574,6 +5771,18 @@ let products = [
   },
   {img:'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/92d62ad6-33db-45f3-af57-91b6a454a07a/image-0-1782712272366.png', name:'Goat Spleen', cat:'Organ Treats', badge:'Iron Rich', badgeCls:'brown', desc:'Goat spleen is one of the richest natural iron sources available. Excellent for anaemic or low-energy dogs.', tags:['Iron Rich','Haemoglobin','Rare Organ'], sizes:[{label:'Pack of 1',price:450,mrp:450},{label:'Pack of 2',price:900,mrp:900},{label:'Pack of 3',price:1350,mrp:1350},{label:'Pack of 4',price:1800,mrp:1800}], filter:'organ', weight:'60 Grams',
     tagline:'Spleen is arguably the single richest natural source of iron available in whole food form — far more concentrated than liver or muscle meat.',
+    subhead:'The most concentrated iron source in the range.',
+    founderNote:'Raw feeders have known about spleen for years — we just made it convenient.',
+    health:'Low energy, pale gums and general lethargy can be signs of anaemia, especially in dogs recovering from illness or on iron-poor diets. Spleen delivers iron in a concentrated, highly bioavailable animal form that the body absorbs far more efficiently than plant-based or synthetic iron sources. Because it\'s so concentrated, small portions go a long way — overfeeding is the only way it causes digestive upset, so sticking to the guided serving size keeps it gentle on the stomach.',
+    healthPoints:['Exceptionally high iron — helps combat anaemia and low energy','Highly bioavailable animal-form iron, absorbed efficiently','Very concentrated — small portions are enough, overfeeding can loosen stools'],
+    originStory:'Goat spleen is sourced from Indian goat farms and dehydrated whole. It\'s one of the most iron-dense organs available, which is exactly why portions are small. We lab-test periodically for quality, and every batch is vacuum-sealed at our Kalyan facility before it ships.',
+    faqs:[
+      {icon:'🩸', q:'Is this really that much richer in iron?',a:'Yes — spleen carries several times more iron than muscle meat, making it useful for dogs recovering from anaemia or low energy (always alongside vet guidance).'},
+      {icon:'⚖️', q:'How often can I feed this?',a:'1-2 times per week in small portions — it\'s concentrated enough that a little goes a long way.'},
+      {icon:'💩', q:'Can overfeeding cause issues?',a:'Yes, too much can cause loose stools given the iron concentration — stick to the guided portions.'},
+      {icon:'🔬', q:'Quality checked?',a:'Yes, lab-tested and vacuum-sealed at our Kalyan facility.'},
+      {icon:'📦', q:'Storage?',a:'About 3 weeks once opened, refrigerate in humid weather.'},
+    ],
     benefits:[
       {icon:'🩸',title:'Exceptional Iron Content',text:'Spleen contains iron concentrations several times higher than muscle meat — directly combating anaemia and fatigue.'},
       {icon:'🔴',title:'Supports Haemoglobin Production',text:'The iron in spleen is bound to haem groups that are directly used in red blood cell and haemoglobin formation.'},
@@ -5588,6 +5797,19 @@ let products = [
   // ── FISH ───────────────────────────────────────────────
   {img:'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/f0846a93-7d6b-42aa-90a7-a6ddd771c156/image-0-1782712072618.png', name:'Anchovies', cat:'Fish Treats', badge:'Omega-3', badgeCls:'teal', desc:'Wild-caught whole anchovies — one of the best natural sources of EPA & DHA omega-3. Shiny coat guaranteed.', tags:['Omega-3','DHA','Wild Caught'], sizes:[{label:'Pack of 1',price:320,mrp:349},{label:'Pack of 2',price:698,mrp:698},{label:'Pack of 3',price:1047,mrp:1047},{label:'Pack of 4',price:1396,mrp:1396}], filter:'fish', weight:'60 Grams',
     tagline:'Small fish, massive nutritional impact. Anchovies have one of the highest omega-3 concentrations of any food — and because they\'re small, they\'re free from heavy metal accumulation.',
+    subhead:'Small fish. Serious omega. Nothing else in the pack.',
+    founderNote:'We lab-test periodically and vacuum-seal every batch before it ships — if we wouldn\'t hand-feed it to our own dogs, it doesn\'t leave Kalyan.',
+    health:'Dry, flaky skin and a dull coat are among the most common complaints pet parents have, and are frequently a sign of insufficient omega-3 in the diet. Anchovies deliver EPA and DHA directly and are gentle on digestion since they\'re whole, small fish with minimal processing — plus, being short-lived and small, they don\'t carry the heavy-metal burden that can make larger fish harder on the body long-term.',
+    healthPoints:['Targets dry skin, flaky coat & dullness — the #1 complaint we hear from pet parents','Gentle on digestion — whole, minimally processed small fish, easy on sensitive stomachs','Low mercury by nature — too small and short-lived to accumulate heavy metals'],
+    originStory:'Anchovies sit at the bottom of the marine food chain — they eat plankton, not other fish — which is exactly why they never accumulate the mercury that larger fish like tuna can carry over their longer lives. We source them whole and do nothing to them beyond slow dehydration: no oil, no salt, no smoke flavouring, nothing to dilute the fish itself. We lab-test periodically for quality, and every batch is vacuum-sealed to lock the crunch in — no air pocket for moisture to creep back into during transit. What\'s in the pack is the whole fish, checked, and nothing else.',
+    faqs:[
+      {icon:'🐱', q:'Can cats eat these too?',a:'Yes — anchovies suit cats just as well as dogs: small, crunchy, single-ingredient, and a natural source of taurine, which cats can\'t make on their own the way dogs can. Start with 1–2 pieces as an occasional treat.'},
+      {icon:'👃', q:'Will feeding anchovies make my dog\'s breath or stool smell stronger?',a:'Fish treats do carry a stronger smell than jerky, and feeding beyond the guided amount can make stool smell more noticeable. Stick to the feeding guide above and it shouldn\'t cause issues.'},
+      {icon:'📅', q:'Is it safe to feed every day?',a:'Yes, within the recommended daily amount. Anchovies are small and low in mercury, so daily feeding as part of the usual 10% treat-calorie guideline is fine for most dogs.'},
+      {icon:'💊', q:'How is this different from a fish oil capsule?',a:'Whole dehydrated anchovies deliver the same omega-3s in real food form, alongside natural protein and calcium from the bone — no capsule, and none of the fishy burps some oils cause.'},
+      {icon:'🔬', q:'How do I know it\'s actually quality-checked?',a:'We lab-test periodically for quality, and every batch is vacuum-sealed at our facility in Kalyan to lock in freshness without any added preservatives.'},
+      {icon:'📦', q:'How should I store the pack?',a:'Keep it in a cool, dry place. Once opened, press the air out and reseal tightly, or move it to an airtight container — the vacuum seal is what keeps them crunchy, so try not to leave the pack open for long.'},
+    ],
     benefits:[
       {icon:'✨',title:'Guaranteed Shiny Coat',text:'EPA and DHA omega-3 fatty acids directly feed skin cells and hair follicles — visible coat improvement within 4–6 weeks.'},
       {icon:'🧠',title:'Brain Development',text:'DHA is critical for brain development in puppies and helps maintain cognitive function in senior dogs.'},
@@ -5600,6 +5822,18 @@ let products = [
   },
   {img:'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/46addf99-2f4a-44f2-ba64-7623cde174ff/image-0-1782712106125.png', name:'Bombay Duck', cat:'Fish Treats', badge:'Uniquely Indian', badgeCls:'brown', desc:'Traditional Bombil (Bombay Duck) — a low-calorie, high-protein coastal treat rich in iodine and selenium.', tags:['Iodine','Low Calorie','Made in India'], sizes:[{label:'Pack of 1',price:399,mrp:399},{label:'Pack of 2',price:798,mrp:798},{label:'Pack of 3',price:1197,mrp:1197},{label:'Pack of 4',price:1596,mrp:1596}], filter:'fish', weight:'60 Grams',
     tagline:'Bombil is a uniquely Indian coastal fish rarely found in any pet treat worldwide. Exceptionally lean, high in iodine and deeply familiar to any dog raised near the coast.',
+    subhead:'A coastal classic, made for dogs.',
+    founderNote:'This is one of the few treats on the market that\'s genuinely, distinctly Indian.',
+    health:'Thyroid and metabolism issues in dogs often go undiagnosed until weight changes appear, and iodine — critical for thyroid hormone production — is easy to overlook in commercial diets. Bombay Duck is naturally rich in iodine and virtually fat-free, so it supports metabolic health without adding calories, and its lean composition means it digests easily and rarely causes the greasy-stool issues fattier fish treats can.',
+    healthPoints:['Naturally rich in iodine for thyroid and metabolism support','Virtually fat-free — safe for daily feeding without added calories','Lean composition, easy on digestion, rarely causes greasy stools'],
+    originStory:'Bombay Duck (Bombil) is sourced from Indian coastal waters and dehydrated whole — no oil, no salt, nothing added. We lab-test periodically for quality, and every batch is vacuum-sealed to lock the crunch in.',
+    faqs:[
+      {icon:'🦋', q:'What does iodine actually do?',a:'Iodine supports thyroid hormone production, which in turn regulates metabolism and energy — often overlooked in commercial diets.'},
+      {icon:'📅', q:'Can I feed this daily?',a:'Yes — it\'s virtually fat-free, making it one of the safer everyday options in terms of calories.'},
+      {icon:'🐱', q:'Can cats have it too?',a:'Yes, in smaller amounts — it\'s a lean, single-ingredient fish treat suitable for cats as well.'},
+      {icon:'🔬', q:'Lab-tested?',a:'Yes, we lab-test periodically for quality, and every batch is vacuum-sealed at our Kalyan facility.'},
+      {icon:'📦', q:'Storage?',a:'About 3 weeks once opened, kept cool, dry and away from direct sunlight.'},
+    ],
     benefits:[
       {icon:'🇮🇳',title:'Proudly Indian Superfood',text:'Bombil is found only along the Maharashtra and Gujarat coasts — a native ingredient no international brand can replicate.'},
       {icon:'⚖️',title:'Lowest Calorie Fish Treat',text:'Bombay Duck is extremely lean with almost zero fat — ideal for weight management without sacrificing flavour.'},
@@ -5612,6 +5846,18 @@ let products = [
   },
   {img:'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/177aaeda-c886-437c-bc6f-aaa5fb27b2c2/image-0-1782712317685.png', name:'Whole Mackerel', cat:'Fish Treats', badge:'Omega Rich', badgeCls:'teal', desc:'Whole dehydrated mackerel — packed with omega-3 fatty acids, B12 and selenium for complete fish nutrition.', tags:['Omega-3','B12','Whole Fish'], sizes:[{label:'Pack of 1',price:500,mrp:500},{label:'Pack of 2',price:1000,mrp:1000},{label:'Pack of 3',price:1500,mrp:1500}], filter:'fish', weight:'100 Grams',
     tagline:'Whole mackerel is a complete fish treat — bones, flesh and all — delivering the full nutritional spectrum of a wild ocean fish in a safe, dehydrated form.',
+    subhead:'The whole fish, the whole benefit.',
+    founderNote:'We leave the bone and skin in on purpose — that\'s where a lot of the nutrition lives.',
+    health:'Dogs with early joint stiffness or heart-health concerns benefit most from consistent omega-3 intake, but many fish oil supplements are poorly absorbed or cause fishy-smelling burps and loose stools. Whole mackerel provides the same EPA and Vitamin D in real food form, which the body handles more naturally — though because it includes bone and skin, it\'s best introduced gradually so digestion adjusts, especially in dogs new to whole fish.',
+    healthPoints:['Complete omega-3, Vitamin D and B12 from a whole real fish','Supports joint, heart and cognitive health with consistent feeding','Introduce gradually — bone and skin content needs digestion to adjust'],
+    originStory:'Whole mackerel is sourced from Indian coastal waters and dehydrated as-is — bone, flesh and skin together, nothing removed and nothing added. We lab-test periodically for quality, and every batch is vacuum-sealed to keep it fresh.',
+    faqs:[
+      {icon:'🐠', q:'Why leave the bones and skin in?',a:'That\'s where a lot of the calcium, Vitamin D and additional nutrition is concentrated — removing them would mean losing much of the benefit.'},
+      {icon:'🐶', q:'Any risk from the bones?',a:'They\'re dehydrated, not cooked, so they\'re digestible rather than splintering. Still, introduce gradually and supervise, especially with small dogs.'},
+      {icon:'📅', q:'How often should I feed this?',a:'2-3 times per week is the general guide — see the feeding section for portion by size.'},
+      {icon:'🔬', q:'Lab-tested?',a:'Yes, we lab-test periodically for quality, and every batch is vacuum-sealed at our Kalyan facility.'},
+      {icon:'📦', q:'Storage?',a:'About 3 weeks once opened, away from heat and direct sunlight.'},
+    ],
     benefits:[
       {icon:'🐠',title:'Complete Whole Fish Nutrition',text:'Every part of the mackerel — flesh, bone, organs — contributes different nutrients. You\'re feeding the whole ecosystem.'},
       {icon:'💊',title:'Natural Vitamin D',text:'One of the few natural dietary sources of Vitamin D — critical for calcium absorption and immune function.'},
@@ -5624,6 +5870,18 @@ let products = [
   },
   {img:'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/771b372e-a767-4056-ae85-c6ad1251e84a/image-0-1782712307911.png', name:'Mackerel Fillet', cat:'Fish Treats', badge:'Boneless', badgeCls:'', desc:'Dehydrated boneless mackerel fillet — all the omega-3 nutrition with no bones. Great for small breeds.', tags:['Boneless','Omega-3','Small Breeds'], sizes:[{label:'Pack of 1',price:550,mrp:550},{label:'Pack of 2',price:1100,mrp:1100},{label:'Pack of 3',price:1650,mrp:1650},{label:'Pack of 4',price:2200,mrp:2200}], filter:'fish', weight:'60 Grams',
     tagline:'All the rich omega-3 goodness of mackerel, but boneless — making it completely safe and appropriate for small dogs, puppies and senior dogs who need a gentler fish treat.',
+    subhead:'All the omega, none of the bones.',
+    founderNote:'Not every dog can handle a whole fish — this is our answer for them.',
+    health:'Some dogs — especially puppies, seniors or small breeds — simply can\'t safely manage a whole fish with bones. The boneless fillet removes that risk entirely while keeping the full omega-3 payload for coat and joint health, and its soft, flesh-only texture is noticeably gentler on digestion than whole fish, making it a safer starting point for dogs new to fish-based treats.',
+    healthPoints:['Full omega-3 benefit without any bone risk','Soft, flesh-only texture suits small breeds, puppies and seniors','Gentler on digestion than whole fish — a good starting point'],
+    originStory:'Mackerel fillet is sourced from Indian coastal waters and dehydrated boneless — just the flesh, nothing added. It\'s a gentler entry point for dogs new to fish treats. We lab-test periodically for quality, and every batch is vacuum-sealed at our Kalyan facility before it ships.',
+    faqs:[
+      {icon:'✅', q:'Is this safer than whole mackerel?',a:'It removes any bone consideration entirely while keeping the same omega-3 nutrition — a good choice for small breeds, puppies or seniors.'},
+      {icon:'🐩', q:'Good for toy breeds?',a:'Yes, the soft fillet-only texture is well suited to small jaws that can\'t manage whole fish.'},
+      {icon:'📅', q:'Can I feed this daily?',a:'Yes, within the guided daily amount — it works well as an ongoing omega-3 supplement.'},
+      {icon:'🔬', q:'Lab-tested?',a:'Yes, we lab-test periodically for quality, and every batch is vacuum-sealed at our Kalyan facility.'},
+      {icon:'📦', q:'Storage?',a:'About 3 weeks once opened, kept cool and dry.'},
+    ],
     benefits:[
       {icon:'✅',title:'Completely Bone-Free',text:'Ideal for dogs where whole fish bones may be a concern — same omega-3 nutrition, zero risk.'},
       {icon:'🐩',title:'Perfect for Small Breeds',text:'Soft, fillet-only texture is appropriate for toy breeds and small dogs that can\'t handle whole fish.'},
@@ -5636,6 +5894,18 @@ let products = [
   },
   {img:'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/f2462343-c4b8-4992-8fc9-d38db31e2e7c/image-0-1782712340470.png', name:'Sardines', cat:'Fish Treats', badge:'Brain Boost', badgeCls:'teal', desc:'Whole dehydrated sardines — exceptional omega-3 content for brain health, coat shine and joint support.', tags:['Omega-3','Brain Health','Whole Fish'], sizes:[{label:'Pack of 1',price:349,mrp:349},{label:'Pack of 2',price:698,mrp:698},{label:'Pack of 3',price:1047,mrp:1047},{label:'Pack of 4',price:1396,mrp:1396}], filter:'fish', weight:'60 Grams',
     tagline:'Sardines are one of the most omega-3 dense fish in the ocean — and they are small enough to be free from heavy metal contamination, making them a safe, daily supplement.',
+    subhead:'Small fish, big omega, daily-safe.',
+    founderNote:'If I could recommend just one daily supplement, it would probably be this.',
+    health:'Joint inflammation and cognitive decline are two of the most common age-related issues in dogs, and both respond well to consistent EPA and DHA intake. Sardines are small enough to avoid mercury build-up, and being naturally soft and oily, they\'re easy to digest in the recommended daily amount — though feeding beyond the guided portion can lead to loose stools given their oil content.',
+    healthPoints:['High EPA/DHA for joints, brain health and coat condition','Small and short-lived — naturally low in mercury','Feed within the guided amount — oil content can loosen stools if overfed'],
+    originStory:'Sardines are sourced from Indian coastal waters and dehydrated whole — no oil, salt or flavouring added. Being small fish, they don\'t carry the mercury burden of larger species. We lab-test periodically for quality, and every batch is vacuum-sealed to lock the crunch in.',
+    faqs:[
+      {icon:'🧠', q:'What\'s the benefit over a fish oil capsule?',a:'Same omega-3s in real food form, alongside protein and other nutrients — without the capsule or the fishy burps some oils cause.'},
+      {icon:'📅', q:'Can I feed sardines every day?',a:'Yes, within the guided daily amount — they\'re one of our better daily omega-3 options.'},
+      {icon:'🐱', q:'Suitable for cats?',a:'Yes, in smaller portions — sardines are a good source of taurine and omega-3 for cats too.'},
+      {icon:'🔬', q:'Lab-tested?',a:'Yes, we lab-test periodically for quality, and every batch is vacuum-sealed at our Kalyan facility.'},
+      {icon:'📦', q:'Storage?',a:'About 3 weeks once opened, away from heat and sunlight.'},
+    ],
     benefits:[
       {icon:'🧠',title:'Brain Health & Cognition',text:'DHA from sardines is the primary structural fat of brain tissue — essential for puppies and aging dogs alike.'},
       {icon:'🦴',title:'Joint Anti-Inflammatory',text:'EPA in sardines is clinically shown to reduce joint inflammation — excellent for dogs with arthritis or hip dysplasia.'},
@@ -5648,6 +5918,18 @@ let products = [
   },
   {img:'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/da659861-df5e-4c9e-991c-811c56f50c7f/image-0-1782795710302.png', name:'Tuna', cat:'Fish Treats', badge:'High Protein', badgeCls:'', desc:'Dehydrated tuna — lean, high-protein ocean fish. Rich in selenium and B12. Dogs love the intense flavour.', tags:['High Protein','Selenium','Ocean Fish'], sizes:[{label:'Pack of 1',price:500,mrp:500},{label:'Pack of 2',price:1000,mrp:1000},{label:'Pack of 3',price:1500,mrp:1500},{label:'Pack of 4',price:2000,mrp:2000}], filter:'fish', weight:'60 Grams',
     tagline:'Tuna is an ocean powerhouse — lean, protein-dense, and rich in selenium and B vitamins. Its intense flavour makes it one of the most motivating treats available.',
+    subhead:'For the dog that ignores everything else.',
+    founderNote:'When nothing else works, this usually does — that\'s exactly why we keep it in the range.',
+    health:'Picky eaters and dogs recovering from illness often need a treat strong enough to reignite appetite, and tuna\'s intense aroma does exactly that while delivering serious protein for muscle repair. It\'s easily digestible in the recommended 2–3 times weekly portion, but because tuna carries more mercury than smaller fish, it isn\'t meant for daily feeding — moderation is what keeps it both effective and safe.',
+    healthPoints:['Intense aroma reignites appetite in picky eaters or recovering dogs','High protein density supports muscle repair','Feed 2-3x weekly, not daily, due to naturally higher mercury than small fish'],
+    originStory:'Tuna is sourced from Indian coastal waters and dehydrated whole, nothing added. Because it\'s a larger, longer-lived fish, we recommend more moderate feeding than our smaller fish treats. We lab-test periodically for quality, and every batch is vacuum-sealed at our Kalyan facility before it ships.',
+    faqs:[
+      {icon:'🎯', q:'Why is this so effective with picky eaters?',a:'The intense aroma is genuinely motivating even for dogs that ignore other treats or are recovering their appetite after illness.'},
+      {icon:'⚠️', q:'Why not feed this daily like sardines?',a:'Tuna is a larger, longer-lived fish and naturally carries more mercury than small fish — 2-3 times weekly keeps it safe.'},
+      {icon:'💪', q:'Good for muscle recovery?',a:'Yes, it\'s exceptionally high in protein, useful for active dogs or those recovering from illness or surgery.'},
+      {icon:'🔬', q:'Lab-tested?',a:'Yes, we lab-test periodically for quality, and every batch is vacuum-sealed at our Kalyan facility.'},
+      {icon:'📦', q:'Storage?',a:'About 3 weeks once opened, kept cool and dry.'},
+    ],
     benefits:[
       {icon:'💪',title:'Exceptionally High Protein',text:'Tuna has one of the highest protein densities of any fish — great for muscle maintenance and repair.'},
       {icon:'🛡️',title:'Selenium Antioxidant',text:'Tuna is exceptionally rich in selenium — protects DNA from oxidative stress and supports thyroid function.'},
@@ -5660,6 +5942,18 @@ let products = [
   },
   {img:'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/a76ab961-d32e-4720-8e2e-e4f989da8ee0/image-0-1782712329883.png', name:'Prawns', cat:'Fish Treats', badge:'Antioxidant', badgeCls:'', desc:'Dehydrated prawns — rich in antioxidants, iodine and astaxanthin. A premium coastal treat dogs adore.', tags:['Antioxidant','Iodine','Coastal'], sizes:[{label:'Pack of 1',price:599,mrp:599},{label:'Pack of 2',price:1198,mrp:1198},{label:'Pack of 3',price:1797,mrp:1797},{label:'Pack of 4',price:2396,mrp:2396}], filter:'fish', weight:'60 Grams',
     tagline:'Prawns are a luxury treat packed with astaxanthin — a powerful antioxidant that gives them their pink colour and provides exceptional anti-inflammatory and immune benefits.',
+    subhead:'A premium treat with a real antioxidant punch.',
+    founderNote:'The pink colour isn\'t decoration — that\'s the astaxanthin actually doing its job.',
+    health:'Joint discomfort and oxidative stress from ageing or inflammation are hard to address through diet alone, but prawns combine astaxanthin — an antioxidant far stronger than Vitamin C — with shell-derived glucosamine for joint support in one bite. They\'re light and easily digestible in the recommended portion, making them a safe, premium option for dogs who need extra antioxidant and joint support without a heavy treat load.',
+    healthPoints:['Astaxanthin — a powerful natural antioxidant, far stronger than Vitamin C','Shell-derived glucosamine adds joint support on top of the antioxidant benefit','Light and easily digestible in the recommended portion'],
+    originStory:'Prawns are sourced from Indian coastal waters and dehydrated whole, shell included — that\'s where the glucosamine comes from. Nothing added. We lab-test periodically for quality, and every batch is vacuum-sealed to keep it fresh.',
+    faqs:[
+      {icon:'🦐', q:'What makes prawns worth the higher price?',a:'The astaxanthin content is a genuinely powerful antioxidant, and the shell adds natural glucosamine — a premium combination not found in most treats.'},
+      {icon:'📅', q:'How often should I feed these?',a:'2-3 times per week is the general guide — see the feeding section for portions by size.'},
+      {icon:'🦴', q:'Does the shell add any risk?',a:'No — it\'s dehydrated and safely digestible, and it\'s exactly where the glucosamine comes from.'},
+      {icon:'🔬', q:'Lab-tested?',a:'Yes, we lab-test periodically for quality, and every batch is vacuum-sealed at our Kalyan facility.'},
+      {icon:'📦', q:'Storage?',a:'About 3 weeks once opened, away from heat and direct sunlight.'},
+    ],
     benefits:[
       {icon:'🦐',title:'Astaxanthin Antioxidant',text:'Astaxanthin is 6,000x more powerful than Vitamin C as an antioxidant — it gives prawns their pink colour and dogs a huge health boost.'},
       {icon:'🦋',title:'Iodine for Metabolism',text:'Rich in iodine that supports thyroid hormone production and healthy metabolic rate.'},
@@ -5674,6 +5968,18 @@ let products = [
 // ── WHOLE PREY ─────────────────────────────────────────
   {img:'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/edb3cdd6-b31f-4e5b-ba18-bf4a300d8090/image-0-1782712359525.png', name:'Whole Quail', cat:'Whole Prey', badge:'Complete Nutrition', badgeCls:'brown', desc:'Whole dehydrated quail — the ultimate whole prey treat. Complete bone, meat and organ in a single piece.', tags:['Whole Prey','Complete Nutrition','Novel Protein'], sizes:[{label:'Pack of 1',price:275,mrp:275},{label:'Pack of 2',price:550,mrp:550},{label:'Pack of 3',price:825,mrp:825},{label:'Pack of 4',price:1100,mrp:1100}], filter:'wholeprey', weight:'1 Piece',
     tagline:'A whole quail is nature\'s most complete single-ingredient treat — bone, muscle meat, skin and organs all in one, replicating what dogs evolved to eat in the wild.',
+    subhead:'The whole animal, the way nature intended.',
+    founderNote:'Whole prey feeding isn\'t a trend for us — it\'s the most complete way to treat a dog.',
+    health:'Dogs with multiple food sensitivities often run out of proteins they haven\'t reacted to, and quail is genuinely novel for almost all of them. Because it includes bone, organ and meat in the natural ratio dogs evolved to digest, it\'s processed by the gut more completely than an isolated muscle-meat treat — though it should be introduced gradually, as with any new whole-prey item, to let digestion adjust.',
+    healthPoints:['Bone, organ and meat in natural ratio — genuinely novel for allergy-prone dogs','Nutrients present in their natural, synergistic balance','Introduce gradually, as with any new whole-prey item'],
+    originStory:'Whole quail is sourced from Indian quail farms and dehydrated as a complete animal — bone, organ and meat together, with nothing added or removed. We lab-test periodically for quality, and every batch is vacuum-sealed to keep it fresh.',
+    faqs:[
+      {icon:'🧬', q:'Why is quail good for allergy-prone dogs?',a:'It\'s a genuinely novel protein most dogs have never encountered, making it useful for elimination diets when other proteins have caused reactions.'},
+      {icon:'🍽️', q:'Can this replace a meal?',a:'It can serve as a substantial treat or part of a meal — see the feeding guide for portions based on your dog\'s size.'},
+      {icon:'🐶', q:'How do I introduce it safely?',a:'Start with a small portion and watch for 24 hours, as with any new whole-prey item, then build up to the full feeding guide amount.'},
+      {icon:'🔬', q:'Lab-tested?',a:'Yes, we lab-test periodically for quality, and every batch is vacuum-sealed at our Kalyan facility.'},
+      {icon:'📦', q:'Storage?',a:'About 6 weeks once opened, kept cool and dry.'},
+    ],
     benefits:[
       {icon:'🌿',title:'Biologically Complete Meal',text:'Whole prey contains the exact ratio of bone, meat and organ that carnivores evolved to consume. Nothing is missing.'},
       {icon:'🧬',title:'Novel Protein for Allergy Dogs',text:'Quail is a genuinely novel protein that most dogs have never been exposed to — perfect for strict elimination diets.'},
@@ -5692,6 +5998,18 @@ let products = [
     tags:['Cats','Fish','Single Ingredient','Trial'],
     sizes:[{label:'Trial Box (5 treats × 100g)',price:729, mrp:849}], filter:'bundle',
     tagline:'Every treat in this box was selected for a cat\'s biology — obligate carnivores who need high animal protein, zero carbs, and intense aromas. All single ingredient. All safe.',
+    subhead:'Built for a carnivore, not a compromise.',
+    founderNote:'Most cat treats are designed around what\'s cheap to make — this box is designed around what a cat actually needs.',
+    health:'Cats are obligate carnivores whose digestive systems are built for high animal protein and essentially zero carbohydrate — yet many commercial cat treats are grain-based, which some cats struggle to digest and derive little nutrition from. Every treat in this box is single-ingredient, protein-first and free of the taurine-deficient fillers that can quietly affect a cat\'s heart and vision over time, making it gentle on digestion and nutritionally appropriate rather than just palatable.',
+    healthPoints:['High animal protein, zero carbs — matches a cat\'s biology, not a dog\'s','Fish-forward selection is naturally rich in taurine cats can\'t make themselves','Single-ingredient treats only — nothing to strain feline digestion'],
+    originStory:'Every treat in this trial box is sourced the same way as our full-size single-ingredient treats — Indian coastal waters for the fish, Indian poultry farms for the chicken — with nothing added. We lab-test periodically for quality, and each is vacuum-sealed at our Kalyan facility before packing.',
+    faqs:[
+      {icon:'🐱', q:'Why does my cat need different treats than my dog?',a:'Cats are obligate carnivores and need high animal protein with essentially no carbohydrate — most commercial cat treats are grain-based and don\'t reflect that.'},
+      {icon:'🧬', q:'What is taurine and why does it matter?',a:'Cats can\'t produce taurine on their own the way dogs can — it\'s essential for heart, vision and immune health, and fish is one of the best natural sources.'},
+      {icon:'🐾', q:'How do I introduce these to a new cat?',a:'Start with one small piece and observe for 24 hours before offering more, especially for kittens.'},
+      {icon:'🔬', q:'Lab-tested?',a:'Yes, we lab-test periodically for quality, and every treat inside is vacuum-sealed at our Kalyan facility.'},
+      {icon:'📦', q:'Storage?',a:'About 4 weeks once opened, refrigerate in warm or humid weather.'},
+    ],
     benefits:[
       {icon:'🐟',title:'Fish-First, Cat-Approved',text:'Cats are drawn to intense marine aromas. Anchovies, Mackerel, Sardines and Tuna are irresistible to even the fussiest cats — and pack natural omega-3s for a glossy coat.'},
       {icon:'🧬',title:'Taurine-Rich — Essential for Cats',text:'Unlike dogs, cats cannot synthesize taurine on their own. Fish is one of the richest natural sources of taurine, which is critical for heart health, vision and immune function in cats.'},
@@ -5717,6 +6035,18 @@ let products = [
     tags:['Mystery Box','Best Sellers','Mixed Proteins','Gift'],
     sizes:[{label:'Surprise Box (200g assorted treats)',price:1299,mrp:1479}], filter:'bundle',
     tagline:'Hand-curated by the Game of Bones team. We pick a balanced mix across proteins — jerky, organs, fish and a chew — so your dog discovers something new every time.',
+    subhead:'A curated rotation, picked by us.',
+    founderNote:'We genuinely rotate the picks — no two boxes leave our hands the same.',
+    health:'Feeding the same single protein for months raises the odds a dog develops a sensitivity to it — one of the most common causes of new food allergies later in life. Rotating proteins, which this box does automatically, is a simple way to reduce that risk while keeping meals interesting. Every treat inside is still single-ingredient and dehydrated the same gentle way, so digestibility doesn\'t drop just because the protein changes.',
+    healthPoints:['Deliberate protein rotation reduces the odds of developing a new sensitivity','Every treat inside is still single-ingredient and dehydrated the same gentle way','A low-risk way to introduce variety without committing to full packs'],
+    originStory:'Every treat in this box is sourced the same way as our individual products — Indian poultry, goat and coastal fish suppliers — with nothing added beyond slow dehydration. We lab-test periodically for quality, and each item is vacuum-sealed at our Kalyan facility before it goes into the box.',
+    faqs:[
+      {icon:'🎁', q:'How is the mix chosen?',a:'Our team hand-picks a balanced mix across proteins and textures each time — jerky, organs, fish and a chew is the general spread.'},
+      {icon:'♻️', q:'Will I get the same box every time I order?',a:'No — we deliberately vary it, so regular customers get a fresh rotation rather than the exact same treats each month.'},
+      {icon:'🐾', q:'Good for a dog new to natural treats?',a:'Yes, it\'s a great low-commitment way to see what your dog responds to before buying full packs.'},
+      {icon:'🔬', q:'Are the treats inside lab-tested?',a:'Yes, we lab-test periodically for quality, and every treat is vacuum-sealed the same as our full-size products.'},
+      {icon:'📦', q:'Storage?',a:'Varies by treat — fish and organ treats should be refrigerated after opening, jerky keeps at room temperature for several weeks.'},
+    ],
     benefits:[
       {icon:'🎁',title:'Handpicked By Us',text:'Our team selects the best in-season, freshest treats across the full range. Balanced across proteins and textures.'},
       {icon:'🐾',title:'Perfect for Explorers',text:'Great for dogs new to natural treats or for pet parents who want their dog to try everything without the commitment of full pouches.'},
@@ -5737,6 +6067,18 @@ let products = [
     sizes:[{label:'Small — 9 treats (120g+)', price:699}],
     filter:'bundle', isBundle:true, isTrialBox:true, trialBoxSize:'small',
     tagline:'The best way to discover what your dog loves. 9 treats, 9 different proteins — hand-picked by us.',
+    subhead:'Nine proteins, one honest way to test the waters.',
+    founderNote:'Buying nine full packs to find one favourite is expensive — this box exists to fix that.',
+    health:'New dog parents often don\'t know which protein will suit their dog\'s digestion or trigger sensitivities until they\'ve already committed to full packs. This box lets you test 9 different single-ingredient proteins in small amounts, so you can watch for loose stools, itching or disinterest early — before investing in a protein that doesn\'t agree with your dog.',
+    healthPoints:['Small portions across 9 proteins let you watch for sensitivities early','Every treat is still single-ingredient — nothing to muddy the results','A low-cost way to find what actually suits your dog before committing'],
+    originStory:'The nine treats inside are sourced the same way as our individual packs — Indian poultry, goat and coastal fish suppliers — dehydrated with nothing added. We lab-test periodically for quality, and each is vacuum-sealed at our Kalyan facility before going into the box.',
+    faqs:[
+      {icon:'🧪', q:'What\'s the point of a trial box?',a:'It lets you sample 9 different proteins in small amounts, so you can spot any sensitivity or preference before buying full packs.'},
+      {icon:'📦', q:'Do the treats arrive separately?',a:'No — they arrive mixed together in a single bag, ready to serve.'},
+      {icon:'🐶', q:'How should I introduce them?',a:'One protein per day is a good way to monitor how your dog responds to each.'},
+      {icon:'🔬', q:'Are they lab-tested?',a:'Yes, we lab-test periodically for quality, and every treat inside is vacuum-sealed the same as our full-size products.'},
+      {icon:'📦', q:'Storage?',a:'Refrigerate fish and organ treats after opening; jerky keeps at room temperature in a sealed pouch.'},
+    ],
     benefits:[
       {icon:'🧪',title:'Try Before You Commit',text:'Sample 9 different treats before buying full packs. Find your dog\'s favourites without the guesswork.'},
       {icon:'🐾',title:'All 4 Categories',text:'Includes jerky, a chew, organ treats and fish — a complete cross-section of our range.'},
@@ -5759,6 +6101,18 @@ let products = [
     sizes:[{label:'Medium — 7 treats (360g+)', price:1749}],
     filter:'bundle', isBundle:true, isTrialBox:true, trialBoxSize:'medium',
     tagline:'More of everything. 7 full-size treats — enough to build a proper rotation and see real results.',
+    subhead:'Enough of everything to actually see results.',
+    founderNote:'Full-size portions matter — you can\'t judge a coat improvement off one small bite.',
+    health:'Once you know your dog tolerates natural treats well, the next real question is which specific proteins deliver visible results — better coat, calmer joints, healthier gums. Seven full-size treats give enough of each to actually notice a difference over two weeks, while staying easy on digestion since every item is single-ingredient with nothing to react to.',
+    healthPoints:['Full-size portions across 7 proteins — enough to notice real change','Fish treats included mean visible coat improvement within about 2 weeks','Every item still single-ingredient, easy on digestion'],
+    originStory:'The seven treats inside are sourced the same way as our individual packs — Indian poultry, goat and coastal fish suppliers — dehydrated with nothing added. We lab-test periodically for quality, and each is vacuum-sealed at our Kalyan facility before going into the box.',
+    faqs:[
+      {icon:'💰', q:'Is this actually better value than buying separately?',a:'Yes — full-size portions at a bundle price work out to more treat per rupee than buying each individually.'},
+      {icon:'📅', q:'How long will this last?',a:'About two weeks feeding one protein per day, giving you a full rotation to establish preferences.'},
+      {icon:'✨', q:'Will I really see a coat difference?',a:'With the fish treats included, most dogs show some visible improvement within about two weeks of regular feeding.'},
+      {icon:'🔬', q:'Lab-tested?',a:'Yes, we lab-test periodically for quality, and every treat inside is vacuum-sealed the same as our full-size products.'},
+      {icon:'📦', q:'Storage?',a:'Refrigerate fish and organ treats after opening; jerky keeps at room temperature.'},
+    ],
     benefits:[
       {icon:'💰',title:'Best Value Trial',text:'Full-size portions at a bundle price — more treat per rupee than buying individually.'},
       {icon:'📅',title:'2-Week Supply',text:'7 different proteins gives you a full two-week rotation to establish preferences.'},
@@ -5780,6 +6134,18 @@ let products = [
     sizes:[{label:'Large — 10 treats (700g+)', price:2499, mrp:2849}],
     filter:'bundle', isBundle:true, isTrialBox:true, trialBoxSize:'large',
     tagline:'The complete Game of Bones haul. 10 treats, every category, every texture.',
+    subhead:'The whole range, in one haul.',
+    founderNote:'This is the box we\'d buy for our own dogs, if we had to pick just one.',
+    health:'For multi-dog households or dogs going through a full rotation, running out of a favourite treat mid-week is the most common complaint. Ten full-size treats across every category means a genuinely complete, gut-gentle rotation with no filler treats mixed in to dilute the nutrition or upset a sensitive stomach.',
+    healthPoints:['Ten full-size treats across every category — a genuinely complete rotation','No filler treats — everything inside is single-ingredient','Enough variety that multi-dog homes won\'t run out mid-week'],
+    originStory:'The ten treats inside are sourced the same way as our individual packs — Indian poultry, goat and coastal fish suppliers — dehydrated with nothing added. We lab-test periodically for quality, and each is vacuum-sealed at our Kalyan facility before going into the box.',
+    faqs:[
+      {icon:'🐾', q:'Who is this box best for?',a:'Multi-dog households, or anyone who wants a genuinely complete rotation across every category without running low mid-week.'},
+      {icon:'📦', q:'Does it include every product you sell?',a:'It covers every major category — jerky, chews, organs and fish — though not literally every SKU in the range.'},
+      {icon:'💰', q:'Is this the best value option?',a:'Yes, it\'s our best per-treat value across the trial box range given the volume included.'},
+      {icon:'🔬', q:'Lab-tested?',a:'Yes, we lab-test periodically for quality, and every treat inside is vacuum-sealed the same as our full-size products.'},
+      {icon:'📦', q:'Storage?',a:'Refrigerate fish and organ treats after opening; jerky keeps at room temperature in a sealed pouch.'},
+    ],
     benefits:[
       {icon:'🏆',title:'The Complete Experience',text:'Fish, organs, jerky, chews and whole prey — all in one box.'},
       {icon:'📦',title:'Month-Long Supply',text:'10 full-size treats, generously portioned — enough to establish a complete rotation.'},
@@ -7159,7 +7525,7 @@ function handleReviewPhotoUpload2(event) {
   reader.onload = function(e) {
     var preview = document.getElementById('reviewPhotoPreview2');
     if (preview) {
-      preview.innerHTML = '<img src="' + e.target.result + '" style="width:100%;max-height:120px;object-fit:cover;border-radius:4px">';
+      preview.innerHTML = '<img src="' + e.target.result + '" alt="Review photo preview" style="width:100%;max-height:120px;object-fit:cover;border-radius:4px">';
       preview.style.display = 'block';
     }
     document.getElementById('reviewPhotoRemove2').style.display = 'block';
@@ -7506,7 +7872,7 @@ function handleReviewPhotoUpload(event) {
     _reviewImagePreview = e.target.result;
     var previewEl = document.getElementById('reviewPhotoPreview');
     if (previewEl) {
-      previewEl.innerHTML = '<img src="' + e.target.result + '" style="width:100%;max-height:150px;object-fit:cover;border-radius:4px;border:1px solid var(--cream-mid)">';
+      previewEl.innerHTML = '<img src="' + e.target.result + '" alt="Review photo preview" style="width:100%;max-height:150px;object-fit:cover;border-radius:4px;border:1px solid var(--cream-mid)">';
       previewEl.style.display = 'block';
     }
     
@@ -8445,7 +8811,7 @@ function renderCartUpsell() {
   var cupEl = document.getElementById('cartUpsellPrice'); if (cupEl) cupEl.textContent = '₹' + candidate.sizes[0].price + ' · ' + candidate.sizes[0].label;
   var imgEl = document.getElementById('cartUpsellImg');
   if (candidate.img) {
-    imgEl.innerHTML = '<img src="' + candidate.img + '" style="width:100%;height:100%;object-fit:cover" onerror="this.parentNode.textContent=\'🦴\'">';
+    imgEl.innerHTML = '<img src="' + candidate.img + '" alt="' + escapeHtml(candidate.name || '') + '" style="width:100%;height:100%;object-fit:cover" onerror="this.parentNode.textContent=\'🦴\'">';
   } else { if(imgEl) imgEl.textContent = '🦴'; }
   upsellEl.style.display = 'block';
 }
@@ -9443,8 +9809,103 @@ function selectDetailSize(i, el) {
     var mrpHtml = (s.mrp && s.mrp > s.price) ? '<span style="text-decoration:line-through;color:var(--muted);font-weight:400;font-size:14px;margin-right:6px">₹' + s.mrp + '</span>' : '';
     priceEl.innerHTML = mrpHtml + '₹' + s.price + ' <span style="font-size:12px;color:var(--muted);font-weight:400">(' + s.label + ')</span>';
   }
+  var loyEl = document.getElementById('detail-loyalty-pts');
+  if (loyEl) loyEl.textContent = Math.floor(s.price / 10);
 }
 const SUPABASE_IMG_URL = 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/';
+
+// ══════════════════════ PER-PRODUCT SEO (title / meta / canonical / OG / JSON-LD) ══════════════════════
+var DEFAULT_SEO = {
+  title: 'Game of Bones \u2014 Natural Dehydrated Dog Treats | Made in India',
+  description: 'Premium single-ingredient dehydrated dog treats made in Maharashtra, India. No preservatives. No fillers. Just real food your dog deserves.',
+  url: 'https://gameofbones.in/',
+  image: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/logo.jpeg'
+};
+
+function _seoSet(selector, attr, value) {
+  var el = document.querySelector(selector);
+  if (el) el.setAttribute(attr, value);
+}
+
+function updateProductSEO(p) {
+  if (!p) return;
+  try {
+    var slug = p.name.toLowerCase().replace(/[&\s]+/g, '-');
+    var url = DEFAULT_SEO.url + '?p=' + slug;
+    var price = (p.sizes && p.sizes[0]) ? p.sizes[0].price : '';
+    var title = p.name + ' \u2014 Natural Dehydrated Dog Treats | Game of Bones';
+    var rawDesc = p.tagline || p.subhead || p.desc || DEFAULT_SEO.description;
+    var desc = String(rawDesc).replace(/\s+/g, ' ').trim();
+    if (desc.length > 160) desc = desc.slice(0, 157) + '...';
+    var img = p.img && p.img.indexOf('http') === 0 ? p.img : (SUPABASE_IMG_URL + (p.img || ''));
+
+    document.title = title;
+    _seoSet('meta[name="description"]', 'content', desc);
+    _seoSet('link[rel="canonical"]', 'href', url);
+    _seoSet('meta[property="og:type"]', 'content', 'product');
+    _seoSet('meta[property="og:title"]', 'content', title);
+    _seoSet('meta[property="og:description"]', 'content', desc);
+    _seoSet('meta[property="og:url"]', 'content', url);
+    _seoSet('meta[property="og:image"]', 'content', img);
+    _seoSet('meta[name="twitter:title"]', 'content', title);
+    _seoSet('meta[name="twitter:description"]', 'content', desc);
+    _seoSet('meta[name="twitter:image"]', 'content', img);
+
+    var rating = (typeof PRODUCT_RATINGS !== 'undefined') ? PRODUCT_RATINGS[p.name] : null;
+    var ld = {
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      name: p.name,
+      image: [img],
+      description: desc,
+      sku: slug,
+      brand: { '@type': 'Brand', name: 'Game of Bones' },
+      offers: {
+        '@type': 'Offer',
+        url: url,
+        priceCurrency: 'INR',
+        price: price,
+        availability: 'https://schema.org/InStock',
+        itemCondition: 'https://schema.org/NewCondition'
+      }
+    };
+    if (rating && rating.count > 0) {
+      ld.aggregateRating = {
+        '@type': 'AggregateRating',
+        ratingValue: rating.avg,
+        reviewCount: rating.count,
+        bestRating: 5,
+        worstRating: 1
+      };
+    }
+    var ldScript = document.getElementById('product-ld-json');
+    if (!ldScript) {
+      ldScript = document.createElement('script');
+      ldScript.type = 'application/ld+json';
+      ldScript.id = 'product-ld-json';
+      document.head.appendChild(ldScript);
+    }
+    ldScript.textContent = JSON.stringify(ld);
+  } catch (e) { console.error('updateProductSEO error', e); }
+}
+
+function resetPageSEO() {
+  try {
+    document.title = DEFAULT_SEO.title;
+    _seoSet('meta[name="description"]', 'content', DEFAULT_SEO.description);
+    _seoSet('link[rel="canonical"]', 'href', DEFAULT_SEO.url);
+    _seoSet('meta[property="og:type"]', 'content', 'website');
+    _seoSet('meta[property="og:title"]', 'content', DEFAULT_SEO.title);
+    _seoSet('meta[property="og:description"]', 'content', DEFAULT_SEO.description);
+    _seoSet('meta[property="og:url"]', 'content', DEFAULT_SEO.url);
+    _seoSet('meta[property="og:image"]', 'content', DEFAULT_SEO.image);
+    _seoSet('meta[name="twitter:title"]', 'content', DEFAULT_SEO.title);
+    _seoSet('meta[name="twitter:description"]', 'content', DEFAULT_SEO.description);
+    _seoSet('meta[name="twitter:image"]', 'content', DEFAULT_SEO.image);
+    var ldScript = document.getElementById('product-ld-json');
+    if (ldScript) ldScript.remove();
+  } catch (e) { console.error('resetPageSEO error', e); }
+}
 
 function openProductPage(idx) {
   // Update URL for product page
@@ -9529,17 +9990,72 @@ function updateProductImage(idx, p) {
     </div>`;
   }).join('');
   
-  const benefitsHtml = (p.benefits || []).map(b => `
-    <div style="display:flex;gap:12px;margin-bottom:16px">
-      <div style="font-size:28px;flex-shrink:0">${b.icon}</div>
-      <div>
-        <div style="font-size:13px;font-weight:700;color:var(--dark);margin-bottom:4px">${b.title}</div>
-        <div style="font-size:12px;color:var(--muted);line-height:1.6">${b.text}</div>
-      </div>
+  const benefitsHtml = `<div class="gob-grid-2">${(p.benefits || []).map((b,bi) => `
+    <div style="background:var(--white);border:1px solid var(--cream-mid);border-radius:4px;padding:18px 16px">
+      <div style="width:36px;height:36px;border-radius:50%;background:var(--cream);display:flex;align-items:center;justify-content:center;font-size:17px;margin-bottom:12px">${b.icon}</div>
+      <div style="font-size:13px;font-weight:700;color:var(--dark);margin-bottom:5px">${b.title}</div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.6">${b.text}</div>
     </div>
-  `).join('');
-  
+  `).join('')}</div>`;
+
+  // Trust chips for the hero — fixed brand facts, no duplication with the nutrient chart below
+  const statChipsHtml = `
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+      <span style="display:inline-flex;align-items:center;gap:5px;background:var(--dark);color:var(--white);font-size:10px;font-weight:700;letter-spacing:.04em;padding:6px 12px;border-radius:20px">🔬 Periodically Lab-Tested</span>
+      <span style="display:inline-flex;align-items:center;gap:5px;background:var(--dark);color:var(--white);font-size:10px;font-weight:700;letter-spacing:.04em;padding:6px 12px;border-radius:20px">🧪 Vacuum-Sealed</span>
+      <span style="display:inline-flex;align-items:center;gap:5px;background:var(--dark);color:var(--white);font-size:10px;font-weight:700;letter-spacing:.04em;padding:6px 12px;border-radius:20px">📍 Made in Kalyan</span>
+    </div>
+  `;
+
+  // Nutrient Profile — real bar chart, built from p.nutrients where the value is a recognised qualitative level
+  const nutrientBars = (p.nutrients || []).map(n => ({ label: n.label, val: n.val, pct: nutrientLevelPct(n.val) })).filter(n => n.pct !== null);
+  const nutrientBarsHtml = nutrientBars.length > 0 ? `
+    <div style="background:var(--dark);border-radius:8px;padding:20px 22px;margin-bottom:24px">
+      <div style="font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:16px">Nutrient Profile</div>
+      ${nutrientBars.map(b => `
+        <div style="margin-bottom:${b === nutrientBars[nutrientBars.length-1] ? '0' : '14px'}">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+            <span style="font-size:12px;color:var(--cream);font-weight:600">${b.label}</span>
+            <span style="font-size:11px;color:var(--gold);font-weight:700;letter-spacing:.03em">${b.val}</span>
+          </div>
+          <div style="height:7px;background:rgba(255,255,255,.14);border-radius:4px;overflow:hidden">
+            <div style="height:100%;width:${b.pct}%;background:linear-gradient(90deg,var(--teal),var(--gold));border-radius:4px"></div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  ` : '';
+
   const dehydInfo = getDehydrationInfo(p.name);
+
+  // Visual 3-step "from source to pack" strip for the origin story section
+  const originSourceLabel = (typeof SOURCE_BY_FILTER !== 'undefined' && SOURCE_BY_FILTER[p.filter]) || 'Indian farms & suppliers';
+  const originSourceIcon = getProteinIcon(p);
+  const originSteps = [
+    {icon: originSourceIcon, title:'Source', text: originSourceLabel},
+    {icon:'🌡️', title:'Slow Dehydrate', text: dehydInfo ? (dehydInfo.tempC + '°C for ' + dehydInfo.hours) : 'Low, controlled heat'},
+    {icon:'🔬', title:'Check & Seal', text:'Checked, then vacuum-sealed in Kalyan'},
+  ];
+
+  // Sourcing "journey" map — Source -> Kalyan (processing) -> Your Door
+  const sourcingMapHtml = `
+    <svg viewBox="0 0 600 130" style="width:100%;height:auto;margin-bottom:20px" xmlns="http://www.w3.org/2000/svg">
+      <line x1="90" y1="45" x2="300" y2="45" stroke="var(--cream-mid)" stroke-width="2" stroke-dasharray="5,5"/>
+      <line x1="300" y1="45" x2="510" y2="45" stroke="var(--cream-mid)" stroke-width="2" stroke-dasharray="5,5"/>
+      <circle cx="90" cy="45" r="26" fill="var(--cream)" stroke="var(--gold)" stroke-width="2"/>
+      <text x="90" y="53" font-size="22" text-anchor="middle">${originSourceIcon}</text>
+      <circle cx="300" cy="45" r="26" fill="var(--dark)" stroke="var(--gold)" stroke-width="2"/>
+      <text x="300" y="53" font-size="22" text-anchor="middle">🏭</text>
+      <circle cx="510" cy="45" r="26" fill="var(--cream)" stroke="var(--gold)" stroke-width="2"/>
+      <text x="510" y="53" font-size="22" text-anchor="middle">🏠</text>
+      <text x="90" y="92" font-size="10" font-weight="700" text-anchor="middle" fill="var(--dark)" style="text-transform:uppercase;letter-spacing:.04em">Source</text>
+      <text x="90" y="108" font-size="9" text-anchor="middle" fill="var(--muted)">${originSourceLabel}</text>
+      <text x="300" y="92" font-size="10" font-weight="700" text-anchor="middle" fill="var(--dark)" style="text-transform:uppercase;letter-spacing:.04em">Processed &amp; Packed</text>
+      <text x="300" y="108" font-size="9" text-anchor="middle" fill="var(--muted)">Kalyan, Maharashtra</text>
+      <text x="510" y="92" font-size="10" font-weight="700" text-anchor="middle" fill="var(--dark)" style="text-transform:uppercase;letter-spacing:.04em">Your Door</text>
+      <text x="510" y="108" font-size="9" text-anchor="middle" fill="var(--muted)">Vacuum-sealed &amp; fresh</text>
+    </svg>
+  `;
   const howMadeInfo = dehydInfo ? `
     <div style="margin-top:24px">
       <div style="font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--dark);margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--cream-mid)">How It's Made</div>
@@ -9564,14 +10080,17 @@ function updateProductImage(idx, p) {
   
   const buyboxHtml = `
     <div>
-      <div style="font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">${p.cat}${p.weight ? ' &nbsp;•&nbsp; ' + p.weight + ' per pack' : ''}</div>
-      <h1 style="font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:700;color:var(--dark);margin-bottom:12px;line-height:1.1">${p.name}</h1>
+      <div style="font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:6px">${p.cat} &nbsp;·&nbsp; Made in Kalyan, IN</div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">${p.weight ? p.weight + ' per pack' : ''}</div>
+      <h1 style="font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:700;color:var(--dark);margin-bottom:6px;line-height:1.1">${p.name}</h1>
+      ${p.subhead ? `<div style="font-family:'Cormorant Garamond',serif;font-size:18px;font-style:italic;color:var(--teal);margin-bottom:14px;line-height:1.4">${p.subhead}</div>` : ''}
+      ${statChipsHtml}
       ${(p.badge && p.badge !== "Bestseller") ? `<div style="display:inline-block;background:var(--gold);color:var(--dark);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;margin-bottom:16px;border-radius:2px">${p.badge}</div>` : ""}
-      
+
       ${p.tagline ? `<p style="font-size:13px;color:var(--muted);line-height:1.7;font-style:italic;margin-bottom:20px;padding:14px 16px;border-left:3px solid var(--gold);background:var(--white)">${p.tagline}</p>` : ''}
-      
+
       <p style="font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:24px">${p.desc}</p>
-      
+
       <div style="margin-bottom:24px">
         <div style="font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--dark);margin-bottom:12px">Choose Size</div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -9579,27 +10098,82 @@ function updateProductImage(idx, p) {
         </div>
       </div>
 
+      <div id="detail-loyalty-preview" style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--teal);font-weight:600;margin-bottom:16px">
+        <span style="font-size:14px">🎁</span> Earn ~<span id="detail-loyalty-pts">${Math.floor(p.sizes[0].price / 10)}</span> loyalty points with this order
+      </div>
+
       <!-- WISHLIST & ADD TO CART -->
       <div style="display:flex;gap:8px;margin-bottom:0;flex-wrap:wrap">
         <button id="detail-fav" onclick="toggleWishlist(this,currentProductIdx)" style="width:48px;height:48px;border:2px solid var(--cream-mid);background:var(--white);font-size:20px;cursor:pointer;border-radius:2px;transition:all .2s;display:flex;align-items:center;justify-content:center;flex-shrink:0">♡</button>
         <button onclick="addCart(this,currentProductIdx,currentProductSize)" style="flex:1;background:var(--dark);color:var(--white);border:none;padding:14px 20px;font-family:'Jost',sans-serif;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all .2s;min-width:150px;min-height:48px">Add to Cart +</button>
       </div>
+
+      <div style="margin-top:16px;padding:14px 16px;background:var(--cream);border-radius:2px;display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--dark)"><span style="font-size:15px">🚚</span> Dispatched in 1–2 business days &middot; Free shipping on all orders</div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--dark)"><span style="font-size:15px">💵</span> Cash on Delivery available (₹40 handling fee)</div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)"><span style="font-size:15px">📍</span> Maharashtra: 2–4 days &middot; Rest of India: 3–7 days</div>
+      </div>
+
+      ${p.founderNote ? `<div style="margin-top:24px;padding:16px 18px;background:var(--cream);border-radius:2px;display:flex;gap:12px;align-items:flex-start">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--gold);line-height:1;flex-shrink:0">"</div>
+        <div>
+          <p style="font-family:'Cormorant Garamond',serif;font-size:15px;font-style:italic;color:var(--dark);line-height:1.6;margin-bottom:6px">${p.founderNote}</p>
+          <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">— Team GOB</div>
+        </div>
+      </div>` : ''}
     </div>
   `;
 
   const contentHtml = `
     <div>
+      ${nutrientBarsHtml}
+
       <div style="margin-bottom:24px">
         <div style="font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--dark);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--cream-mid)">Key Benefits</div>
         ${benefitsHtml}
       </div>
-      
+
+      ${p.health ? `<div style="margin-bottom:24px;background:var(--cream);border-left:3px solid var(--teal);padding:16px 18px;border-radius:2px">
+        <div style="font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--dark);margin-bottom:12px;display:flex;align-items:center;gap:6px"><span style="font-size:14px">🩺</span> How This Helps &amp; Digestibility</div>
+        ${(p.healthPoints && p.healthPoints.length > 0) ? `<div style="display:flex;flex-direction:column;gap:9px;margin-bottom:12px">${p.healthPoints.map(pt => `<div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--teal);font-size:13px;flex-shrink:0;margin-top:1px">✓</span><span style="font-size:12px;color:var(--dark);line-height:1.55;font-weight:600">${pt}</span></div>`).join('')}</div>` : ''}
+        <p style="font-size:12px;color:var(--muted);line-height:1.8">${p.health}</p>
+      </div>` : ''}
+
       ${p.feeding ? `<div style="margin-bottom:24px"><div style="font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--dark);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--cream-mid)">Feeding Guide</div><p style="font-size:13px;color:var(--muted);line-height:1.8">${p.feeding}</p></div>` : ''}
       
       ${howMadeInfo}
+
+      ${p.originStory ? `<div style="margin-top:24px">
+        <div style="font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--dark);margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--cream-mid)">Where It's From &amp; Why It's The Only Ingredient</div>
+        ${sourcingMapHtml}
+        <p style="font-size:13px;color:var(--muted);line-height:1.8;margin-bottom:20px">${p.originStory}</p>
+        <div class="gob-grid-3">
+          ${originSteps.map((s,si) => `<div style="padding-top:14px;border-top:2px solid var(--gold)">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--gold);margin-bottom:6px">0${si+1}</div>
+            <div style="font-size:10px;font-weight:700;color:var(--dark);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px">${s.title}</div>
+            <div style="font-size:11px;color:var(--muted);line-height:1.55">${s.text}</div>
+          </div>`).join('')}
+        </div>
+      </div>` : ''}
+
       ${storageInfo}
-      
+
       ${(p.tags && p.tags.length > 0) ? `<div style="margin-top:24px;display:flex;gap:8px;flex-wrap:wrap">${p.tags.map(t => `<span style="background:var(--cream);padding:6px 12px;font-size:11px;color:var(--muted);border-radius:2px">${t}</span>`).join('')}</div>` : ''}
+
+      ${(p.faqs && p.faqs.length > 0) ? `<div style="margin-top:24px">
+        <div style="font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--dark);margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--cream-mid)">Real Questions, Real Answers</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          ${p.faqs.map((f, fi) => `
+            <div style="border-bottom:1px solid var(--cream-mid)">
+              <button onclick="toggleProductFaq(this)" style="width:100%;text-align:left;background:none;border:none;padding:14px 4px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;font-family:'Jost',sans-serif;font-size:13px;font-weight:600;color:var(--dark)">
+                <span>${f.q}</span>
+                <span class="faq-caret" style="flex-shrink:0;color:var(--gold);font-size:12px;transition:transform .2s">▾</span>
+              </button>
+              <div class="faq-answer" style="display:none;padding:0 4px 14px;font-size:12px;color:var(--muted);line-height:1.7">${f.a}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>` : ''}
     </div>
   `;
   
@@ -9622,12 +10196,98 @@ function updateProductImage(idx, p) {
   
   // Load related products and blogs
   renderRelatedProducts(idx);
-  renderBlogs();
+  renderBlogs(p);
+  renderSpecSheet(p);
   renderSafetyCard(p);
   renderLabelTest(p);
   
   showPage('product');
   window.scrollTo(0, 0);
+}
+
+function toggleProductFaq(btn) {
+  var answer = btn.nextElementSibling;
+  var caret = btn.querySelector('.faq-caret');
+  var isOpen = answer.style.display === 'block';
+  answer.style.display = isOpen ? 'none' : 'block';
+  if (caret) caret.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+}
+
+// ── NUTRIENT LEVEL MAP — turns qualitative nutrient words into bar-chart % ──
+const NUTRIENT_LEVEL_MAP = {
+  'very high':95,'very low':10,'high':80,'low':25,'rich':78,'natural':60,'zero':3,
+  'complete':100,'balanced':70,'safe':92,'light':35,'moderate':55,'dense':85,'novel':65,
+  'omega-3':78,'premium':88,'mixed':50,'varied':50
+};
+function nutrientLevelPct(val) {
+  if (!val) return null;
+  var key = String(val).toLowerCase().trim();
+  if (NUTRIENT_LEVEL_MAP.hasOwnProperty(key)) return NUTRIENT_LEVEL_MAP[key];
+  return null;
+}
+
+// ── PROTEIN ICON — detects the actual animal from the product name, so the
+// sourcing map/steps show chicken for chicken, goat for goat, buffalo for
+// buffalo and fish for fish, rather than one generic icon per category.
+function getProteinIcon(p) {
+  var name = (p.name || '').toLowerCase();
+  if (name.indexOf('chicken') > -1) return '🐔';
+  if (name.indexOf('buff') > -1) return '🐃';
+  if (name.indexOf('goat') > -1) return '🐐';
+  if (name.indexOf('quail') > -1) return '🐦';
+  if (p.filter === 'fish') return '🐟';
+  if (p.filter === 'wholeprey') return '🐦';
+  if (p.filter === 'bundle') return '🎁';
+  return '🥩';
+}
+
+const SOURCE_BY_FILTER = {
+  jerky: 'Indian poultry & livestock farms',
+  chew: 'Indian poultry & goat farms',
+  organ: 'Indian poultry & goat farms',
+  fish: 'Indian coastal waters',
+  wholeprey: 'Indian quail farms',
+  bundle: 'Mixed — see treats inside',
+};
+const BESTFOR_BY_FILTER = {
+  fish: 'Dogs & cats',
+  bundle: 'Dogs new to natural treats',
+};
+
+// ── RELATED ARTICLES — maps product category to relevant indices in the
+// real `articles` array (the ones with working openArt() links), so the
+// product page can surface genuinely relevant reading instead of a generic list.
+const ARTICLE_INDICES_BY_FILTER = {
+  jerky: [0, 3],       // Why Single-Ingredient..., The 7-Day Transition Plan...
+  chew: [3, 6],        // The 7-Day Transition Plan..., How to Store Dehydrated Treats...
+  organ: [1, 2],       // The Hidden Truth..., 10 Human Foods...
+  fish: [5, 1],        // Why Fish Treats Are the Most Underrated..., The Hidden Truth...
+  wholeprey: [0, 1],   // Why Single-Ingredient..., The Hidden Truth...
+  bundle: [4, 3],      // The New Dog Parent's Guide..., The 7-Day Transition Plan...
+};
+
+function renderSpecSheet(p) {
+  var el = document.getElementById('product-detail-specsheet');
+  if (!el) return;
+  var d = getDehydrationInfo(p.name);
+  var source = SOURCE_BY_FILTER[p.filter] || 'Indian farms & suppliers';
+  var method = d ? ('Slow-dehydrated, ' + d.tempC + '°C · ' + d.hours) : 'Slow dehydration, low heat';
+  var pack = (p.weight || 'Standard pack') + ' · Vacuum-sealed';
+  var bestFor = BESTFOR_BY_FILTER[p.filter] || 'Dogs, all life stages';
+  var tiles = [
+    {icon:'🌍', label:'Source', val: source},
+    {icon:'🌡️', label:'Method', val: method},
+    {icon:'📦', label:'Pack', val: pack},
+    {icon:'🐾', label:'Best For', val: bestFor},
+  ];
+  el.innerHTML = `
+    <div style="background:var(--white);border:1px solid var(--cream-mid);padding:20px 22px;border-radius:4px">
+      <div style="font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Spec Sheet</div>
+      <div>
+        ${tiles.map(function(t, ti){ return '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:12px 0' + (ti < tiles.length - 1 ? ';border-bottom:1px solid var(--cream-mid)' : '') + '"><span style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);flex-shrink:0">' + t.label + '</span><span style="font-size:12px;font-weight:600;color:var(--dark);text-align:right;line-height:1.4">' + t.val + '</span></div>'; }).join('')}
+      </div>
+    </div>
+  `;
 }
 
 function renderSafetyCard(p) {
@@ -9816,26 +10476,57 @@ const blogs = [
   }
 ];
 
-function renderBlogs() {
+function renderBlogs(p) {
   console.log('🔵 renderBlogs called');
   const blogsGrid = document.getElementById('blogs-grid');
   console.log('📍 blogsGrid element:', blogsGrid);
-  
+
   if (!blogsGrid) {
     console.log('❌ blogs-grid element not found!');
     return;
   }
-  blogsGrid.innerHTML = blogs.map(blog => `
-    <div style="background:var(--cream);padding:0;border-radius:2px;overflow:hidden;transition:all .2s;cursor:pointer" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,.1)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
-      <div style="aspect-ratio:16/9;background:linear-gradient(135deg,var(--gold) 0%,var(--brown) 100%);display:flex;align-items:center;justify-content:center;font-size:48px">
-        ${blog.image}
+
+  // Product-relevant reading: when the product has a matching filter/category,
+  // pull the genuinely relevant posts from the real `articles` array
+  // (these link to the full article via openArt()) instead of the generic list.
+  var relevantIdx = (p && p.filter && ARTICLE_INDICES_BY_FILTER[p.filter]) ? ARTICLE_INDICES_BY_FILTER[p.filter] : null;
+
+  var headingEl = document.getElementById('blogs-heading');
+
+  if (relevantIdx) {
+    if (headingEl) headingEl.textContent = 'Related Reading';
+    blogsGrid.innerHTML = relevantIdx.map(function(idx) {
+      var a = articles[idx];
+      if (!a) return '';
+      var plainBody = a.body.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+      var excerpt = plainBody.length > 110 ? plainBody.slice(0, 110) + '…' : plainBody;
+      return `
+        <div onclick="openArt(${idx})" style="background:var(--cream);padding:0;border-radius:2px;overflow:hidden;transition:all .2s;cursor:pointer" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,.1)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
+          <div style="aspect-ratio:16/9;background:linear-gradient(135deg,var(--gold) 0%,var(--brown) 100%);display:flex;align-items:center;justify-content:center;font-size:48px">
+            ${a.emoji}
+          </div>
+          <div style="padding:20px">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-bottom:8px">${a.tag}</div>
+            <h3 style="font-size:14px;font-weight:600;color:var(--dark);margin-bottom:8px;line-height:1.4">${a.title}</h3>
+            <p style="font-size:12px;color:var(--muted);line-height:1.5;margin:0">${excerpt}</p>
+          </div>
+        </div>
+      `;
+    }).join('');
+  } else {
+    if (headingEl) headingEl.textContent = 'Our Blogs';
+    blogsGrid.innerHTML = blogs.map(blog => `
+      <div style="background:var(--cream);padding:0;border-radius:2px;overflow:hidden;transition:all .2s;cursor:pointer" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,.1)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
+        <div style="aspect-ratio:16/9;background:linear-gradient(135deg,var(--gold) 0%,var(--brown) 100%);display:flex;align-items:center;justify-content:center;font-size:48px">
+          ${blog.image}
+        </div>
+        <div style="padding:20px">
+          <h3 style="font-size:14px;font-weight:600;color:var(--dark);margin-bottom:8px;line-height:1.4">${blog.title}</h3>
+          <p style="font-size:12px;color:var(--muted);line-height:1.5;margin:0">${blog.excerpt}</p>
+        </div>
       </div>
-      <div style="padding:20px">
-        <h3 style="font-size:14px;font-weight:600;color:var(--dark);margin-bottom:8px;line-height:1.4">${blog.title}</h3>
-        <p style="font-size:12px;color:var(--muted);line-height:1.5;margin:0">${blog.excerpt}</p>
-      </div>
-    </div>
-  `).join('');
+    `).join('');
+  }
   console.log('✓ Blogs rendered');
 }
 
@@ -11013,7 +11704,7 @@ function renderRecentlyViewed() {
     var sz=(p.sizes||[])&&(p.sizes||[])[0];
     var price=sz?sz.price:'-';
     var h='<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--cream-mid)">';
-    h+='<img src="'+(p.img||'')+'" style="width:42px;height:42px;object-fit:cover;border-radius:2px;flex-shrink:0">';
+    h+='<img src="'+(p.img||'')+'" alt="'+escapeHtml(p.name||'')+'" style="width:42px;height:42px;object-fit:cover;border-radius:2px;flex-shrink:0">';
     h+='<div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600;color:var(--dark);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+p.name+'</div>';
     h+='<div style="font-size:11px;color:var(--muted)">₹'+price+'</div></div>';
     h+='<button onclick="addCart(null,'+idx+',0);renderRecentlyViewed()" style="background:var(--dark);color:var(--white);border:none;padding:6px 12px;font-size:10px;font-weight:700;cursor:pointer;flex-shrink:0">+ Add</button>';
@@ -11834,7 +12525,7 @@ function openDbBlog(slug) {
   overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);display:flex;align-items:flex-start;justify-content:center;z-index:2003;padding:40px 16px;overflow-y:auto';
   overlay.innerHTML = '<div style="background:var(--white);max-width:720px;width:100%;border-radius:8px;overflow:hidden;margin-bottom:40px">' +
     '<div style="position:relative">' +
-    (blog.cover_image ? '<div style="width:100%;aspect-ratio:16/9;overflow:hidden;background:var(--dark)"><img src="'+escapeHtml(blog.cover_image)+'" style="width:100%;height:100%;object-fit:contain;display:block"></div>' : '') +
+    (blog.cover_image ? '<div style="width:100%;aspect-ratio:16/9;overflow:hidden;background:var(--dark)"><img src="'+escapeHtml(blog.cover_image)+'" alt="'+escapeHtml(blog.title||'')+'" style="width:100%;height:100%;object-fit:contain;display:block"></div>' : '') +
     '<button onclick="closeDbBlog()" style="position:absolute;top:16px;right:16px;background:rgba(0,0,0,.6);color:#fff;border:none;border-radius:50%;width:36px;height:36px;font-size:18px;cursor:pointer">&#10005;</button>' +
     '</div>' +
     '<div style="padding:40px">' +
@@ -12094,7 +12785,7 @@ function loadStrays() {
     container.innerHTML = strays.map(function(s) {
       var img = (s.images && s.images.length > 0) ? s.images[0] : '';
       var safeName = escapeHtml(s.name || '');
-      var moreImgs = (s.images && s.images.length > 1) ? '<div style="display:flex;gap:4px;margin-top:8px">' + s.images.slice(1,4).map(function(u){ return '<img src="'+escapeHtml(u)+'" style="width:48px;height:48px;object-fit:cover;border-radius:4px">'; }).join('') + '</div>' : '';
+      var moreImgs = (s.images && s.images.length > 1) ? '<div style="display:flex;gap:4px;margin-top:8px">' + s.images.slice(1,4).map(function(u){ return '<img src="'+escapeHtml(u)+'" alt="Customer review photo" style="width:48px;height:48px;object-fit:cover;border-radius:4px">'; }).join('') + '</div>' : '';
       return '<div style="background:var(--white);border:1px solid var(--cream-mid);border-radius:8px;overflow:hidden">' +
         (img ? '<img src="'+escapeHtml(img)+'" alt="'+safeName+'" style="width:100%;height:200px;object-fit:cover">' : '<div style="width:100%;height:200px;background:var(--cream);display:flex;align-items:center;justify-content:center;font-size:48px">&#128054;</div>') +
         '<div style="padding:16px"><h4 style="font-size:16px;font-weight:700;margin:0 0 4px">' + safeName + '</h4>' +
