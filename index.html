@@ -954,7 +954,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
 .star-half { color: var(--gold); }
 </style>
 
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script defer src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.43.4/dist/umd/supabase.min.js"></script>
 <script>
   // Initialize Supabase client
@@ -1440,7 +1440,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
         <div style="margin-top:32px"><a class="btn-outline-light" onclick="navigateTo('about')" style="display:inline-flex">Read Our Full Story &rarr;</a></div>
       </div>
       <div class="about-strip-visual">
-        <img src="https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/logo.jpeg" alt="Game of Bones" onerror="this.style.display='none'">
+        <img src="https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/logo.jpeg" alt="Game of Bones" loading="lazy" onerror="this.style.display='none'">
         <p class="about-quote">&ldquo;If you wouldn&rsquo;t eat it yourself, your dog shouldn&rsquo;t have to.&rdquo;</p>
       </div>
     </div>
@@ -5010,6 +5010,15 @@ function showPage(id) {
     loadSavedAddresses();
     renderSavedAddresses();
     checkLoyaltyAtCheckout();
+    if (typeof cartItems !== 'undefined' && cartItems.length) {
+      trackMetaEvent('InitiateCheckout', {
+        content_ids: cartItems.map(function(i){ return String(i.name || '').toLowerCase().replace(/[&\s]+/g, '-'); }),
+        content_type: 'product',
+        num_items: cartItems.reduce(function(n,i){ return n + (i.qty || 1); }, 0),
+        value: cartItems.reduce(function(s,i){ return s + (i.price || 0) * (i.qty || 1); }, 0),
+        currency: 'INR'
+      });
+    }
   }
 }
 function showShopCategory(filter) {
@@ -6807,6 +6816,7 @@ function addTrialBox(size) {
     price: box.price,
     img: ''
   });
+  trackMetaEvent('AddToCart', { content_ids: [label.toLowerCase() + '-treat-box'], content_type: 'product', content_name: label + ' Treat Box', value: box.price, currency: 'INR' });
   renderCartDrawer();
   updateCartBadge();
   showPage('cart');
@@ -7836,6 +7846,13 @@ function addBundleToCart(bundleId) {
   });
 
   _saveCart();
+  trackMetaEvent('AddToCart', {
+    content_ids: resolved.map(function(r){ return r.prod.name.toLowerCase().replace(/[&\s]+/g, '-'); }),
+    content_type: 'product',
+    content_name: bundle.name,
+    value: bundlePrice,
+    currency: 'INR'
+  });
   updateCartBadge();
   renderCartDrawer();
   showCartToast('🎁 ' + bundle.name + ' added to cart!', 'success');
@@ -8494,6 +8511,7 @@ function addCart(btn, productIdx, sizeIdx) {
     cartItems.push({name: p.name, img: p.img, sizeLabel: size.label, price: size.price, qty: 1});
   }
   _saveCart();
+  trackMetaEvent('AddToCart', { content_ids: [p.name.toLowerCase().replace(/[&\s]+/g, '-')], content_type: 'product', content_name: p.name, value: size.price, currency: 'INR' });
   addedProductIdxs.add(productIdx);
   updateCartBadge();
   showCartToast(p.name + ' added to cart 🐾', 'success');
@@ -8529,6 +8547,7 @@ function addCartModal() {
     cartItems.push({name: p.name, img: p.img, sizeLabel: size.label, price: size.price, qty: 1});
   }
   _saveCart();
+  trackMetaEvent('AddToCart', { content_ids: [p.name.toLowerCase().replace(/[&\s]+/g, '-')], content_type: 'product', content_name: p.name, value: size.price, currency: 'INR' });
   updateCartBadge();
   // Unlock FBT bundle discount now that main product is in cart
   fbtMainProductAdded = true;
@@ -8828,6 +8847,7 @@ function addUpsellToCart() {
   if (existing) { existing.qty++; } else {
     cartItems.push({name: p.name, img: p.img, sizeLabel: p.sizes[0].label, price: p.sizes[0].price, qty: 1});
   }
+  trackMetaEvent('AddToCart', { content_ids: [p.name.toLowerCase().replace(/[&\s]+/g, '-')], content_type: 'product', content_name: p.name, value: p.sizes[0].price, currency: 'INR' });
   updateCartBadge();
   renderCartDrawer();
   showCartToast(p.name + ' added! 🐾', 'success');
@@ -9385,6 +9405,11 @@ function addFbtBundleToCart() {
     }
   });
 
+  trackMetaEvent('AddToCart', {
+    content_ids: selectedKeys.map(function(k){ var pr = products[parseInt(k)]; return pr ? pr.name.toLowerCase().replace(/[&\s]+/g, '-') : ''; }).filter(Boolean),
+    content_type: 'product',
+    currency: 'INR'
+  });
   updateCartBadge();
   renderCartDrawer();
   // Visual confirm
@@ -9409,6 +9434,7 @@ function quickAddFbt(idx) {
   if (existing > -1) { cartItems[existing].qty++; }
   else { cartItems.push({ name: prod.name, size: prod.sizes[0].label, price: prod.sizes[0].price, img: prod.img || '', qty: 1, emoji: prod.emoji || '🍖' }); }
   _saveCart();
+  trackMetaEvent('AddToCart', { content_ids: [prod.name.toLowerCase().replace(/[&\s]+/g, '-')], content_type: 'product', content_name: prod.name, value: prod.sizes[0].price, currency: 'INR' });
   updateCartBadge();
   renderCartDrawer();
   var btn = document.getElementById('fbt-btn-' + idx);
@@ -9707,16 +9733,17 @@ function renderProducts(items, containerId) {
       imgUrl = SUPABASE_IMG_URL + p.img;
     }
     
+    const _slug = p.name.toLowerCase().replace(/[&\s]+/g, '-');
     return `
     <div class="prod-card" onclick="openProductPage(${globalIdx})">
-      <div class="prod-img-wrap">
+      <a class="prod-img-wrap" href="?p=${_slug}" onclick="event.preventDefault();event.stopPropagation();openProductPage(${globalIdx})" style="display:block;position:relative">
         <img src="${imgUrl}" alt="${p.name}" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23f0e6d2%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2224%22%3E🐾%3C/text%3E%3C/svg%3E'">
         <span class="prod-badge ${p.badgeCls}">${p.badge}</span>
         <button class="prod-fav" onclick="event.stopPropagation();toggleWishlist(this,${globalIdx})">${isWishlisted(globalIdx)?'♥':'♡'}</button>
-      </div>
+      </a>
       <div class="prod-body">
         <div class="prod-cat">${p.cat}</div>
-        <h3 class="prod-name">${p.name}</h3>
+        <h3 class="prod-name"><a href="?p=${_slug}" onclick="event.preventDefault();event.stopPropagation();openProductPage(${globalIdx})" style="color:inherit;text-decoration:none">${p.name}</a></h3>
         ${p.weight ? `<div class="prod-weight">⚖️ ${p.weight} per pack</div>` : ''}
         <p class="prod-desc">${p.desc}</p>
         <div class="prod-tags">${p.tags.map(t=>`<span class="p-tag">${t}</span>`).join('')}</div>
@@ -9827,6 +9854,12 @@ function _seoSet(selector, attr, value) {
   if (el) el.setAttribute(attr, value);
 }
 
+function trackMetaEvent(name, params) {
+  try {
+    if (typeof fbq !== 'undefined') fbq('track', name, params);
+  } catch (e) { console.error('trackMetaEvent error', e); }
+}
+
 function updateProductSEO(p) {
   if (!p) return;
   try {
@@ -9838,6 +9871,8 @@ function updateProductSEO(p) {
     var desc = String(rawDesc).replace(/\s+/g, ' ').trim();
     if (desc.length > 160) desc = desc.slice(0, 157) + '...';
     var img = p.img && p.img.indexOf('http') === 0 ? p.img : (SUPABASE_IMG_URL + (p.img || ''));
+
+    trackMetaEvent('ViewContent', { content_ids: [slug], content_type: 'product', content_name: p.name, value: price, currency: 'INR' });
 
     document.title = title;
     _seoSet('meta[name="description"]', 'content', desc);
@@ -9886,6 +9921,34 @@ function updateProductSEO(p) {
       document.head.appendChild(ldScript);
     }
     ldScript.textContent = JSON.stringify(ld);
+
+    // Per-product FAQPage schema (built from this product's own FAQs)
+    var faqLdScript = document.getElementById('product-faq-ld-json');
+    if (Array.isArray(p.faqs) && p.faqs.length > 0) {
+      var faqLd = {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: p.faqs.map(function(f) {
+          return {
+            '@type': 'Question',
+            name: String(f.q || '').replace(/<[^>]*>/g, ''),
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: String(f.a || '').replace(/<[^>]*>/g, '')
+            }
+          };
+        })
+      };
+      if (!faqLdScript) {
+        faqLdScript = document.createElement('script');
+        faqLdScript.type = 'application/ld+json';
+        faqLdScript.id = 'product-faq-ld-json';
+        document.head.appendChild(faqLdScript);
+      }
+      faqLdScript.textContent = JSON.stringify(faqLd);
+    } else if (faqLdScript) {
+      faqLdScript.remove();
+    }
   } catch (e) { console.error('updateProductSEO error', e); }
 }
 
@@ -9904,6 +9967,8 @@ function resetPageSEO() {
     _seoSet('meta[name="twitter:image"]', 'content', DEFAULT_SEO.image);
     var ldScript = document.getElementById('product-ld-json');
     if (ldScript) ldScript.remove();
+    var faqLdScript = document.getElementById('product-faq-ld-json');
+    if (faqLdScript) faqLdScript.remove();
   } catch (e) { console.error('resetPageSEO error', e); }
 }
 
@@ -10423,15 +10488,16 @@ function updateRelatedProductsDisplay() {
       imgUrl = 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/' + prod.img;
     }
     
+    const _relSlug = prod.name.toLowerCase().replace(/[&\s]+/g, '-');
     return `
-      <div onclick="openProductPage(${prodIdx})" style="cursor:pointer;transition:all .2s">
+      <a href="?p=${_relSlug}" onclick="event.preventDefault();openProductPage(${prodIdx})" style="cursor:pointer;transition:all .2s;display:block;color:inherit;text-decoration:none">
         <div style="aspect-ratio:1;background:var(--white);border:1px solid var(--cream-mid);margin-bottom:8px;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:4px">
           <img src="${imgUrl}" alt="${prod.name}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'">
         </div>
         <h3 style="font-size:13px;font-weight:600;color:var(--dark);margin-bottom:4px;line-height:1.3">${prod.name}</h3>
         <div style="font-size:11px;color:var(--gold);margin-bottom:8px">${stars}</div>
         <div style="font-size:10px;color:var(--muted)">${ratingText}</div>
-      </div>
+      </a>
     `;
   }).join('');
 }
@@ -13246,7 +13312,7 @@ window.addEventListener('popstate', function(event) {
   <div class="f-inner">
     <div class="f-top">
       <div class="f-brand">
-        <img src="https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/logo.jpeg" alt="Game of Bones" style="height:36px;margin-bottom:12px" onerror="this.style.display='none'">
+        <img src="https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/logo.jpeg" alt="Game of Bones" style="height:36px;margin-bottom:12px" loading="lazy" onerror="this.style.display='none'">
         <h3>Game of Bones</h3>
         <p>Dehydrated dog treats made in Kalyan, Maharashtra. Single ingredient. No preservatives. Real food for real dogs.</p>
         <div style="margin-top:20px">
