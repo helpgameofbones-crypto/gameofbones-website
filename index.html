@@ -10581,7 +10581,7 @@ function renderBlogs(p) {
     }).join('');
   } else {
     if (headingEl) headingEl.textContent = 'Our Blogs';
-    blogsGrid.innerHTML = blogs.map(blog => `
+    blogsGrid.innerHTML = (window._dbBlogs && window._dbBlogs.length ? window._dbBlogs : blogs).map(blog => `
       <div style="background:var(--cream);padding:0;border-radius:2px;overflow:hidden;transition:all .2s;cursor:pointer" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,.1)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
         <div style="aspect-ratio:16/9;background:linear-gradient(135deg,var(--gold) 0%,var(--brown) 100%);display:flex;align-items:center;justify-content:center;font-size:48px">
           ${blog.image}
