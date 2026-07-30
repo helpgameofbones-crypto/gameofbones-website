@@ -8210,7 +8210,7 @@ function _finaliseOrder(ref, phoneVal, orderItems, razorpayPaymentId) {
         contents: itemsWithDetails.map(function(item) {
           return { id: item.product_name, quantity: item.quantity, item_price: item.pack_price };
         })
-      });
+            }, { eventID: ref });
     }
 
     // ═══════════════════════ SEND ORDER CONFIRMATION EMAIL (non-blocking) ═══════════════════════
