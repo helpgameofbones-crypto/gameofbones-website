@@ -5086,8 +5086,10 @@ function trackByPhone() {
   phone = phone.slice(-10);
   result.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted)">&#9203; Loading your orders...</div>';
 
-  fetch(SUPABASE_URL + '/rest/v1/orders?select=ref,status,grand_total,total_amount,items,created_at,delhivery_awb,payment_method&customer_phone=ilike.*' + phone + '&order=created_at.desc&limit=20', {
-    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
+  fetch(SUPABASE_URL + '/rest/v1/rpc/orders_by_phone_recent', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY },
+    body: JSON.stringify({ p_phone: phone, p_limit: 20 })
   })
   .then(function(res) { return res.json(); })
   .then(function(orders) {
@@ -7136,8 +7138,10 @@ function applyDiscount() {
         updateCheckoutTotals();
         return;
       }
-      fetch(SUPABASE_URL + '/rest/v1/orders?select=id,customer_phone,customer_email&coupon_code=eq.' + encodeURIComponent(code), {
-        headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
+      fetch(SUPABASE_URL + '/rest/v1/rpc/check_coupon_usage', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY },
+        body: JSON.stringify({ p_coupon_code: code })
       })
       .then(function(r) { return r.json(); })
       .then(function(pastOrders) {
@@ -7380,12 +7384,14 @@ function checkCustomerPurchaseHistory(productName) {
   _currentCustomerPhone = phone;
   
   // Fetch orders from Supabase to check if they bought this product
-  fetch(SUPABASE_URL + '/rest/v1/orders?customer_phone=eq.' + phone + '&select=items', {
-    method: 'GET',
+  fetch(SUPABASE_URL + '/rest/v1/rpc/check_phone_order_items', {
+    method: 'POST',
     headers: {
+      'Content-Type': 'application/json',
       'apikey': SUPABASE_ANON_KEY,
       'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
-    }
+    },
+    body: JSON.stringify({ p_phone: phone })
   })
   .then(r => r.json())
   .then(data => {
@@ -10850,8 +10856,10 @@ function verifyReviewPurchase() {
   // 2) There is no separate `order_items` table — line items live in the
   //    `items` jsonb column on each order, keyed by `product_name` (not a
   //    numeric product_id), so match against that instead.
-  fetch('https://syuostlqzzinigqwjzap.supabase.co/rest/v1/orders?select=id,customer_phone,items&status=neq.cancelled&order=created_at.desc&limit=1000', {
-    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
+  fetch('https://syuostlqzzinigqwjzap.supabase.co/rest/v1/rpc/orders_bulk_stats', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY },
+    body: JSON.stringify({ p_limit: 1000 })
   }).then(r => r.json()).then(allOrders => {
     const orders = Array.isArray(allOrders) ? allOrders : [];
     const myOrders = orders.filter(o => decryptPhone(o.customer_phone || '').replace(/\D/g,'').slice(-10) === phoneLast10);
@@ -11960,8 +11968,10 @@ function doLogin(){
   // Best-effort: pull this customer's past orders so reviews can be marked
   // "verified purchase" and the account shows order count. Non-blocking.
   try{
-    fetch(SUPABASE_URL+'/rest/v1/orders?select=items&customer_phone=ilike.*'+phone,{
-      headers:{apikey:SUPABASE_ANON_KEY,Authorization:'Bearer '+SUPABASE_ANON_KEY}
+    fetch(SUPABASE_URL+'/rest/v1/rpc/orders_items_by_phone_pattern',{
+      method:'POST',
+      headers:{'Content-Type':'application/json',apikey:SUPABASE_ANON_KEY,Authorization:'Bearer '+SUPABASE_ANON_KEY},
+      body: JSON.stringify({ p_phone: phone })
     }).then(function(r){return r.json();}).then(function(rows){
       if(Array.isArray(rows)){
         currentUser.orderCount=rows.length;
@@ -12035,8 +12045,10 @@ function trackOrderByRef(ref) {
   var result = document.getElementById("trackResult");
   if (!result) return;
   result.innerHTML = "<p style='color:var(--muted);font-size:13px'>Loading your order...</p>";
-  fetch(SUPABASE_URL + '/rest/v1/orders?select=ref,status,grand_total,total_amount,items,created_at,delhivery_awb,payment_method&ref=eq.' + encodeURIComponent(ref), {
-    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
+  fetch(SUPABASE_URL + '/rest/v1/rpc/get_order_by_ref', {
+    method: 'POST',
+    body: JSON.stringify({ p_ref: ref }),
+    headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
   })
   .then(function(r){ return r.json(); })
   .then(function(orders) {
@@ -12081,8 +12093,10 @@ function checkRewards() {
   var phoneLast10 = phone.slice(-10);
 
   Promise.all([
-    fetch(SUPABASE_URL + '/rest/v1/orders?select=id,grand_total,total_amount,status,created_at,customer_phone&status=neq.cancelled&order=created_at.desc&limit=1000', {
-      headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
+    fetch(SUPABASE_URL + '/rest/v1/rpc/orders_bulk_stats', {
+      method: 'POST',
+      body: JSON.stringify({ p_limit: 1000 }),
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
     }).then(function(r){ return r.json(); }).then(function(all){
       // customer_phone is stored ENCRYPTED (see encryptData() above) — it can never be
       // matched with a server-side ilike filter against plaintext digits (that was the
@@ -12700,7 +12714,7 @@ async function checkReturnEligibility() {
 
   try {
     var encPhone = encryptData(phone);
-    var res = await supabase.from('orders').select('*').eq('ref', orderRef);
+    var res = await supabase.rpc('get_order_by_ref', { p_ref: orderRef });
     var order = (res.data || []).find(function(o) {
       return o.customer_phone === encPhone || o.customer_phone === phone;
     });
@@ -12984,8 +12998,10 @@ function checkLoyaltyAtCheckout() {
     // "Loyalty Points Available" box never appeared at checkout). Fetch recent orders
     // and filter client-side by decrypting each phone and comparing the last 10 digits,
     // same approach already used in checkRewards() above.
-    fetch(SUPABASE_URL + '/rest/v1/orders?select=grand_total,total_amount,status,customer_phone&status=neq.cancelled&order=created_at.desc&limit=1000', {
-      headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
+    fetch(SUPABASE_URL + '/rest/v1/rpc/orders_bulk_stats', {
+      method: 'POST',
+      body: JSON.stringify({ p_limit: 1000 }),
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
     }).then(function(r){ return r.json(); }).then(function(all){
       var list = Array.isArray(all) ? all : [];
       return list.filter(function(o){
@@ -13383,10 +13399,7 @@ window.addEventListener('popstate', function(event) {
     try {
       // Fetch orders that match BOTH phone AND email (not phone alone)
       const { data: orders } = await supabase
-        .from('orders')
-        .select('*')
-        .eq('customer_phone', encryptData(phone))
-        .eq('customer_email', encryptData(email));
+        .rpc('track_orders', { p_phone: encryptData(phone), p_email: encryptData(email) });
 
       if (!orders || orders.length === 0) {
         alert('❌ No matching account found for that phone number and email combination. Please double-check both fields.');
@@ -13456,32 +13469,16 @@ window.addEventListener('popstate', function(event) {
       const encryptedPhone = encryptData(phone);
       const encryptedEmail = encryptData(email);
 
-      // First confirm a matching record actually exists before mutating anything.
-      const { data: matchingOrders, error: lookupError } = await supabase
-        .from('orders')
-        .select('id')
-        .eq('customer_phone', encryptedPhone)
-        .eq('customer_email', encryptedEmail);
+      // Atomic server-side check + anonymize (replaces the old two-step
+      // direct-table check-then-update, which required broad table access).
+      const { data: deletedCount, error: deleteError } = await supabase
+        .rpc('gdpr_delete_my_data', { p_phone: encryptedPhone, p_email: encryptedEmail });
 
-      if (lookupError) throw lookupError;
-      if (!matchingOrders || matchingOrders.length === 0) {
+      if (deleteError) throw deleteError;
+      if (!deletedCount || deletedCount === 0) {
         alert('❌ No matching account found for that phone number and email combination. Please double-check both fields.');
         return;
       }
-
-      const { error: updateError } = await supabase
-        .from('orders')
-        .update({
-          customer_phone: 'DELETED_' + Math.random().toString(36).slice(2, 10),
-          customer_email: null,
-          shipping_address: null,
-          csrf_token: null,
-          status: 'deleted'
-        })
-        .eq('customer_phone', encryptedPhone)
-        .eq('customer_email', encryptedEmail);
-      
-      if (updateError) throw updateError;
       
       // Clear form
       document.getElementById('co-phone').value = '';
