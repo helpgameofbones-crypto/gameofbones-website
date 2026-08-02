@@ -3399,6 +3399,14 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
                 <div id="cartPageShipFill" style="height:100%;background:var(--gold);border-radius:3px;width:0%;transition:width .4s"></div>
               </div>
             </div>
+            <div id="cartCaptureBlockPage" style="margin-bottom:14px;padding:12px 14px;background:var(--cream);border:1px solid var(--cream-mid);border-radius:4px">
+              <div style="font-size:11px;font-weight:700;color:var(--dark);margin-bottom:8px">Get 10% off - enter your number to save this cart</div>
+              <div style="display:flex;gap:6px">
+                <input id="cartCapturePhonePage" type="tel" inputmode="numeric" placeholder="Mobile number" maxlength="10" style="flex:1;min-width:0;padding:9px 10px;font-size:12px;border:1px solid var(--cream-mid);border-radius:3px;background:var(--white)">
+                <button onclick="captureCartContact('Page')" style="background:var(--gold);border:none;padding:0 16px;font-size:11px;font-weight:700;letter-spacing:.04em;border-radius:3px;cursor:pointer;color:var(--dark);white-space:nowrap">Unlock</button>
+              </div>
+              <div id="cartCaptureMsgPage" style="font-size:11px;margin-top:6px;display:none"></div>
+            </div>
             <p style="font-size:11px;color:var(--muted);margin-bottom:16px">Taxes and discounts calculated at checkout.</p>
             <button class="btn-gold" onclick="goToCheckout()" style="width:100%;padding:15px;font-size:13px;letter-spacing:.1em">Proceed to Checkout →</button>
             <button onclick="showPage('shop')" style="width:100%;background:none;border:none;color:var(--muted);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;padding:10px;margin-top:6px">← Continue Shopping</button>
@@ -8638,9 +8646,10 @@ function _syncAbandonedCart() {
   } catch(e) { /* silent */ }
 }
 
-      function captureCartContact() {
-        var input = document.getElementById('cartCapturePhone');
-        var msg = document.getElementById('cartCaptureMsg');
+      function captureCartContact(suffix) {
+          suffix = suffix || '';
+          var input = document.getElementById('cartCapturePhone' + suffix);
+          var msg = document.getElementById('cartCaptureMsg' + suffix);
         if (!input) return;
         var phone = input.value.replace(/\D/g, '').slice(-10);
         if (phone.length !== 10) {
