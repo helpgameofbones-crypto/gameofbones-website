@@ -8170,7 +8170,13 @@ function _finaliseOrder(ref, phoneVal, orderItems, razorpayPaymentId) {
       'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
       'Prefer': 'return=minimal'
     },
-    body: JSON.stringify(orderPayload)
+    body: JSON.stringify(orderPayload),
+    // keepalive: lets this request finish even if the tab is backgrounded or
+    // closed right after Razorpay's success handler fires (e.g. customer
+    // switches apps immediately after paying on mobile) -- without this the
+    // browser can abort the in-flight save, leaving a captured payment with
+    // no order row (the exact failure that lost GOB-BUYG3U on 2 Aug).
+    keepalive: true
   })
   .then(function(res) { 
     console.log('Supabase response:', res.status);
@@ -8446,6 +8452,12 @@ function placeOrder() {
     },
     notes: {
       order_ref: ref,
+      // Only order_ref/address were sent before -- if the client-side save
+      // ever fails after a successful payment (see keepalive note above),
+      // the admin webhook can only self-heal an order from what's in these
+      // notes. Including the name here too means a self-healed order at
+      // least has a customer to call, not just a phone number and city.
+      customer_name: fname + ' ' + lname,
       address: (document.getElementById('co-addr1') ? document.getElementById('co-addr1').value : '') + ', ' +
                 (document.getElementById('co-city') ? document.getElementById('co-city').value : '') + ' ' +
                 pinEl.value
