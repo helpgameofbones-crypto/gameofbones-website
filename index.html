@@ -3129,6 +3129,14 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
         <div id="cartShipFill" style="height:100%;background:var(--gold);border-radius:3px;width:0%;transition:width .4s"></div>
       </div>
     </div>
+    <div id="cartCaptureBlock" style="margin-bottom:14px;padding:12px 14px;background:var(--cream);border:1px solid var(--cream-mid);border-radius:4px">
+      <div style="font-size:11px;font-weight:700;color:var(--dark);margin-bottom:8px">Get 10% off - enter your number to save this cart</div>
+      <div style="display:flex;gap:6px">
+        <input id="cartCapturePhone" type="tel" inputmode="numeric" placeholder="Mobile number" maxlength="10" style="flex:1;min-width:0;padding:9px 10px;font-size:12px;border:1px solid var(--cream-mid);border-radius:3px;background:var(--white)">
+        <button onclick="captureCartContact()" style="background:var(--gold);border:none;padding:0 16px;font-size:11px;font-weight:700;letter-spacing:.04em;border-radius:3px;cursor:pointer;color:var(--dark);white-space:nowrap">Unlock</button>
+      </div>
+      <div id="cartCaptureMsg" style="font-size:11px;margin-top:6px;display:none"></div>
+    </div>
     <button class="btn-gold" onclick="goToCheckout()" style="width:100%;padding:15px;font-size:13px;letter-spacing:.1em">Proceed to Checkout →</button>
     <button onclick="toggleCart()" style="width:100%;background:none;border:none;color:var(--muted);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;padding:10px;margin-top:6px">← Continue Shopping</button>
     <button onclick="if(confirm('Remove all items from your cart?')){clearCart();}" style="width:100%;background:none;border:none;color:#c0392b;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;padding:6px;opacity:.7">🗑 Clear Cart</button>
@@ -3176,9 +3184,9 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
       <!-- Breadcrumb -->
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:32px;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">
         <a onclick="navigateTo('shop')" style="cursor:pointer;color:var(--muted)">Shop</a>
-        <span>›</span>
+        <span>></span>
         <a onclick="showPage('cart')" style="cursor:pointer;color:var(--muted)">Cart</a>
-        <span>›</span>
+        <span>></span>
         <span style="color:var(--dark)">Checkout</span>
       </div>
 
@@ -3342,7 +3350,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
       <!-- Breadcrumb -->
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:32px;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">
         <a onclick="showPage('shop')" style="cursor:pointer;color:var(--muted)">Shop</a>
-        <span>›</span>
+        <span>></span>
         <span style="color:var(--dark)">Your Bowl</span>
       </div>
 
@@ -6918,6 +6926,7 @@ function renderCheckoutSummary() {
   var packVal = document.getElementById('co-packaging-val');
   if (packVal) packVal.textContent = clubOrder ? 'Clubbed together (eco-friendly) 🌿' : 'Packed separately';
   updateCheckoutTotals();
+      if (window._cartRecoveryCoupon && dc) { dc.value = window._cartRecoveryCoupon; applyDiscount(); }
 }
 
 function updateCheckoutTotals() {
@@ -8576,6 +8585,8 @@ function updateCartBadge() {
 // ── ABANDONED CART TRACKING ─────────────────────────────────────────────
 var _abandonedCartTimer = null;
 var _abandonedCartId = null;
+  var _cartCapturePhone = '';
+  var _cartCaptureEmail = '';
 function _debouncedAbandonedCartSync() {
   if (_abandonedCartTimer) clearTimeout(_abandonedCartTimer);
   _abandonedCartTimer = setTimeout(_syncAbandonedCart, 5000); // 5 sec debounce
@@ -8595,6 +8606,8 @@ function _syncAbandonedCart() {
     if (fnameEl && fnameEl.value) name = fnameEl.value.trim() + (lnameEl && lnameEl.value ? ' ' + lnameEl.value.trim() : '');
     if (!phone && currentUser && currentUser.phone) phone = currentUser.phone;
     if (!name && currentUser && currentUser.name) name = currentUser.name;
+        if (!phone && _cartCapturePhone) phone = _cartCapturePhone;
+      if (!email && _cartCaptureEmail) email = _cartCaptureEmail;
 
     var payload = {
       customer_phone: phone || null,
@@ -8624,6 +8637,40 @@ function _syncAbandonedCart() {
     }
   } catch(e) { /* silent */ }
 }
+
+      function captureCartContact() {
+        var input = document.getElementById('cartCapturePhone');
+        var msg = document.getElementById('cartCaptureMsg');
+        if (!input) return;
+        var phone = input.value.replace(/\D/g, '').slice(-10);
+        if (phone.length !== 10) {
+          if (msg) { msg.style.display = 'block'; msg.style.color = '#c0392b'; msg.textContent = 'Please enter a valid 10-digit mobile number.'; }
+          return;
+        }
+        _cartCapturePhone = phone;
+        if (msg) { msg.style.display = 'block'; msg.style.color = 'var(--muted)'; msg.textContent = 'Saving...'; }
+        var total = cartItems.reduce(function(s, i) { return s + (i.price || 0) * (i.qty || 1); }, 0);
+        fetch('https://gameofbones-admin.vercel.app/api/abandoned-cart', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone: phone, email: _cartCaptureEmail || null, name: (currentUser && currentUser.name) || null, items: cartItems, total: total })
+  })
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+          if (d && d.coupon_code) {
+            window._cartRecoveryCoupon = d.coupon_code;
+            if (msg) { msg.style.color = 'var(--teal)'; msg.textContent = 'Saved! Use code ' + d.coupon_code + ' at checkout for 10% off.'; }
+            input.disabled = true;
+            var btn = input.nextElementSibling;
+            if (btn) { btn.textContent = 'Saved'; btn.disabled = true; btn.style.opacity = '.6'; }
+          } else {
+            if (msg) { msg.style.color = 'var(--muted)'; msg.textContent = 'Saved! We will remind you if you leave items behind.'; }
+  }
+  })
+        .catch(function() {
+          if (msg) { msg.style.color = '#c0392b'; msg.textContent = 'Something went wrong - please try again.'; }
+        });
+  }
 function _markCartRecovered() {
   if (_abandonedCartId) {
     try {
