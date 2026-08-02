@@ -6934,7 +6934,12 @@ function renderCheckoutSummary() {
   var packVal = document.getElementById('co-packaging-val');
   if (packVal) packVal.textContent = clubOrder ? 'Clubbed together (eco-friendly) 🌿' : 'Packed separately';
   updateCheckoutTotals();
-      if (window._cartRecoveryCoupon && dc) { dc.value = window._cartRecoveryCoupon; applyDiscount(); }
+      if (window._cartRecoveryCoupon && dc) {
+        var coPhoneEl = document.getElementById('co-phone');
+        if (coPhoneEl && !coPhoneEl.value && _cartCapturePhone) coPhoneEl.value = _cartCapturePhone;
+        dc.value = window._cartRecoveryCoupon;
+        applyDiscount();
+      }
 }
 
 function updateCheckoutTotals() {
