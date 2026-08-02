@@ -8000,6 +8000,29 @@ function _finaliseOrder(ref, phoneVal, orderItems, razorpayPaymentId) {
   const fname = document.getElementById('co-fname').value.trim();
   const lname = document.getElementById('co-lname').value.trim();
   const email = (document.getElementById('co-email') && document.getElementById('co-email').value.trim()) || '';
+
+  // ═══════════════════════ INDEPENDENT \u201cCHECKOUT STARTED\u201d ALERT ═══════════════════════
+  // Fired first, before the order row exists, so a failed save below (see
+  // keepalive note further down) still leaves a trail -- an email in the
+  // shop inbox saying a customer attempted this order. This is what makes
+  // COD safe too: COD has no Razorpay webhook to self-heal from, so this
+  // alert is the ONLY signal that survives a failed save for a cash order.
+  try {
+    fetch('https://gameofbones-admin.vercel.app/api/order-attempt-alert', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ref: ref,
+        customer_name: (fname + ' ' + lname).trim(),
+        customer_phone: phoneVal,
+        customer_email: email,
+        payment_method: selectedPayment === 'cod' ? 'cod' : 'razorpay',
+        grand_total: _currentOrderTotal,
+        items: orderItems
+      }),
+      keepalive: true
+    }).catch(function(){});
+  } catch(e) {}
   const addr1 = (document.getElementById('co-addr1') && document.getElementById('co-addr1').value.trim()) || '';
   const addr2 = (document.getElementById('co-addr2') && document.getElementById('co-addr2').value.trim()) || '';
   const city = (document.getElementById('co-city') && document.getElementById('co-city').value.trim()) || '';
@@ -8162,7 +8185,8 @@ function _finaliseOrder(ref, phoneVal, orderItems, razorpayPaymentId) {
   })();
   
   // ═══════════════════════ SAVE TO SUPABASE ═══════════════════════
-  fetch(SUPABASE_URL + '/rest/v1/orders', {
+  function saveOrder(attempt) {
+    return fetch(SUPABASE_URL + '/rest/v1/orders', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -8179,6 +8203,7 @@ function _finaliseOrder(ref, phoneVal, orderItems, razorpayPaymentId) {
     keepalive: true
   })
   .then(function(res) { 
+    if (!res.ok) throw new Error('HTTP ' + res.status);
     console.log('Supabase response:', res.status);
     return res.text().then(function(t) { return t ? JSON.parse(t) : []; });
   })
@@ -8305,41 +8330,60 @@ function _finaliseOrder(ref, phoneVal, orderItems, razorpayPaymentId) {
       })
       .catch(function(e) { console.warn('Delhivery auto-shipment skipped:', e.message); });
     } catch(e) { console.warn('Delhivery call skipped:', e.message); }
-  })
-  .catch(function(err) {
-    console.error('Supabase save failed (will retry):', err.message);
-  });
   
-  // ═══════════════════════ SAVE TO LOCALSTORAGE (BACKUP) ═══════════════════════
-  try {
-    var orders = JSON.parse(localStorage.getItem('gobOrders') || '[]');
-    orders.push({ ref: ref, phone: phoneVal, items: orderItems, total: grandTotal, date: new Date().toISOString(), status: 'placed' });
-    localStorage.setItem('gobOrders', JSON.stringify(orders));
-    var fnameEl = document.getElementById('co-fname');
-    var lnameEl = document.getElementById('co-lname');
-    if (fnameEl && lnameEl && fnameEl.value && phoneVal) {
-      currentUser = { name: fnameEl.value.trim() + ' ' + lnameEl.value.trim(), phone: phoneVal, purchased: orderItems };
-      localStorage.setItem('gobCurrentUser', JSON.stringify(currentUser));
-    }
-  } catch(e) {
-    console.error('localStorage save failed:', e.message);
+
+    // ═══════════════════════ SAVE TO LOCALSTORAGE (BACKUP) ═══════════════════════
+      try {
+        var orders = JSON.parse(localStorage.getItem('gobOrders') || '[]');
+        orders.push({ ref: ref, phone: phoneVal, items: orderItems, total: grandTotal, date: new Date().toISOString(), status: 'placed' });
+        localStorage.setItem('gobOrders', JSON.stringify(orders));
+        var fnameEl = document.getElementById('co-fname');
+        var lnameEl = document.getElementById('co-lname');
+        if (fnameEl && lnameEl && fnameEl.value && phoneVal) {
+          currentUser = { name: fnameEl.value.trim() + ' ' + lnameEl.value.trim(), phone: phoneVal, purchased: orderItems };
+          localStorage.setItem('gobCurrentUser', JSON.stringify(currentUser));
+        }
+      } catch(e) {
+        console.error('localStorage save failed:', e.message);
+      }
+      
+      // ═══════════════════════ SHOW SUCCESS ═══════════════════════
+      var osRef = document.getElementById('orderSuccessRef');
+      if (osRef) osRef.textContent = 'Order Ref: ' + ref;
+      var osOvl = document.getElementById('orderSuccessOverlay');
+      if (osOvl) osOvl.style.display = 'flex';
+      cartItems = []; _saveCart(); updateCartBadge();
+      // Mark the abandoned cart as recovered (customer completed checkout)
+      _markCartRecovered();
+      clearTimeout(window._orderSuccessTimer);
+      window._orderSuccessTimer = setTimeout(function(){ closeOrderSuccess(); showPage('shop'); }, 10000);
+      ['co-fname','co-lname','co-phone','co-email','co-addr1','co-addr2','co-city','co-pin'].forEach(function(id){
+        var el = document.getElementById(id); if (el) el.value = '';
+      });
+      var stateEl = document.getElementById('co-state'); if (stateEl) stateEl.selectedIndex = 0;
+      var coErr = document.getElementById('co-form-error'); if (coErr) { coErr.style.display='none'; coErr.textContent=''; }
+    })
+    .catch(function(err) {
+      if (attempt < 3) {
+        console.warn('Order save failed, retrying (' + attempt + '/3):', err.message);
+        return new Promise(function(resolve) { setTimeout(resolve, 1200 * attempt); }).then(function() { return saveOrder(attempt + 1); });
+      }
+      // All retries exhausted. The order-attempt alert already fired at the
+      // top of _finaliseOrder, so the shop has been notified even though
+      // this save never landed -- but the customer also needs to know NOT
+      // to assume their order went through (the old code showed the success
+      // overlay unconditionally here, regardless of whether this save had
+      // actually succeeded).
+      console.error('Order save failed after 3 attempts:', err.message);
+      var errBox2 = document.getElementById('co-form-error');
+      if (errBox2) {
+        errBox2.innerHTML = 'We could not confirm your order automatically. Please WhatsApp us at <a href="https://wa.me/919082503295" target="_blank">+91 90825 03295</a> with reference <strong>' + ref + '</strong> and your payment details, and we will confirm it right away.';
+        errBox2.style.display = 'block';
+        errBox2.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    });
   }
-  
-  // ═══════════════════════ SHOW SUCCESS ═══════════════════════
-  var osRef = document.getElementById('orderSuccessRef');
-  if (osRef) osRef.textContent = 'Order Ref: ' + ref;
-  var osOvl = document.getElementById('orderSuccessOverlay');
-  if (osOvl) osOvl.style.display = 'flex';
-  cartItems = []; _saveCart(); updateCartBadge();
-  // Mark the abandoned cart as recovered (customer completed checkout)
-  _markCartRecovered();
-  clearTimeout(window._orderSuccessTimer);
-  window._orderSuccessTimer = setTimeout(function(){ closeOrderSuccess(); showPage('shop'); }, 10000);
-  ['co-fname','co-lname','co-phone','co-email','co-addr1','co-addr2','co-city','co-pin'].forEach(function(id){
-    var el = document.getElementById(id); if (el) el.value = '';
-  });
-  var stateEl = document.getElementById('co-state'); if (stateEl) stateEl.selectedIndex = 0;
-  var coErr = document.getElementById('co-form-error'); if (coErr) { coErr.style.display='none'; coErr.textContent=''; }
+  saveOrder(1);
 }
 
 var _currentOrderTotal = 0;
