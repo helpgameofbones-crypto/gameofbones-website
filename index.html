@@ -6836,6 +6836,7 @@ function addTrialBox(size) {
     img: ''
   });
   trackMetaEvent('AddToCart', { content_ids: [label.toLowerCase() + '-treat-box'], content_type: 'product', content_name: label + ' Treat Box', value: box.price, currency: 'INR' });
+  gtag('event', 'add_to_cart', { currency: 'INR', value: box.price, items: [{ item_name: label + ' Treat Box', item_id: label.toLowerCase() + '-treat-box', price: box.price, quantity: 1 }] });
   renderCartDrawer();
   updateCartBadge();
   showPage('cart');
@@ -7882,6 +7883,7 @@ function addBundleToCart(bundleId) {
     value: bundlePrice,
     currency: 'INR'
   });
+  gtag('event', 'add_to_cart', { currency: 'INR', value: bundlePrice, items: resolved.map(function(r){ return { item_name: r.prod.name, item_id: r.prod.name.toLowerCase().replace(/[&\s]+/g, '-'), price: r.size.price, quantity: r.qty }; }) });
   updateCartBadge();
   renderCartDrawer();
   showCartToast('🎁 ' + bundle.name + ' added to cart!', 'success');
@@ -8588,6 +8590,7 @@ function toggleCart() {
   }
 }
 
+  
 function addCart(btn, productIdx, sizeIdx) {
   const p = products[productIdx];
   const size = p.sizes[sizeIdx !== undefined ? sizeIdx : 0];
@@ -8597,6 +8600,7 @@ function addCart(btn, productIdx, sizeIdx) {
   }
   _saveCart();
   trackMetaEvent('AddToCart', { content_ids: [p.name.toLowerCase().replace(/[&\s]+/g, '-')], content_type: 'product', content_name: p.name, value: size.price, currency: 'INR' });
+  gtag('event', 'add_to_cart', { currency: 'INR', value: size.price, items: [{ item_name: p.name, item_id: p.name.toLowerCase().replace(/[&\s]+/g, '-'), price: size.price, quantity: 1 }] });
   addedProductIdxs.add(productIdx);
   updateCartBadge();
   showCartToast(p.name + ' added to cart 🐾', 'success');
@@ -8633,6 +8637,7 @@ function addCartModal() {
   }
   _saveCart();
   trackMetaEvent('AddToCart', { content_ids: [p.name.toLowerCase().replace(/[&\s]+/g, '-')], content_type: 'product', content_name: p.name, value: size.price, currency: 'INR' });
+  gtag('event', 'add_to_cart', { currency: 'INR', value: size.price, items: [{ item_name: p.name, item_id: p.name.toLowerCase().replace(/[&\s]+/g, '-'), price: size.price, quantity: 1 }] });
   updateCartBadge();
   // Unlock FBT bundle discount now that main product is in cart
   fbtMainProductAdded = true;
@@ -8972,6 +8977,7 @@ function addUpsellToCart() {
     cartItems.push({name: p.name, img: p.img, sizeLabel: p.sizes[0].label, price: p.sizes[0].price, qty: 1});
   }
   trackMetaEvent('AddToCart', { content_ids: [p.name.toLowerCase().replace(/[&\s]+/g, '-')], content_type: 'product', content_name: p.name, value: p.sizes[0].price, currency: 'INR' });
+  gtag('event', 'add_to_cart', { currency: 'INR', value: p.sizes[0].price, items: [{ item_name: p.name, item_id: p.name.toLowerCase().replace(/[&\s]+/g, '-'), price: p.sizes[0].price, quantity: 1 }] });
   updateCartBadge();
   renderCartDrawer();
   showCartToast(p.name + ' added! 🐾', 'success');
@@ -9534,6 +9540,7 @@ function addFbtBundleToCart() {
     content_type: 'product',
     currency: 'INR'
   });
+  gtag('event', 'add_to_cart', { currency: 'INR', value: selectedKeys.reduce(function(s,k){ var pr = products[parseInt(k)]; return s + (pr ? pr.sizes[0].price : 0); }, 0), items: selectedKeys.map(function(k){ var pr = products[parseInt(k)]; return pr ? { item_name: pr.name, item_id: pr.name.toLowerCase().replace(/[&\s]+/g, '-'), price: pr.sizes[0].price, quantity: 1 } : null; }).filter(Boolean) });
   updateCartBadge();
   renderCartDrawer();
   // Visual confirm
@@ -9559,6 +9566,7 @@ function quickAddFbt(idx) {
   else { cartItems.push({ name: prod.name, size: prod.sizes[0].label, price: prod.sizes[0].price, img: prod.img || '', qty: 1, emoji: prod.emoji || '🍖' }); }
   _saveCart();
   trackMetaEvent('AddToCart', { content_ids: [prod.name.toLowerCase().replace(/[&\s]+/g, '-')], content_type: 'product', content_name: prod.name, value: prod.sizes[0].price, currency: 'INR' });
+  gtag('event', 'add_to_cart', { currency: 'INR', value: prod.sizes[0].price, items: [{ item_name: prod.name, item_id: prod.name.toLowerCase().replace(/[&\s]+/g, '-'), price: prod.sizes[0].price, quantity: 1 }] });
   updateCartBadge();
   renderCartDrawer();
   var btn = document.getElementById('fbt-btn-' + idx);
