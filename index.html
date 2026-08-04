@@ -8018,7 +8018,7 @@ function _finaliseOrder(ref, phoneVal, orderItems, razorpayPaymentId) {
         customer_email: email,
         payment_method: selectedPayment === 'cod' ? 'cod' : 'razorpay',
         grand_total: _currentOrderTotal,
-        items: orderItems
+        items: cartItems.map(function(ci){ return { name: ci.name, qty: ci.qty || 1 }; })
       }),
       keepalive: true
     }).catch(function(){});
