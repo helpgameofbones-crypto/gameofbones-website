@@ -1182,16 +1182,16 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
   <div style="display:inline-block;animation:scrollBanner 30s linear infinite;padding-left:100%">
     <span style="font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:.08em;color:var(--white)">
       &#127881; FREE SHIPPING on ALL orders &nbsp;&nbsp;&bull;&nbsp;&nbsp;
-      &#127873; Use code <span style="color:var(--gold)">FIRST15</span> for 15% off your first order &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+      &#127873; Use code <span style="color:var(--gold)">WELCOME15</span> for 15% off your first order &nbsp;&nbsp;&bull;&nbsp;&nbsp;
       &#128176; Pay online &amp; get &#8377;30 OFF &nbsp;&nbsp;&bull;&nbsp;&nbsp;
-      &#128230; Buying in bulk? Use code <span style="color:var(--gold)">BULK20</span> for 20% off orders &#8377;1,499+ &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+      &#128230; Spend big? Use code <span style="color:var(--gold)">MEGA20</span> for 20% off orders &#8377;2,199+ &nbsp;&nbsp;&bull;&nbsp;&nbsp;
       &#128666; PAN India delivery via Delhivery &nbsp;&nbsp;&bull;&nbsp;&nbsp;
       &#127775; 100% Natural &#8212; Zero Preservatives &#8212; Single Ingredient &nbsp;&nbsp;&bull;&nbsp;&nbsp;
       &#128062; Trusted by 2000+ dog parents across India &nbsp;&nbsp;&bull;&nbsp;&nbsp;
       &#127881; FREE SHIPPING on ALL orders &nbsp;&nbsp;&bull;&nbsp;&nbsp;
-      &#127873; Use code <span style="color:var(--gold)">FIRST15</span> for 15% off your first order &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+      &#127873; Use code <span style="color:var(--gold)">WELCOME15</span> for 15% off your first order &nbsp;&nbsp;&bull;&nbsp;&nbsp;
       &#128176; Pay online &amp; get &#8377;30 OFF &nbsp;&nbsp;&bull;&nbsp;&nbsp;
-      &#128230; Buying in bulk? Use code <span style="color:var(--gold)">BULK20</span> for 20% off orders &#8377;1,499+
+      &#128230; Spend big? Use code <span style="color:var(--gold)">MEGA20</span> for 20% off orders &#8377;2,199+
     </span>
   </div>
 </div>
@@ -1449,7 +1449,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
 
   <div class="cta-banner">
     <h2>Ready to Make Your Dog&rsquo;s Day? <em>Order Today.</em></h2>
-    <p>First order? Use code <strong style="color:var(--gold-light)">FIRST15</strong> for 15% off. Free shipping on all orders. COD available.</p>
+    <p>First order? Use code <strong style="color:var(--gold-light)">WELCOME15</strong> for 15% off. Free shipping on all orders. COD available.</p>
     <div class="cta-btns">
       <a class="btn-gold" onclick="navigateTo('shop')">Shop All Treats &rarr;</a>
       <button class="btn-gold-outline" onclick="openWA()">WhatsApp Us &#128172;</button>
@@ -1580,7 +1580,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
         </div>
       </div>
       <div style="font-size:11px;color:var(--muted);text-align:center;margin:0 0 8px">This discount is applied automatically and does not stack with any other offer or coupon.</div>
-      <div style="font-size:12px;color:var(--dark);text-align:center;margin:0 0 24px">Fewer, pricier items instead? Use code <strong style="color:var(--gold-dark,#a97c1f);letter-spacing:.03em">BULK20</strong> for 20% off orders ₹1,499+.</div>
+      <div style="font-size:12px;color:var(--dark);text-align:center;margin:0 0 24px">Fewer, pricier items instead? Use code <strong style="color:var(--gold-dark,#a97c1f);letter-spacing:.03em">MEGA20</strong> for 20% off orders ₹2,199+.</div>
 
       <!-- Bundle Deals — populated from the admin Promotions > Bundles tab
            (Supabase `product_bundles` table). Hidden entirely when there are
@@ -6844,11 +6844,10 @@ function addTrialBox(size) {
 
 // ── CHECKOUT ────────────────────────────────────────────────────────────
 const DISCOUNT_CODES = {
-  'FIRST15': { type:'percent', value:15, label:'15% off (First Order)' },
+  'WELCOME15': { type:'percent', value:15, label:'15% off (First Order)' },
   'SAVE50':  { type:'fixed',   value:50, label:'₹50 off' },
   'SAVE100': { type:'fixed',   value:100, label:'₹100 off', minOrder:999 },
-  'BULK20':  { type:'percent', value:20,  label:'20% off', minOrder:1499 },
-  'MEGA20':  { type:'percent', value:20,  label:'20% off', minOrder:2499 },
+  'MEGA20':  { type:'percent', value:20,  label:'20% off', minOrder:2199 },
   'FREEFEET': { type:'free',    value:0,   label:'Free Chicken Feet pack (60g)', minOrder:749 },
 };
 let appliedDiscount = null;
@@ -7022,11 +7021,8 @@ function showDiscountPanel() {
 
   // Only show user-facing codes (not internal spin codes)
   var visibleCodes = [
-    { code:'FIRST15', desc:'15% off your first order',          minOrder:0    },
-    { code:'SAVE50',  desc:'₹50 off',                           minOrder:0    },
-    { code:'SAVE100', desc:'₹100 off',                          minOrder:999  },
-    { code:'BULK20',  desc:'20% off',                           minOrder:1499 },
-    { code:'MEGA20',  desc:'20% off',                           minOrder:2499 },
+    { code:'WELCOME15', desc:'15% off your first order',          minOrder:0    },
+    { code:'MEGA20',  desc:'20% off',                           minOrder:2199 },
   ];
 
   var html = '';
@@ -7120,7 +7116,7 @@ function applyDiscount() {
     if (!coupon) {
       appliedDiscount = null;
       msg.style.color = '#c0392b';
-      msg.textContent = '✗ Invalid code. Try FIRST15 for 15% off your first order.';
+      msg.textContent = '✗ Invalid code. Try WELCOME15 for 15% off your first order.';
       updateCheckoutTotals();
       return;
     }
@@ -10461,16 +10457,26 @@ function renderProductCoupons() {
     var stored = JSON.parse(localStorage.getItem('gobOrders') || '[]');
     hasOrdered = Array.isArray(stored) && stored.length > 0;
   } catch(e) {}
+  var bulkTiers = [ { pct:5, qty:3 }, { pct:8, qty:5 }, { pct:12, qty:8 }, { pct:15, qty:10 } ];
+  var bulkCardsHtml = bulkTiers.map(function(t) {
+    return '<div style="flex:0 0 auto;width:150px;background:var(--white);border:1px dashed var(--teal,#2f6f62);border-radius:8px;padding:10px">' +
+      '<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">' +
+      '<span style="font-size:15px">\ud83d\udce6</span>' +
+      '<span style="font-family:\'Cormorant Garamond\',serif;font-weight:700;font-size:17px;color:var(--dark)">' + t.pct + '% OFF</span>' +
+      '</div>' +
+      '<div style="font-size:10px;color:var(--muted);margin-bottom:6px">Buy ' + t.qty + '+ items</div>' +
+      '<div style="border-top:1px dashed var(--cream-dark);margin:6px 0"></div>' +
+      '<div style="font-size:9px;font-weight:700;letter-spacing:.04em;color:var(--teal,#2f6f62);text-transform:uppercase">Auto-applied \u2713</div>' +
+      '</div>';
+  }).join('');
   fetch(SUPABASE_URL + '/rest/v1/coupons?is_active=eq.true&show_publicly=eq.true&select=code,type,value,min_order', {
     headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
   })
   .then(function(r) { return r.json(); })
   .then(function(rows) {
-    if (!Array.isArray(rows)) { el.innerHTML = ''; return; }
-    var list = rows.filter(function(c) { return !(hasOrdered && c.code === 'WELCOME15'); });
-    if (!list.length) { el.innerHTML = ''; return; }
-    var icons = { WELCOME15:'\ud83c\udf81', BULK20:'\ud83d\udecd\ufe0f', MEGA20:'\ud83d\udc51', SAVE50:'\ud83d\udcb8', SAVE100:'\ud83d\udcb8', BARKSYXGOB:'\ud83d\udc3e' };
-    var cardsHtml = list.map(function(c) {
+    var list = Array.isArray(rows) ? rows.filter(function(c) { return !(hasOrdered && c.code === 'WELCOME15'); }) : [];
+    var icons = { WELCOME15:'\ud83c\udf81', MEGA20:'\ud83d\udc51', SAVE50:'\ud83d\udcb8', SAVE100:'\ud83d\udcb8', BARKSYXGOB:'\ud83d\udc3e' };
+    var couponCardsHtml = list.map(function(c) {
       var label = c.type === 'percent' ? (c.value + '% OFF') : (c.type === 'free' ? 'FREE ITEM' : ('\u20b9' + c.value + ' OFF'));
       var cond = c.min_order ? ('Orders above \u20b9' + c.min_order) : 'No minimum order';
       var icon = icons[c.code] || '\ud83c\udff7\ufe0f';
@@ -10487,10 +10493,15 @@ function renderProductCoupons() {
         '</div></div>';
     }).join('');
     el.innerHTML = '<div style="font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:20px 0 8px">Offers for you</div>' +
-      '<div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px">' + cardsHtml + '</div>';
+      '<div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px">' + couponCardsHtml + bulkCardsHtml + '</div>' +
+      '<div style="font-size:10px;color:var(--muted);margin-top:6px">Bulk discounts apply automatically in cart and don\'t stack with coupon codes.</div>';
   })
-  .catch(function() { el.innerHTML = ''; });
+  .catch(function() {
+    el.innerHTML = '<div style="font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:20px 0 8px">Offers for you</div>' +
+      '<div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px">' + bulkCardsHtml + '</div>';
+  });
 }
+
 function copyProductCoupon(code, btn) {
   window._cartRecoveryCoupon = code;
   if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(code).catch(function(){}); }
@@ -11903,10 +11914,8 @@ function submitBdayForm() {
 // ── ANNOUNCEMENT BANNER ──────────────────────────────────────────────
 var annSlides = [
   {tag:'🚚 Free Delivery', text:'Free shipping on all orders above ₹599 — no code needed', code:null, after:'', bg:'var(--dark)'},
-  {tag:'🐾 First Order',   text:'15% off your first order — use code', code:'FIRST15', after:'at checkout', bg:'#1a2a1a'},
-  {tag:'💰 Big Order',     text:'Flat ₹100 off on orders above ₹999 — use code', code:'SAVE100', after:'at checkout', bg:'#2a1a18'},
-  {tag:'🛍️ Shop More',     text:'Spend ₹1,499 or more — get 20% off — use code', code:'BULK20', after:'at checkout', bg:'#1a1a2a'},
-  {tag:'🏆 Max Savings',   text:'Spend ₹2,499 or more — get 20% off — use code', code:'MEGA20', after:'at checkout', bg:'#1e1208'},
+  {tag:'🐾 First Order',   text:'15% off your first order — use code', code:'WELCOME15', after:'at checkout', bg:'#1a2a1a'},
+  {tag:'🏆 Max Savings',   text:'Spend ₹2,199 or more — get 20% off — use code', code:'MEGA20', after:'at checkout', bg:'#1e1208'},
 ];
 var annIdx = 0;
 var annTimer = null;
