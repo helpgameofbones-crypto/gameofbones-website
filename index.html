@@ -10349,6 +10349,7 @@ function updateProductImage(idx, p) {
         <button id="detail-fav" onclick="toggleWishlist(this,currentProductIdx)" style="width:48px;height:48px;border:2px solid var(--cream-mid);background:var(--white);font-size:20px;cursor:pointer;border-radius:2px;transition:all .2s;display:flex;align-items:center;justify-content:center;flex-shrink:0">♡</button>
         <button onclick="addCart(this,currentProductIdx,currentProductSize)" style="flex:1;background:var(--dark);color:var(--white);border:none;padding:14px 20px;font-family:'Jost',sans-serif;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all .2s;min-width:150px;min-height:48px">Add to Cart +</button>
       </div>
+      ${(p.filter !== 'jerky' && p.filter !== 'bundle') ? '<div style="margin-top:10px;padding:10px 12px;background:var(--gold-pale,#faf3e3);border:1px dashed var(--gold);border-radius:2px;font-size:12px;color:var(--dark);display:flex;align-items:center;gap:8px"><span style="font-size:15px">\ud83d\udc3e</span><span>New to raw treats? First-time customers save 15% off with code <strong>WELCOME15</strong>.</span></div>' : ''}
 
       <div style="margin-top:16px;padding:14px 16px;background:var(--cream);border-radius:2px;display:flex;flex-direction:column;gap:8px">
         <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--dark)"><span style="font-size:15px">🚚</span> Dispatched in 1–2 business days &middot; Free shipping on all orders</div>
@@ -11694,6 +11695,12 @@ function swSpin() {
     usedEmails.push(email.toLowerCase());
     sessionStorage.setItem('swUsedEmails', JSON.stringify(usedEmails));
     errEl.style.display = 'none';
+
+    // Bridge this email into abandoned-cart tracking so a visitor who
+    // still has items in their cart stops showing up as "Anonymous" in
+    // the admin's Abandoned Carts list.
+    _cartCaptureEmail = email;
+    try { if (typeof cartItems !== 'undefined' && cartItems.length > 0 && typeof _debouncedAbandonedCartSync === 'function') _debouncedAbandonedCartSync(); } catch(e) {}
 
     // Save to backend so this shows up in admin (email_captures table).
     // Capture the inserted row's id so we can attach the prize once the
