@@ -2938,25 +2938,30 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
     <button onclick="spinWheelClose()" style="position:absolute;top:12px;right:14px;background:none;border:none;font-size:22px;cursor:pointer;color:var(--muted);z-index:10;line-height:1">&#10005;</button>
 
     <!-- LEFT: wheel -->
-    <div style="background:var(--dark);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;gap:16px">
-      <div style="font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:4px">Try Your Luck</div>
+    <div style="background:var(--dark);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;gap:16px;position:relative;overflow:hidden">
+<div style="position:absolute;inset:0;pointer-events:none;z-index:0;background-image:radial-gradient(circle at 20% 15%,rgba(200,151,58,.10) 0,transparent 45%),radial-gradient(circle at 85% 90%,rgba(200,151,58,.08) 0,transparent 40%),url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90' viewBox='0 0 90 90'%3E%3Cg fill='%23c8973a' fill-opacity='0.07'%3E%3Cellipse cx='45' cy='55' rx='11' ry='9'/%3E%3Cellipse cx='30' cy='38' rx='5' ry='6.5'/%3E%3Cellipse cx='45' cy='30' rx='5.5' ry='7'/%3E%3Cellipse cx='60' cy='38' rx='5' ry='6.5'/%3E%3C/g%3E%3C/svg%3E&quot;);background-size:auto,auto,90px 90px"></div>
+<div style="position:absolute;bottom:-16px;left:-12px;width:96px;height:96px;opacity:.17;z-index:0;transform:rotate(-8deg);pointer-events:none"><svg viewBox="0 0 100 100" width="100%" height="100%"><g fill="none" stroke="#c8973a" stroke-width="2.5"><path d="M20 78c0-16 12-27 30-27s30 11 30 27" stroke-linecap="round"/><circle cx="30" cy="34" r="7"/><circle cx="70" cy="34" r="7"/><circle cx="18" cy="52" r="7"/><circle cx="82" cy="52" r="7"/><path d="M50 51c-9 0-16 6-16 14 0 6 5 9 16 9s16-3 16-9c0-8-7-14-16-14z"/></g></svg></div>
+
+      <div style="font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:4px"><span style="margin-right:5px">🐾</span>Try Your Luck</div>
       <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--white);text-align:center;line-height:1.3">Spin to win<br><em style="color:var(--gold-light)">a discount</em></div>
       <div style="position:relative;margin:8px 0">
-        <div style="position:absolute;top:-14px;left:50%;transform:translateX(-50%);font-size:24px;z-index:2;color:var(--gold)">&#9660;</div>
+        <div style="position:absolute;top:-14px;left:50%;transform:translateX(-50%);font-size:20px;z-index:2;filter:drop-shadow(0 2px 3px rgba(0,0,0,.5))">🐾</div>
         <canvas id="spinCanvas" width="220" height="220" style="border-radius:50%;display:block"></canvas>
       </div>
-      <button id="spinBtn" onclick="swSpin()" style="background:var(--gold);color:var(--dark);border:none;padding:13px 32px;font-family:'Jost',sans-serif;font-size:13px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;width:100%;max-width:220px">SPIN!</button>
+      <button id="spinBtn" onclick="swSpin()" style="background:var(--gold);color:var(--dark);border:none;padding:13px 32px;font-family:'Jost',sans-serif;font-size:13px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;width:100%;max-width:220px">SPIN THE WHEEL 🐾</button>
     </div>
 
     <!-- RIGHT: form / result -->
     <div style="padding:28px 24px;display:flex;flex-direction:column;justify-content:center;gap:14px">
       <div id="spinRightPre">
         <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:900;color:var(--dark);margin-bottom:8px">One spin, one deal.</div>
-        <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:16px">Enter your email to unlock your discount code.</p>
-        <label style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px">Email Address</label>
-        <input id="spinEmail" type="email" placeholder="you@email.com" style="width:100%;padding:11px 14px;border:1.5px solid var(--cream-mid);background:var(--cream);font-family:'Jost',sans-serif;font-size:14px;color:var(--dark);outline:none;box-sizing:border-box;margin-bottom:6px">
+        <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:16px">Enter your name and phone number to unlock your discount code.</p>
+        <label style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px">Your Name</label>
+        <input id="spinName" type="text" placeholder="Your name" style="width:100%;padding:11px 14px;border:1.5px solid var(--cream-mid);background:var(--cream);font-family:'Jost',sans-serif;font-size:14px;color:var(--dark);outline:none;box-sizing:border-box;margin-bottom:6px">
+        <label style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px;margin-top:10px">Phone Number</label>
+        <input id="spinPhone" type="tel" placeholder="10-digit mobile number" maxlength="10" style="width:100%;padding:11px 14px;border:1.5px solid var(--cream-mid);background:var(--cream);font-family:'Jost',sans-serif;font-size:14px;color:var(--dark);outline:none;box-sizing:border-box;margin-bottom:6px">
         <div id="spinEmailErr" style="display:none;font-size:12px;color:#c0392b;margin-bottom:8px"></div>
-        <p style="font-size:10px;color:var(--muted);line-height:1.6">&#128274; We never share your email.</p>
+        <p style="font-size:10px;color:var(--muted);line-height:1.6">&#128274; We never share your number.</p>
       </div>
 
       <div id="spinRightSpin" style="display:none;text-align:center">
@@ -11574,7 +11579,15 @@ function swDrawWheel() {
   var cx = 150, cy = 150, r = 145;
   var n = SW.segments.length;
   var arc = (2 * Math.PI) / n;
-  ctx.clearRect(0, 0, 240, 240);
+  ctx.clearRect(0, 0, 300, 300);
+
+  // soft outer glow ring
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(cx, cy, r + 6, 0, 2 * Math.PI);
+  ctx.fillStyle = 'rgba(200,151,58,.18)';
+  ctx.fill();
+  ctx.restore();
 
   for (var i = 0; i < n; i++) {
     var seg = SW.segments[i];
@@ -11582,12 +11595,15 @@ function swDrawWheel() {
     var end = start + arc;
     var mid = start + arc / 2;
 
-    // Slice fill
+    // Slice fill \u2014 subtle radial gradient instead of flat colour
     ctx.beginPath();
     ctx.moveTo(cx, cy);
     ctx.arc(cx, cy, r, start, end);
     ctx.closePath();
-    ctx.fillStyle = seg.bg;
+    var grad = ctx.createRadialGradient(cx, cy, 10, cx, cy, r);
+    if (seg.bg === '#c8973a') { grad.addColorStop(0, '#e0b563'); grad.addColorStop(1, '#c8973a'); }
+    else { grad.addColorStop(0, '#2a1c10'); grad.addColorStop(1, '#170d05'); }
+    ctx.fillStyle = grad;
     ctx.fill();
 
     // Crisp divider lines
@@ -11598,7 +11614,20 @@ function swDrawWheel() {
     ctx.lineWidth = 1.5;
     ctx.stroke();
 
-    // Label text — radially centred in slice
+    // Small paw-print watermark near the outer edge of each slice
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(mid);
+    ctx.globalAlpha = 0.16;
+    ctx.font = '11px serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = seg.fg;
+    ctx.fillText('\ud83d\udc3e', r * 0.94, 0);
+    ctx.globalAlpha = 1;
+    ctx.restore();
+
+    // Label text \u2014 radially centred in slice
     ctx.save();
     ctx.translate(cx, cy);
     ctx.rotate(mid);
@@ -11609,7 +11638,7 @@ function swDrawWheel() {
     ctx.font = '15px serif';
     ctx.fillText(seg.emoji, r * 0.44, 0);
 
-    // Label — split into 2 lines for 3+ word labels
+    // Label \u2014 split into 2 lines for 3+ word labels
     ctx.fillStyle = seg.fg;
     ctx.font = 'bold 9px "Jost", Arial, sans-serif';
     var words = seg.label.toUpperCase().split(' ');
@@ -11620,7 +11649,7 @@ function swDrawWheel() {
       var line1 = words.slice(0, half).join(' ');
       var line2 = words.slice(half).join(' ');
       ctx.fillText(line1, r * 0.76, -5);
-      ctx.fillText(line2, r * 0.76,  5);
+      ctx.fillText(line2, r * 0.76, 5);
     }
 
     ctx.restore();
@@ -11633,8 +11662,7 @@ function swDrawWheel() {
   ctx.lineWidth = 4;
   ctx.stroke();
 
-
-  // Arrow pointer at top centre — drawn on canvas
+  // Paw-print pointer at top centre \u2014 drawn on canvas
   ctx.save();
   ctx.translate(cx, 0);
   ctx.beginPath();
@@ -11649,18 +11677,23 @@ function swDrawWheel() {
   ctx.shadowBlur = 0;
   ctx.restore();
 
-  // Dark center hub
+  // Centre hub redrawn as a paw print
   ctx.beginPath();
-  ctx.arc(cx, cy, 16, 0, 2 * Math.PI);
+  ctx.arc(cx, cy, 18, 0, 2 * Math.PI);
   ctx.fillStyle = '#c8973a';
   ctx.fill();
   ctx.beginPath();
-  ctx.arc(cx, cy, 10, 0, 2 * Math.PI);
+  ctx.arc(cx, cy, 13, 0, 2 * Math.PI);
   ctx.fillStyle = '#1a1008';
   ctx.fill();
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = '13px serif';
+  ctx.fillText('\ud83d\udc3e', 0, 1);
+  ctx.restore();
 }
-
-var _swEmailCaptureId = null;
 
 function swPickSegment() {
   var r = Math.random(), cumul = 0;
@@ -11673,48 +11706,59 @@ function swPickSegment() {
 
 
 function swSpin() {
-  // Validate email first
-  var emailEl = document.getElementById('spinEmail');
-  var errEl   = document.getElementById('spinEmailErr');
-  var pre     = document.getElementById('spinRightPre');
-  var spinP   = document.getElementById('spinRightSpin');
-  if (emailEl && errEl) {
-    var email = emailEl.value.trim();
-    if (!email || !email.includes('@') || !email.includes('.')) {
-      errEl.textContent = 'Please enter a valid email to spin.';
+  // Validate name + phone first
+  var nameEl = document.getElementById('spinName');
+  var phoneEl = document.getElementById('spinPhone');
+  var errEl = document.getElementById('spinEmailErr');
+  var pre = document.getElementById('spinRightPre');
+  var spinP = document.getElementById('spinRightSpin');
+  if (nameEl && phoneEl && errEl) {
+    var name = nameEl.value.trim();
+    var phone = phoneEl.value.replace(/\D/g, '').slice(-10);
+    if (!name) {
+      errEl.textContent = 'Please enter your name to spin.';
       errEl.style.display = 'block';
       return;
     }
-    // One spin per email per session
-    var usedEmails = JSON.parse(sessionStorage.getItem('swUsedEmails') || '[]');
-    if (usedEmails.indexOf(email.toLowerCase()) > -1) {
-      errEl.textContent = 'You\'ve already spun with this email. One spin per person!';
+    if (phone.length !== 10) {
+      errEl.textContent = 'Please enter a valid 10-digit phone number to spin.';
       errEl.style.display = 'block';
       return;
     }
-    usedEmails.push(email.toLowerCase());
-    sessionStorage.setItem('swUsedEmails', JSON.stringify(usedEmails));
+    // One spin per phone number per session
+    var usedPhones = JSON.parse(sessionStorage.getItem('swUsedPhones') || '[]');
+    if (usedPhones.indexOf(phone) > -1) {
+      errEl.textContent = "You've already spun with this number. One spin per person!";
+      errEl.style.display = 'block';
+      return;
+    }
+    usedPhones.push(phone);
+    sessionStorage.setItem('swUsedPhones', JSON.stringify(usedPhones));
     errEl.style.display = 'none';
 
-    // Bridge this email into abandoned-cart tracking so a visitor who
+    // Bridge name+phone into abandoned-cart tracking so a visitor who
     // still has items in their cart stops showing up as "Anonymous" in
     // the admin's Abandoned Carts list.
-    _cartCaptureEmail = email;
+    _cartCapturePhone = phone;
     try { if (typeof cartItems !== 'undefined' && cartItems.length > 0 && typeof _debouncedAbandonedCartSync === 'function') _debouncedAbandonedCartSync(); } catch(e) {}
 
+    // Decide the prize NOW so it's saved immediately together with the
+    // contact info, instead of waiting for the spin animation to finish
+    // (which was getting skipped whenever someone closed the popup early).
+    _swTargetIdx = swPickSegment();
+    var seg = SW.segments[_swTargetIdx];
+
     // Save to backend so this shows up in admin (email_captures table).
-    // Capture the inserted row's id so we can attach the prize once the
-    // wheel finishes spinning (see showSpinResult below).
-    _swEmailCaptureId = null;
     try {
       fetch(SUPABASE_URL + '/rest/v1/email_captures', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY, 'Prefer': 'return=representation' },
-        body: JSON.stringify({ email: email, source: 'spin_wheel', status: 'active' })
-      }).then(function(r) { return r.text().then(function(t) { var d = t ? JSON.parse(t) : []; return { ok: r.status === 201 || r.status === 204, d: d }; }); })
-        .then(function(res) { console.log('Spin wheel email captured:', res.ok); if (res.ok && Array.isArray(res.d) && res.d[0] && res.d[0].id) _swEmailCaptureId = res.d[0].id; })
-        .catch(function(e) { console.warn('Spin wheel email capture failed:', e.message); });
-    } catch(e) { console.warn('Spin wheel email capture skipped:', e.message); }
+        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY, 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ name: name, phone: phone, source: 'spin_wheel', status: 'active', prize: seg.label, coupon_code: seg.code || null })
+      }).then(function(r) { console.log('Spin wheel contact captured:', r.status === 201 || r.status === 204); })
+      .catch(function(e) { console.warn('Spin wheel contact capture failed:', e.message); });
+    } catch(e) { console.warn('Spin wheel contact capture skipped:', e.message); }
+  } else {
+    _swTargetIdx = swPickSegment();
   }
   // Show spinning panel
   if (pre) pre.style.display = 'none';
@@ -11730,7 +11774,7 @@ function doSpin() {
   var btn = document.getElementById('spinBtn');
   if (btn) { btn.disabled = true; btn.textContent = '🌀 Spinning…'; btn.style.opacity = '.6'; }
 
-  var targetIdx = swPickSegment();
+  var targetIdx = (typeof _swTargetIdx === 'number') ? _swTargetIdx : swPickSegment();
   var n = SW.segments.length;
   var arc = (2 * Math.PI) / n;
   var fullSpins = 5 + Math.floor(Math.random() * 3);
@@ -11792,18 +11836,8 @@ function showSpinResult(idx) {
   }
   var srs = document.getElementById('spinResultSub'); if (srs) srs.textContent = sub;
 
-  // Attach the prize won to the email_captures row created in swSpin(),
-  // so the admin's Email Captures Dashboard can show what each person won.
-  if (_swEmailCaptureId) {
-    try {
-      fetch(SUPABASE_URL + '/rest/v1/email_captures?id=eq.' + _swEmailCaptureId, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY },
-        body: JSON.stringify({ prize: seg.label, coupon_code: seg.code || null })
-      }).catch(function(e) { console.warn('Spin wheel prize save failed:', e.message); });
-    } catch(e) { /* silent */ }
-    _swEmailCaptureId = null;
-  }
+  // Prize was already decided and saved together with the contact info
+  // in swSpin(), so no second network request is needed here.
 }
 
 function spinCopyCode() {
