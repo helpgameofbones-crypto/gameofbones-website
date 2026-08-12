@@ -12179,7 +12179,7 @@ function handleLoginClick(){
   // Show correct login state
   if(currentUser){
     var la=document.getElementById('loginAlreadyIn'),lf=document.getElementById('loginForm');
-    if(la)la.style.display='block'; if(lf)lf.style.display='none';
+    if(la)la.style.display='block'; if(lf)lf.style.display='none';var __gobScrollP=la;while(__gobScrollP){if(__gobScrollP.scrollHeight>__gobScrollP.clientHeight){__gobScrollP.scrollTop=0;break;}__gobScrollP=__gobScrollP.parentElement;}
     setText('loginWelcomeName',currentUser.name);
     // Phone-based account: show the mobile number where the email line sits
     var ph=currentUser.phone?String(currentUser.phone):'';
