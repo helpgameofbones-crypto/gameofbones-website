@@ -137,7 +137,7 @@ button{font-family:'Jost',sans-serif;cursor:pointer;border:none;background:none}
 @media(max-width:1024px){.hero{min-height:100vh}}
 @media(max-width:768px){.hero{min-height:auto;padding:60px 5%}}
 @media(max-width:480px){.hero{padding:40px 5%}}
-.hero-bg{position:absolute;inset:0;background:linear-gradient(90deg,rgba(20,12,6,.92) 0%,rgba(20,12,6,.75) 30%,rgba(20,12,6,.25) 55%,rgba(20,12,6,0) 70%),url('https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/promos/independence-day-hero-2026.jpg');background-size:cover,cover;background-position:center,right top;background-repeat:no-repeat,no-repeat;filter:brightness(1.15) contrast(1.05);}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 20%,rgba(74,52,36,1) 0%,rgba(38,24,14,1) 55%,rgba(26,16,8,1) 100%)}
 .hero-content{position:relative;z-index:1;max-width:1320px;margin:0 auto;padding:80px 6%;display:grid;grid-template-columns:1fr;gap:60px;align-items:center;width:100%}
 @media(max-width:1024px){.hero-content{padding:60px 5%;gap:40px}}
 @media(max-width:768px){.hero-content{grid-template-columns:1fr;gap:30px;padding:0}}
@@ -1604,6 +1604,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
       <button onclick="navigateTo('shop')" style="background:none;border:none;color:var(--gold);font-size:13px;font-weight:600;cursor:pointer;margin-bottom:20px">← Back to Shop</button>
     </div>
   </section>
+  <div id="b2g1-tricolor-banner" style="width:100%;overflow:hidden"><div style="height:4px;background:#FF9933"></div><div style="background:#fffdf7;padding:10px 0;overflow:hidden;white-space:nowrap;border-top:1px solid #f0e6d2;border-bottom:1px solid #f0e6d2"><div style="display:inline-block;white-space:nowrap;animation:b2g1scroll 16s linear infinite;will-change:transform"><span style="font-family:'Jost',sans-serif;font-weight:700;font-size:13px;letter-spacing:.05em;color:#c2410c;padding:0 36px">🇮🇳 BUY 2 GET 1 FREE — Chicken Neck Packs, auto-applied at checkout on orders ₹600+ 🇮🇳</span><span style="font-family:'Jost',sans-serif;font-weight:700;font-size:13px;letter-spacing:.05em;color:#15803d;padding:0 36px">🇮🇳 BUY 2 GET 1 FREE — Chicken Neck Packs, auto-applied at checkout on orders ₹600+ 🇮🇳</span><span style="font-family:'Jost',sans-serif;font-weight:700;font-size:13px;letter-spacing:.05em;color:#c2410c;padding:0 36px">🇮🇳 BUY 2 GET 1 FREE — Chicken Neck Packs, auto-applied at checkout on orders ₹600+ 🇮🇳</span><span style="font-family:'Jost',sans-serif;font-weight:700;font-size:13px;letter-spacing:.05em;color:#15803d;padding:0 36px">🇮🇳 BUY 2 GET 1 FREE — Chicken Neck Packs, auto-applied at checkout on orders ₹600+ 🇮🇳</span></div></div><div style="height:4px;background:#138808"></div></div><style>@keyframes b2g1scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}</style>
   <section style="background:var(--cream);padding:60px 6%;min-height:auto">
     <div class="pg-grid" style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start">
       <div class="pg-left">
@@ -6856,6 +6857,65 @@ const DISCOUNT_CODES = {
   'FREEFEET': { type:'free',    value:0,   label:'Free Chicken Feet pack (60g)', minOrder:749 },
 };
 let appliedDiscount = null;
+// ── BUY 2 GET 1 FREE: auto-apply on Chicken Neck packs, orders ₹600+ ──
+const B2G1_PRODUCT_NAME = 'Chicken Neck';
+const B2G1_UNIT_PRICE = 300;
+const B2G1_MIN_ORDER = 600;
+function b2g1EligibleUnits() {
+  return cartItems.filter(function(i){ return i.name === B2G1_PRODUCT_NAME && !i._b2g1free; })
+    .reduce(function(s,i){ return s + (i.price / B2G1_UNIT_PRICE) * i.qty; }, 0);
+}
+function b2g1PaidSubtotal() {
+  return cartItems.filter(function(i){ return !i._b2g1free; })
+    .reduce(function(s,i){ return s + i.price*i.qty; }, 0);
+}
+function b2g1FreeIndex() {
+  for (var i=0;i<cartItems.length;i++) { if (cartItems[i]._b2g1free) return i; }
+  return -1;
+}
+function checkB2G1Offer() {
+  var idx = b2g1FreeIndex();
+  var eligible = !appliedDiscount && b2g1EligibleUnits() >= 2 && b2g1PaidSubtotal() >= B2G1_MIN_ORDER;
+  if (eligible && idx === -1) {
+    var chickenProduct = null;
+    if (typeof products !== 'undefined') {
+      for (var i=0;i<products.length;i++) { if (products[i].name === B2G1_PRODUCT_NAME) { chickenProduct = products[i]; break; } }
+    }
+    cartItems.push({
+      name: B2G1_PRODUCT_NAME,
+      img: chickenProduct ? chickenProduct.img : '',
+      sizeLabel: 'Pack of 1 — FREE (Buy 2 Get 1)',
+      price: 0,
+      origPrice: B2G1_UNIT_PRICE,
+      qty: 1,
+      _b2g1free: true
+    });
+    if (typeof _saveCart === 'function') _saveCart();
+    if (typeof showCartToast === 'function') showCartToast('🎉 Buy 2 Get 1 Free applied — 1 free Chicken Neck Pack added!', 'success');
+    return true;
+  }
+  if (!eligible && idx !== -1) {
+    cartItems.splice(idx, 1);
+    if (typeof _saveCart === 'function') _saveCart();
+    return true;
+  }
+  return false;
+}
+function removeCartCoupon(suffix) {
+  suffix = suffix || '';
+  appliedDiscount = null;
+  var input = document.getElementById('cartCouponCode' + suffix);
+  var msg = document.getElementById('cartCouponMsg' + suffix);
+  if (input) { input.disabled = false; input.value = ''; }
+  if (msg) { msg.style.display = 'none'; msg.innerHTML = ''; }
+  checkB2G1Offer();
+  if (typeof renderCartDrawer === 'function') renderCartDrawer();
+  if (typeof renderCartPage === 'function') renderCartPage();
+  if (typeof renderCheckoutSummary === 'function') renderCheckoutSummary();
+  if (typeof updateCheckoutTotals === 'function') updateCheckoutTotals();
+  if (typeof showCartToast === 'function') showCartToast('Coupon removed');
+}
+
 let selectedPayment = 'upi';
 let clubOrder = true; // default: yes, club together
 
@@ -6913,6 +6973,7 @@ function goToCheckout() {
 }
 
 function renderCheckoutSummary() {
+  checkB2G1Offer();
   const list = document.getElementById('co-items-list');
   if (!list) return;
   list.innerHTML = cartItems.map(item => `
@@ -6948,8 +7009,9 @@ function renderCheckoutSummary() {
 }
 
 function updateCheckoutTotals() {
+  checkB2G1Offer();
   const subtotal = cartItems.reduce((s,i) => s+i.price*i.qty, 0);
-  const totalQty = cartItems.reduce((s,i) => s+i.qty, 0);
+  const totalQty = cartItems.filter(i => !i._b2g1free).reduce((s,i) => s+i.qty, 0);
   let couponDiscount = 0;
   let loyaltyDiscount = 0;
   let bulkDiscount = 0;
@@ -7087,10 +7149,15 @@ function finalizeCouponApply(coupon, code, msg, codeInput) {
               '₹' + coupon.value + ' off';
   appliedDiscount = { type: coupon.type, value: coupon.value, label: label, code: code };
   var priorTier = getBulkTier(cartItems.reduce(function(s,i){return s+i.qty;},0));
+  var suffix = codeInput ? codeInput.id.replace('cartCouponCode','') : '';
   msg.style.color = 'var(--teal)';
-  msg.textContent = '✓ ' + label + ' applied!' + (priorTier.pct > 0 ? ' Note: this replaces your Buy More Pay Less discount — offers don\'t stack.' : '');
+  msg.innerHTML = '✓ ' + label + ' applied!' + (priorTier.pct > 0 ? ' Note: this replaces your Buy More Pay Less discount — offers don\'t stack.' : '') + ' <span onclick="removeCartCoupon(\'' + suffix + '\')" style="text-decoration:underline;cursor:pointer;color:var(--dark);font-weight:600">✕ Remove</span>';
   if (codeInput) codeInput.disabled = true;
+  checkB2G1Offer();
   updateCheckoutTotals();
+  if (typeof renderCartDrawer === 'function') renderCartDrawer();
+  if (typeof renderCartPage === 'function') renderCartPage();
+  if (typeof renderCheckoutSummary === 'function') renderCheckoutSummary();
 }
 
 function applyDiscount() {
@@ -8899,6 +8966,7 @@ function clearCart() {
 }
 
 function renderCartDrawer() {
+  checkB2G1Offer();
   const empty = document.getElementById('cartEmpty');
   const itemsEl = document.getElementById('cartItems');
   const footer = document.getElementById('cartFooter');
@@ -8935,6 +9003,7 @@ function renderCartDrawer() {
 }
 
 function renderCartPage() {
+  checkB2G1Offer();
   const empty = document.getElementById('cartPageEmpty');
   const content = document.getElementById('cartPageContent');
   if (!empty || !content) return;
