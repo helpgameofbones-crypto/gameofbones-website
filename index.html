@@ -6904,6 +6904,7 @@ function checkB2G1Offer() {
 function removeCartCoupon(suffix) {
   suffix = suffix || '';
   appliedDiscount = null;
+  window._cartRecoveryCoupon = null;
   var input = document.getElementById('cartCouponCode' + suffix);
   var msg = document.getElementById('cartCouponMsg' + suffix);
   if (input) { input.disabled = false; input.value = ''; }
