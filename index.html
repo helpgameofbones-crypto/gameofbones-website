@@ -6875,7 +6875,7 @@ function b2g1FreeIndex() {
 }
 function checkB2G1Offer() {
   var idx = b2g1FreeIndex();
-  var eligible = !appliedDiscount && b2g1EligibleUnits() >= 2 && b2g1PaidSubtotal() >= B2G1_MIN_ORDER;
+  var eligible = !appliedDiscount && b2g1PaidSubtotal() >= B2G1_MIN_ORDER;
   if (eligible && idx === -1) {
     var chickenProduct = null;
     if (typeof products !== 'undefined') {
