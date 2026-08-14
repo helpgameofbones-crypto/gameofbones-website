@@ -8090,7 +8090,7 @@ function _finaliseOrder(ref, phoneVal, orderItems, razorpayPaymentId) {
         customer_email: email,
         payment_method: selectedPayment === 'cod' ? 'cod' : 'razorpay',
         grand_total: _currentOrderTotal,
-        items: cartItems.map(function(ci){ return { name: ci.name, qty: ci.qty || 1 }; })
+        shipping_address: [ (document.getElementById('co-addr1')&&document.getElementById('co-addr1').value.trim())||'', (document.getElementById('co-addr2')&&document.getElementById('co-addr2').value.trim())||'', (document.getElementById('co-city')&&document.getElementById('co-city').value.trim())||'', (document.getElementById('co-state')&&document.getElementById('co-state').value)||'', (document.getElementById('co-pin')&&document.getElementById('co-pin').value.trim())||'' ].filter(Boolean).join(', '), coupon_code: (typeof appliedDiscount!=='undefined' && appliedDiscount && appliedDiscount.code) ? appliedDiscount.code : null, coupon_label: (typeof appliedDiscount!=='undefined' && appliedDiscount) ? appliedDiscount.label : null, subtotal: cartItems.reduce(function(s,i){return s+(i.price||0)*(i.qty||1);},0), items: cartItems.map(function(ci){ return { name: ci.name, size: ci.sizeLabel || ci.size || null, qty: ci.qty || 1, unit_price: ci.price || 0, line_total: (ci.price||0)*(ci.qty||1) }; })
       }),
       keepalive: true
     }).catch(function(){});
