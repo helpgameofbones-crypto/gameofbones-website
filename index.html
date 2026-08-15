@@ -5030,7 +5030,8 @@ function showPage(id) {
   
   // PHASE 3: Initialize checkout features
   if (id === 'checkout') {
-    loadSavedAddresses();
+    if (typeof currentUser !== 'undefined' && currentUser) { var __coF=document.getElementById('co-fname'); var __coL=document.getElementById('co-lname'); var __coP=document.getElementById('co-phone'); var __coE=document.getElementById('co-email'); var __parts=currentUser.name ? String(currentUser.name).trim().split(/\s+/) : []; if (__coF && !__coF.value.trim()) __coF.value = __parts[0] || ''; if (__coL && !__coL.value.trim()) __coL.value = __parts.slice(1).join(' ') || ''; if (__coP && !__coP.value.trim() && currentUser.phone) __coP.value = String(currentUser.phone).replace(/\D/g,'').slice(-10); if (__coE && !__coE.value.trim() && currentUser.email) __coE.value = currentUser.email; }
+  loadSavedAddresses();
     renderSavedAddresses();
     checkLoyaltyAtCheckout();
     if (typeof cartItems !== 'undefined' && cartItems.length) {
