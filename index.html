@@ -11624,11 +11624,11 @@ var SW = {
   segments: [
     { label: 'Next Time',     emoji: '🔄', bg: '#1a1008', fg: '#c8973a', prob: 0.15, type: 'none',     code: null,       codeLabel: null },
     { label: '25% Off',       emoji: '🏆', bg: '#c8973a', fg: '#1a1008', prob: 0.05, type: 'percent',  code: 'SPIN25',   codeLabel: '25% OFF' },
-    { label: 'No Luck',       emoji: '😅', bg: '#1a1008', fg: '#c8973a', prob: 0.05, type: 'none',     code: null,       codeLabel: null },
-    { label: 'Free Ship',     emoji: '🚚', bg: '#c8973a', fg: '#1a1008', prob: 0.15, type: 'shipping', code: 'SHIPFREE', codeLabel: 'FREE SHIP' },
+    { label: 'Goat Ear Pack', emoji: '🐐', bg: '#1a1008', fg: '#c8973a', prob: 0.05, type: 'free',     code: 'FREEGOATEAR', codeLabel: 'FREE GOAT EAR PACK' },
+    { label: '2 Free Wings',  emoji: '🍗', bg: '#c8973a', fg: '#1a1008', prob: 0.15, type: 'free',     code: 'FREEWINGS', codeLabel: '2 FREE CHICKEN WINGS' },
     { label: 'Try Again',     emoji: '🎲', bg: '#1a1008', fg: '#c8973a', prob: 0.10, type: 'none',     code: null,       codeLabel: null },
     { label: 'Chicken Feet',  emoji: '🐾', bg: '#c8973a', fg: '#1a1008', prob: 0.30, type: 'free',     code: 'FREEFEET', codeLabel: 'FREE CHICKEN FEET 60G' },
-    { label: 'Oh No!',        emoji: '😱', bg: '#1a1008', fg: '#c8973a', prob: 0.07, type: 'none',     code: null,       codeLabel: null },
+    { label: 'Chicken Bones', emoji: '🦴', bg: '#1a1008', fg: '#c8973a', prob: 0.07, type: 'free',     code: 'FREEBONES', codeLabel: 'FREE CHICKEN BONES PACK' },
     { label: '₹75 Off',       emoji: '💰', bg: '#c8973a', fg: '#1a1008', prob: 0.13, type: 'fixed',    code: 'SPIN75',   codeLabel: '₹75 OFF' },
   ],
   angle: 0,
@@ -11638,7 +11638,7 @@ var SW = {
 
 // Add spin codes to DISCOUNT_CODES
 DISCOUNT_CODES['SPIN25']    = { type:'percent', value:25, label:'25% off (Jackpot!)' };
-DISCOUNT_CODES['SHIPFREE']  = { type:'fixed',   value:70, label:'Free Shipping' };
+DISCOUNT_CODES['FREEWINGS']   = { type:'free', value:0, label:'2 Free Chicken Wings', minOrder:749 }; DISCOUNT_CODES['FREEGOATEAR'] = { type:'free', value:0, label:'Free Goat Ear Pack', minOrder:749 }; DISCOUNT_CODES['FREEBONES']   = { type:'free', value:0, label:'Free Chicken Bones Pack', minOrder:749 };
 DISCOUNT_CODES['SPIN75']    = { type:'fixed',   value:75, label:'₹75 off' };
 
 function swDrawWheel() {
@@ -11904,7 +11904,7 @@ function showSpinResult(idx) {
   } else {
     sub = seg.type === 'percent' ? 'You won ' + seg.codeLabel + ' on your entire order! Use the code at checkout.' :
           seg.type === 'shipping' ? 'You won FREE shipping! Use the code at checkout.' :
-          seg.type === 'free'     ? 'You won a FREE 60g Chicken Feet pack! Valid on orders above ₹749. Use the code at checkout.' :
+          seg.type === 'free'     ? 'You won ' + seg.codeLabel + '! Valid on orders above ₹749. Use the code at checkout.' :
           'You won ' + seg.codeLabel + ' off your order! Use the code at checkout.';
     codeBox.style.display = 'block';
     var __g_spinCodeVal=document.getElementById('spinCodeVal');if(__g_spinCodeVal)__g_spinCodeVal.textContent = seg.code;
