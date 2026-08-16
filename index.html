@@ -4920,6 +4920,15 @@ function navigateTo(page, productIdx = null) {
     window.history.pushState({ page, productIdx }, '', url);
   } catch (e) { }
   showPage(page, productIdx);
+
+  // GA4: fire a page_view for SPA route changes (product pages, etc.)
+  if (typeof gtag === 'function') {
+    gtag('event', 'page_view', {
+      page_title: document.title,
+      page_location: window.location.href,
+      page_path: window.location.pathname + window.location.search
+    });
+  }
 }
 
 // ── SAFE setText/setHtml — NEVER throws null error ──────────────────────
