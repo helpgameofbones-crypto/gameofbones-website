@@ -8277,7 +8277,37 @@ function _finaliseOrder(ref, phoneVal, orderItems, razorpayPaymentId) {
     keepalive: true
   })
   .then(function(res) { 
-    if (!res.ok) throw new Error('HTTP ' + res.status);
+// RACE-CONDITION FALLBACK: 409 here means a row with this ref already
+  // exists -- almost always the Razorpay webhook's own placeholder
+  // safety-net, which waits ~9s for this save to land before inserting a
+  // minimal stub so a captured payment is never lost. When that stub wins
+  // the race this INSERT can never succeed no matter how many times we
+  // retry it, which is why AUTO-RECOVERED orders end up with empty items
+  // even though the real payload was sent. PATCH the real details onto
+  // that row instead. payment_status/status are left out on purpose --
+  // the webhook is the only trustworthy source for those, not the client.
+  if (res.status === 409) {
+  var patchPayload = Object.assign({}, orderPayload);
+  delete patchPayload.payment_status;
+  delete patchPayload.status;
+  delete patchPayload.ref;
+  delete patchPayload.created_at;
+  return fetch(SUPABASE_URL + '/rest/v1/orders?ref=eq.' + encodeURIComponent(ref), {
+  method: 'PATCH',
+  headers: {
+  'Content-Type': 'application/json',
+  'apikey': SUPABASE_ANON_KEY,
+  'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+  'Prefer': 'return=representation'
+  },
+  body: JSON.stringify(patchPayload)
+  }).then(function(pres) {
+  if (!pres.ok) throw new Error('HTTP ' + pres.status);
+  console.log('Order save recovered via PATCH (ref already existed):', pres.status);
+  return pres.text().then(function(t) { return t ? JSON.parse(t) : []; });
+  });
+  }
+  if (!res.ok) throw new Error('HTTP ' + res.status);
     console.log('Supabase response:', res.status);
     return res.text().then(function(t) { return t ? JSON.parse(t) : []; });
   })
