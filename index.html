@@ -8618,7 +8618,11 @@ function placeOrder() {
     },
     handler: function(response) {
       // Payment successful — capture the real Razorpay transaction ID
-      _finaliseOrder(ref, phoneVal, orderItems, response.razorpay_payment_id);
+      try {
+        var beaconPayload = JSON.stringify({ ref: ref, customer_name: fname + ' ' + lname, customer_phone: phoneVal, payment_method: 'razorpay', grand_total: _currentOrderTotal, razorpay_payment_id: response.razorpay_payment_id, note: 'sendBeacon from Razorpay handler -- client save may not run if this browser kills JS right after (seen in Facebook in-app browsers)' });
+  navigator.sendBeacon('https://gameofbones-admin.vercel.app/api/order-attempt-alert', new Blob([beaconPayload], { type: 'application/json' }));
+  } catch(e) {}
+  _finaliseOrder(ref, phoneVal, orderItems, response.razorpay_payment_id);
     }
   };
 
