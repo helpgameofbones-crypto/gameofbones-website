@@ -6854,7 +6854,7 @@ const DISCOUNT_CODES = {
   'SAVE50':  { type:'fixed',   value:50, label:'₹50 off' },
   'SAVE100': { type:'fixed',   value:100, label:'₹100 off', minOrder:999 },
   'MEGA20':  { type:'percent', value:20,  label:'20% off', minOrder:2199 },
-  'FREEFEET': { type:'free',    value:0,   label:'Free Chicken Feet pack (60g)', minOrder:749 },
+  'FREEFEET': { type:'free',    value:0,   label:'Free Chicken Feet pack (60g)' },
 };
 let appliedDiscount = null;
 // ── BUY 2 GET 1 FREE: auto-apply on Chicken Neck packs, orders ₹600+ ──
@@ -11672,7 +11672,7 @@ var SW = {
 
 // Add spin codes to DISCOUNT_CODES
 DISCOUNT_CODES['SPIN25']    = { type:'percent', value:25, label:'25% off (Jackpot!)' };
-DISCOUNT_CODES['FREEWINGS']   = { type:'free', value:0, label:'2 Free Chicken Wings', minOrder:749 }; DISCOUNT_CODES['FREEGOATEAR'] = { type:'free', value:0, label:'Free Goat Ear Pack', minOrder:749 }; DISCOUNT_CODES['FREEBONES']   = { type:'free', value:0, label:'Free Chicken Bones Pack', minOrder:749 };
+DISCOUNT_CODES['FREEWINGS']   = { type:'free', value:0, label:'2 Free Chicken Wings' }; DISCOUNT_CODES['FREEGOATEAR'] = { type:'free', value:0, label:'Free Goat Ear Pack' }; DISCOUNT_CODES['FREEBONES']   = { type:'free', value:0, label:'Free Chicken Bones Pack' };
 DISCOUNT_CODES['SPIN75']    = { type:'fixed',   value:75, label:'₹75 off' };
 
 function swDrawWheel() {
@@ -11938,13 +11938,13 @@ function showSpinResult(idx) {
   } else {
     sub = seg.type === 'percent' ? 'You won ' + seg.codeLabel + ' on your entire order! Use the code at checkout.' :
           seg.type === 'shipping' ? 'You won FREE shipping! Use the code at checkout.' :
-          seg.type === 'free'     ? 'You won ' + seg.codeLabel + '! Valid on orders above ₹749. Use the code at checkout.' :
+          seg.type === 'free'     ? 'You won ' + seg.codeLabel + '! Use the code at checkout.' :
           'You won ' + seg.codeLabel + ' off your order! Use the code at checkout.';
     codeBox.style.display = 'block';
     var __g_spinCodeVal=document.getElementById('spinCodeVal');if(__g_spinCodeVal)__g_spinCodeVal.textContent = seg.code;
     var __g_spinCopyBtn=document.getElementById('spinCopyBtn');if(__g_spinCopyBtn)__g_spinCopyBtn.style.display = 'block';
     var minOrderEl = document.getElementById('spinMinOrder');
-    if (minOrderEl) minOrderEl.style.display = seg.type === 'free' ? 'block' : 'none';
+    if (minOrderEl) minOrderEl.style.display = 'none';
   }
   var srs = document.getElementById('spinResultSub'); if (srs) srs.textContent = sub;
 
