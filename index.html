@@ -10901,8 +10901,8 @@ const blogs = [
   }
 ];
 
-function renderBlogs(p) {
-  console.log('🔵 renderBlogs called');
+var ARTICLE_TO_BLOG_SLUG={1:'hidden-truth-dog-treats',2:'human-foods-dogs-can-eat',3:'7-day-transition-plan',4:'natural-treats-clean-teeth',5:'buffalo-vs-chicken-jerky',6:'dog-food-sensitivity-signs',7:'new-dog-parent-guide',8:'fish-treats-underrated',9:'store-treats-indian-humidity'};function getArticleCoverHtml(idx,a){var slug=ARTICLE_TO_BLOG_SLUG[idx];var match=slug&&window._dbBlogs?window._dbBlogs.find(function(b){return b.slug===slug;}):null;if(match&&match.cover_image){return '<img src="'+match.cover_image+'" alt="'+String(a.title).replace(/"/g,'&quot;')+'" style="width:100%;height:100%;object-fit:cover;display:block">';}return a.emoji;}function renderBlogs(p) {
+  console.log('🔵 renderBlogs called'); if(!window._dbBlogs&&typeof loadBlogsFromDB==='function'){loadBlogsFromDB();}
   const blogsGrid = document.getElementById('blogs-grid');
   console.log('📍 blogsGrid element:', blogsGrid);
 
@@ -10928,7 +10928,7 @@ function renderBlogs(p) {
       return `
         <div onclick="openArt(${idx})" style="background:var(--cream);padding:0;border-radius:2px;overflow:hidden;transition:all .2s;cursor:pointer" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,.1)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
           <div style="aspect-ratio:16/9;background:linear-gradient(135deg,var(--gold) 0%,var(--brown) 100%);display:flex;align-items:center;justify-content:center;font-size:48px">
-            ${a.emoji}
+            ${getArticleCoverHtml(idx, a)}
           </div>
           <div style="padding:20px">
             <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-bottom:8px">${a.tag}</div>
@@ -12812,7 +12812,7 @@ function loadBlogsFromDB() {
   .then(function(r) { return r.json(); })
   .then(function(blogs) {
     if (!Array.isArray(blogs) || blogs.length === 0) return;
-    window._dbBlogs = blogs;
+    window._dbBlogs = blogs; if(typeof currentProductIdx==='number'&&typeof products!=='undefined'&&products[currentProductIdx]&&document.getElementById('blogs-grid')){renderBlogs(products[currentProductIdx]);}
 
 
     // ── CATEGORY FILTER ──────────────────────────────────────────────
