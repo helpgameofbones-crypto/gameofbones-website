@@ -4999,7 +4999,7 @@ function showPage(id) {
   if (id === 'shop') { activeShopFilter = 'all'; activeShopSize = 'all'; }
   // Restore WA widget when leaving checkout
   var waW = document.querySelector('.wa-widget');
-  if (waW) waW.style.display = (id === 'checkout' || id === 'login') ? 'none' : '';
+  if (waW) waW.style.display = (id === 'checkout' || id === 'login' || id === 'cart') ? 'none' : ''; var msbW = document.getElementById('mobileStickyBar'); if (msbW) { if (id === 'checkout' || id === 'login' || id === 'cart') { msbW.style.setProperty('display','none','important'); } else { msbW.style.removeProperty('display'); } }
   var footerEl = document.querySelector('footer');
   if(footerEl) footerEl.style.display = (id === 'checkout' || id === 'login') ? 'none' : '';
   var mainNav = document.getElementById('mainNav');
