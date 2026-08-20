@@ -4907,7 +4907,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
 var WA_NUMBER = '919082503295';
 
 // URL Routing - separate links for each page
-function navigateTo(page, productIdx = null) { var _wa=document.querySelector('.wa-widget'),_msb=document.getElementById('mobileStickyBar'); if(_wa){if(page==='cart'||page==='checkout'){_wa.style.setProperty('display','none','important');}else{_wa.style.removeProperty('display');}} if(_msb){if(page==='cart'||page==='checkout'){_msb.style.setProperty('display','none','important');}else{_msb.style.removeProperty('display');}}
+function navigateTo(page, productIdx = null) { var _wa=document.querySelector('.wa-widget'),_msb=document.getElementById('mobileStickyBar'); if(_wa){if(page==='cart'||page==='checkout'){_wa.style.setProperty('display','none','important');}else{_wa.style.removeProperty('display');}} if(_msb){if(page==='cart'||page==='checkout'){_msb.style.setProperty('display','none','important');}else{_msb.style.display='none';}}
   let url = window.location.pathname;
   if (page === 'product' && productIdx !== null) {
     const productName = products[productIdx]?.name || '';
@@ -4999,7 +4999,7 @@ function showPage(id) {
   if (id === 'shop') { activeShopFilter = 'all'; activeShopSize = 'all'; }
   // Restore WA widget when leaving checkout
   var waW = document.querySelector('.wa-widget');
-  if (waW) waW.style.display = (id === 'checkout' || id === 'login' || id === 'cart') ? 'none' : ''; var msbW = document.getElementById('mobileStickyBar'); if (msbW) { if (id === 'checkout' || id === 'login' || id === 'cart') { msbW.style.setProperty('display','none','important'); } else { msbW.style.removeProperty('display'); } }
+  if (waW) waW.style.display = (id === 'checkout' || id === 'login' || id === 'cart') ? 'none' : ''; var msbW = document.getElementById('mobileStickyBar'); if (msbW) { if (id === 'checkout' || id === 'login' || id === 'cart') { msbW.style.setProperty('display','none','important'); } else { msbW.style.display='none'; } }
   var footerEl = document.querySelector('footer');
   if(footerEl) footerEl.style.display = (id === 'checkout' || id === 'login') ? 'none' : '';
   var mainNav = document.getElementById('mainNav');
@@ -8709,7 +8709,7 @@ function addCart(btn, productIdx, sizeIdx) {
   gtag('event', 'add_to_cart', { currency: 'INR', value: size.price, items: [{ item_name: p.name, item_id: p.name.toLowerCase().replace(/[&\s]+/g, '-'), price: size.price, quantity: 1 }] });
   addedProductIdxs.add(productIdx);
   updateCartBadge();
-  showCartToast(p.name + ' added to cart 🐾', 'success');
+  gobAddToCartFeedback(p, size);
   var originalText = btn.textContent; // remember what the button said before ("+" on cards, "Add to Cart +" on the detail page)
   // Capture the button's ACTUAL current background (from its CSS/inline style) before
   // overwriting it — setting style.background='' afterward would otherwise clear it to
@@ -8979,7 +8979,7 @@ document.addEventListener('keydown', function(e) {
     toggleCart(); return;
   }
 });
-function showCartToast(msg, type) {
+function gobConfetti(n){n=n||60;var c=document.createElement('canvas');c.style.cssText='position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:99999';document.body.appendChild(c);var ctx=c.getContext('2d');c.width=window.innerWidth;c.height=window.innerHeight;var colors=['#d4af37','#25d366','#c0392b','#2563eb','#ffffff'];var parts=[];for(var i=0;i<n;i++){parts.push({x:c.width/2+(Math.random()-0.5)*160,y:c.height*0.55+(Math.random()-0.5)*40,vx:(Math.random()-0.5)*8,vy:-4-Math.random()*6,g:0.18+Math.random()*0.12,size:4+Math.random()*4,color:colors[Math.floor(Math.random()*colors.length)],rot:Math.random()*360,vr:(Math.random()-0.5)*12});}var start=Date.now();function tick(){var t=Date.now()-start;ctx.clearRect(0,0,c.width,c.height);parts.forEach(function(p){p.vy+=p.g;p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot*Math.PI/180);ctx.fillStyle=p.color;ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size*0.6);ctx.restore();});if(t<1600){requestAnimationFrame(tick);}else{c.remove();}}requestAnimationFrame(tick);}function gobAddToCartFeedback(p,size){var totalQty=cartItems.reduce(function(s,i){return s+i.qty;},0);var subtotal=cartItems.reduce(function(s,i){return s+i.price*i.qty;},0);var tier=getBulkTier(totalQty);var prevTier=getBulkTier(totalQty-1);var thresholds=[3,5,8,10];var pcts=[5,8,12,15];var nextIdx=thresholds.findIndex(function(th){return totalQty<th;});var msg;if(tier.pct>prevTier.pct){var discTotal=Math.round(subtotal*(1-tier.pct/100));msg='🎉 '+p.name+' added — '+tier.pct+'% off unlocked! New total ₹'+discTotal.toLocaleString('en-IN');gobConfetti(90);}else if(nextIdx>=0){var need=thresholds[nextIdx]-totalQty;msg=p.name+' added to cart 🐾 — add '+need+' more for '+pcts[nextIdx]+'% off';gobConfetti(35);}else{var discTotal2=Math.round(subtotal*(1-tier.pct/100));msg=p.name+' added — 15% off already applied (₹'+discTotal2.toLocaleString('en-IN')+')';gobConfetti(35);}showCartToast(msg,'success');}function showCartToast(msg, type) {
   var existing = document.getElementById('gobToast');
   if (existing) existing.remove();
   var t = document.createElement('div');
@@ -12011,7 +12011,7 @@ setTimeout(function() {
   // Reset spin state on each load so it always shows
   SW.hasSpun = false; SW.spinning = false; SW.angle = 0;
   if(sessionStorage.getItem('gob_spin_shown'))return;sessionStorage.setItem('gob_spin_shown','1');spinWheelOpen();
-}, 25000);
+}, 40000);
 
 // ── DOG BIRTHDAY FORM ────────────────────────────────────────────────
 function bdayAutoTab(el, nextId, maxLen) {
