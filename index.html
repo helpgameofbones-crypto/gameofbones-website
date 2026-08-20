@@ -4907,7 +4907,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
 var WA_NUMBER = '919082503295';
 
 // URL Routing - separate links for each page
-function navigateTo(page, productIdx = null) {
+function navigateTo(page, productIdx = null) { var _wa=document.querySelector('.wa-widget'),_msb=document.getElementById('mobileStickyBar'); if(_wa){if(page==='cart'||page==='checkout'){_wa.style.setProperty('display','none','important');}else{_wa.style.removeProperty('display');}} if(_msb){if(page==='cart'||page==='checkout'){_msb.style.setProperty('display','none','important');}else{_msb.style.removeProperty('display');}}
   let url = window.location.pathname;
   if (page === 'product' && productIdx !== null) {
     const productName = products[productIdx]?.name || '';
