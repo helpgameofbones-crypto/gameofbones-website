@@ -1,0 +1,74 @@
+export const config = { matcher: ['/'] };
+
+const PRODUCTS = {
+  'chicken-jerky': { name: 'Chicken Jerky', img: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/293b7ba0-37a7-4626-b97e-0f6aa8d86fa4/image-0-1782712553501.png', desc: 'Single-ingredient slow-dehydrated chicken breast. High-protein, low-fat. Perfect for training rewards.' },
+  'buff-jerky': { name: 'Buff Jerky', img: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/5805f088-bda7-4070-9534-96fe4cfe77ef/image-0-1782140747762.png', desc: 'Premium buffalo jerky — rich in iron, zinc and amino acids. Ideal for dogs with chicken sensitivity.' },
+  'chicken-feet': { name: 'Chicken Feet', img: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/cac553a3-463f-4cf6-92dd-48c054f82bfe/image-0-1782712513139.png', desc: 'Natural glucosamine & chondroitin source. Soft dehydrated bone scrapes plaque while your dog chews.' },
+  'chicken-neck': { name: 'Chicken Neck', img: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/373c6199-f75b-4294-8626-4f173fda9f5d/image-0-1782712577445.png', desc: 'Whole chicken neck — satisfying chew with natural calcium and phosphorus for strong bones.' },
+  'chicken-bites': { name: 'Chicken Bites', img: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/2d733070-14d7-4d82-9ec4-4aa1548cbc35/image-0-1782712121099.png', desc: 'Bite-sized dehydrated chicken pieces — perfect treat size for training. High protein, easy to carry.' },
+  'chicken-wings': { name: 'Chicken Wings', img: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/ef9d3dbe-f6d7-4e59-b673-ffe451e0ab5a/image-0-1782712167008.png', desc: 'Crunchy dehydrated chicken wings — collagen-rich, great for coat health and a satisfying long chew.' },
+  'chicken-bones': { name: 'Chicken Bones', img: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/937c9539-b00d-4e93-9291-1af00893a061/image-0-1782712130859.png', desc: 'Assorted dehydrated chicken bones — natural calcium source, safe digestible chew for all breeds.' },
+  'goat-trachea': { name: 'Goat Trachea', img: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/cb465b52-4add-49b6-82be-b6f016d10b7c/image-0-1782795689958.png', desc: 'Natural cartilage-rich chew packed with glucosamine & chondroitin. Excellent for senior or active dogs.' },
+  'goat-trotter': { name: 'Goat Trotter', img: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/abef0def-e2c9-4981-b6bc-80a079ed31eb/image-0-1782712288081.png', desc: 'Hard-working chew for powerful chewers. Rich in collagen and marrow, keeps dogs engaged for hours.' },
+  'goat-ear': { name: 'Goat Ear', img: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/9e4a7262-ad95-4076-a0ee-949f9582616f/image-0-1782712197998.png', desc: 'Thin, crunchy goat ears — a lighter chew that is great for smaller breeds and senior dogs.' },
+  'chicken-gizzards': { name: 'Chicken Gizzards', img: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/5d4353a7-fd6c-4919-a32b-4d4c66fd44ab/image-0-1782712147567.png', desc: 'Nutrient-dense gizzards packed with B12, iron, zinc and phosphorus. Nature\'s multivitamin for dogs.' },
+  'chicken-heart-liver': { name: 'Chicken Heart & Liver', img: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/b8ea22dc-d46f-4ee9-b779-8c1aacafd755/image-0-1782759470191.png', desc: 'Rich in Vitamin A, B12 and iron. One of the most nutrient-dense organ meats available.' },
+  'goat-liver': { name: 'Goat Liver', img: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/f804c0d1-0be7-4281-bc8a-c9dc6e8cfd50/image-0-1782712241277.png', desc: 'Goat liver — richer and more intense than chicken. Exceptional source of Vitamin A, copper and folate.' },
+  'goat-lungs': { name: 'Goat Lungs', img: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/39ac015f-9a37-49c4-b2df-34b29472eca7/image-0-1782712258742.png', desc: 'Lightweight and crunchy dehydrated goat lungs. High protein, very low fat — great for weight-conscious dogs.' },
+  'goat-heart-kidney-mix': { name: 'Goat Heart & Kidney Mix', img: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/007d8e1a-3640-4b75-b467-d27782f82855/image-0-1782712225799.png', desc: 'Goat heart and kidney — rich in taurine, CoQ10 and B vitamins. Supports cardiovascular health.' },
+  'goat-spleen': { name: 'Goat Spleen', img: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/92d62ad6-33db-45f3-af57-91b6a454a07a/image-0-1782712272366.png', desc: 'Goat spleen is one of the richest natural iron sources available. Excellent for anaemic or low-energy dogs.' },
+  'anchovies': { name: 'Anchovies', img: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/f0846a93-7d6b-42aa-90a7-a6ddd771c156/image-0-1782712072618.png', desc: 'Wild-caught whole anchovies — one of the best natural sources of EPA & DHA omega-3. Shiny coat guaranteed.' },
+  'bombay-duck': { name: 'Bombay Duck', img: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/46addf99-2f4a-44f2-ba64-7623cde174ff/image-0-1782712106125.png', desc: 'Traditional Bombil (Bombay Duck) — a low-calorie, high-protein coastal treat rich in iodine and selenium.' },
+  'whole-mackerel': { name: 'Whole Mackerel', img: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/177aaeda-c886-437c-bc6f-aaa5fb27b2c2/image-0-1782712317685.png', desc: 'Whole dehydrated mackerel — packed with omega-3 fatty acids, B12 and selenium for complete fish nutrition.' },
+  'mackerel-fillet': { name: 'Mackerel Fillet', img: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/771b372e-a767-4056-ae85-c6ad1251e84a/image-0-1782712307911.png', desc: 'Dehydrated boneless mackerel fillet — all the omega-3 nutrition with no bones. Great for small breeds.' },
+  'sardines': { name: 'Sardines', img: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/f2462343-c4b8-4992-8fc9-d38db31e2e7c/image-0-1782712340470.png', desc: 'Whole dehydrated sardines — exceptional omega-3 content for brain health, coat shine and joint support.' },
+  'tuna': { name: 'Tuna', img: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/da659861-df5e-4c9e-991c-811c56f50c7f/image-0-1782795710302.png', desc: 'Dehydrated tuna — lean, high-protein ocean fish. Rich in selenium and B12. Dogs love the intense flavour.' },
+  'prawns': { name: 'Prawns', img: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/a76ab961-d32e-4720-8e2e-e4f989da8ee0/image-0-1782712329883.png', desc: 'Dehydrated prawns — rich in antioxidants, iodine and astaxanthin. A premium coastal treat dogs adore.' },
+  'whole-quail': { name: 'Whole Quail', img: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/edb3cdd6-b31f-4e5b-ba18-bf4a300d8090/image-0-1782712359525.png', desc: 'Whole dehydrated quail — the ultimate whole prey treat. Complete bone, meat and organ in a single piece.' },
+};
+
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+export default async function middleware(request) {
+  const url = new URL(request.url);
+  const slug = url.searchParams.get('p');
+  if (!slug) return;
+
+  const product = PRODUCTS[slug];
+  if (!product) return;
+
+  const originUrl = new URL('/index.html', url.origin);
+  const originResponse = await fetch(originUrl.toString());
+  if (!originResponse.ok) return;
+
+  let html = await originResponse.text();
+
+  const title = product.name + ' \u2014 Game of Bones';
+  const desc = product.desc;
+  const img = product.img;
+  const pageUrl = 'https://gameofbones.in/?p=' + slug;
+
+  html = html.replace(/<title>[\s\S]*?<\/title>/, '<title>' + escapeHtml(title) + '</title>');
+  html = html.replace(/<meta name="description" content="[^"]*">/, '<meta name="description" content="' + escapeHtml(desc) + '">');
+  html = html.replace(/<meta property="og:title" content="[^"]*">/, '<meta property="og:title" content="' + escapeHtml(title) + '">');
+  html = html.replace(/<meta property="og:description" content="[^"]*">/, '<meta property="og:description" content="' + escapeHtml(desc) + '">');
+  html = html.replace(/<meta property="og:url" content="[^"]*">/, '<meta property="og:url" content="' + pageUrl + '">');
+  html = html.replace(/<meta property="og:image" content="[^"]*">/, '<meta property="og:image" content="' + img + '">');
+  html = html.replace(/<meta name="twitter:title" content="[^"]*">/, '<meta name="twitter:title" content="' + escapeHtml(title) + '">');
+  html = html.replace(/<meta name="twitter:description" content="[^"]*">/, '<meta name="twitter:description" content="' + escapeHtml(desc) + '">');
+  html = html.replace(/<meta name="twitter:image" content="[^"]*">/, '<meta name="twitter:image" content="' + img + '">');
+
+  return new Response(html, {
+    status: 200,
+    headers: {
+      'content-type': 'text/html; charset=utf-8',
+      'cache-control': 'public, max-age=300, s-maxage=300',
+    },
+  });
+}
