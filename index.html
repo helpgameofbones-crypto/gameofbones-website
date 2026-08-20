@@ -10266,7 +10266,7 @@ function resetPageSEO() {
   } catch (e) { console.error('resetPageSEO error', e); }
 }
 
-function openProductPage(idx) {
+function injectProductSchema(p,idx){try{var old=document.getElementById('product-schema-ld');if(old)old.remove();var imgUrl=p.img&&p.img.startsWith('http')?p.img:(SUPABASE_IMG_URL+p.img);var prices=(p.sizes||[]).map(function(s){return s.price;});var lowPrice=prices.length?Math.min.apply(null,prices):0;var highPrice=prices.length?Math.max.apply(null,prices):0;var slug=p.name.toLowerCase().replace(/[&\s]+/g,'-');var url='https://gameofbones.in/?p='+slug;var schema={'@context':'https://schema.org','@type':'Product','name':p.name,'image':[imgUrl],'description':p.desc||'','brand':{'@type':'Brand','name':'Game of Bones'},'offers':{'@type':'AggregateOffer','priceCurrency':'INR','lowPrice':lowPrice,'highPrice':highPrice,'offerCount':prices.length,'availability':'https://schema.org/InStock','url':url}};var rating=(typeof getProductRating==='function')?getProductRating(p.name):null;if(rating&&rating.count>0){schema.aggregateRating={'@type':'AggregateRating','ratingValue':rating.avg,'reviewCount':rating.count,'bestRating':5,'worstRating':1};}var s=document.createElement('script');s.type='application/ld+json';s.id='product-schema-ld';s.text=JSON.stringify(schema);document.head.appendChild(s);}catch(e){console.log('schema inject failed',e);}}function openProductPage(idx) {
   // Update URL for product page
   var p = products[idx];
   if (p) {
@@ -10333,7 +10333,7 @@ function updateProductImage(idx, p) {
   
   // Update wishlist button
   const favBtn = document.getElementById('detail-fav');
-  if (favBtn) favBtn.textContent = isWishlisted(idx) ? '♥' : '♡';
+  if (favBtn) favBtn.textContent = isWishlisted(idx) ? '♥' : '♡'; injectProductSchema(p, idx);
   
   // Build product details HTML
   const sizeOpts = p.sizes.map((s,i) => {
