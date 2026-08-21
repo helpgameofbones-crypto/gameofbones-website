@@ -11926,10 +11926,10 @@ function showSpinResult(idx) {
                                        "Oops! The wheel was feeling cheeky. Try again tomorrow!";
     codeBox.style.display = 'none';
   } else {
-    sub = seg.type === 'percent' ? 'You won ' + seg.codeLabel + ' on your entire order! Use the code at checkout.' :
+    sub = seg.type === 'percent' ? 'You won ' + seg.codeLabel + ' on your entire order! Use the code at checkout. Note: does not stack with Buy More Pay Less.' :
           seg.type === 'shipping' ? 'You won FREE shipping! Use the code at checkout.' :
           seg.type === 'free'     ? 'You won ' + seg.codeLabel + '! Use the code at checkout.' :
-          'You won ' + seg.codeLabel + ' off your order! Use the code at checkout.';
+          'You won ' + seg.codeLabel + ' off your order! Use the code at checkout. Note: does not stack with Buy More Pay Less.';
     codeBox.style.display = 'block';
     var __g_spinCodeVal=document.getElementById('spinCodeVal');if(__g_spinCodeVal)__g_spinCodeVal.textContent = seg.code;
     var __g_spinCopyBtn=document.getElementById('spinCopyBtn');if(__g_spinCopyBtn)__g_spinCopyBtn.style.display = 'block';
