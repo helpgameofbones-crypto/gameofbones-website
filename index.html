@@ -11828,7 +11828,7 @@ function swSpin() {
       return;
     }
     // One spin per phone number per session
-    var usedPhones = JSON.parse(sessionStorage.getItem('swUsedPhones') || '[]');
+    var usedPhones; try { usedPhones = JSON.parse(sessionStorage.getItem('swUsedPhones') || '[]'); } catch (e) { usedPhones = []; }
     if (usedPhones.indexOf(phone) > -1) {
       errEl.textContent = "You've already spun with this number. One spin per person!";
       errEl.style.display = 'block';
