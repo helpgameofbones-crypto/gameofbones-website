@@ -27,48 +27,4 @@ const PRODUCTS = {
   'whole-quail': { name: 'Whole Quail', img: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/edb3cdd6-b31f-4e5b-ba18-bf4a300d8090/image-0-1782712359525.png', desc: 'Whole dehydrated quail — the ultimate whole prey treat. Complete bone, meat and organ in a single piece.' },
 };
 
-function escapeHtml(s) {
-  return String(s)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
-
-export default async function middleware(request) {
-  const url = new URL(request.url);
-  const slug = url.searchParams.get('p');
-  if (!slug) return;
-
-  const product = PRODUCTS[slug];
-  if (!product) return;
-
-  const originUrl = new URL('/index.html', url.origin);
-  const originResponse = await fetch(originUrl.toString());
-  if (!originResponse.ok) return;
-
-  let html = await originResponse.text();
-
-  const title = product.name + ' \u2014 Game of Bones';
-  const desc = product.desc;
-  const img = product.img;
-  const pageUrl = 'https://gameofbones.in/?p=' + slug;
-
-  html = html.replace(/<title>[\s\S]*?<\/title>/, '<title>' + escapeHtml(title) + '</title>');
-  html = html.replace(/<meta name="description" content="[^"]*">/, '<meta name="description" content="' + escapeHtml(desc) + '">');
-  html = html.replace(/<meta property="og:title" content="[^"]*">/, '<meta property="og:title" content="' + escapeHtml(title) + '">');
-  html = html.replace(/<meta property="og:description" content="[^"]*">/, '<meta property="og:description" content="' + escapeHtml(desc) + '">');
-  html = html.replace(/<meta property="og:url" content="[^"]*">/, '<meta property="og:url" content="' + pageUrl + '">');
-  html = html.replace(/<meta property="og:image" content="[^"]*">/, '<meta property="og:image" content="' + img + '">');
-  html = html.replace(/<meta name="twitter:title" content="[^"]*">/, '<meta name="twitter:title" content="' + escapeHtml(title) + '">');
-  html = html.replace(/<meta name="twitter:description" content="[^"]*">/, '<meta name="twitter:description" content="' + escapeHtml(desc) + '">');
-  html = html.replace(/<meta name="twitter:image" content="[^"]*">/, '<meta name="twitter:image" content="' + img + '">');
-
-  return new Response(html, {
-    status: 200,
-    headers: {
-      'content-type': 'text/html; charset=utf-8',
-      'cache-control': 'public, max-age=300, s-maxage=300',
-    },
-  });
-}
+const SUPABASE_URL = 'https://syuostlqzzinigqwjzap.supabase.co'; const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5dW9zdGxxenppbmlncXdqemFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NTA3MzIsImV4cCI6MjA4OTQyNjczMn0.BKf4EF2QhNcW_u1SVVbtiGdlnzdthiptlVcNk3gP2KU'; const DEFAULT_BLOG_IMG = 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/logo.jpeg'; function escapeHtml(s) { return String(s) .replace(/&/g, '&amp;') .replace(/</g, '&lt;') .replace(/>/g, '&gt;') .replace(/"/g, '&quot;'); } function injectMeta(html, { title, desc, img, pageUrl }) { html = html.replace(/<title>[\s\S]*?<\/title>/, '<title>' + escapeHtml(title) + '</title>'); html = html.replace(/<meta name="description" content="[^"]*">/, '<meta name="description" content="' + escapeHtml(desc) + '">'); html = html.replace(/<meta property="og:title" content="[^"]*">/, '<meta property="og:title" content="' + escapeHtml(title) + '">'); html = html.replace(/<meta property="og:description" content="[^"]*">/, '<meta property="og:description" content="' + escapeHtml(desc) + '">'); html = html.replace(/<meta property="og:url" content="[^"]*">/, '<meta property="og:url" content="' + pageUrl + '">'); html = html.replace(/<meta property="og:image" content="[^"]*">/, '<meta property="og:image" content="' + img + '">'); html = html.replace(/<meta name="twitter:title" content="[^"]*">/, '<meta name="twitter:title" content="' + escapeHtml(title) + '">'); html = html.replace(/<meta name="twitter:description" content="[^"]*">/, '<meta name="twitter:description" content="' + escapeHtml(desc) + '">'); html = html.replace(/<meta name="twitter:image" content="[^"]*">/, '<meta name="twitter:image" content="' + img + '">'); return html; } export default async function middleware(request) { const url = new URL(request.url); const slug = url.searchParams.get('p'); const blogSlug = url.searchParams.get('blog'); if (!slug && !blogSlug) return; const originUrl = new URL('/index.html', url.origin); if (slug) { const product = PRODUCTS[slug]; if (!product) return; const originResponse = await fetch(originUrl.toString()); if (!originResponse.ok) return; let html = await originResponse.text(); html = injectMeta(html, { title: product.name + ' — Game of Bones', desc: product.desc, img: product.img, pageUrl: 'https://gameofbones.in/?p=' + slug, }); return new Response(html, { status: 200, headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'public, max-age=300, s-maxage=300', }, }); } const apiUrl = SUPABASE_URL + '/rest/v1/blogs?slug=eq.' + encodeURIComponent(blogSlug) + '&select=title,excerpt,cover_image,is_published&limit=1'; const blogResponse = await fetch(apiUrl, { headers: { apikey: SUPABASE_ANON_KEY, Authorization: 'Bearer ' + SUPABASE_ANON_KEY, }, }); if (!blogResponse.ok) return; const rows = await blogResponse.json(); const blog = rows && rows[0]; if (!blog || blog.is_published === false) return; const originResponse = await fetch(originUrl.toString()); if (!originResponse.ok) return; let html = await originResponse.text(); html = injectMeta(html, { title: blog.title + ' — Game of Bones Blog', desc: blog.excerpt || (blog.title + ' — read more on the Game of Bones blog.'), img: blog.cover_image || DEFAULT_BLOG_IMG, pageUrl: 'https://gameofbones.in/?blog=' + blogSlug, }); return new Response(html, { status: 200, headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'public, max-age=300, s-maxage=300', }, }); }
