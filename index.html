@@ -11988,7 +11988,7 @@ function spinWheelOpen() {
 }
 
 function spinWheelClose() {
-  document.getElementById('spinWheelOverlay').style.display = 'none';
+  document.getElementById('spinWheelOverlay').style.pointerEvents = 'none'; requestAnimationFrame(function(){ requestAnimationFrame(function(){ var ov = document.getElementById('spinWheelOverlay'); ov.style.display = 'none'; ov.style.pointerEvents = ''; }); });
   document.body.style.overflow = '';
 }
 
