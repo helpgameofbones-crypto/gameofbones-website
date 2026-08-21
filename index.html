@@ -1217,7 +1217,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
       <li><a id="nav-rewards" onclick="navigateTo('rewards')">My Rewards</a></li>
     </ul>
     <div class="nav-actions">
-      <button id="loginNavBtn" class="nav-icon" onclick="handleLoginClick()" title="Sign In / Account" style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;position:relative">&#128100;</button>
+      <div style="position:relative;display:inline-block"><button id="loginNavBtn" class="nav-icon" onclick="handleLoginClick()" title="Sign In / Account" style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;position:relative">&#128100;</button><span id="navPointsBadge" onclick="navigateTo('rewards')" style="display:none;position:absolute;top:-4px;right:-4px;background:var(--gold);color:var(--dark);font-size:9px;font-weight:800;line-height:1;padding:3px 5px;border-radius:10px;min-width:14px;text-align:center;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.3)"></span></div>
       <button class="nav-icon" onclick="showPage('cart')">&#128722;<span class="cart-badge" id="cartCount">0</span></button>
     </div>
     <button class="hamburger-btn" onclick="toggleMobileMenu()">
@@ -12293,31 +12293,10 @@ function handleLoginClick(){
     if(la2)la2.style.display='none'; if(lf2)lf2.style.display='flex';
   }
 }
-function signOut(){
-  currentUser=null;
-  try{localStorage.removeItem('gobCurrentUser');}catch(e){}
-  setText('loginNavBtn','👤');
-  var nb=document.getElementById('loginNavBtn');
-  if(nb){nb.style.background='';nb.style.color='';nb.style.fontWeight='';}
-  var la=document.getElementById('loginAlreadyIn'),lf=document.getElementById('loginForm');
-  if(la)la.style.display='none'; if(lf)lf.style.display='flex';
-  showCartToast('Signed out','success');
-}
+function signOut(){ currentUser=null; try{localStorage.removeItem('gobCurrentUser');}catch(e){} setText('loginNavBtn','👤'); var nb=document.getElementById('loginNavBtn'); if(nb){nb.style.background='';nb.style.color='';nb.style.fontWeight='';} var __npb=document.getElementById('navPointsBadge');if(__npb)__npb.style.display='none'; var la=document.getElementById('loginAlreadyIn'),lf=document.getElementById('loginForm'); if(la)la.style.display='none'; if(lf)lf.style.display='flex'; showCartToast('Signed out','success'); }
 
 // Paint the nav avatar button with the signed-in customer's initials
-function _applyLoginAvatar(){
-  var nb=document.getElementById('loginNavBtn');
-  if(!nb) return;
-  if(currentUser && currentUser.name){
-    var parts=String(currentUser.name).trim().split(/\s+/).filter(Boolean);
-    var initials=((parts[0]||'').charAt(0)+(parts.length>1?(parts[parts.length-1]||'').charAt(0):'')).toUpperCase();
-    nb.textContent=initials||'👤';
-    nb.style.background='var(--gold)';nb.style.color='var(--dark)';nb.style.fontWeight='700';nb.style.fontSize='12px';
-  } else {
-    nb.textContent='👤';
-    nb.style.background='';nb.style.color='';nb.style.fontWeight='';
-  }
-}
+function _applyLoginAvatar(){ var nb=document.getElementById('loginNavBtn'); if(!nb) return; if(currentUser && currentUser.name){ var parts=String(currentUser.name).trim().split(/\s+/).filter(Boolean); var initials=((parts[0]||'').charAt(0)+(parts.length>1?(parts[parts.length-1]||'').charAt(0):'')).toUpperCase(); nb.textContent=initials||'👤'; nb.style.background='var(--gold)';nb.style.color='var(--dark)';nb.style.fontWeight='700';nb.style.fontSize='12px'; } else { nb.textContent='👤'; nb.style.background='';nb.style.color='';nb.style.fontWeight=''; } updateNavPointsBadge(); } function updateNavPointsBadge(){ var badge=document.getElementById('navPointsBadge'); if(!badge) return; if(!currentUser || !currentUser.phone || typeof supabase==='undefined' || !supabase){ badge.style.display='none'; return; } supabase.rpc('get_customer_rewards',{p_phone:currentUser.phone}).then(function(rr){ var rows=(rr && rr.data) || []; var pts=rows.length ? (rows[0].loyalty_points||0) : 0; if(pts>0){ badge.textContent=pts>999?Math.round(pts/1000)+'k':pts; badge.style.display='flex'; badge.style.alignItems='center'; badge.style.justifyContent='center'; } else { badge.style.display='none'; } }).catch(function(){ badge.style.display='none'; }); }
 
 // Sign in with mobile number + name (verified against order history).
 // This is the function the login page's "Sign In" button calls.
