@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://gameofbones.in/</loc>
     <lastmod>2026-07-22</lastmod>
@@ -32,145 +32,452 @@
   </url>
   <url>
     <loc>https://gameofbones.in/?p=chicken-jerky</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/293b7ba0-37a7-4626-b97e-0f6aa8d86fa4/image-0-1782712553501.png</image:loc>
+    </image:image>
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://gameofbones.in/?p=buff-jerky</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/5805f088-bda7-4070-9534-96fe4cfe77ef/image-0-1782140747762.png</image:loc>
+    </image:image>
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://gameofbones.in/?p=chicken-feet</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/cac553a3-463f-4cf6-92dd-48c054f82bfe/image-0-1782712513139.png</image:loc>
+    </image:image>
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://gameofbones.in/?p=chicken-neck</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/373c6199-f75b-4294-8626-4f173fda9f5d/image-0-1782712577445.png</image:loc>
+    </image:image>
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://gameofbones.in/?p=chicken-bites</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/2d733070-14d7-4d82-9ec4-4aa1548cbc35/image-0-1782712121099.png</image:loc>
+    </image:image>
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://gameofbones.in/?p=chicken-wings</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/ef9d3dbe-f6d7-4e59-b673-ffe451e0ab5a/image-0-1782712167008.png</image:loc>
+    </image:image>
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://gameofbones.in/?p=chicken-bones</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/937c9539-b00d-4e93-9291-1af00893a061/image-0-1782712130859.png</image:loc>
+    </image:image>
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://gameofbones.in/?p=goat-trachea</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/cb465b52-4add-49b6-82be-b6f016d10b7c/image-0-1782795689958.png</image:loc>
+    </image:image>
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://gameofbones.in/?p=goat-trotter</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/abef0def-e2c9-4981-b6bc-80a079ed31eb/image-0-1782712288081.png</image:loc>
+    </image:image>
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://gameofbones.in/?p=goat-ear</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/9e4a7262-ad95-4076-a0ee-949f9582616f/image-0-1782712197998.png</image:loc>
+    </image:image>
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://gameofbones.in/?p=chicken-gizzards</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/5d4353a7-fd6c-4919-a32b-4d4c66fd44ab/image-0-1782712147567.png</image:loc>
+    </image:image>
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://gameofbones.in/?p=chicken-heart-liver</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/b8ea22dc-d46f-4ee9-b779-8c1aacafd755/image-0-1782759470191.png</image:loc>
+    </image:image>
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://gameofbones.in/?p=goat-liver</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/f804c0d1-0be7-4281-bc8a-c9dc6e8cfd50/image-0-1782712241277.png</image:loc>
+    </image:image>
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://gameofbones.in/?p=goat-lungs</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/39ac015f-9a37-49c4-b2df-34b29472eca7/image-0-1782712258742.png</image:loc>
+    </image:image>
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://gameofbones.in/?p=goat-heart-kidney-mix</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/007d8e1a-3640-4b75-b467-d27782f82855/image-0-1782712225799.png</image:loc>
+    </image:image>
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://gameofbones.in/?p=goat-spleen</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/92d62ad6-33db-45f3-af57-91b6a454a07a/image-0-1782712272366.png</image:loc>
+    </image:image>
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://gameofbones.in/?p=anchovies</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/f0846a93-7d6b-42aa-90a7-a6ddd771c156/image-0-1782712072618.png</image:loc>
+    </image:image>
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://gameofbones.in/?p=bombay-duck</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/46addf99-2f4a-44f2-ba64-7623cde174ff/image-0-1782712106125.png</image:loc>
+    </image:image>
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://gameofbones.in/?p=whole-mackerel</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/177aaeda-c886-437c-bc6f-aaa5fb27b2c2/image-0-1782712317685.png</image:loc>
+    </image:image>
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://gameofbones.in/?p=mackerel-fillet</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/771b372e-a767-4056-ae85-c6ad1251e84a/image-0-1782712307911.png</image:loc>
+    </image:image>
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://gameofbones.in/?p=sardines</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/f2462343-c4b8-4992-8fc9-d38db31e2e7c/image-0-1782712340470.png</image:loc>
+    </image:image>
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://gameofbones.in/?p=tuna</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/da659861-df5e-4c9e-991c-811c56f50c7f/image-0-1782795710302.png</image:loc>
+    </image:image>
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://gameofbones.in/?p=prawns</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/a76ab961-d32e-4720-8e2e-e4f989da8ee0/image-0-1782712329883.png</image:loc>
+    </image:image>
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://gameofbones.in/?p=whole-quail</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/edb3cdd6-b31f-4e5b-ba18-bf4a300d8090/image-0-1782712359525.png</image:loc>
+    </image:image>
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-  </url> <url> <loc>https://gameofbones.in/?blog=dog-food-sensitivity-signs</loc> <lastmod>2025-08-01</lastmod> <changefreq>monthly</changefreq> <priority>0.6</priority> </url> <url> <loc>https://gameofbones.in/?blog=hidden-truth-dog-treats</loc> <lastmod>2025-08-14</lastmod> <changefreq>monthly</changefreq> <priority>0.6</priority> </url> <url> <loc>https://gameofbones.in/?blog=human-foods-dogs-can-eat</loc> <lastmod>2025-08-28</lastmod> <changefreq>monthly</changefreq> <priority>0.6</priority> </url> <url> <loc>https://gameofbones.in/?blog=7-day-transition-plan</loc> <lastmod>2025-09-11</lastmod> <changefreq>monthly</changefreq> <priority>0.6</priority> </url> <url> <loc>https://gameofbones.in/?blog=store-treats-indian-humidity</loc> <lastmod>2025-09-25</lastmod> <changefreq>monthly</changefreq> <priority>0.6</priority> </url> <url> <loc>https://gameofbones.in/?blog=fish-treats-underrated</loc> <lastmod>2025-10-09</lastmod> <changefreq>monthly</changefreq> <priority>0.6</priority> </url> <url> <loc>https://gameofbones.in/?blog=new-dog-parent-guide</loc> <lastmod>2025-10-23</lastmod> <changefreq>monthly</changefreq> <priority>0.6</priority> </url> <url> <loc>https://gameofbones.in/?blog=natural-treats-clean-teeth</loc> <lastmod>2025-11-06</lastmod> <changefreq>monthly</changefreq> <priority>0.6</priority> </url> <url> <loc>https://gameofbones.in/?blog=buffalo-vs-chicken-jerky</loc> <lastmod>2025-11-20</lastmod> <changefreq>monthly</changefreq> <priority>0.6</priority> </url> <url> <loc>https://gameofbones.in/?blog=can-dogs-eat-eggs</loc> <lastmod>2025-12-04</lastmod> <changefreq>monthly</changefreq> <priority>0.6</priority> </url> <url> <loc>https://gameofbones.in/?blog=can-dogs-eat-rice</loc> <lastmod>2025-12-18</lastmod> <changefreq>monthly</changefreq> <priority>0.6</priority> </url> <url> <loc>https://gameofbones.in/?blog=fruits-dogs-cats-can-eat</loc> <lastmod>2026-01-01</lastmod> <changefreq>monthly</changefreq> <priority>0.6</priority> </url> <url> <loc>https://gameofbones.in/?blog=dog-diarrhea-what-to-feed</loc> <lastmod>2026-01-15</lastmod> <changefreq>monthly</changefreq> <priority>0.6</priority> </url> <url> <loc>https://gameofbones.in/?blog=why-is-my-dog-eating-grass</loc> <lastmod>2026-01-29</lastmod> <changefreq>monthly</changefreq> <priority>0.6</priority> </url> <url> <loc>https://gameofbones.in/?blog=house-plants-safe-for-dogs-and-cats</loc> <lastmod>2026-02-12</lastmod> <changefreq>monthly</changefreq> <priority>0.6</priority> </url> <url> <loc>https://gameofbones.in/?blog=puppy-teething-guide</loc> <lastmod>2026-02-26</lastmod> <changefreq>monthly</changefreq> <priority>0.6</priority> </url> <url> <loc>https://gameofbones.in/?blog=best-diet-for-senior-dogs</loc> <lastmod>2026-03-12</lastmod> <changefreq>monthly</changefreq> <priority>0.6</priority> </url> <url> <loc>https://gameofbones.in/?blog=best-natural-treats-for-cats</loc> <lastmod>2026-03-26</lastmod> <changefreq>monthly</changefreq> <priority>0.6</priority> </url> <url> <loc>https://gameofbones.in/?blog=rabies-awareness-guide</loc> <lastmod>2026-04-09</lastmod> <changefreq>monthly</changefreq> <priority>0.6</priority> </url> <url> <loc>https://gameofbones.in/?blog=vaccination-guide-community-dogs</loc> <lastmod>2026-04-23</lastmod> <changefreq>monthly</changefreq> <priority>0.6</priority> </url> <url> <loc>https://gameofbones.in/?blog=is-grain-free-better</loc> <lastmod>2026-05-07</lastmod> <changefreq>monthly</changefreq> <priority>0.6</priority> </url> <url> <loc>https://gameofbones.in/?blog=preservatives-explained</loc> <lastmod>2026-05-21</lastmod> <changefreq>monthly</changefreq> <priority>0.6</priority> </url> <url> <loc>https://gameofbones.in/?blog=what-are-fillers</loc> <lastmod>2026-06-04</lastmod> <changefreq>monthly</changefreq> <priority>0.6</priority> </url> <url> <loc>https://gameofbones.in/?blog=how-to-read-dog-food-labels</loc> <lastmod>2026-06-18</lastmod> <changefreq>monthly</changefreq> <priority>0.6</priority> </url> <url> <loc>https://gameofbones.in/?blog=best-treats-for-training</loc> <lastmod>2026-07-02</lastmod> <changefreq>monthly</changefreq> <priority>0.6</priority> </url> <url> <loc>https://gameofbones.in/?blog=treats-for-aggressive-chewers</loc> <lastmod>2026-07-16</lastmod> <changefreq>monthly</changefreq> <priority>0.6</priority> </url> </urlset>
+  </url>
+  <url>
+    <loc>https://gameofbones.in/?blog=dog-food-sensitivity-signs</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/blogs/blog-1784196253378.png</image:loc>
+    </image:image>
+    <lastmod>2025-08-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://gameofbones.in/?blog=hidden-truth-dog-treats</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/blogs/blog-1784196151909.png</image:loc>
+    </image:image>
+    <lastmod>2025-08-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://gameofbones.in/?blog=human-foods-dogs-can-eat</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/blogs/blog-1783184534404.png</image:loc>
+    </image:image>
+    <lastmod>2025-08-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://gameofbones.in/?blog=7-day-transition-plan</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/blogs/blog-1783184638545.png</image:loc>
+    </image:image>
+    <lastmod>2025-09-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://gameofbones.in/?blog=store-treats-indian-humidity</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/blogs/blog-1783184608423.png</image:loc>
+    </image:image>
+    <lastmod>2025-09-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://gameofbones.in/?blog=fish-treats-underrated</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/blogs/blog-1783184593305.png</image:loc>
+    </image:image>
+    <lastmod>2025-10-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://gameofbones.in/?blog=new-dog-parent-guide</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/blogs/blog-1784194668064.png</image:loc>
+    </image:image>
+    <lastmod>2025-10-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://gameofbones.in/?blog=natural-treats-clean-teeth</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/blogs/blog-1784195266914.png</image:loc>
+    </image:image>
+    <lastmod>2025-11-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://gameofbones.in/?blog=buffalo-vs-chicken-jerky</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/blogs/blog-1784195042839.png</image:loc>
+    </image:image>
+    <lastmod>2025-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://gameofbones.in/?blog=can-dogs-eat-eggs</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/blogs/blog-1784194515255.png</image:loc>
+    </image:image>
+    <lastmod>2025-12-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://gameofbones.in/?blog=can-dogs-eat-rice</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/blogs/blog-1784194323211.png</image:loc>
+    </image:image>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://gameofbones.in/?blog=fruits-dogs-cats-can-eat</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/blogs/blog-1784194203375.png</image:loc>
+    </image:image>
+    <lastmod>2026-01-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://gameofbones.in/?blog=dog-diarrhea-what-to-feed</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/blogs/blog-1784194084983.png</image:loc>
+    </image:image>
+    <lastmod>2026-01-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://gameofbones.in/?blog=why-is-my-dog-eating-grass</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/blogs/blog-1784190661462.png</image:loc>
+    </image:image>
+    <lastmod>2026-01-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://gameofbones.in/?blog=house-plants-safe-for-dogs-and-cats</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/blogs/blog-1784190551827.png</image:loc>
+    </image:image>
+    <lastmod>2026-02-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://gameofbones.in/?blog=puppy-teething-guide</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/blogs/blog-1784190446762.png</image:loc>
+    </image:image>
+    <lastmod>2026-02-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://gameofbones.in/?blog=best-diet-for-senior-dogs</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/blogs/blog-1784190310413.png</image:loc>
+    </image:image>
+    <lastmod>2026-03-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://gameofbones.in/?blog=best-natural-treats-for-cats</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/blogs/blog-1784190179262.png</image:loc>
+    </image:image>
+    <lastmod>2026-03-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://gameofbones.in/?blog=rabies-awareness-guide</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/blogs/blog-1784190070184.png</image:loc>
+    </image:image>
+    <lastmod>2026-04-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://gameofbones.in/?blog=vaccination-guide-community-dogs</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/blogs/blog-1784189928031.png</image:loc>
+    </image:image>
+    <lastmod>2026-04-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://gameofbones.in/?blog=is-grain-free-better</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/blogs/blog-1784189753917.png</image:loc>
+    </image:image>
+    <lastmod>2026-05-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://gameofbones.in/?blog=preservatives-explained</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/blogs/blog-1784189220689.png</image:loc>
+    </image:image>
+    <lastmod>2026-05-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://gameofbones.in/?blog=what-are-fillers</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/blogs/blog-1783405321718.png</image:loc>
+    </image:image>
+    <lastmod>2026-06-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://gameofbones.in/?blog=how-to-read-dog-food-labels</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/blogs/blog-1783333201143.png</image:loc>
+    </image:image>
+    <lastmod>2026-06-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://gameofbones.in/?blog=best-treats-for-training</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/blogs/blog-1783333182490.png</image:loc>
+    </image:image>
+    <lastmod>2026-07-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://gameofbones.in/?blog=treats-for-aggressive-chewers</loc>
+    <image:image>
+      <image:loc>https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/blogs/blog-1783325663205.png</image:loc>
+    </image:image>
+    <lastmod>2026-07-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+</urlset>
