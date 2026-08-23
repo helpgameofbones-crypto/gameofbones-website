@@ -11997,7 +11997,7 @@ function spinWheelClose() {
 setTimeout(function() {
   var activePage = document.querySelector('.page.active');
   var activeId = activePage ? activePage.id : '';
-  if (activeId === 'page-checkout') return;
+  if (activeId === 'page-checkout' || activeId === 'page-product') return; var qOv=document.getElementById('quizOverlay'), cOv=document.getElementById('calcOverlay'); if((qOv&&qOv.style.display==='flex')||(cOv&&cOv.style.display==='flex'))return;
   // Reset spin state on each load so it always shows
   SW.hasSpun = false; SW.spinning = false; SW.angle = 0;
   if(sessionStorage.getItem('gob_spin_shown'))return;sessionStorage.setItem('gob_spin_shown','1');spinWheelOpen();
