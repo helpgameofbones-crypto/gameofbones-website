@@ -207,7 +207,7 @@ section{padding:90px 6%}
 .bulk-banner{display:flex;flex-wrap:wrap;background:var(--dark);border-radius:2px;overflow:hidden;margin-bottom:8px}
 .bulk-banner-label{background:var(--gold);color:var(--dark);padding:16px 20px;display:flex;flex-direction:column;justify-content:center;min-width:150px;flex:1 1 150px}
 .bulk-tier-grid{flex:3 1 400px;display:grid;grid-template-columns:repeat(4,1fr)}
-.bulk-tier{padding:14px 8px;text-align:center;border-left:1px solid rgba(255,255,255,.08)}
+.bulk-tier{padding:14px 8px;text-align:center;border-left:1px solid rgba(255,255,255,.08);cursor:pointer}
 .bulk-tier-pct{display:flex;align-items:baseline;justify-content:center;gap:2px}
 .bulk-tier-num{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:var(--gold-light)}
 .bulk-tier-label{font-size:10px;font-weight:700;color:var(--gold-light)}
@@ -1551,19 +1551,19 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
           <div style="font-size:9px;font-weight:600;opacity:.75;margin-top:2px">Auto-applied in Cart</div>
         </div>
         <div class="bulk-tier-grid">
-          <div class="bulk-tier">
+          <div class="bulk-tier" onclick="document.getElementById('shopProd').scrollIntoView({behavior:'smooth',block:'start'})">
             <div class="bulk-tier-pct"><span class="bulk-tier-num">5</span><span class="bulk-tier-label">% OFF</span></div>
             <div class="bulk-tier-items">Buy 3+ Items</div>
           </div>
-          <div class="bulk-tier">
+          <div class="bulk-tier" onclick="document.getElementById('shopProd').scrollIntoView({behavior:'smooth',block:'start'})">
             <div class="bulk-tier-pct"><span class="bulk-tier-num">8</span><span class="bulk-tier-label">% OFF</span></div>
             <div class="bulk-tier-items">Buy 5+ Items</div>
           </div>
-          <div class="bulk-tier">
+          <div class="bulk-tier" onclick="document.getElementById('shopProd').scrollIntoView({behavior:'smooth',block:'start'})">
             <div class="bulk-tier-pct"><span class="bulk-tier-num">12</span><span class="bulk-tier-label">% OFF</span></div>
             <div class="bulk-tier-items">Buy 8+ Items</div>
           </div>
-          <div class="bulk-tier">
+          <div class="bulk-tier" onclick="document.getElementById('shopProd').scrollIntoView({behavior:'smooth',block:'start'})">
             <div class="bulk-tier-pct"><span class="bulk-tier-num">15</span><span class="bulk-tier-label">% OFF</span></div>
             <div class="bulk-tier-items">Buy 10+ Items</div>
           </div>
