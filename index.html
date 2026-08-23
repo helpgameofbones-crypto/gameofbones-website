@@ -54,7 +54,7 @@
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-N0KE06DGPV"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
+  function gtag(){dataLayer.push(arguments); try{if(arguments[0]==='event'&&typeof clarity!=='undefined')clarity('event',arguments[1]);}catch(e){}}
   gtag('js', new Date());
   gtag('config', 'G-N0KE06DGPV');
 </script>
@@ -5025,7 +5025,7 @@ function showPage(id) {
     renderSavedAddresses();
     checkLoyaltyAtCheckout();
     if (typeof cartItems !== 'undefined' && cartItems.length) {
-      trackMetaEvent('InitiateCheckout', {
+      if (typeof gtag !== 'undefined') { gtag('event', 'begin_checkout', { currency: 'INR', value: cartItems.reduce(function(s,i){ return s + (i.price||0)*(i.qty||1); }, 0), items: cartItems.map(function(i){ return { item_name: i.name, item_id: String(i.name||'').toLowerCase().replace(/[&\s]+/g,'-'), quantity: i.qty||1, price: i.price||0 }; }) }); }      trackMetaEvent('InitiateCheckout', {
         content_ids: cartItems.map(function(i){ return String(i.name || '').toLowerCase().replace(/[&\s]+/g, '-'); }),
         content_type: 'product',
         num_items: cartItems.reduce(function(n,i){ return n + (i.qty || 1); }, 0),
