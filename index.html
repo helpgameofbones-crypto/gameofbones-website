@@ -13391,7 +13391,29 @@ function checkLoyaltyAtCheckout() {
       if (btn) btn.textContent = 'Use Rs.' + rupees + ' Off';
     }
   })
-  .catch(function(){});
+  .catch(function(){})
+    .then(function(){
+          var sec = document.getElementById('loyaltyPointsSection');
+          if (sec && sec.style.display === 'block') return;
+          fetch(SUPABASE_URL + '/rest/v1/rpc/get_customer_profile', {
+                  method: 'POST',
+                  body: JSON.stringify({ p_phone: phone }),
+                  headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
+          }).then(function(r){ return r.json(); }).then(function(rows){
+                  var row = Array.isArray(rows) && rows.length ? rows[0] : null;
+                  var pts = (row && row.loyalty_points) || 0;
+                  if (pts === 0 || _loyaltyApplied) return;
+                  _loyaltyPoints = pts;
+                  var rupees2 = Math.round(_loyaltyPoints * 0.3);
+                  if (rupees2 <= 0) return;
+                  var section = document.getElementById('loyaltyPointsSection');
+                  var msg = document.getElementById('loyaltyPointsMsg');
+                  var btn2 = document.getElementById('loyaltyApplyBtn');
+                  if (section) section.style.display = 'block';
+                  if (msg) msg.textContent = _loyaltyPoints + ' points = Rs.' + rupees2 + ' off your order';
+                  if (btn2) btn2.textContent = 'Use Rs.' + rupees2 + ' Off';
+          }).catch(function(){});
+    });
 }
 
 function applyLoyaltyPoints() {
