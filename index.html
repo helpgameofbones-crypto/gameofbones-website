@@ -8576,7 +8576,13 @@ function placeOrder() {
     return;
   }
 
-  var options = {
+  var __itemsCompact = '';
+    try { __itemsCompact = JSON.stringify(cartItems.map(function(ci){ return { n: ci.name, s: ci.sizeLabel || ci.size || '', q: ci.qty || 1, p: ci.price || 0 }; })); } catch (__e) { __itemsCompact = ''; }
+    var __itemsChunk1 = __itemsCompact.substring(0,250);
+    var __itemsChunk2 = __itemsCompact.substring(250,500);
+    var __itemsChunk3 = __itemsCompact.substring(500,750);
+  
+    var options = {
     key: RAZORPAY_KEY_ID,
     amount: grandTotal * 100, // Razorpay uses paise
     currency: 'INR',
@@ -8598,7 +8604,10 @@ function placeOrder() {
       customer_name: fname + ' ' + lname,
       address: (document.getElementById('co-addr1') ? document.getElementById('co-addr1').value : '') + ', ' +
                 (document.getElementById('co-city') ? document.getElementById('co-city').value : '') + ' ' +
-                pinEl.value
+                pinEl.value,
+        items_1: __itemsChunk1,
+        items_2: __itemsChunk2,
+        items_3: __itemsChunk3
     },
     theme: { color: '#c8973a' },
     modal: {
