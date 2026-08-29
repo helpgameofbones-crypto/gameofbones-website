@@ -3131,7 +3131,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
 <input id="cartCouponCode" type="text" placeholder="Enter coupon code" style="flex:1;min-width:0;padding:9px 10px;font-size:12px;border:1px solid var(--cream-mid);border-radius:3px;background:var(--white);text-transform:uppercase">
 <button onclick="applyCartCoupon()" style="background:var(--gold);border:none;padding:0 16px;font-size:11px;font-weight:700;letter-spacing:.04em;border-radius:3px;cursor:pointer;color:var(--dark);white-space:nowrap">Apply</button>
 </div>
-<div id="cartCouponMsg" style="font-size:11px;margin-top:6px;display:none"></div>
+<div id="cartCouponMsg" style="font-size:11px;margin-top:6px;display:none"></div><div style="font-size:11px;font-weight:700;color:var(--dark);margin:10px 0 8px">Have a referral code?</div><div style="display:flex;gap:6px"><input id="cartReferralCode" type="text" placeholder="Enter referral code" style="flex:1;min-width:0;padding:9px 10px;font-size:12px;border:1px solid var(--cream-mid);border-radius:3px;background:var(--white);text-transform:uppercase;"><button onclick="applyCartReferral()" style="background:var(--teal);border:none;padding:0 16px;font-size:11px;font-weight:700;letter-spacing:.04em;border-radius:3px;cursor:pointer;color:var(--white);white-space:nowrap">Apply</button></div><div id="cartReferralMsg" style="font-size:11px;margin-top:6px;display:none"></div>
     </div>
     <button class="btn-gold" onclick="goToCheckout()" style="width:100%;padding:15px;font-size:13px;letter-spacing:.1em">Proceed to Checkout →</button>
     <button onclick="toggleCart()" style="width:100%;background:none;border:none;color:var(--muted);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;padding:10px;margin-top:6px">← Continue Shopping</button>
@@ -7320,9 +7320,9 @@ var _referrerPhone = null; // Phone number of the person who referred this custo
 (function() {
   var params = new URLSearchParams(window.location.search);
   var refCode = params.get('ref');
-  if (refCode && refCode.match(/^GOB\d{4}$/)) {
+  if (refCode && refCode.match(/^[A-Za-z0-9]{4,15}$/)) {
     _referrerCode = refCode;
-    _referrerPhone = refCode.replace('GOB', ''); // Extract last 4 digits, will need full phone lookup
+    _referrerPhone = null; // Resolved server-side by matching referrer_code against customers.referral_code
     console.log('Referral code detected:', _referrerCode);
     // Show banner that they're using a referral
     var banner = document.createElement('div');
@@ -8224,7 +8224,7 @@ function _finaliseOrder(ref, phoneVal, orderItems, razorpayPaymentId) {
     notes: notesText,
     csrf_token: csrfToken,                                         // 🔐 CSRF TOKEN FOR VERIFICATION
     referrer_code: _referrerCode,
-    referrer_phone: _referrerCode ? _referrerCode.replace('GOB', '').slice(-10) : null,
+    referrer_phone: null,
     referrer_points_credited: false,
     created_at: new Date().toISOString()
   };
@@ -8842,7 +8842,7 @@ function _syncAbandonedCart() {
           if (msg) { msg.style.color = '#c0392b'; msg.textContent = 'Something went wrong - please try again.'; }
         });
   }
-function applyCartCoupon(suffix) {
+function applyCartReferral(){var input=document.getElementById('cartReferralCode');var msg=document.getElementById('cartReferralMsg');if(!input)return;var code=input.value.trim().toUpperCase();if(!code)return;msg.style.display='block';msg.style.color='var(--muted)';msg.textContent='Checking...';fetch(SUPABASE_URL+'/rest/v1/customers?referral_code=eq.'+encodeURIComponent(code)+'&select=id,name',{headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+SUPABASE_ANON_KEY}}).then(function(r){return r.json();}).then(function(rows){var match=Array.isArray(rows)&&rows.length>0?rows[0]:null;if(!match){msg.style.color='#c0392b';msg.textContent='Referral code not found.';return;}if(currentUser&&currentUser.name&&match.name===currentUser.name){msg.style.color='#c0392b';msg.textContent="You can't use your own referral code.";return;}_referrerCode=code;input.disabled=true;var btn=input.nextElementSibling;if(btn){btn.textContent='Applied';btn.disabled=true;btn.style.opacity='.6';}msg.style.color='var(--teal)';msg.textContent="Referral applied! You'll both get 300 points after this order is delivered.";}).catch(function(){msg.style.color='#c0392b';msg.textContent='Something went wrong - please try again.';});} function applyCartCoupon(suffix) {
         suffix = suffix || '';
         var input = document.getElementById('cartCouponCode' + suffix);
         var msg = document.getElementById('cartCouponMsg' + suffix);
