@@ -8225,7 +8225,7 @@ function _finaliseOrder(ref, phoneVal, orderItems, razorpayPaymentId) {
     csrf_token: csrfToken,                                         // 🔐 CSRF TOKEN FOR VERIFICATION
     referrer_code: _referrerCode,
     referrer_phone: null,
-    referrer_points_credited: false,
+    referrer_points_credited: false, loyalty_points_redeemed: (_loyaltyApplied && _loyaltyPoints > 0) ? _loyaltyPoints : 0,
     created_at: new Date().toISOString()
   };
   // Save dog birthday if provided
