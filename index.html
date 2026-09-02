@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta name="facebook-domain-verification" content="o25cf67cy3msn8sn4e8ttkoimte3a1" /><script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "y5fd0b1rp3");</script>
+  <meta name="facebook-domain-verification" content="o25cf67cy3msn8sn4e8ttkoimte3a1" />
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Game of Bones — Natural Dehydrated Dog Treats | Made in India</title>
@@ -50,31 +50,21 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preconnect" href="https://syuostlqzzinigqwjzap.supabase.co"><link rel="dns-prefetch" href="https://syuostlqzzinigqwjzap.supabase.co">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-N0KE06DGPV"></script>
+<!-- Optional analytics loads only after cookie consent. -->
 <script>
   window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments); try{if(arguments[0]==='event'&&typeof clarity!=='undefined')clarity('event',arguments[1]);}catch(e){}}
-  gtag('js', new Date());
-  gtag('config', 'G-N0KE06DGPV');
+  window.gtag = function(){ window.dataLayer.push(arguments); };
+  window.__gobLoadAnalytics = function(){
+    if (window.__gobAnalyticsLoaded) return;
+    window.__gobAnalyticsLoaded = true;
+    var clarity=document.createElement('script'); clarity.async=true; clarity.src='https://www.clarity.ms/tag/y5fd0b1rp3'; document.head.appendChild(clarity);
+    var ga=document.createElement('script'); ga.async=true; ga.src='https://www.googletagmanager.com/gtag/js?id=G-N0KE06DGPV'; document.head.appendChild(ga);
+    window.gtag('js', new Date()); window.gtag('config', 'G-N0KE06DGPV');
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    window.fbq('init','2097278950833218'); window.fbq('track','PageView');
+  };
 </script>
 
-<!-- Meta Pixel -->
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '2097278950833218');
-fbq('track', 'PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none" alt=""
-src="https://www.facebook.com/tr?id=2097278950833218&ev=PageView&noscript=1"
-/></noscript>
 
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:rgba(0,0,0,0)}
@@ -1018,7 +1008,12 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
   
   // ===== SECURITY: GDPR CONSENT =====
   function showGDPRBanner() {
-    if (!localStorage.getItem('gob_gdpr_accepted')) {
+    var consent = localStorage.getItem('gob_gdpr_accepted');
+    if (consent === 'true' && typeof window.__gobLoadAnalytics === 'function') {
+      window.__gobLoadAnalytics();
+      return;
+    }
+    if (!consent) {
       setTimeout(function() {
         const banner = document.getElementById('cookieBanner');
         if (banner) {
@@ -1030,6 +1025,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
   
   function acceptGDPRCookies() {
     localStorage.setItem('gob_gdpr_accepted', 'true');
+    if (typeof window.__gobLoadAnalytics === 'function') window.__gobLoadAnalytics();
     const banner = document.getElementById('cookieBanner');
     if (banner) banner.style.display = 'none';
     console.log('✅ GDPR cookies accepted');
