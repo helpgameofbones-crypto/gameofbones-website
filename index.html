@@ -944,6 +944,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
 <script src="/components/cart-shell.js"></script>
 <script src="/components/checkout-transport.js"></script>
 <script src="/components/blog-routing.js"></script>
+<script src="/components/blog-article.js"></script>
 <script>
   // Initialize Supabase client
   const SUPABASE_URL = 'https://syuostlqzzinigqwjzap.supabase.co';
@@ -5264,84 +5265,6 @@ const articles = [
 ];
 
 var currentArtIdx = 0;
-function openArt(idx) {
-  var a = articles[idx];
-  if (!a) return;
-  currentArtIdx = idx;
-  var __g_art_emoji=document.getElementById('art-emoji');if(__g_art_emoji)__g_art_emoji.textContent = a.emoji;
-  var __g_art_tag=document.getElementById('art-tag');if(__g_art_tag)__g_art_tag.textContent = a.tag;
-  var __g_art_title=document.getElementById('art-title');if(__g_art_title)__g_art_title.textContent = a.title;
-  var __g_art_meta=document.getElementById('art-meta');if(__g_art_meta)__g_art_meta.textContent = a.date;
-  document.getElementById('art-body').innerHTML = a.body;
-  // Update WhatsApp share link
-  var waShare = document.getElementById('art-wa-share');
-  if (waShare) {
-    var msg = encodeURIComponent('Check out this article from Game of Bones: \u201c' + a.title + '\u201d \ud83d\udc3e gameofbones.in');
-    waShare.href = 'https://wa.me/?text=' + msg;
-  }
-  // Update prev/next nav
-  var prevBtn = document.getElementById('art-prev-btn');
-  var nextBtn = document.getElementById('art-next-btn');
-  if (prevBtn) { prevBtn.style.display = idx > 0 ? 'inline-flex' : 'none'; }
-  if (nextBtn) { nextBtn.style.display = idx < articles.length - 1 ? 'inline-flex' : 'none'; }
-  var overlay = document.getElementById('artOverlay');
-  overlay.classList.add('open');
-  overlay.scrollTop = 0;
-  document.body.style.overflow = 'hidden';
-  // Update URL
-  try { window.history.pushState({}, '', '?page=blog-' + createBlogSlug(a.title)); } catch(e) {}
-}
-
-function closeArt() {
-  document.getElementById('artOverlay').classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-function shareArticle(platform) {
-  if (!currentArtIdx && currentArtIdx !== 0) return;
-  
-  const article = articles[currentArtIdx];
-  const title = article.title;
-  const url = window.location.origin + window.location.pathname + '?article=' + currentArtIdx;
-  const text = 'Check out this article: ' + title + ' from Game of Bones';
-  
-  if (platform === 'whatsapp') {
-    const msg = encodeURIComponent(text + ' ' + url);
-    window.open('https://wa.me/?text=' + msg, '_blank');
-  } else if (platform === 'facebook') {
-    window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url), '_blank');
-  } else if (platform === 'twitter') {
-    window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(url), '_blank');
-  } else if (platform === 'copy') {
-    navigator.clipboard.writeText(url).then(() => {
-      alert('Article link copied to clipboard!');
-    }).catch(() => {
-      // Fallback for browsers that don't support clipboard API
-      const temp = document.createElement('input');
-      temp.value = url;
-      document.body.appendChild(temp);
-      temp.select();
-      document.execCommand('copy');
-      document.body.removeChild(temp);
-      alert('Article link copied to clipboard!');
-    });
-  }
-}
-
-function artNav(dir) {
-  var next = currentArtIdx + dir;
-  if (next >= 0 && next < articles.length) openArt(next);
-}
-// Expose to window for onclick attributes (cfasync safety)
-
-
-// Expose to window for onclick attributes (cfasync safety)
-window.openArt = openArt;
-window.closeArt = closeArt;
-window.shareArticle = shareArticle;
-window._openArtReal = openArt;
-
-
 
 // Product data with real images
 // ── HOW IT'S MADE: dehydration temperature & time per product ────────
