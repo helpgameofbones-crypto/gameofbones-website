@@ -940,6 +940,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
 <script src="/assets/js/routes.js"></script>
 <script src="/components/navigation.js"></script>
 <script src="/components/shop-controls.js"></script>
+<script src="/components/product-routing.js"></script>
 <script>
   // Initialize Supabase client
   const SUPABASE_URL = 'https://syuostlqzzinigqwjzap.supabase.co';
@@ -10199,12 +10200,11 @@ function resetPageSEO() {
   } catch (e) { console.error('resetPageSEO error', e); }
 }
 
-function injectProductSchema(p,idx){try{var old=document.getElementById('product-schema-ld');if(old)old.remove();var imgUrl=p.img&&p.img.startsWith('http')?p.img:(SUPABASE_IMG_URL+p.img);var prices=(p.sizes||[]).map(function(s){return s.price;});var lowPrice=prices.length?Math.min.apply(null,prices):0;var highPrice=prices.length?Math.max.apply(null,prices):0;var slug=p.name.toLowerCase().replace(/[&\s]+/g,'-');var url='https://gameofbones.in/?p='+slug;var schema={'@context':'https://schema.org','@type':'Product','name':p.name,'image':[imgUrl],'description':p.desc||'','brand':{'@type':'Brand','name':'Game of Bones'},'offers':{'@type':'AggregateOffer','priceCurrency':'INR','lowPrice':lowPrice,'highPrice':highPrice,'offerCount':prices.length,'availability':'https://schema.org/InStock','url':url}};var rating=(typeof getProductRating==='function')?getProductRating(p.name):null;if(rating&&rating.count>0){schema.aggregateRating={'@type':'AggregateRating','ratingValue':rating.avg,'reviewCount':rating.count,'bestRating':5,'worstRating':1};}var s=document.createElement('script');s.type='application/ld+json';s.id='product-schema-ld';s.text=JSON.stringify(schema);document.head.appendChild(s);}catch(e){console.log('schema inject failed',e);}}function openProductPage(idx) {
+function openProductPage(idx) {
   // Update URL for product page
   var p = products[idx];
   if (p) {
-    var slug = p.name.toLowerCase().replace(/[&\s]+/g, '-');
-    try { history.pushState({page:'product',productIdx:idx}, '', '?p=' + slug); } catch(e) {}
+    try { history.pushState({page:'product',productIdx:idx}, '', window.GobProductRoute.pathFor(p)); } catch(e) {}
   }
   currentProductIdx = idx;
   currentProductSize = 0;
