@@ -13499,6 +13499,25 @@ window.addEventListener('popstate', function(event) {
     }
     
     try {
+      const response = await postCustomerData('public-data-export', { phone: phone, email: email });
+      const exportData = await response.json();
+      if (!response.ok || !exportData.total_orders) {
+        alert('❌ No matching account found for that phone number and email combination. Please double-check both fields.');
+        return;
+      }
+      const secureJson = JSON.stringify(exportData, null, 2);
+      const secureBlob = new Blob([secureJson], { type: 'application/json' });
+      const secureUrl = URL.createObjectURL(secureBlob);
+      const secureLink = document.createElement('a');
+      secureLink.href = secureUrl;
+      secureLink.download = `gameofbones_data_export_${Date.now()}.json`;
+      document.body.appendChild(secureLink);
+      secureLink.click();
+      document.body.removeChild(secureLink);
+      URL.revokeObjectURL(secureUrl);
+      alert('✅ Data exported successfully!');
+      return;
+
       // Fetch orders that match BOTH phone AND email (not phone alone)
       const { data: orders } = await supabase
         .rpc('track_orders', { p_phone: encryptData(phone), p_email: encryptData(email) });
