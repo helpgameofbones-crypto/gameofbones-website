@@ -8184,17 +8184,16 @@ function _finaliseOrder(ref, phoneVal, orderItems, razorpayPaymentId) {
     }
   })();
   
+  // The secure endpoint validates a small, explicit item contract.
+  var secureOrderPayload = Object.assign({}, orderPayload, { items: itemsWithDetails.map(function(item) { return { name: item.product_name, price: item.pack_price, quantity: item.quantity, pack_label: item.pack_label, bundle_id: item.bundle_id, bundle_name: item.bundle_name }; }) });
   // ═══════════════════════ SAVE TO SUPABASE ═══════════════════════
   function saveOrder(attempt) {
-    return fetch(SUPABASE_URL + '/rest/v1/orders', {
+    return fetch('https://gameofbones-admin.vercel.app/api/save-order', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
-      'apikey': SUPABASE_ANON_KEY,
-      'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
-      'Prefer': 'return=minimal'
+      'Content-Type': 'application/json'
     },
-    body: JSON.stringify(orderPayload),
+    body: JSON.stringify(secureOrderPayload),
     // keepalive: lets this request finish even if the tab is backgrounded or
     // closed right after Razorpay's success handler fires (e.g. customer
     // switches apps immediately after paying on mobile) -- without this the
@@ -8212,30 +8211,10 @@ function _finaliseOrder(ref, phoneVal, orderItems, razorpayPaymentId) {
   // even though the real payload was sent. PATCH the real details onto
   // that row instead. payment_status/status are left out on purpose --
   // the webhook is the only trustworthy source for those, not the client.
-  if (res.status === 409) {
-  var patchPayload = Object.assign({}, orderPayload);
-  delete patchPayload.payment_status;
-  delete patchPayload.status;
-  delete patchPayload.ref;
-  delete patchPayload.created_at;
-  return fetch(SUPABASE_URL + '/rest/v1/orders?ref=eq.' + encodeURIComponent(ref), {
-  method: 'PATCH',
-  headers: {
-  'Content-Type': 'application/json',
-  'apikey': SUPABASE_ANON_KEY,
-  'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
-  'Prefer': 'return=representation'
-  },
-  body: JSON.stringify(patchPayload)
-  }).then(function(pres) {
-  if (!pres.ok) throw new Error('HTTP ' + pres.status);
-  console.log('Order save recovered via PATCH (ref already existed):', pres.status);
-  return pres.text().then(function(t) { return t ? JSON.parse(t) : []; });
-  });
-  }
+  if (res.status === 409) throw new Error('Order reference conflict');
   if (!res.ok) throw new Error('HTTP ' + res.status);
     console.log('Supabase response:', res.status);
-    return res.text().then(function(t) { return t ? JSON.parse(t) : []; });
+    return res.json().then(function(body) { return body.order || []; });
   })
   .then(function(data) {
     console.log('Order saved to Supabase:', data);
