@@ -942,6 +942,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
 <script src="/components/shop-controls.js"></script>
 <script src="/components/product-routing.js"></script>
 <script src="/components/cart-shell.js"></script>
+<script src="/components/checkout-transport.js"></script>
 <script>
   // Initialize Supabase client
   const SUPABASE_URL = 'https://syuostlqzzinigqwjzap.supabase.co';
@@ -8188,34 +8189,7 @@ function _finaliseOrder(ref, phoneVal, orderItems, razorpayPaymentId) {
   var secureOrderPayload = Object.assign({}, orderPayload, { items: itemsWithDetails.map(function(item) { return { name: item.product_name, price: item.pack_price, quantity: item.quantity, pack_label: item.pack_label, bundle_id: item.bundle_id, bundle_name: item.bundle_name }; }) });
   // ═══════════════════════ SAVE TO SUPABASE ═══════════════════════
   function saveOrder(attempt) {
-    return fetch('https://gameofbones-admin.vercel.app/api/save-order', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(secureOrderPayload),
-    // keepalive: lets this request finish even if the tab is backgrounded or
-    // closed right after Razorpay's success handler fires (e.g. customer
-    // switches apps immediately after paying on mobile) -- without this the
-    // browser can abort the in-flight save, leaving a captured payment with
-    // no order row (the exact failure that lost GOB-BUYG3U on 2 Aug).
-    keepalive: true
-  })
-  .then(function(res) { 
-// RACE-CONDITION FALLBACK: 409 here means a row with this ref already
-  // exists -- almost always the Razorpay webhook's own placeholder
-  // safety-net, which waits ~9s for this save to land before inserting a
-  // minimal stub so a captured payment is never lost. When that stub wins
-  // the race this INSERT can never succeed no matter how many times we
-  // retry it, which is why AUTO-RECOVERED orders end up with empty items
-  // even though the real payload was sent. PATCH the real details onto
-  // that row instead. payment_status/status are left out on purpose --
-  // the webhook is the only trustworthy source for those, not the client.
-  if (res.status === 409) throw new Error('Order reference conflict');
-  if (!res.ok) throw new Error('HTTP ' + res.status);
-    console.log('Supabase response:', res.status);
-    return res.json().then(function(body) { return body.order || []; });
-  })
+    return window.GobCheckoutTransport.saveOrder(secureOrderPayload)
   .then(function(data) {
     console.log('Order saved to Supabase:', data);
 
