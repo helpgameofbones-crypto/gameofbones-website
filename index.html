@@ -7050,16 +7050,13 @@ function applyDiscount() {
         updateCheckoutTotals();
         return;
       }
-      fetch(SUPABASE_URL + '/rest/v1/rpc/check_coupon_usage', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY },
-        body: JSON.stringify({ p_coupon_code: code })
-      })
+      postCustomerData('public-coupon-usage', { code: code, phone: phoneVal2, email: emailVal2 })
       .then(function(r) { return r.json(); })
-      .then(function(pastOrders) {
-        var allOrders = Array.isArray(pastOrders) ? pastOrders : [];
+      .then(function(usage) {
+        var totalUses = Number(usage.totalUses || 0);
+        var customerUses = Number(usage.customerUses || 0);
 
-        if (coupon.max_uses && allOrders.length >= coupon.max_uses) {
+        if (coupon.max_uses && totalUses >= coupon.max_uses) {
           appliedDiscount = null;
           msg.style.color = '#c0392b';
           msg.textContent = '\u2717 ' + code + ' has reached its usage limit and is no longer available.';
@@ -7068,12 +7065,7 @@ function applyDiscount() {
         }
 
         if (coupon.usagepercustomer) {
-          var encPhone = encryptData(phoneVal2);
-          var encEmail = emailVal2 ? encryptData(emailVal2) : null;
-          var usedCount = allOrders.filter(function(o) {
-            return o.customer_phone === encPhone || (encEmail && o.customer_email === encEmail);
-          }).length;
-          if (usedCount >= coupon.usagepercustomer) {
+          if (customerUses >= coupon.usagepercustomer) {
             appliedDiscount = null;
             msg.style.color = '#c0392b';
             msg.textContent = '\u2717 ' + code + ' has already been used on an order with this phone number or email \u2014 it\'s valid once per customer.';
