@@ -8220,29 +8220,7 @@ function _finaliseOrder(ref, phoneVal, orderItems, razorpayPaymentId) {
     console.log('Order saved to Supabase:', data);
 
     // ═══════════════════════ CREDIT REFERRAL BONUS (non-blocking) ═══════════════════════
-    try {
-      var newOrderId = (Array.isArray(data) && data[0] && data[0].id) ? data[0].id : null;
-      if (_referrerCode && newOrderId) {
-        var last4 = _referrerCode.replace('GOB', '').slice(-4);
-        // Look up the referrer's real phone number via the last 4 digits encoded in the code
-        fetch(SUPABASE_URL + '/rest/v1/customers?select=phone,name&phone=like.*' + last4, {
-          headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
-        })
-        .then(function(r) { return r.json(); })
-        .then(function(matches) {
-          if (!Array.isArray(matches) || matches.length === 0) return;
-          var referrerPhone = matches[0].phone;
-          if (referrerPhone === phoneVal) return; // can't refer yourself
-          fetch(SUPABASE_URL + '/rest/v1/referrals', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY },
-            body: JSON.stringify({ referrer_phone: referrerPhone, referred_phone: phoneVal, order_id: newOrderId, points_awarded: 300 })
-          }).then(function(rr) { console.log('Referral bonus credited:', rr.status === 201); })
-            .catch(function(e) { console.warn('Referral credit skipped:', e.message); });
-        })
-        .catch(function(e) { console.warn('Referral lookup skipped:', e.message); });
-      }
-    } catch(e) { console.warn('Referral block skipped:', e.message); }
+    // Referral validation and crediting occur inside the secure order API.
 
     // Send purchase event to Google Analytics
     if (typeof gtag !== 'undefined') {
@@ -8712,7 +8690,7 @@ function _syncAbandonedCart() {
           if (msg) { msg.style.color = '#c0392b'; msg.textContent = 'Something went wrong - please try again.'; }
         });
   }
-function applyCartReferral(){var input=document.getElementById('cartReferralCode');var msg=document.getElementById('cartReferralMsg');if(!input)return;var code=input.value.trim().toUpperCase();if(!code)return;msg.style.display='block';msg.style.color='var(--muted)';msg.textContent='Checking...';fetch(SUPABASE_URL+'/rest/v1/customers?referral_code=eq.'+encodeURIComponent(code)+'&select=id,name',{headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+SUPABASE_ANON_KEY}}).then(function(r){return r.json();}).then(function(rows){var match=Array.isArray(rows)&&rows.length>0?rows[0]:null;if(!match){msg.style.color='#c0392b';msg.textContent='Referral code not found.';return;}if(currentUser&&currentUser.name&&match.name===currentUser.name){msg.style.color='#c0392b';msg.textContent="You can't use your own referral code.";return;}_referrerCode=code;input.disabled=true;var btn=input.nextElementSibling;if(btn){btn.textContent='Applied';btn.disabled=true;btn.style.opacity='.6';}msg.style.color='var(--teal)';msg.textContent="Referral applied! You'll both get 300 points after this order is delivered.";}).catch(function(){msg.style.color='#c0392b';msg.textContent='Something went wrong - please try again.';});} function applyCartCoupon(suffix) {
+function applyCartReferral(){var input=document.getElementById('cartReferralCode');var msg=document.getElementById('cartReferralMsg');if(!input)return;var code=input.value.trim().toUpperCase();if(!code)return;msg.style.display='block';msg.style.color='var(--muted)';msg.textContent='Checking...';fetch('https://gameofbones-admin.vercel.app/api/public-referral-validate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:code})}).then(function(r){return r.json();}).then(function(result){if(!result.valid){msg.style.color='#c0392b';msg.textContent='Referral code not found.';return;}_referrerCode=code;input.disabled=true;var btn=input.nextElementSibling;if(btn){btn.textContent='Applied';btn.disabled=true;btn.style.opacity='.6';}msg.style.color='var(--teal)';msg.textContent="Referral applied! You'll both get 300 points after this order is delivered.";}).catch(function(){msg.style.color='#c0392b';msg.textContent='Something went wrong - please try again.';});} function applyCartCoupon(suffix) {
         suffix = suffix || '';
         var input = document.getElementById('cartCouponCode' + suffix);
         var msg = document.getElementById('cartCouponMsg' + suffix);
