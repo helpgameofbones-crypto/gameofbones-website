@@ -938,6 +938,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
 <script defer src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.43.4/dist/umd/supabase.min.js"></script>
 <script src="/assets/js/routes.js"></script>
+<script src="/components/navigation.js"></script>
 <script>
   // Initialize Supabase client
   const SUPABASE_URL = 'https://syuostlqzzinigqwjzap.supabase.co';
@@ -1198,7 +1199,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
 }
 @keyframes scrollBanner { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
 </style>
-<nav id="mainNav">
+<nav id="mainNav" aria-label="Primary navigation">
   <div class="nav-inner">
     <div class="logo" onclick="navigateTo('home')">
       <img src="https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/logo.jpeg" alt="Game of Bones" onerror="this.style.display='none'">
@@ -1215,9 +1216,9 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
     </ul>
     <div class="nav-actions">
       <div style="position:relative;display:inline-block"><button id="loginNavBtn" class="nav-icon" onclick="handleLoginClick()" title="Sign In / Account" style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;position:relative">&#128100;</button><span id="navPointsBadge" onclick="navigateTo('rewards')" style="display:none;position:absolute;top:-4px;right:-4px;background:var(--gold);color:var(--dark);font-size:9px;font-weight:800;line-height:1;padding:3px 5px;border-radius:10px;min-width:14px;text-align:center;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.3)"></span></div>
-      <button class="nav-icon" onclick="showPage('cart')">&#128722;<span class="cart-badge" id="cartCount">0</span></button>
+      <button class="nav-icon" onclick="navigateTo('cart')" aria-label="Open cart">&#128722;<span class="cart-badge" id="cartCount">0</span></button>
     </div>
-    <button class="hamburger-btn" onclick="toggleMobileMenu()">
+    <button class="hamburger-btn" onclick="toggleMobileMenu()" aria-label="Open navigation menu" aria-controls="mobileNavMenu" aria-expanded="false">
       <span></span>
       <span></span>
       <span></span>
