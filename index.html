@@ -12757,6 +12757,29 @@ async function checkReturnEligibility() {
   }
 
   try {
+    var eligibilityResponse = await postCustomerData('public-return-eligibility', { ref: orderRef, phone: phone });
+    var eligibility = await eligibilityResponse.json();
+    if (!eligibilityResponse.ok || !eligibility.eligible) {
+      var returnMessage = eligibility.reason === 'not_delivered'
+        ? 'This order hasn&rsquo;t been marked delivered yet. Returns open once delivery is confirmed &mdash; check back after your order arrives.'
+        : eligibility.reason === 'expired'
+          ? 'The 48-hour return window for this order has closed. For exceptional cases, please WhatsApp us at +91 90825 03295.'
+          : 'We couldn&rsquo;t find that order with this phone number. Please double-check, or WhatsApp us at +91 90825 03295.';
+      resultBox.innerHTML = '<div style="background:#FFF5F5;border:1px solid #f3c0bb;color:#C0392B;font-size:13px;padding:12px;border-radius:4px">' + returnMessage + '</div>';
+      return;
+    }
+    resultBox.innerHTML =
+      '<div style="background:#F0FDF4;border:1px solid #bbf7d0;color:#166534;font-size:13px;padding:12px;border-radius:4px;margin-bottom:14px">' +
+      '&#10003; Eligible for return &mdash; ' + eligibility.hoursLeft + ' hour(s) left in your return window.</div>' +
+      '<label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Reason for Return</label>' +
+      '<select id="ret-reason" style="width:100%;padding:11px 12px;border:1px solid var(--cream-mid);border-radius:4px;margin:6px 0 14px;font-size:14px;box-sizing:border-box">' +
+        '<option value="">Select a reason&hellip;</option><option>Wrong product delivered</option><option>Damaged product</option><option>Quality issue</option><option>My dog did not like it</option><option>Other</option>' +
+      '</select>' +
+      '<textarea id="ret-notes" placeholder="Any extra details (optional)" style="width:100%;padding:11px 12px;border:1px solid var(--cream-mid);border-radius:4px;margin-bottom:14px;font-size:14px;box-sizing:border-box;min-height:70px"></textarea>' +
+      '<button onclick="submitReturnRequest(null,\'' + eligibility.ref + '\',null,\'' + phone + '\')" style="width:100%;background:var(--gold);color:var(--dark);border:none;padding:13px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-radius:2px;cursor:pointer">Submit Return Request</button>' +
+      '<div id="ret-submit-msg" style="margin-top:10px"></div>';
+    return;
+
     var encPhone = encryptData(phone);
     var res = await supabase.rpc('get_order_by_ref', { p_ref: orderRef });
     var order = (res.data || []).find(function(o) {
@@ -12817,6 +12840,19 @@ async function submitReturnRequest(orderId, orderRef, customerName, customerPhon
   }
   if (msgBox) msgBox.innerHTML = '<div style="font-size:12px;color:var(--muted)">Submitting&hellip;</div>';
   try {
+    var response = await postCustomerData('public-return-request', {
+      ref: orderRef,
+      phone: customerPhoneEncrypted,
+      reason: reason,
+      notes: (notesEl ? notesEl.value : '') || ''
+    });
+    if (!response.ok) throw new Error('Return request failed');
+    var secureBody = document.getElementById('return-request-body');
+    if (secureBody) {
+      secureBody.innerHTML = '<div style="background:#F0FDF4;border:1px solid #bbf7d0;color:#166534;font-size:14px;padding:20px;border-radius:6px;text-align:center;line-height:1.6">&#10003; Return request submitted!<br>Our team will reach out on WhatsApp/phone within 24 hours.</div>';
+    }
+    return;
+
     var resp = await supabase.from('returns').insert({
       order_id: orderId,
       order_ref: orderRef,
