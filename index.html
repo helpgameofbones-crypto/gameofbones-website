@@ -8236,11 +8236,7 @@ function _finaliseOrder(ref, phoneVal, orderItems, razorpayPaymentId) {
       var dd = (parts[0]||'').padStart(2,'0');
       var mm = (parts[1]||'').padStart(2,'0');
       var bdayISO = '2000-' + mm + '-' + dd;
-      fetch(SUPABASE_URL + '/rest/v1/dog_birthdays', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY, 'Prefer': 'return=minimal' },
-        body: JSON.stringify({ dog_name: dogName, customer_name: ownerName, customer_email: email, customer_phone: phone, birthday: bdayISO })
-      }).catch(function(){});
+      captureDogBirthday({ dog_name: dogName, customer_name: ownerName, customer_email: email, customer_phone: phone, birthday: bdayISO }).catch(function(){});
     }
   })();
   
@@ -11238,6 +11234,17 @@ function initReveal() {
   }, 200);
 }
 
+function postCustomerData(path, payload) {
+  return fetch('https://gameofbones-admin.vercel.app/api/' + path, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+}
+
+function captureEmail(payload) { return postCustomerData('public-email-capture', payload); }
+function captureDogBirthday(payload) { return postCustomerData('public-dog-birthday', payload); }
+
 function submitNewsletter() {
   var email = document.getElementById('nlEmail').value.trim();
   var form = document.getElementById('nlForm');
@@ -11251,11 +11258,7 @@ function submitNewsletter() {
   success.style.display = 'block';
   // Save to backend (non-blocking)
   try {
-    fetch(SUPABASE_URL + '/rest/v1/email_captures', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY, 'Prefer': 'return=minimal' },
-      body: JSON.stringify({ email: email, source: 'newsletter', status: 'active' })
-    }).catch(function(){});
+    captureEmail({ email: email, source: 'newsletter' }).catch(function(){});
   } catch (e) {}
   // WhatsApp notify as fallback (opens WA with email)
   var waMsg = encodeURIComponent('New newsletter signup: ' + email);
@@ -11857,11 +11860,7 @@ function swSpin() {
 
     // Save to backend so this shows up in admin (email_captures table).
     try {
-      fetch(SUPABASE_URL + '/rest/v1/email_captures', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY, 'Prefer': 'return=minimal' },
-        body: JSON.stringify({ name: name, phone: phone, source: 'spin_wheel', status: 'active', prize: seg.label, coupon_code: seg.code || null })
-      }).then(function(r) { console.log('Spin wheel contact captured:', r.status === 201 || r.status === 204); })
+      captureEmail({ name: name, phone: phone, source: 'spin_wheel', prize: seg.label, coupon_code: seg.code || null }).then(function(r) { console.log('Spin wheel contact captured:', r.status === 201 || r.status === 204); })
       .catch(function(e) { console.warn('Spin wheel contact capture failed:', e.message); });
     } catch(e) { console.warn('Spin wheel contact capture skipped:', e.message); }
   } else {
@@ -11972,11 +11971,7 @@ function spinUnlock() {
   }
   // Capture the email to the backend (non-blocking)
   try {
-    fetch(SUPABASE_URL + '/rest/v1/email_captures', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY, 'Prefer': 'return=minimal' },
-      body: JSON.stringify({ email: email, source: 'spin_wheel', status: 'active' })
-    }).catch(function(){});
+    captureEmail({ email: email, source: 'spin_wheel' }).catch(function(){});
   } catch (e) {}
   // Transition: hide pre, show spin
   document.getElementById('spinRightPre').style.display = 'none';
@@ -12042,15 +12037,8 @@ function submitBdayForm() {
   // Save to backend (non-blocking)
   try {
     var bdayISO = year + '-' + ('0'+m).slice(-2) + '-' + ('0'+d).slice(-2);
-    var _h = { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY, 'Prefer': 'return=minimal' };
-    fetch(SUPABASE_URL + '/rest/v1/dog_birthdays', {
-      method: 'POST', headers: _h,
-      body: JSON.stringify({ customer_name: name, customer_email: email, dog_name: dogName, birthday: bdayISO })
-    }).catch(function(){});
-    fetch(SUPABASE_URL + '/rest/v1/email_captures', {
-      method: 'POST', headers: _h,
-      body: JSON.stringify({ email: email, source: 'dog_birthday', status: 'active' })
-    }).catch(function(){});
+    captureDogBirthday({ customer_name: name, customer_email: email, dog_name: dogName, birthday: bdayISO }).catch(function(){});
+    captureEmail({ email: email, source: 'dog_birthday' }).catch(function(){});
   } catch (e) {}
 
   // Show success
@@ -13287,11 +13275,7 @@ function submitBirthday() {
   var dd = String(day).padStart(2, '0');
   var birthdayDate = y + '-' + mm + '-' + dd;
 
-  fetch(SUPABASE_URL + '/rest/v1/dog_birthdays', {
-    method: 'POST',
-    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-    body: JSON.stringify({ dog_name: petName, customer_name: ownerName, customer_email: email, customer_phone: phone, birthday: birthdayDate })
-  }).then(function(res) {
+  captureDogBirthday({ dog_name: petName, customer_name: ownerName, customer_email: email, customer_phone: phone, birthday: birthdayDate }).then(function(res) {
     if (!res.ok) {
       return res.text().then(function(t) { throw new Error('Save failed (' + res.status + '): ' + t); });
     }
