@@ -8134,10 +8134,10 @@ function _finaliseOrder(ref, phoneVal, orderItems, razorpayPaymentId) {
   var orderPayload = {
     ref: ref,
     customer_name: fname + ' ' + lname,
-    customer_email: encryptData(email) || null,                    // 🔐 ENCRYPTED
-    customer_phone: encryptData(phoneVal),                         // 🔐 ENCRYPTED
+    customer_email: email || null,
+    customer_phone: phoneVal,
     shipping_address: {
-      street: encryptData(addr1 + (addr2 ? ', ' + addr2 : '')),    // 🔐 ENCRYPTED
+      street: addr1 + (addr2 ? ', ' + addr2 : ''),
       city: city,
       state: state,
       pincode: pin
