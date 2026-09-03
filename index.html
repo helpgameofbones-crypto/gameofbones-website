@@ -13065,6 +13065,23 @@ function checkLoyaltyAtCheckout() {
   if (phone === _loyaltyPhone) return; // already checked this number
 
   _loyaltyPhone = phone;
+  postCustomerData('public-loyalty-summary', { phone: phone })
+    .then(function(response) { return response.ok ? response.json() : { points: 0 }; })
+    .then(function(summary) {
+      _loyaltyPoints = Number(summary.points || 0);
+      if (_loyaltyPoints <= 0 || _loyaltyApplied) return;
+      var rupees = Math.round(_loyaltyPoints * 0.3);
+      if (rupees <= 0) return;
+      var section = document.getElementById('loyaltyPointsSection');
+      var msg = document.getElementById('loyaltyPointsMsg');
+      var btn = document.getElementById('loyaltyApplyBtn');
+      if (section) section.style.display = 'block';
+      if (msg) msg.textContent = _loyaltyPoints + ' points = Rs.' + rupees + ' off your order';
+      if (btn) btn.textContent = 'Use Rs.' + rupees + ' Off';
+    })
+    .catch(function() {});
+  return;
+
   var phoneLast10 = phone.slice(-10);
 
   Promise.all([
