@@ -943,6 +943,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
 <script src="/components/product-routing.js"></script>
 <script src="/components/cart-shell.js"></script>
 <script src="/components/checkout-transport.js"></script>
+<script src="/components/blog-routing.js"></script>
 <script>
   // Initialize Supabase client
   const SUPABASE_URL = 'https://syuostlqzzinigqwjzap.supabase.co';
@@ -5263,19 +5264,6 @@ const articles = [
 ];
 
 var currentArtIdx = 0;
-// Create URL-friendly slug from blog title
-function createBlogSlug(title) {
-  return title.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').substring(0, 60);
-}
-
-// Get blog index from slug
-function getBlogIndexFromSlug(slug) {
-  for (var i = 0; i < articles.length; i++) {
-    if (createBlogSlug(articles[i].title) === slug) return i;
-  }
-  return -1;
-}
-
 function openArt(idx) {
   var a = articles[idx];
   if (!a) return;
