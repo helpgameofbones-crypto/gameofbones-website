@@ -945,6 +945,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
 <script src="/components/checkout-transport.js"></script>
 <script src="/components/blog-routing.js"></script>
 <script src="/components/blog-article.js"></script>
+<script src="/components/review-verification.js"></script>
 <script>
   // Initialize Supabase client
   const SUPABASE_URL = 'https://syuostlqzzinigqwjzap.supabase.co';
@@ -10871,49 +10872,6 @@ function resetReviewForm() {
   currentReviewRating = 0;
   reviewVerified = false;
 }
-
-function verifyReviewPurchase() {
-  const phone = document.getElementById('review-phone').value.trim().replace(/\D/g, '');
-  document.getElementById('review-phone-error').textContent = '';
-  document.getElementById('review-verify-status').textContent = '';
-  if (phone.length < 10) { document.getElementById('review-phone-error').textContent = 'Enter valid 10-digit number'; reviewVerified = false; return; }
-  const phoneLast10 = phone.slice(-10);
-  const productName = (products[currentReviewIdx] && products[currentReviewIdx].name) || '';
-  document.getElementById('review-verify-status').textContent = 'Verifying...';
-  postCustomerData('public-review-purchase', { phone: phone, productName: productName })
-    .then(function(response) { return response.ok ? response.json() : Promise.reject(new Error('Verification failed')); })
-    .then(function(result) {
-      if (result.purchased) { reviewVerified = true; reviewVerifiedPhone = phoneLast10; document.getElementById('review-verify-status').textContent = '✓ Verified'; document.getElementById('review-phone-error').textContent = ''; }
-      else { document.getElementById('review-phone-error').textContent = 'No purchase history for this product'; }
-    })
-    .catch(function() { document.getElementById('review-phone-error').textContent = 'Verification error'; });
-  return;
-
-  // Two bugs fixed here:
-  // 1) customer_phone is stored XOR+base64 encrypted, so a server-side ilike
-  //    filter against plaintext digits could never match a real order — fetch
-  //    recent orders and decrypt client-side instead (same pattern used
-  //    elsewhere in this file, e.g. checkLoyaltyAtCheckout/checkRewards).
-  // 2) There is no separate `order_items` table — line items live in the
-  //    `items` jsonb column on each order, keyed by `product_name` (not a
-  //    numeric product_id), so match against that instead.
-  fetch('https://syuostlqzzinigqwjzap.supabase.co/rest/v1/rpc/orders_bulk_stats', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY },
-    body: JSON.stringify({ p_limit: 1000 })
-  }).then(r => r.json()).then(allOrders => {
-    const orders = Array.isArray(allOrders) ? allOrders : [];
-    const myOrders = orders.filter(o => decryptPhone(o.customer_phone || '').replace(/\D/g,'').slice(-10) === phoneLast10);
-    if (!myOrders.length) { document.getElementById('review-phone-error').textContent = 'No purchase history'; return; }
-    const purchased = myOrders.some(o => (o.items || []).some(item =>
-      (item.product_name || '').trim().toLowerCase() === productName.trim().toLowerCase()
-    ));
-    if (purchased) { reviewVerified = true; reviewVerifiedPhone = phoneLast10; document.getElementById('review-verify-status').textContent = '✓ Verified'; document.getElementById('review-phone-error').textContent = ''; }
-    else { document.getElementById('review-phone-error').textContent = 'Not purchased'; }
-  }).catch(() => document.getElementById('review-phone-error').textContent = 'Verification error');
-}
-
-
 
 function initReveal() {
   setTimeout(function() {
