@@ -939,6 +939,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.43.4/dist/umd/supabase.min.js"></script>
 <script src="/assets/js/routes.js"></script>
 <script src="/components/navigation.js"></script>
+<script src="/components/shop-controls.js"></script>
 <script>
   // Initialize Supabase client
   const SUPABASE_URL = 'https://syuostlqzzinigqwjzap.supabase.co';
@@ -6419,70 +6420,6 @@ function updateShipBar() {
   if(amt)amt.textContent='';
 }
 
-function filterBySize(size) {
-  activeShopSize = size;
-  document.querySelectorAll('.sz-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.size === size); });
-  applyShopFilters();
-}
-
-function applyShopFilters() {
-  var base = activeShopFilter === 'all' ? products : products.filter(function(p){ return p.filter === activeShopFilter; });
-  if (activeShopSize !== 'all') {
-    base = base.filter(function(p){
-      var sizes = (p.sizes?p.sizes.map(function(s){return s.label;}):['all']);
-      return sizes.indexOf(activeShopSize) > -1;
-    });
-  }
-  var searchVal = (document.getElementById('shopSearch') || {}).value || '';
-  var v = searchVal.trim().toLowerCase();
-  var emptyMsg = document.getElementById('searchEmpty');
-  if (v) {
-    base = base.filter(function(p){
-      return p.name.toLowerCase().includes(v) || p.cat.toLowerCase().includes(v) ||
-        (p.tags && p.tags.some(function(t){ return t.toLowerCase().includes(v); })) ||
-        (p.desc && p.desc.toLowerCase().includes(v)) || p.filter.toLowerCase().includes(v);
-    });
-  }
-  // Sort
-  var sortEl = document.getElementById('shopSort');
-  var sortVal = sortEl ? sortEl.value : 'default';
-  if (sortVal === 'price-asc') {
-    base = base.slice().sort(function(a,b){ return a.sizes[0].price - b.sizes[0].price; });
-  } else if (sortVal === 'price-desc') {
-    base = base.slice().sort(function(a,b){ return b.sizes[0].price - a.sizes[0].price; });
-  } else if (sortVal === 'name-asc') {
-    base = base.slice().sort(function(a,b){ return a.name.localeCompare(b.name); });
-  } else if (sortVal === 'rating') {
-    base = base.slice().sort(function(a,b){
-      var ra = getProductRating(a.name); var rb = getProductRating(b.name);
-      return (rb ? rb.avg : 0) - (ra ? ra.avg : 0);
-    });
-  }
-  // Result count
-  var countEl = document.getElementById('shopResultCount');
-  if (countEl) countEl.textContent = base.length > 0 ? base.length + ' treat' + (base.length === 1 ? '' : 's') + ' found' : '';
-  if (base.length === 0) {
-    document.getElementById('shopProd').innerHTML = '<div style="text-align:center;padding:48px 0;font-size:14px;color:var(--muted)">No treats match this combination.<br><button onclick="filterBySize(\'all\');showShopCategory(\'all\')" style="margin-top:12px;background:var(--dark);color:var(--white);border:none;padding:9px 20px;font-family:\'Jost\',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer">Clear Filters</button></div>';
-    if (emptyMsg) emptyMsg.style.display = 'none';
-  } else {
-    if (emptyMsg) emptyMsg.style.display = 'none';
-    renderProducts(base, 'shopProd');
-    restoreViewCartBtns();
-  }
-}
-function doShopSearch(val) {
-  const v = val.trim().toLowerCase();
-  const clearBtn = document.getElementById('searchClearBtn');
-  const glassIcon = document.getElementById('searchIconGlass');
-  if (clearBtn) clearBtn.style.display = v ? 'block' : 'none';
-  if (glassIcon) glassIcon.style.display = v ? 'none' : 'block';
-  applyShopFilters();
-}
-function clearShopSearch() {
-  const inp = document.getElementById('shopSearch');
-  if (inp) inp.value = '';
-  doShopSearch('');
-}
 
 // ── TREAT FINDER QUIZ ────────────────────────────────────────────────────
 var quizAnswers = {};
