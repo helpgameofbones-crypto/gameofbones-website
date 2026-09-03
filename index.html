@@ -5040,32 +5040,6 @@ function showPage(id) {
     }
   }
 }
-function showShopCategory(filter) {
-  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); p.style.display=''; });
-  document.querySelectorAll('.nav-links a[id]').forEach(function(a){ a.classList.remove('active'); });
-  document.getElementById('page-shop').classList.add('active');
-  var n = document.getElementById('nav-shop');
-  if (n) n.classList.add('active');
-  window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-  activeShopFilter = filter;
-  setTimeout(function() {
-    // Clear search
-    var searchInp = document.getElementById('shopSearch');
-    if (searchInp) searchInp.value = '';
-    var clearBtn = document.getElementById('searchClearBtn');
-    if (clearBtn) clearBtn.style.display = 'none';
-    var glassIcon = document.getElementById('searchIconGlass');
-    if (glassIcon) glassIcon.style.display = 'block';
-    var emptyMsg = document.getElementById('searchEmpty');
-    if (emptyMsg) emptyMsg.style.display = 'none';
-    document.querySelectorAll('.f-btn').forEach(function(b){ b.classList.remove('active'); });
-    var target = document.querySelector('.f-btn[data-filter="' + filter + '"]');
-    if (target) target.classList.add('active');
-    applyShopFilters();
-    var grid = document.getElementById('shopProd');
-    if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 80);
-}
 // ===== DELHIVERY LIVE TRACKING =====
 // Calls a Supabase Edge Function that proxies the Delhivery API server-side
 // (the Delhivery token is NEVER exposed in this file). If the function is

@@ -41,4 +41,19 @@
     window.applyShopFilters();
   };
   window.clearShopSearch = function () { var input = document.getElementById('shopSearch'); if (input) input.value = ''; window.doShopSearch(''); };
+
+  window.showShopCategory = function (filter) {
+    document.querySelectorAll('.page').forEach(function (page) { page.classList.remove('active'); page.style.display = ''; });
+    document.querySelectorAll('.nav-links a[id]').forEach(function (link) { link.classList.remove('active'); });
+    var page = document.getElementById('page-shop'), nav = document.getElementById('nav-shop');
+    if (page) page.classList.add('active'); if (nav) nav.classList.add('active');
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' }); activeShopFilter = filter;
+    setTimeout(function () {
+      var input = document.getElementById('shopSearch'), clear = document.getElementById('searchClearBtn'), icon = document.getElementById('searchIconGlass'), empty = document.getElementById('searchEmpty');
+      if (input) input.value = ''; if (clear) clear.style.display = 'none'; if (icon) icon.style.display = 'block'; if (empty) empty.style.display = 'none';
+      document.querySelectorAll('.f-btn').forEach(function (button) { button.classList.remove('active'); });
+      var target = document.querySelector('.f-btn[data-filter="' + filter + '"]'); if (target) target.classList.add('active');
+      window.applyShopFilters(); var grid = document.getElementById('shopProd'); if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 80);
+  };
 }());
