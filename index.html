@@ -937,6 +937,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
 
 <script defer src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.43.4/dist/umd/supabase.min.js"></script>
+<script src="/assets/js/routes.js"></script>
 <script>
   // Initialize Supabase client
   const SUPABASE_URL = 'https://syuostlqzzinigqwjzap.supabase.co';
@@ -4892,15 +4893,18 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
 // Global WA functions — defined early so inline onclicks always work
 var WA_NUMBER = '919082503295';
 
-// URL Routing - separate links for each page
+// Canonical routes keep links shareable while the existing checkout remains intact.
+function gobPageFromPath() {
+  return window.GobRoutes ? window.GobRoutes.pageFromPath(window.location.pathname) : '';
+}
 function navigateTo(page, productIdx = null) { var _wa=document.querySelector('.wa-widget'),_msb=document.getElementById('mobileStickyBar'); if(_wa){if(page==='cart'||page==='checkout'){_wa.style.setProperty('display','none','important');}else{_wa.style.removeProperty('display');}} if(_msb){if(page==='cart'||page==='checkout'){_msb.style.setProperty('display','none','important');}else{_msb.style.display='none';}}
-  let url = window.location.pathname;
+  let url = '/';
   if (page === 'product' && productIdx !== null) {
     const productName = products[productIdx]?.name || '';
     const slug = productName.toLowerCase().replace(/[&\s]+/g, '-');
-    url += `?p=${slug}`;
+    url = `/products/${slug}`;
   } else if (page !== 'home') {
-    url += `?page=${page}`;
+    url = window.GobRoutes && window.GobRoutes.pages.indexOf(page) >= 0 ? `/${page}` : `/?page=${page}`;
   }
   try {
     window.history.pushState({ page, productIdx }, '', url);
@@ -13624,15 +13628,14 @@ window.addEventListener('popstate', function(event) {
   if (event.state && event.state.page) {
     showPage(event.state.page, event.state.productIdx);
   } else {
-    // No state means we're going back to home
-    showPage('home');
+    showPage(gobPageFromPath() || 'home');
   }
 });
 
 // Handle page routing on initial load
 (function() {
   var params = new URLSearchParams(window.location.search);
-  var pageParam = params.get('page');
+  var pageParam = params.get('page') || gobPageFromPath();
   var orderRefParam = params.get('ref') || params.get('order');
 
   if (pageParam) {
@@ -13672,7 +13675,7 @@ window.addEventListener('popstate', function(event) {
   }
   
   // Handle product URLs (?p=product-name)
-  var productParam = params.get('p');
+  var productParam = params.get('p') || (window.location.pathname.match(/^\/products\/([^/]+)\/?$/) || [])[1];
   if (productParam && typeof products !== 'undefined') {
     var pIdx = products.findIndex(function(p) {
       var slug = p.name.toLowerCase().replace(/[&\s]+/g, '-');

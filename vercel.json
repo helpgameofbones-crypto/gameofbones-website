@@ -1,1 +1,25 @@
-{"headers":[{"source":"/(.*)", "headers":[{"key":"Cache-Control","value":"public, max-age=0, must-revalidate"}]}]}
+{
+  "rewrites": [
+    { "source": "/shop", "destination": "/" },
+    { "source": "/cart", "destination": "/" },
+    { "source": "/checkout", "destination": "/" },
+    { "source": "/about", "destination": "/" },
+    { "source": "/blog", "destination": "/" },
+    { "source": "/contact", "destination": "/" },
+    { "source": "/track", "destination": "/" },
+    { "source": "/rewards", "destination": "/" },
+    { "source": "/refer", "destination": "/" },
+    { "source": "/reviews", "destination": "/" },
+    { "source": "/faq", "destination": "/" },
+    { "source": "/privacy", "destination": "/" },
+    { "source": "/shipping", "destination": "/" },
+    { "source": "/returns", "destination": "/" },
+    { "source": "/products/:slug", "destination": "/" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }]
+    }
+  ]
+}
