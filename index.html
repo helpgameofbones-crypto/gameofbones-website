@@ -941,6 +941,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
 <script src="/components/navigation.js"></script>
 <script src="/components/shop-controls.js"></script>
 <script src="/components/product-routing.js"></script>
+<script src="/components/cart-shell.js"></script>
 <script>
   // Initialize Supabase client
   const SUPABASE_URL = 'https://syuostlqzzinigqwjzap.supabase.co';
@@ -8602,33 +8603,7 @@ let cartItems = []; // [{product, size, price, qty}]
 // Restore cart from localStorage
 try { var _savedCart = localStorage.getItem('gobCartItems'); if (_savedCart) { cartItems = JSON.parse(_savedCart); setTimeout(function(){ updateCartBadge(); },100); } } catch(e) {}
 
-function _saveCart() {
-  try { localStorage.setItem('gobCartItems', JSON.stringify(cartItems)); } catch(e) {}
-}
 let addedProductIdxs = new Set(); // tracks which product indices have been added to cart
-
-function toggleCart() {
-  const drawer = document.getElementById('cartDrawer');
-  const overlay = document.getElementById('cartOverlay');
-  if (!drawer) return;
-  const isOpen = drawer.classList.contains('open');
-  if (isOpen) {
-    drawer.style.transform = 'translateX(100%)';
-    overlay.style.opacity = '0';
-    overlay.style.display = 'none';
-    drawer.classList.remove('open');
-    document.body.style.overflow = '';
-  } else {
-    renderCartDrawer();
-    overlay.style.display = 'block';
-    requestAnimationFrame(function() {
-      overlay.style.opacity = '1';
-      drawer.style.transform = 'translateX(0)';
-    });
-    drawer.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-}
 
   
 function addCart(btn, productIdx, sizeIdx) {
@@ -8687,13 +8662,6 @@ function addCartModal() {
   if (hint) { hint.textContent = 'Pick any 1 for 3% off, or 2+ for 5% off your bundle'; hint.style.color = 'var(--teal)'; }
   const btn = document.querySelector('.pmodal-buy-btn');
   if (btn) { btn.textContent = '✓ Added!'; btn.style.background = 'var(--teal)'; setTimeout(() => { btn.textContent = 'Add to Cart +'; btn.style.background = ''; }, 1600); }
-}
-
-function updateCartBadge() {
-  const total = cartItems.reduce((s, i) => s + i.qty, 0);
-  var ccEl = document.getElementById('cartCount'); if (ccEl) ccEl.textContent = total;
-  // Sync abandoned cart state (debounced)
-  _debouncedAbandonedCartSync();
 }
 
 // ── ABANDONED CART TRACKING ─────────────────────────────────────────────
