@@ -8670,32 +8670,11 @@ function _syncAbandonedCart() {
         if (!phone && _cartCapturePhone) phone = _cartCapturePhone;
       if (!email && _cartCaptureEmail) email = _cartCaptureEmail;
 
-    var payload = {
-      customer_phone: phone || null,
-      customer_email: email || null,
-      customer_name: name || null,
-      items: JSON.stringify(cartItems),
-      total: total,
-      recovered: false,
-      abandoned_at: new Date().toISOString()
-    };
-
-    var headers = { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY, 'Prefer': 'return=representation' };
-
-    if (_abandonedCartId) {
-      // Update existing
-      fetch(SUPABASE_URL + '/rest/v1/abandoned_carts?id=eq.' + _abandonedCartId, {
-        method: 'PATCH', headers: headers, body: JSON.stringify(payload)
-      }).catch(function(){});
-    } else {
-      // Create new
-      fetch(SUPABASE_URL + '/rest/v1/abandoned_carts', {
-        method: 'POST', headers: headers, body: JSON.stringify(payload)
-      })
-      .then(function(r) { return r.json(); })
-      .then(function(d) { if (Array.isArray(d) && d[0] && d[0].id) _abandonedCartId = d[0].id; })
-      .catch(function(){});
-    }
+    if (!phone) return;
+    fetch('https://gameofbones-admin.vercel.app/api/abandoned-cart', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone: phone, email: email || null, name: name || null, items: cartItems, total: total })
+    }).catch(function(){});
   } catch(e) { /* silent */ }
 }
 
@@ -8788,16 +8767,7 @@ function applyCartReferral(){var input=document.getElementById('cartReferralCode
         });
       }
       function renderCouponUnlockCard() { var target = 2199, pct = 20, ucode = 'MEGA20'; var subtotal = cartItems.reduce(function(s,i){ return s + (i.price||0)*(i.qty||1); }, 0); var ids = ['cartUnlockCard','cartUnlockCardPage']; var suffixes = ['', 'Page']; for (var k = 0; k < ids.length; k++) { var el = document.getElementById(ids[k]); if (!el) continue; if (appliedDiscount || subtotal <= 0) { el.style.display = 'none'; continue; } var suffix = suffixes[k]; if (subtotal >= target) { el.style.display = 'block'; el.innerHTML = '<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px"><span style="color:var(--teal);font-weight:700;font-size:12px">✓ Coupon unlocked</span></div>' + '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px">' + '<span style="font-size:12px;color:var(--dark)">Get ' + pct + '% off this order</span>' + '<button onclick="applyUnlockCoupon(\'' + ucode + '\',\'' + suffix + '\')" style="background:var(--gold);border:none;padding:6px 14px;font-size:11px;font-weight:700;border-radius:3px;cursor:pointer;color:var(--dark);white-space:nowrap">Apply</button>' + '</div>'; } else { var remaining = target - subtotal; var barPct = Math.max(2, Math.min(100, Math.round(subtotal/target*100))); el.style.display = 'block'; el.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;gap:10px">' + '<span style="font-size:12px;font-weight:600;color:var(--dark)">Add ₹' + remaining.toLocaleString('en-IN') + ' more to unlock</span>' + '<span style="font-size:12px;font-weight:700;color:var(--gold);white-space:nowrap">' + pct + '% off</span></div>' + '<div style="height:5px;background:var(--cream-mid);border-radius:3px;overflow:hidden">' + '<div style="height:100%;background:var(--gold);border-radius:3px;width:' + barPct + '%"></div></div>'; } } } function applyUnlockCoupon(ucode, suffix) { var input = document.getElementById('cartCouponCode' + (suffix||'')); if (input) input.value = ucode; if (typeof applyCartCoupon === 'function') applyCartCoupon(suffix||''); } function _markCartRecovered() {
-  if (_abandonedCartId) {
-    try {
-      fetch(SUPABASE_URL + '/rest/v1/abandoned_carts?id=eq.' + _abandonedCartId, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY },
-        body: JSON.stringify({ recovered: true })
-      }).catch(function(){});
-    } catch(e) {}
-    _abandonedCartId = null;
-  }
+  _abandonedCartId = null;
 }
 
 function changeQty(idx, delta) {
