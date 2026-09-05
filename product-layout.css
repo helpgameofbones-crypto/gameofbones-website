@@ -1,1 +1,14 @@
 .product-accordion-panel{max-width:1340px;margin:0 auto clamp(48px,7vw,96px);padding:0 max(4vw,24px);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:clamp(30px,6vw,88px);border-top:1px solid var(--line)}.product-accordion-panel details{padding:19px 0}.product-accordion-panel details:nth-child(odd){padding-right:clamp(18px,3vw,48px)}.product-accordion-panel details:nth-child(even){padding-left:clamp(18px,3vw,48px);border-left:1px solid var(--line)}.product-accordion-panel summary{font-size:15px}.product-accordion-panel p{max-width:56ch}@media(max-width:760px){.product-accordion-panel{display:block}.product-accordion-panel details:nth-child(odd),.product-accordion-panel details:nth-child(even){padding-inline:0;border-left:0}}
+
+/* Keep the media gallery and purchasing details in ordinary document flow on phones. */
+@media(max-width:560px){
+  .detail{display:block;padding:18px 16px 34px}
+  .gallery{display:flex;flex-direction:column;gap:8px;height:auto;overflow:visible}
+  .gallery .thumbs{order:0;display:grid;grid-template-columns:repeat(6,minmax(54px,1fr));gap:8px;overflow-x:auto;padding-bottom:4px}
+  .gallery .main-product-image{order:1;width:100%;aspect-ratio:4/3}
+  .gallery .media-count{order:2;margin:3px 0 0}
+  .gallery .gallery-notes{order:3;width:100%;margin:0}
+  /* The media notes are visually ordered after the gallery; reserve their row before the info panel. */
+  .detail>.gallery{margin-bottom:110px}
+  .product-info{margin-top:26px;padding-top:0}
+}
