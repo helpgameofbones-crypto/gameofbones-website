@@ -4,7 +4,14 @@
   const slug = value => String(value || '').toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
   const safeMoney = value => Number.isFinite(Number(value)) && Number(value) >= 0 ? Number(value) : 0;
   const productStore = () => typeof GOB_PRODUCTS !== 'undefined' ? GOB_PRODUCTS : (window.GOB_PRODUCTS ||= {});
-  const media = (items, type) => (Array.isArray(items) ? items : []).filter(item => typeof item === 'string' && item).map((src, index) => ({ type, src, label: `${type === 'video' ? 'Video' : 'Photo'} ${index + 1}` }));
+  /* A legacy Goat Trachea upload was accidentally attached to Chicken Bones.
+     Keep storefront galleries product-safe while the admin record is cleaned. */
+  const invalidMedia = new Set([
+    'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/937c9539-b00d-4e93-9291-1af00893a061/image-1-1782745615470.png'
+  ]);
+  const media = (items, type) => (Array.isArray(items) ? items : [])
+    .filter(item => typeof item === 'string' && item && !invalidMedia.has(item))
+    .map((src, index) => ({ type, src, label: `${type === 'video' ? 'Video' : 'Photo'} ${index + 1}` }));
   const packs = sizes => (Array.isArray(sizes) ? sizes : []).map(size => ({
     label: String(size?.label || '').trim(),
     weight: Number(size?.weight_grams) > 0 ? `${Number(size.weight_grams)} g` : '',
