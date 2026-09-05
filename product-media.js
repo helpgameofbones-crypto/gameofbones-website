@@ -6,6 +6,10 @@ window.GOB_PRODUCT_MEDIA = window.GOB_PRODUCT_MEDIA || {
     { type: 'image', src: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/293b7ba0-37a7-4626-b97e-0f6aa8d86fa4/image-2-1782712480316.png', alt: 'Chicken Jerky product photo 3', label: 'Product photo 3' },
     { type: 'image', src: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/293b7ba0-37a7-4626-b97e-0f6aa8d86fa4/image-3-1782712483596.png', alt: 'Chicken Jerky product photo 4', label: 'Product photo 4' },
     { type: 'image', src: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/293b7ba0-37a7-4626-b97e-0f6aa8d86fa4/image-4-1782797388440.png', alt: 'Chicken Jerky product photo 5', label: 'Product photo 5' }
+  ],
+  'chicken-bones': [
+    { type: 'image', src: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/937c9539-b00d-4e93-9291-1af00893a061/image-0-1782712130859.png', alt: 'Chicken Bones', label: 'Product photo 1' },
+    { type: 'image', src: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/937c9539-b00d-4e93-9291-1af00893a061/image-2-1782797344360.png', alt: 'Chicken Bones product information', label: 'Product photo 2' }
   ]
 }
 
