@@ -13,11 +13,16 @@ main>.section>.products:not(#liveCatalog){grid-template-columns:repeat(3,minmax(
 @media(max-width:1100px){.products{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:720px){.products,main>.section>.products:not(#liveCatalog){grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card-copy{padding:11px}.product-card h3{font-size:18px}.product-image{aspect-ratio:1}.card-bottom{font-size:11px}.quick-add{min-width:36px;height:36px}}
 @media(max-width:640px){
-  .products,main>.section>.products:not(#liveCatalog){grid-template-columns:1fr}
-  .products .product-card,main>.section>.products:not(#liveCatalog) .product-card{display:block}
-  .products .product-image,main>.section>.products:not(#liveCatalog) .product-image{min-height:0;aspect-ratio:1.16}
-  .products .card-copy,main>.section>.products:not(#liveCatalog) .card-copy{min-width:0;padding:16px}
-  .products .product-card h3,main>.section>.products:not(#liveCatalog) .product-card h3{font-size:25px;line-height:1.05}
-  .products .catalog-desc,main>.section>.products:not(#liveCatalog) .catalog-desc{margin-bottom:14px}
-  .products .card-bottom,main>.section>.products:not(#liveCatalog) .card-bottom{font-size:13px}
+  /* Compact two-up catalogue inspired by Canine India's mobile product rhythm. */
+  .products,main>.section>.products:not(#liveCatalog){grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .products .product-card,main>.section>.products:not(#liveCatalog) .product-card{display:block;min-width:0;border-radius:3px}
+  .products .product-image,main>.section>.products:not(#liveCatalog) .product-image{min-height:0;aspect-ratio:1;background:#fffdf8!important;border-bottom:1px solid var(--line);padding:5px}
+  .products .product-image img,main>.section>.products:not(#liveCatalog) .product-image img{object-fit:contain}
+  .products .number,main>.section>.products:not(#liveCatalog) .number{display:none}
+  .products .card-copy,main>.section>.products:not(#liveCatalog) .card-copy{min-width:0;padding:11px}
+  .products .product-card .tag,main>.section>.products:not(#liveCatalog) .product-card .tag{min-height:18px;font-size:8px;line-height:1.2;letter-spacing:.08em}
+  .products .product-card h3,main>.section>.products:not(#liveCatalog) .product-card h3{min-height:37px;margin:4px 0 8px;font-size:18px;line-height:1.02;overflow-wrap:anywhere}
+  .products .catalog-desc,main>.section>.products:not(#liveCatalog) .catalog-desc,.products .card-copy>p[style],main>.section>.products:not(#liveCatalog) .card-copy>p[style]{display:none!important}
+  .products .card-bottom,main>.section>.products:not(#liveCatalog) .card-bottom{font-size:11px;line-height:1.2}
+  .products .quick-add,main>.section>.products:not(#liveCatalog) .quick-add{min-width:34px;height:34px;font-size:18px}
 }
