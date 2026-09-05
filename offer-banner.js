@@ -1,6 +1,6 @@
 (() => {
   const offers = [
-    { copy: 'WELCOME15: 15% off your first order', href: 'products.html' },
+    { copy: 'New here? Use code WELCOME15 for 15% off your first order · one use per customer', href: 'products.html' },
     { copy: 'Pay online and get ₹30 off', href: 'checkout.html' },
     { copy: 'Buy 3+ treats, save 5% automatically', href: 'products.html#buyMoreTitle' },
     { copy: 'MEGA20: 20% off orders above ₹2,199', href: 'products.html' },
