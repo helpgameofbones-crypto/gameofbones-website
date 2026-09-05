@@ -27,6 +27,13 @@
       if (!response.ok) throw new Error(data.error || 'The catalogue could not be loaded.');
       return data;
     },
+    blogs: async () => {
+      if (!catalogueBase) throw new Error('The blog feed is not configured for this preview.');
+      const response = await fetch(`${catalogueBase}/public-blogs`, { cache: 'no-store' });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.error || 'The journal could not be loaded.');
+      return data;
+    },
     pincode: pin => request(`/pincode-check?pin=${encodeURIComponent(pin)}`),
     requestLoginCode: phone => request('/customer-auth/request-code', { method: 'POST', body: JSON.stringify({ phone }) }),
     verifyLoginCode: (phone, code) => request('/customer-auth/verify-code', { method: 'POST', body: JSON.stringify({ phone, code }) }),
