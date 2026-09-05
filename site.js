@@ -1,4 +1,6 @@
 const GOB_PRODUCTS={jerky:{name:'Chicken Jerky',price:329,image:'assets/chicken-jerky-pouch.png',tag:'Boneless jerky'},'jerky-pack-2':{name:'Chicken Jerky — 2 pouch value pack',price:625,image:'assets/chicken-jerky-pouch.png',tag:'Boneless jerky · save ₹33'},trachea:{name:'Goat Trachea',price:100,image:'assets/goat-trachea-pouch.png',tag:'Chews & bones'},trotter:{name:'Goat Trotter',price:250,image:'assets/goat-trotter-plate.png',tag:'Chews & bones'}};
+// Keep the catalogue store on window as well, so every deferred storefront script shares it reliably.
+window.GOB_PRODUCTS = GOB_PRODUCTS;
 const money=n=>`₹${Number(n).toLocaleString('en-IN')}`;
 const cart=()=>JSON.parse(localStorage.getItem('gob-preview-cart')||'[]');
 const saveCart=value=>localStorage.setItem('gob-preview-cart',JSON.stringify(value));

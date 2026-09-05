@@ -71,6 +71,8 @@
     };
 
     const refresh = () => {
+      // Never replace a populated catalogue with an empty response while scripts or the API initialise.
+      if (!catalogue().length) return;
       renderFilters();
       render();
     };
