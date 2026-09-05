@@ -21,7 +21,7 @@
 <link rel="stylesheet" href="product-loyalty.css">
 <link rel="stylesheet" href="key-benefits.css?v=full-width-2">
 <link rel="stylesheet" href="product-layout.css?v=full-width-1">
-<link rel="stylesheet" href="product-reference.css?v=1">
+<link rel="stylesheet" href="product-reference.css?v=live-product-data-1">
 <script defer src="site.js?v=product-reference-1">
 </script>
 <script defer src="api-client.js?v=delivery-1"></script>
@@ -31,7 +31,7 @@
 </script>
 <script defer src="catalog-purchase.js"></script>
 <script defer src="product-loyalty.js"></script>
-<script defer src="product-media.js?v=media-overflow-1"></script>
+<script defer src="product-media.js?v=live-media-1"></script>
 <script defer src="product-benefits.js?v=full-width-2"></script>
 <script defer src="nutrient-profile.js?v=full-width-2"></script>
 <script defer src="pincode-checker.js?v=delivery-1"></script>
@@ -89,11 +89,13 @@ font-weight:600">4.9 from verified dog parents</span>
 <span class="chip">Naturally dehydrated</span>
 </div>
 <p class="eyebrow" style="margin-top:28px">Choose pack size</p>
-<div class="option-row">
+<div class="option-row" id="packOptions">
 <button class="option selected" data-pack="1">1 pouch <small>60 g · ₹329</small></button>
-<button class="option value-pack" data-pack="2">2 pouches <small>120 g · ₹625</small><em>Save ₹33</em></button>
+<button class="option" data-pack="2">2 pouches <small>140 g · ₹658</small></button>
+<button class="option" data-pack="3">3 pouches <small>210 g · ₹987</small></button>
+<button class="option" data-pack="4">4 pouches <small>280 g · ₹1,316</small></button>
 </div>
-<div class="pack-value" id="packValue"><span class="value-stamp">Better value</span><p><strong>Save ₹33 with two pouches</strong><small>That’s 5% off, with fewer treat-time emergencies.</small></p></div>
+<div class="pack-value" id="packValue"><span class="value-stamp">Live pack pricing</span><p><strong>Choose the pack that suits your routine</strong><small>Prices and weights match the current product record.</small></p></div>
 <div class="buy-row">
 <div class="quantity">
 <button id="minus" aria-label="Decrease quantity">−</button>
@@ -177,19 +179,23 @@ margin-top:10px" href="https://wa.me/?text=Hi%20Game%20of%20Bones%2C%20I%20have%
 </div>
 </section>
 </main>
-<script>document.addEventListener('DOMContentLoaded',()=>{const type=new URLSearchParams(location.search).get('product')||'jerky',data={jerky:['Chicken Jerky','₹329','Boneless jerky · Made in Kalyan','Single-ingredient, slow-dehydrated chicken breast. High-protein, low-fat and made for training rewards.','assets/chicken-jerky-pouch.png','Boneless chicken breast. That’s it.'],trachea:['Goat Trachea','₹100','Chews & bones · Made in Kalyan','A firm-but-yielding, cartilage-rich chew for supervised chew time.','assets/goat-trachea-pouch.png','Goat windpipe (trachea). That’s it.'],trotter:['Goat Trotter','₹250','Chews & bones · Made in Kalyan','A dense natural chew with bone, skin and cartilage for supervised power-chewer enrichment.','assets/goat-trotter-plate.png','Goat trotter: bone, skin and cartilage. That’s it.']}[type]||null;
+<script>document.addEventListener('DOMContentLoaded',()=>{const params=new URLSearchParams(location.search),type=params.get('catalog')||params.get('product')||'jerky',data={jerky:['Chicken Jerky','₹329','Boneless jerky · Made in Kalyan','Single-ingredient, slow-dehydrated chicken breast. High-protein, low-fat and made for training rewards.','https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/293b7ba0-37a7-4626-b97e-0f6aa8d86fa4/image-0-1782712553501.png','Boneless chicken breast. That’s it.'],trachea:['Goat Trachea','₹100','Chews & bones · Made in Kalyan','A firm-but-yielding, cartilage-rich chew for supervised chew time.','assets/goat-trachea-pouch.png','Goat windpipe (trachea). That’s it.'],trotter:['Goat Trotter','₹250','Chews & bones · Made in Kalyan','A dense natural chew with bone, skin and cartilage for supervised power-chewer enrichment.','assets/goat-trotter-plate.png','Goat trotter: bone, skin and cartilage. That’s it.']}[type]||null;
 if(!data)return;
 ['productName','productPrice','productTag','productDesc','inside'].forEach((id,i)=>document.getElementById(id).textContent=data[[0,1,2,3,5][i]]);
 document.getElementById('productImage').src=data[4];
 document.getElementById('productImage').alt=data[0];
 document.title=data[0]+' — Game of Bones';
-let q=1,packSize=1,packPrice=Number(data[1].replace(/[^0-9]/g,''));
+const packs=type==='jerky'?[{label:'1 pouch',weight:'70 g',price:329},{label:'2 pouches',weight:'140 g',price:658},{label:'3 pouches',weight:'210 g',price:987},{label:'4 pouches',weight:'280 g',price:1316}]:[{label:'1 pouch',weight:'60 g',price:Number(data[1].replace(/[^0-9]/g,''))}];
+const packOptions=document.getElementById('packOptions');
+packOptions.innerHTML=packs.map((pack,index)=>`<button class="option${index===0?' selected':''}" data-pack="${index}">${pack.label}<small>${pack.weight} · ₹${pack.price.toLocaleString('en-IN')}</small></button>`).join('');
+let q=1,packIndex=0,packPrice=packs[0].price;
+const setPack=index=>{packIndex=index;const pack=packs[index];packPrice=pack.price;packOptions.querySelectorAll('.option').forEach((option,optionIndex)=>option.classList.toggle('selected',optionIndex===index));document.getElementById('addProduct').textContent=`Add to treat jar · ₹${packPrice.toLocaleString('en-IN')}`;document.getElementById('stickyPrice').textContent=`₹${packPrice.toLocaleString('en-IN')}`;document.getElementById('stickyPackLabel').textContent=`${pack.label} · ${pack.weight}`;document.getElementById('packValue').classList.toggle('active',index>0)};
 document.getElementById('minus').onclick=()=>{q=Math.max(1,q-1);
 document.getElementById('quantity').textContent=q};
 document.getElementById('plus').onclick=()=>{q++;
 document.getElementById('quantity').textContent=q};
-document.querySelectorAll('.option').forEach((option,index)=>option.addEventListener('click',()=>{if(option.style.display==='none')return;packSize=Number(option.dataset.pack||index+1);packPrice=packSize===2&&type==='jerky'?625:Number(data[1].replace(/[^0-9]/g,''))*packSize;document.getElementById('addProduct').textContent=`Add to treat jar · ₹${packPrice}`;document.getElementById('stickyPrice').textContent=`₹${packPrice}`;document.getElementById('stickyPackLabel').textContent=packSize===2?'2 pouches · 120 g':'1 pouch · 60 g';document.getElementById('packValue').classList.toggle('active',packSize===2)}));
-document.getElementById('addProduct').onclick=()=>addToCart(type==='jerky'&&packSize===2?'jerky-pack-2':type,q);
+packOptions.querySelectorAll('.option').forEach((option,index)=>option.addEventListener('click',()=>setPack(index)));
+document.getElementById('addProduct').onclick=()=>{const pack=packs[packIndex],cartId=packIndex===0?type:`${type}-pack-${packIndex+1}`;GOB_PRODUCTS[cartId]={name:`${data[0]} — ${pack.label}`,price:pack.price,image:data[4],tag:`${data[2]} · ${pack.weight}`};addToCart(cartId,q)};
 document.getElementById('stickyAdd').onclick=()=>document.getElementById('addProduct').click()})</script>
 </body>
 </html>

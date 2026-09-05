@@ -1,12 +1,11 @@
 /* Per-product media accepts up to six items: five photos plus one video, or any other mix. */
 window.GOB_PRODUCT_MEDIA = window.GOB_PRODUCT_MEDIA || {
   jerky: [
-    { type: 'image', src: 'assets/chicken-jerky-pouch.png', alt: 'Chicken Jerky pouch', label: 'Front pack' },
-    { type: 'image', src: 'assets/chicken-jerky-pouch.png', alt: 'Chicken Jerky pack detail', label: 'Pack detail' },
-    { type: 'image', src: 'assets/chicken-jerky-pouch.png', alt: 'Chicken Jerky ingredient detail', label: 'Ingredient detail' },
-    { type: 'image', src: 'assets/chicken-jerky-pouch.png', alt: 'Chicken Jerky serving detail', label: 'Serving idea' },
-    { type: 'image', src: 'assets/chicken-jerky-pouch.png', alt: 'Chicken Jerky back-of-pack detail', label: 'Back of pack' },
-    { type: 'video', src: '', poster: 'assets/chicken-jerky-pouch.png', alt: 'Chicken Jerky product video', label: 'Watch video' }
+    { type: 'image', src: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/293b7ba0-37a7-4626-b97e-0f6aa8d86fa4/image-0-1782712553501.png', alt: 'Chicken Jerky front pack', label: 'Front pack' },
+    { type: 'image', src: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/293b7ba0-37a7-4626-b97e-0f6aa8d86fa4/image-1-1782712557758.png', alt: 'Chicken Jerky product photo 2', label: 'Product photo 2' },
+    { type: 'image', src: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/293b7ba0-37a7-4626-b97e-0f6aa8d86fa4/image-2-1782712480316.png', alt: 'Chicken Jerky product photo 3', label: 'Product photo 3' },
+    { type: 'image', src: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/293b7ba0-37a7-4626-b97e-0f6aa8d86fa4/image-3-1782712483596.png', alt: 'Chicken Jerky product photo 4', label: 'Product photo 4' },
+    { type: 'image', src: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/293b7ba0-37a7-4626-b97e-0f6aa8d86fa4/image-4-1782797388440.png', alt: 'Chicken Jerky product photo 5', label: 'Product photo 5' }
   ]
 }
 
