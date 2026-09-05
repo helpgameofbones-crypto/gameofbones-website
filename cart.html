@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Your Bowl — Game of Bones</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="site.css"><link rel="stylesheet" href="commerce.css">
+  <script defer src="site.js?v=commerce-6"></script><script defer src="catalog.js?v=commerce-6"></script><script defer src="commerce.js?v=commerce-6"></script>
+</head>
+<body>
+  <div class="notice"><span>Free shipping on every order • Pay online & get ₹30 off • Pan-India delivery via Delhivery</span></div>
+  <nav class="nav">
+    <a class="brand" href="index.html"><img src="assets/gob-logo.png" alt="Game of Bones"><small>Game of Bones</small></a>
+    <div class="nav-links"><a href="index.html">Home</a><a href="products.html">Products</a><a href="our-story.html">Our story</a><a href="bundles.html">Bundles</a></div>
+    <div class="nav-actions"><a href="login.html">Log in</a><a class="cart-trigger" href="cart.html" aria-label="Treat jar">Jar <span data-cart-count>0</span></a><button class="menu-toggle">Menu</button></div>
+  </nav>
+  <main class="commerce-wrap">
+    <p class="eyebrow">Your bowl</p><h1 class="commerce-title">The good stuff.</h1>
+    <p class="commerce-sub">Free shipping on every order. Review your treats, then continue to secure checkout.</p>
+    <div class="commerce-grid">
+      <section class="cart-panel" id="commerceCart" aria-live="polite"></section>
+      <aside class="order-panel">
+        <h2>Order summary</h2>
+        <div class="order-row"><span>Items (<span data-commerce-count>0</span>)</span><span data-commerce-subtotal>₹0</span></div>
+        <div class="order-row"><span>Shipping</span><span>Free</span></div>
+        <div class="order-row"><span>Pay online</span><span>−₹30 at checkout</span></div>
+        <form class="promo" id="promoForm"><input id="promoCode" aria-label="Discount code" placeholder="Discount code"><button>Apply</button></form>
+        <p id="promoMessage" class="order-note"></p>
+        <div class="order-row total"><span>Total</span><span data-commerce-total>₹0</span></div>
+        <a class="button" id="checkoutLink" style="width:100%" href="checkout.html">Secure checkout</a>
+        <p class="order-note">COD is available on most PIN codes with a ₹40 handling fee. You can use loyalty points at checkout.</p>
+        <div class="secure-strip"><span>Secure payment</span><span>UPI · Cards · COD</span></div>
+      </aside>
+    </div>
+  </main>
+</body>
+</html>

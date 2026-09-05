@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Track order — Game of Bones</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+<link rel="stylesheet" href="account.css">
+<script defer src="api-client.js"></script>
+<script defer src="site.js">
+</script>
+<script defer src="track-order.js?v=tracking-1"></script>
+</head>
+<body>
+<div class="notice">
+<span>Free shipping on every order • Pay online & get ₹30 off • MEGA20: 20% off ₹2,199+</span>
+</div>
+<nav class="nav">
+<a class="brand" href="index.html">
+<img src="assets/gob-logo.png" alt="Game of Bones">
+</a>
+<div class="nav-links">
+<a href="index.html">Home</a>
+<a href="products.html">Products</a>
+<a href="our-story.html">Our story</a>
+<a href="bundles.html">Bundles</a>
+<a href="blog.html">Blog</a>
+<a href="contact.html">Contact us</a>
+<a href="rewards.html">Rewards</a>
+<a class="active" href="track.html">Track</a>
+<a href="learn.html">Learn</a>
+</div>
+<div class="nav-actions">
+<button class="cart-trigger" data-open-cart>Bag <span data-cart-count>0</span>
+</button>
+<button class="menu-toggle">Menu</button>
+</div>
+</nav>
+<main>
+<header class="page-hero">
+<p class="eyebrow">Order tracking</p>
+<h1 class="display">Where are the <span class="accent">treats?</span>
+</h1>
+<p class="lead">Enter your Delhivery AWB or tracking number to see the latest delivery update. Tracking details are sent by SMS and/or WhatsApp once an order is dispatched.</p>
+</header>
+<section class="section">
+<form class="form-panel" id="trackingForm">
+<label class="field">Order number or Delhivery AWB<input id="trackingReference" required placeholder="Example: GOB-1048">
+</label>
+<button class="button" type="submit">Find my order</button>
+<div id="trackingResult" class="account-form-status" aria-live="polite"></div>
+</form>
+</section>
+</main>
+</body>
+</html>

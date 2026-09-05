@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Products — Game of Bones</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+<link rel="stylesheet" href="product-experience.css">
+<link rel="stylesheet" href="merchandising.css">
+<link rel="stylesheet" href="catalog-compact.css?v=1">
+<script defer src="site.js">
+</script>
+<script defer src="catalog.js">
+</script>
+<script defer src="catalog-enhance.js">
+</script>
+<script defer src="merchandising.js"></script>
+</head>
+<body>
+<div class="notice">
+<span>Free shipping on every order • Pay online & get ₹30 off • MEGA20: 20% off ₹2,199+</span>
+</div>
+<nav class="nav">
+<a class="brand" href="index.html">
+<img src="assets/gob-logo.png" alt="Game of Bones">
+<small>Premium dog treats</small>
+</a>
+<div class="nav-links">
+<a href="index.html">Home</a>
+<a class="active" href="products.html">Products</a>
+<a href="our-story.html">Our story</a>
+<a href="bundles.html">Bundles</a>
+<a href="blog.html">Blog</a>
+<a href="contact.html">Contact us</a>
+<a href="rewards.html">Rewards</a>
+<a href="track.html">Track</a>
+<a href="learn.html">Learn</a>
+</div>
+<div class="nav-actions">
+<button class="cart-trigger" data-open-cart>Bag <span data-cart-count>0</span>
+</button>
+<button class="menu-toggle" aria-label="Open menu">Menu</button>
+</div>
+</nav>
+<main>
+<header class="page-hero">
+<p class="eyebrow">Single ingredient. Fully loved.</p>
+<h1 class="display">Treat time, made <span class="accent">simple.</span>
+</h1>
+<p class="lead">Explore the live range: jerky, chews & bones, organ treats, fish and whole prey. Every item is one ingredient, with no grains, corn, soy, artificial flavours or preservatives.</p>
+</header>
+<section class="buy-more" aria-labelledby="buyMoreTitle"><div class="buy-more-intro"><p class="eyebrow">Buy more</p><h2 id="buyMoreTitle">Pay less.</h2><small>Applied automatically in cart</small></div><div class="buy-tier"><strong>5<small>% off</small></strong><span>Buy 3+ items</span></div><div class="buy-tier"><strong>8<small>% off</small></strong><span>Buy 5+ items</span></div><div class="buy-tier"><strong>12<small>% off</small></strong><span>Buy 8+ items</span></div><div class="buy-tier"><strong>15<small>% off</small></strong><span>Buy 10+ items</span></div><p class="buy-more-note">Buy-more savings do not stack with another offer or coupon. MEGA20 applies to eligible orders of ₹2,199+.</p></section>
+<section class="section">
+<div class="products">
+<article class="product-card reveal">
+<a href="product.html">
+<div class="product-image cream">
+<span class="number">01</span>
+<img src="assets/chicken-jerky-pouch.png" alt="Chicken Jerky pouch">
+</div>
+</a>
+<div class="card-copy">
+<p class="tag">Bestseller · Boneless jerky</p>
+<h3>
+<a href="product.html">Chicken Jerky</a>
+</h3>
+<p style="color:var(--muted);font-size:13px">Slow-dehydrated chicken breast. High-protein, low-fat and easy to break for training.</p>
+<div class="card-bottom">
+<span>60 g · ₹329</span>
+<button class="quick-add" data-add="jerky" aria-label="Add Chicken Jerky">+</button>
+</div>
+</div>
+</article>
+<article class="product-card reveal">
+<a href="product.html?product=trachea">
+<div class="product-image brown">
+<span class="number">02</span>
+<img src="assets/goat-trachea-pouch.png" alt="Goat Trachea pouch">
+</div>
+</a>
+<div class="card-copy">
+<p class="tag">Joint superfood · Chews & bones</p>
+<h3>
+<a href="product.html?product=trachea">Goat Trachea</a>
+</h3>
+<p style="color:var(--muted);font-size:13px">A cartilage-rich, firm-but-yielding chew for medium and large dogs. Supervise while serving.</p>
+<div class="card-bottom">
+<span>1 piece · ₹100</span>
+<button class="quick-add" data-add="trachea" aria-label="Add Goat Trachea">+</button>
+</div>
+</div>
+</article>
+<article class="product-card reveal">
+<a href="product.html?product=trotter">
+<div class="product-image sage">
+<span class="number">03</span>
+<img src="assets/goat-trotter-plate.png" alt="Goat Trotter treat on a plate">
+</div>
+</a>
+<div class="card-copy">
+<p class="tag">Long lasting · Chews & bones</p>
+<h3>
+<a href="product.html?product=trotter">Goat Trotter</a>
+</h3>
+<p style="color:var(--muted);font-size:13px">A dense natural chew with bone, skin and cartilage for power chewers. Supervise while serving.</p>
+<div class="card-bottom">
+<span>1 piece · ₹250</span>
+<button class="quick-add" data-add="trotter" aria-label="Add Goat Trotter">+</button>
+</div>
+</div>
+</article>
+</div>
+</section>
+<section class="section" aria-labelledby="full-range-title">
+<div class="section-head"><div><p class="eyebrow">The complete live range</p><h2 class="section-title" id="full-range-title">All 29 things your dog can get excited about.</h2></div></div>
+<div class="catalog-filters" id="catalogFilters" aria-label="Filter the product range"></div>
+<div class="products" id="liveCatalog" aria-live="polite"></div>
+</section>
+<section class="quote-section">
+<div class="section">
+<p class="eyebrow">Pick the right treat</p>
+<h2 class="section-title">Need a hand finding their match?</h2>
+<p class="lead">Treats should make up no more than 10% of a dog’s daily calories. Start with a small amount, introduce one protein at a time, provide fresh water and supervise every chew.</p>
+<a class="button" href="learn.html">Open the treat guide</a>
+</div>
+</section>
+</main>
+<footer class="footer">
+<div class="footer-bottom">
+<span>© 2026 Game of Bones</span>
+<span>
+<a href="contact.html">Need help?</a> · <a href="track.html">Track an order</a>
+</span>
+</div>
+</footer>
+</body>
+</html>
