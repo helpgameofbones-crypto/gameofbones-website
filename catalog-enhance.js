@@ -17,6 +17,10 @@ function hydrateCatalogCards(root) {
     gobProducts()[id] = { name: product.n, price: Number(product.p) || 0, image: product.i, tag: product.c };
     const link = card.querySelector('a');
     if (link) link.href = `product.html?catalog=${id}`;
+    const image = card.querySelector('.product-image img');
+    if (image && product.i) { image.src = product.i; image.alt = product.n; }
+    const price = card.querySelector('.card-bottom span');
+    if (price) price.textContent = `${product.w || 'Pack'} · ${product.p ? `₹${Number(product.p).toLocaleString('en-IN')}` : 'Ask us'}`;
   });
 }
 
