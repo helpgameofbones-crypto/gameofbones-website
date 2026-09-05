@@ -1,0 +1,10 @@
+/* Keep the supplied portrait centred on the dog at every hero size. */
+.hero-media > img.hero-real-dogs {
+  object-position: center 61%;
+}
+
+@media (max-width: 560px) {
+  .hero-media > img.hero-real-dogs {
+    object-position: center 56%;
+  }
+}
