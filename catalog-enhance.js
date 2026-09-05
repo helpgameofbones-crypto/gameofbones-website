@@ -41,7 +41,14 @@ function hydrateProduct() {
   setText('#specMethod', method);
   setText('#specPack', `${product.w} · packed fresh`);
   setText('#specBest', bestFor);
-  if (window.GOB_SET_PRODUCT_MEDIA && product.media?.length) window.GOB_SET_PRODUCT_MEDIA(id, product.media);
+  /* Keep the gallery aligned with the product title immediately; the complete
+     admin gallery replaces this single safe fallback as soon as it arrives. */
+  if (window.GOB_SET_PRODUCT_MEDIA) {
+    if (product.media?.length) window.GOB_SET_PRODUCT_MEDIA(id, product.media);
+    else if (!window.GOB_PRODUCT_MEDIA?.[id]?.length && product.i) {
+      window.GOB_SET_PRODUCT_MEDIA(id, [{ type: 'image', src: product.i, alt: product.n, label: 'Product photo' }]);
+    }
+  }
   document.dispatchEvent(new CustomEvent('gob:product-ready', { detail: { product } }));
 }
 
