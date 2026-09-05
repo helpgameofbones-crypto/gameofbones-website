@@ -1,5 +1,54 @@
-const gobSlug=value=>value.toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
-const gobMethod=product=>product.c==='Jerky'?['Slow-dehydrated at 65°C','Training rewards & everyday treats']:product.c==='Chews & bones'?['Slow-dehydrated at 58°C','Supervised chew time']:product.c==='Organ treats'?['Slow-dehydrated at 52–55°C','Small, occasional rewards']:product.c==='Fish treats'?['Slow-dehydrated at low heat','High-value treat time']:product.c==='Whole prey'?['Slow-dehydrated at low heat','Supervised treat time']:['Curated by the Game of Bones team','Discovery and variety'];
-function hydrateCatalogCards(root){root.querySelectorAll('.product-card').forEach(card=>{const product=window.GOB_LIVE_CATALOG.find(item=>item.n===card.querySelector('h3')?.textContent.trim());if(!product)return;const id=product.id||gobSlug(product.n);GOB_PRODUCTS[id]??={name:product.n,price:product.p||0,image:product.i,tag:product.c};card.querySelector('a').href=`product.html?catalog=${id}`;const action=card.querySelector('.catalog-link');if(action){const button=document.createElement('button');button.className='quick-add';button.setAttribute('aria-label',`Add ${product.n} to bag`);button.textContent='+';button.addEventListener('click',()=>addToCart(id));action.replaceWith(button)}})}
-document.addEventListener('DOMContentLoaded',()=>{const root=document.querySelector('#liveCatalog');if(!root)return;hydrateCatalogCards(root);new MutationObserver(()=>hydrateCatalogCards(root)).observe(root,{childList:true,subtree:true})});
-document.addEventListener('DOMContentLoaded',()=>{const catalog=document.querySelector('#liveCatalog');if(catalog){catalog.querySelectorAll('.product-card').forEach((card,index)=>{const product=window.GOB_LIVE_CATALOG[index];if(!product)return;const id=product.id||gobSlug(product.n);GOB_PRODUCTS[id]??={name:product.n,price:product.p||0,image:product.i,tag:product.c};card.querySelector('a').href=`product.html?catalog=${id}`;const action=card.querySelector('.catalog-link');if(action){const button=document.createElement('button');button.className='quick-add';button.setAttribute('aria-label',`Add ${product.n} to bag`);button.textContent='+';button.addEventListener('click',()=>addToCart(id));action.replaceWith(button)}});return}const id=new URLSearchParams(location.search).get('catalog');if(!id)return;const product=window.GOB_LIVE_CATALOG.find(item=>(item.id||gobSlug(item.n))===id);if(!product)return;const productId=product.id||gobSlug(product.n),[method,bestFor]=gobMethod(product);GOB_PRODUCTS[productId]??={name:product.n,price:product.p||0,image:product.i,tag:product.c};document.title=`${product.n} — Game of Bones`;document.querySelector('#productName').textContent=product.n;document.querySelector('#productPrice').textContent=product.p?`₹${product.p}`:'Contact us';document.querySelector('#productTag').textContent=`${product.c} · Made in Kalyan`;document.querySelector('#productDesc').textContent=product.d;document.querySelector('#productImage').src=product.i;document.querySelector('#productImage').alt=product.n;document.querySelector('#inside').textContent=`${product.n}. Single ingredient; see the product pouch for the current label.`;document.querySelector('#labelIngredient').textContent=`${product.n}.`;document.querySelector('#specMethod').textContent=method;document.querySelector('#specPack').textContent=`${product.w} · packed fresh`;document.querySelector('#specBest').textContent=bestFor;document.querySelectorAll('.option').forEach((button,index)=>{button.textContent=index===0?`${product.w} · ${product.p?`₹${product.p}`:'Ask us'}`:'Choose another product';button.style.display=index===0?'inline-block':'none'});document.querySelector('#addProduct').textContent=product.p?`Add to bag · ₹${product.p}`:'Ask us';document.querySelector('#addProduct').onclick=()=>product.p?addToCart(productId,Number(document.querySelector('#quantity').textContent)):location.assign('contact.html')});
+const gobSlug = value => String(value || '').toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+const gobMethod = product => product.c === 'Jerky' ? ['Slow-dehydrated at 65°C', 'Training rewards & everyday treats'] : product.c === 'Chews & bones' ? ['Slow-dehydrated at 58°C', 'Supervised chew time'] : product.c === 'Organ treats' ? ['Slow-dehydrated at 52–55°C', 'Small, occasional rewards'] : product.c === 'Fish treats' ? ['Slow-dehydrated at low heat', 'High-value treat time'] : product.c === 'Whole prey' ? ['Slow-dehydrated at low heat', 'Supervised treat time'] : ['Curated by the Game of Bones team', 'Discovery and variety'];
+
+function currentProduct() {
+  const params = new URLSearchParams(location.search);
+  const id = params.get('catalog') || params.get('product');
+  return id && window.GOB_LIVE_CATALOG.find(item => (item.id || gobSlug(item.n)) === id);
+}
+
+function hydrateCatalogCards(root) {
+  root.querySelectorAll('.product-card').forEach(card => {
+    const product = window.GOB_LIVE_CATALOG.find(item => item.n === card.querySelector('h3')?.textContent.trim());
+    if (!product) return;
+    const id = product.id || gobSlug(product.n);
+    window.GOB_PRODUCTS[id] = { name: product.n, price: Number(product.p) || 0, image: product.i, tag: product.c };
+    const link = card.querySelector('a');
+    if (link) link.href = `product.html?catalog=${id}`;
+  });
+}
+
+function hydrateProduct() {
+  const product = currentProduct();
+  if (!product || !document.querySelector('#productName')) return;
+  const [method, bestFor] = gobMethod(product);
+  const id = product.id || gobSlug(product.n);
+  window.GOB_CURRENT_PRODUCT = product;
+  window.GOB_PRODUCTS[id] = { name: product.n, price: Number(product.p) || 0, image: product.i, tag: product.c };
+  document.title = `${product.n} — Game of Bones`;
+  document.querySelector('#productName').textContent = product.n;
+  document.querySelector('#productPrice').textContent = product.p ? `₹${Number(product.p).toLocaleString('en-IN')}` : 'Contact us';
+  document.querySelector('#productTag').textContent = `${product.c} · Made in Kalyan`;
+  document.querySelector('#productDesc').textContent = product.d;
+  document.querySelector('#inside').textContent = `${product.n}. Single ingredient; see the product pouch for the current label.`;
+  document.querySelector('#labelIngredient').textContent = `${product.n}.`;
+  document.querySelector('#specMethod').textContent = method;
+  document.querySelector('#specPack').textContent = `${product.w} · packed fresh`;
+  document.querySelector('#specBest').textContent = bestFor;
+  if (window.GOB_SET_PRODUCT_MEDIA && product.media?.length) window.GOB_SET_PRODUCT_MEDIA(id, product.media);
+  document.dispatchEvent(new CustomEvent('gob:product-ready', { detail: { product } }));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const catalog = document.querySelector('#liveCatalog');
+  if (catalog) {
+    hydrateCatalogCards(catalog);
+    new MutationObserver(() => hydrateCatalogCards(catalog)).observe(catalog, { childList: true, subtree: true });
+  }
+  hydrateProduct();
+});
+document.addEventListener('gob:catalog-sync', () => {
+  const catalog = document.querySelector('#liveCatalog');
+  if (catalog) hydrateCatalogCards(catalog);
+  hydrateProduct();
+});

@@ -33,3 +33,9 @@ function renderProductMedia(){
   select(0)
 }
 document.addEventListener('DOMContentLoaded',renderProductMedia)
+window.GOB_SET_PRODUCT_MEDIA=(id,items)=>{
+  if(!id||!Array.isArray(items)||!items.length)return
+  window.GOB_PRODUCT_MEDIA[id]=items.slice(0,6)
+  if(productMediaId()===id&&document.readyState!=='loading')renderProductMedia()
+}
+window.GOB_RENDER_PRODUCT_MEDIA=renderProductMedia
