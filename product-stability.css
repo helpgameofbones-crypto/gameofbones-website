@@ -5,7 +5,7 @@ body{overflow-x:clip}
 .product-return a:hover,.product-return a:focus-visible{background:var(--ink);color:var(--paper);outline:none}
 .detail{width:min(100%,1260px);max-width:1260px;margin:0 auto;padding:22px max(24px,4vw) 72px;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(28px,4vw,64px);align-items:start;overflow-x:clip}
 .detail,.gallery,.product-info,.main-product-image{min-width:0}
-.gallery{width:100%;max-width:100%;grid-template-columns:76px minmax(0,1fr);gap:12px}
+.gallery{position:static;top:auto;width:100%;max-width:100%;grid-template-columns:76px minmax(0,1fr);gap:12px}
 .gallery .main-product-image{width:100%;max-width:100%}
 .product-info{width:100%;max-width:none;padding-left:0}
 .product-info h1{overflow-wrap:anywhere}
