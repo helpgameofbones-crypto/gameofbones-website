@@ -3,6 +3,7 @@
 (() => {
   const slug = value => String(value || '').toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
   const safeMoney = value => Number.isFinite(Number(value)) && Number(value) >= 0 ? Number(value) : 0;
+  const productStore = () => typeof GOB_PRODUCTS !== 'undefined' ? GOB_PRODUCTS : (window.GOB_PRODUCTS ||= {});
   const media = (items, type) => (Array.isArray(items) ? items : []).filter(item => typeof item === 'string' && item).map((src, index) => ({ type, src, label: `${type === 'video' ? 'Video' : 'Photo'} ${index + 1}` }));
   const packs = sizes => (Array.isArray(sizes) ? sizes : []).map(size => ({
     label: String(size?.label || '').trim(),
@@ -59,9 +60,10 @@
       });
 
       window.GOB_LIVE_CATALOG.splice(0, window.GOB_LIVE_CATALOG.length, ...merged);
+      const store = productStore();
       merged.forEach(item => {
         const id = item.id || slug(item.n);
-        window.GOB_PRODUCTS[id] = { name: item.n, price: safeMoney(item.p), image: item.i, tag: item.c };
+        store[id] = { name: item.n, price: safeMoney(item.p), image: item.i, tag: item.c };
       });
       document.dispatchEvent(new CustomEvent('gob:catalog-sync', { detail: { count: merged.length } }));
     } catch (error) {
