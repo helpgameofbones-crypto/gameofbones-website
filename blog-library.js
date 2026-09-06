@@ -9,7 +9,8 @@
     { slug: 'new-dog-parent-guide', category: 'New Dog Parent Guide', title: 'A New Dog Parent’s Guide to Treats', excerpt: 'How to choose an appropriate size, introduce treats thoughtfully and supervise every chew.', read_time: 4, body: '<p>Treats complement a complete diet. Choose the right size and texture for your dog, offer water, and supervise chews from start to finish.</p>' },
   ];
 
-  const state = { articles: fallback, category: 'All', shown: 9, current: null };
+  const readSaved = () => { try { return new Set(JSON.parse(localStorage.getItem('gob-saved-articles') || '[]')); } catch { return new Set(); } };
+  const state = { articles: fallback, category: 'All', query: '', shown: 9, current: null, saved: readSaved() };
   const $ = selector => document.querySelector(selector);
   const escapeHtml = value => String(value || '').replace(/[&<>'"]/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[character]);
   const readingTime = value => `${Math.max(1, Number(value) || 3)} min read`;
@@ -18,6 +19,15 @@
     const date = new Date(value || '');
     return Number.isNaN(date.valueOf()) ? '' : date.toLocaleDateString('en-IN', { month: 'long', year: 'numeric' });
   };
+  const results = () => {
+    const term = state.query.trim().toLowerCase();
+    return state.articles.filter(article => {
+      const categoryMatch = state.category === 'All' || article.category === state.category;
+      const searchable = [article.title, article.category, article.excerpt, ...(article.tags || [])].join(' ').toLowerCase();
+      return categoryMatch && (!term || searchable.includes(term));
+    });
+  };
+  const saveState = () => { try { localStorage.setItem('gob-saved-articles', JSON.stringify([...state.saved])); } catch {} };
 
   function safeBody(input) {
     const allowed = new Set(['P', 'H2', 'H3', 'H4', 'UL', 'OL', 'LI', 'STRONG', 'EM', 'B', 'I', 'A', 'BLOCKQUOTE', 'BR']);
@@ -107,6 +117,23 @@
     }));
   }
 
+  function renderFeature() {
+    const article = state.articles[0];
+    if (!article) return;
+    const image = article.cover_image
+      ? `<img src="${escapeHtml(article.cover_image)}" alt="${escapeHtml(article.title)}">`
+      : '<span class="journal-placeholder" aria-hidden="true">🐾</span>';
+    $('#journal-feature').innerHTML = `
+      <div class="journal-feature-copy">
+        <p class="eyebrow">Featured field note · ${escapeHtml(article.category || 'Guide')}</p>
+        <h3 id="journal-feature-title">${escapeHtml(article.title)}</h3>
+        <p>${escapeHtml(article.excerpt || 'A practical guide for thoughtful dog parents.')}</p>
+        <button class="button" type="button" data-open-feature="${escapeHtml(article.slug)}">Read the guide <span aria-hidden="true">→</span></button>
+      </div>
+      <div class="journal-feature-image">${image}<span class="journal-feature-stamp">${escapeHtml(readingTime(article.read_time))}<br>field guide</span></div>`;
+    $('[data-open-feature]').addEventListener('click', () => openArticle(article.slug, true));
+  }
+
   function card(article) {
     const image = article.cover_image
       ? `<img src="${escapeHtml(article.cover_image)}" alt="${escapeHtml(article.title)}" loading="lazy">`
@@ -127,9 +154,9 @@
   }
 
   function renderGrid() {
-    const matching = state.articles.filter(article => state.category === 'All' || article.category === state.category);
+    const matching = results();
     const shown = matching.slice(0, state.shown);
-    $('#journal-grid').innerHTML = shown.length ? shown.map(card).join('') : '<p class="journal-empty">No articles are available in this topic yet.</p>';
+    $('#journal-grid').innerHTML = shown.length ? shown.map((article, index) => card(article).replace('class="post journal-post"', `class="post journal-post" style="--journal-index:${index}"`)).join('') : '<p class="journal-empty">No articles match that search. Try a shorter word or browse a topic.</p>';
     $('#journal-count').textContent = `${matching.length} article${matching.length === 1 ? '' : 's'} for dog parents`;
     const more = $('#journal-load-more');
     more.hidden = shown.length >= matching.length;
@@ -155,11 +182,18 @@
     const tags = Array.isArray(article.tags) ? article.tags : [];
     $('#journal-reader-tags').innerHTML = tags.map(tag => `<span class="chip">${escapeHtml(tag)}</span>`).join('');
     $('#journal-reader-body').innerHTML = safeBody(article.body) || `<p>${escapeHtml(article.excerpt || '')}</p>`;
+    const save = $('#journal-save');
+    const isSaved = state.saved.has(article.slug);
+    save.classList.toggle('saved', isSaved);
+    save.textContent = isSaved ? '★ Saved to your list' : '☆ Save article';
+    const next = state.articles.find(entry => entry.slug !== article.slug);
+    $('#journal-next').innerHTML = next ? `<div><p>Continue exploring</p><h2>${escapeHtml(next.title)}</h2></div><button type="button" data-next="${escapeHtml(next.slug)}">Next guide →</button>` : '';
+    $('#journal-next [data-next]')?.addEventListener('click', () => openArticle(next.slug, true));
     $('#journal-index').hidden = true;
     reader.hidden = false;
     updateHead(article);
     if (updateUrl) history.pushState({ blog: article.slug }, '', `?blog=${encodeURIComponent(article.slug)}`);
-    window.scrollTo({ top: 0, behavior: 'instant' });
+    window.scrollTo(0, 0);
   }
 
   function closeArticle(updateUrl) {
@@ -168,7 +202,7 @@
     $('#journal-index').hidden = false;
     updateHead(null);
     if (updateUrl) history.pushState({}, '', 'blog.html');
-    window.scrollTo({ top: 0, behavior: 'instant' });
+    window.scrollTo(0, 0);
   }
 
   async function loadJournal() {
@@ -179,6 +213,7 @@
       console.warn('Showing saved journal previews until the live articles are available.', error);
     }
     renderFilters();
+    renderFeature();
     renderGrid();
     const slug = new URLSearchParams(window.location.search).get('blog');
     if (slug) openArticle(slug, false);
@@ -188,6 +223,26 @@
   document.addEventListener('DOMContentLoaded', () => {
     $('#journal-load-more').addEventListener('click', () => { state.shown += 9; renderGrid(); });
     $('#journal-back').addEventListener('click', () => closeArticle(true));
+    $('#journal-search').addEventListener('input', event => {
+      state.query = event.target.value || '';
+      state.shown = 9;
+      $('#journal-clear').hidden = !state.query;
+      renderGrid();
+    });
+    $('#journal-clear').addEventListener('click', () => {
+      state.query = '';
+      $('#journal-search').value = '';
+      $('#journal-clear').hidden = true;
+      renderGrid();
+      $('#journal-search').focus();
+    });
+    $('#journal-save').addEventListener('click', () => {
+      if (!state.current) return;
+      if (state.saved.has(state.current.slug)) state.saved.delete(state.current.slug);
+      else state.saved.add(state.current.slug);
+      saveState();
+      openArticle(state.current.slug, false);
+    });
     window.addEventListener('popstate', () => {
       const slug = new URLSearchParams(window.location.search).get('blog');
       if (slug) openArticle(slug, false);

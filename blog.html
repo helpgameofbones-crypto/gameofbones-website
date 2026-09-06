@@ -39,11 +39,18 @@
       <p class="eyebrow">The Game of Bones journal</p>
       <h1 class="display">Better questions. <span class="accent">Better routines.</span></h1>
       <p class="lead">Straightforward guides to ingredients, treat routines and everyday dog care—written for Indian dog parents and grounded in practical, sensible choices.</p>
+      <a class="text-link journal-jump" href="#journal-heading">Explore the library ↓</a>
     </header>
     <section class="section" aria-labelledby="journal-heading">
       <div class="section-head"><div><p class="eyebrow">Dog parent library</p><h2 class="section-title" id="journal-heading">Guides worth keeping handy.</h2></div></div>
+      <article class="journal-feature" id="journal-feature" aria-labelledby="journal-feature-title"></article>
       <div class="journal-toolbar">
         <div class="journal-filters" id="journal-filters" aria-label="Filter articles by topic"></div>
+        <div class="journal-search-wrap">
+          <label class="sr-only" for="journal-search">Search the journal</label>
+          <input id="journal-search" type="search" placeholder="Search a topic or question">
+          <button class="journal-clear" id="journal-clear" type="button" hidden aria-label="Clear search">×</button>
+        </div>
         <p class="journal-count" id="journal-count" aria-live="polite">Loading articles…</p>
       </div>
       <div class="blog-grid" id="journal-grid" aria-live="polite"></div>
@@ -59,8 +66,9 @@
       <p class="journal-reader-meta" id="journal-reader-meta"></p>
     </header>
     <img id="journal-reader-cover" class="journal-reader-cover" src="" alt="" hidden>
-    <div class="journal-reader-tags" id="journal-reader-tags" aria-label="Article topics"></div>
+    <div class="journal-reader-actions"><div class="journal-reader-tags" id="journal-reader-tags" aria-label="Article topics"></div><button class="journal-save" id="journal-save" type="button">☆ Save article</button></div>
     <div class="journal-reader-body" id="journal-reader-body"></div>
+    <aside class="journal-next" id="journal-next" aria-label="Continue reading"></aside>
   </article>
 </main>
 </body>
