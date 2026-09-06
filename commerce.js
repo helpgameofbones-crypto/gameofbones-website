@@ -57,7 +57,10 @@ function updateCommerceTotals(){
   const couponRate=coupon==='WELCOME15'&&eligibility.firstOrder ? .15 : coupon==='MEGA20'&&subtotal>=2199 ? .2 : 0
   const couponDiscount=Math.round(subtotal*couponRate),saving=Math.max(bulk,couponDiscount)
   const payment=document.querySelector('[name="payment"]:checked')?.value||'online'
-  const paymentChange=payment==='cod'?40:-30,total=Math.max(0,subtotal-saving+paymentChange)
+  const requestedPoints=Number(document.querySelector('[name="loyalty_points_redeemed"]')?.value||0)
+  const pointsRedeemed=eligibility.signedIn?Math.min(Math.max(Math.floor(requestedPoints)||0,0),100,Number(eligibility.points||0)):0
+  const pointsDiscount=Math.round(pointsRedeemed*.3)
+  const paymentChange=payment==='cod'?40:-30,total=Math.max(0,subtotal-saving-pointsDiscount+paymentChange)
   const pointsEarned=Math.floor(total/10),pointsValue=pointsEarned*.3
   document.querySelectorAll('[data-commerce-subtotal]').forEach(el=>el.textContent=money(subtotal))
   document.querySelectorAll('[data-commerce-total]').forEach(el=>el.textContent=money(total))
@@ -65,6 +68,7 @@ function updateCommerceTotals(){
   document.querySelectorAll('[data-bulk-label]').forEach(el=>el.textContent=bulk?`${rate*100}% buy-more saving`:'Buy more, save more')
   document.querySelectorAll('[data-coupon-discount]').forEach(el=>el.textContent=saving?`−${money(saving)}`:'—')
   document.querySelectorAll('[data-payment-change]').forEach(el=>el.textContent=payment==='cod'?`+${money(40)}`:`−${money(30)}`)
+  document.querySelectorAll('[data-points-discount]').forEach(el=>el.textContent=pointsDiscount?`−${money(pointsDiscount)}`:'—')
   document.querySelectorAll('[data-loyalty-points]').forEach(el=>el.textContent=pointsEarned.toLocaleString('en-IN'))
   document.querySelectorAll('[data-loyalty-value]').forEach(el=>el.textContent=pointsValue.toFixed(pointsValue%1?2:0))
   document.querySelectorAll('[data-commerce-count]').forEach(el=>el.textContent=count)
@@ -106,11 +110,11 @@ function ensureCheckoutOptions(){
     <label><input type="radio" name="coupon" value="none" checked><span>Use automatic buy-more saving <small>We’ll apply your best eligible saving. It cannot be combined with a code.</small></span></label>
     <label data-welcome-offer><input type="radio" name="coupon" value="WELCOME15"><span>WELCOME15 — 15% off your first order <small>Verified new accounts only · one use · disappears after the first completed order.</small></span></label>
     <label><input type="radio" name="coupon" value="MEGA20"><span>MEGA20 — 20% off orders ₹2,199+ <small>Eligible treat subtotal must reach ₹2,199 · excludes buy-more savings.</small></span></label>
-    <label><input type="checkbox" disabled><span>Use reward points <small><a href="login.html">Log in</a> to see your available balance and redeem eligible points.</small></span></label>
+    <label data-loyalty-redeem hidden><input type="number" name="loyalty_points_redeemed" min="0" max="100" step="1" value="0" inputmode="numeric"><span>Use reward points <small>Use up to 100 points per order. Every point is worth ₹0.30 and can be combined with one eligible coupon.</small></span></label>
     <p class="perk-status" data-coupon-status role="status" aria-live="polite"></p>
   </section>`)
-  total.insertAdjacentHTML('beforebegin','<div class="order-row"><span>Offer saving</span><span data-coupon-discount>—</span></div><div class="order-row"><span>Payment adjustment</span><span data-payment-change>−₹30</span></div>')
-  form.querySelectorAll('[name="coupon"],[name="payment"]').forEach(input=>input.addEventListener('change',updateCommerceTotals))
+  total.insertAdjacentHTML('beforebegin','<div class="order-row"><span>Offer saving</span><span data-coupon-discount>—</span></div><div class="order-row" data-loyalty-discount-row hidden><span>Reward points</span><span data-points-discount>—</span></div><div class="order-row"><span>Payment adjustment</span><span data-payment-change>−₹30</span></div>')
+  form.querySelectorAll('[name="coupon"],[name="payment"],[name="loyalty_points_redeemed"]').forEach(input=>input.addEventListener('input',updateCommerceTotals))
 
   // A code applied from the bag is only carried to this secure checkout; it
   // is still checked against the signed-in customer's eligibility below.
@@ -132,11 +136,22 @@ function updateWelcomeOfferVisibility(){
   }
 }
 
+function updateLoyaltyRedemptionVisibility(){
+  const eligibility=window.GOB_CHECKOUT_ELIGIBILITY||{},control=document.querySelector('[data-loyalty-redeem]'),row=document.querySelector('[data-loyalty-discount-row]')
+  if(!control||!row)return
+  const available=Math.min(100,Math.max(0,Math.floor(Number(eligibility.points||0))))
+  control.hidden=!eligibility.signedIn||available<=0
+  row.hidden=!eligibility.signedIn||available<=0
+  const input=control.querySelector('[name="loyalty_points_redeemed"]')
+  if(input){input.max=String(available);input.value=String(Math.min(Number(input.value)||0,available))}
+}
+
 async function loadCheckoutEligibility(){
   const token=window.sessionStorage.getItem('gob-customer-token')
   window.GOB_CHECKOUT_ELIGIBILITY={signedIn:Boolean(token),firstOrder:false,checking:Boolean(token),points:0}
   updateCommerceTotals()
   updateWelcomeOfferVisibility()
+  updateLoyaltyRedemptionVisibility()
   if(!token)return
   try{
     const account=await window.GOB_API?.account(token)
@@ -146,6 +161,7 @@ async function loadCheckoutEligibility(){
     window.GOB_CHECKOUT_ELIGIBILITY={signedIn:true,firstOrder:false,checking:false,points:0}
   }
   updateWelcomeOfferVisibility()
+  updateLoyaltyRedemptionVisibility()
   updateCommerceTotals()
 }
 

@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="site.css?v=checkout-4"><link rel="stylesheet" href="commerce.css?v=checkout-4">
-<script defer src="site.js?v=cart-recovery-1"></script><script defer src="api-client.js?v=cart-recovery-1"></script><script defer src="catalog.js?v=commerce-6"></script><script defer src="catalogue-reference.js?v=1"></script><script defer src="catalog-sync.js?v=cart-recovery-1"></script><script defer src="commerce.js?v=cart-recovery-1"></script><script defer src="commerce-backend.js?v=cart-recovery-1"></script>
+<script defer src="site.js?v=loyalty-profile-1"></script><script defer src="api-client.js?v=loyalty-profile-1"></script><script defer src="catalog.js?v=commerce-6"></script><script defer src="catalogue-reference.js?v=1"></script><script defer src="catalog-sync.js?v=loyalty-profile-1"></script><script defer src="commerce.js?v=loyalty-profile-1"></script><script defer src="commerce-backend.js?v=loyalty-profile-1"></script>
 </head>
 <body>
 <div class="notice"><span>Secure checkout • UPI, cards & COD • Free shipping on every order</span></div>
@@ -19,7 +19,7 @@
 <label class="field">First name *<input required autocomplete="given-name"></label><label class="field">Last name *<input required autocomplete="family-name"></label>
 <label class="field">Mobile number *<input required type="tel" autocomplete="tel" inputmode="tel" placeholder="98765 43210"></label><label class="field">Email *<input required type="email" autocomplete="email" placeholder="you@email.com"></label>
 </div></section>
-<section class="form-section"><h2>Your dog <small style="font:600 11px var(--body);color:var(--muted)">optional</small></h2><div class="form-grid"><label class="field">Dog’s name<input autocomplete="off" placeholder="Bruno, Coco, Luna…"></label><label class="field">Birthday<input type="text" inputmode="numeric" placeholder="DD/MM"></label></div><p class="order-note">Save a birthday in your secure account for future birthday offers.</p></section>
+<section class="form-section"><h2>Your dog <small style="font:600 11px var(--body);color:var(--muted)">optional</small></h2><div class="form-grid"><label class="field">Dog’s name<input name="dog_name" autocomplete="off" placeholder="Bruno, Coco, Luna…"></label><label class="field">Birthday<input name="dog_birthday" type="date"></label></div><p class="order-note">Save a birthday in your secure account for future birthday offers.</p></section>
 <section class="form-section"><h2>Delivery address</h2><div class="form-grid">
 <label class="field wide">Street address *<input required autocomplete="street-address" placeholder="House / Flat / Building"></label><label class="field wide">Area / locality<input autocomplete="address-line2" placeholder="Street, locality, area"></label>
 <label class="field">City *<input required autocomplete="address-level2" placeholder="Mumbai"></label><label class="field">State *<input required autocomplete="address-level1" placeholder="Maharashtra"></label><label class="field">PIN code *<input required inputmode="numeric" autocomplete="postal-code" placeholder="400001"></label>
