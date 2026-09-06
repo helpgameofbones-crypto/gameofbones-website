@@ -15,6 +15,19 @@
   const escapeHtml = value => String(value || '').replace(/[&<>'"]/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[character]);
   const readingTime = value => `${Math.max(1, Number(value) || 3)} min read`;
   const articleUrl = slug => `${journalUrl}?blog=${encodeURIComponent(slug)}`;
+  const productId = item => item?.id || String(item?.n || '').toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  const productRecommendations = {
+    'treats-for-aggressive-chewers': ['chicken-feet', 'chicken-neck', 'chicken-bones'],
+    'best-treats-for-training': ['jerky', 'chicken-bites', 'buff-jerky'],
+    '7-day-transition-plan': ['jerky', 'chicken-bites', 'anchovies'],
+    'new-dog-parent-guide': ['jerky', 'chicken-feet', 'anchovies'],
+    'natural-treats-clean-teeth': ['chicken-feet', 'chicken-neck', 'chicken-bones'],
+    'fish-treats-underrated': ['anchovies', 'mackerel-fillet', 'sardines'],
+    'buffalo-vs-chicken-jerky': ['jerky', 'buff-jerky', 'chicken-bites'],
+    'how-to-read-dog-food-labels': ['jerky', 'buff-jerky', 'mackerel-fillet'],
+    'what-are-fillers': ['jerky', 'buff-jerky', 'anchovies'],
+    'preservatives-explained': ['jerky', 'buff-jerky', 'mackerel-fillet'],
+  };
   const dateLabel = value => {
     const date = new Date(value || '');
     return Number.isNaN(date.valueOf()) ? '' : date.toLocaleDateString('en-IN', { month: 'long', year: 'numeric' });
@@ -166,6 +179,41 @@
     }));
   }
 
+  function renderRecommendations(article) {
+    const section = $('#journal-recommendations');
+    const ids = productRecommendations[article?.slug];
+    const catalog = Array.isArray(window.GOB_LIVE_CATALOG) ? window.GOB_LIVE_CATALOG : [];
+    const products = (ids || []).map(id => catalog.find(item => productId(item) === id)).filter(Boolean);
+    if (!products.length) {
+      section.hidden = true;
+      section.innerHTML = '';
+      return;
+    }
+    section.hidden = false;
+    section.innerHTML = `
+      <div class="journal-recommendations-heading">
+        <div><p class="eyebrow">Picked for this guide</p><h2 id="journal-recommendations-title">Continue with a treat your dog can get excited about.</h2></div>
+        <a class="text-link" href="products.html">Shop all treats</a>
+      </div>
+      <div class="journal-product-grid">
+        ${products.map(product => {
+          const id = productId(product);
+          const image = product.image || product.i || product.images?.[0] || '';
+          const price = Number(product.p || product.price || 0);
+          return `<article class="journal-product-card">
+            <a href="product.html?catalog=${encodeURIComponent(id)}" class="journal-product-image">${image ? `<img src="${escapeHtml(image)}" alt="${escapeHtml(product.n)}" loading="lazy">` : '<span aria-hidden="true">🐾</span>'}</a>
+            <div class="journal-product-copy"><p>${escapeHtml(product.cat || product.c || 'Natural dog treat')}</p><h3><a href="product.html?catalog=${encodeURIComponent(id)}">${escapeHtml(product.n)}</a></h3><strong>${price ? `₹${price.toLocaleString('en-IN')}` : 'View product'}</strong></div>
+            <button class="journal-product-add" type="button" data-recommend-add="${escapeHtml(id)}" aria-label="Add ${escapeHtml(product.n)} to treat jar">Add to jar <span aria-hidden="true">+</span></button>
+          </article>`;
+        }).join('')}
+      </div>`;
+    section.querySelectorAll('[data-recommend-add]').forEach(button => button.addEventListener('click', () => {
+      const id = button.dataset.recommendAdd;
+      if (typeof window.addToCart === 'function') window.addToCart(id);
+      else window.location.href = `product.html?catalog=${encodeURIComponent(id)}`;
+    }));
+  }
+
   function openArticle(slug, updateUrl) {
     const article = state.articles.find(entry => entry.slug === slug);
     if (!article) return;
@@ -182,6 +230,7 @@
     const tags = Array.isArray(article.tags) ? article.tags : [];
     $('#journal-reader-tags').innerHTML = tags.map(tag => `<span class="chip">${escapeHtml(tag)}</span>`).join('');
     $('#journal-reader-body').innerHTML = safeBody(article.body) || `<p>${escapeHtml(article.excerpt || '')}</p>`;
+    renderRecommendations(article);
     const save = $('#journal-save');
     const isSaved = state.saved.has(article.slug);
     save.classList.toggle('saved', isSaved);
@@ -199,6 +248,8 @@
   function closeArticle(updateUrl) {
     state.current = null;
     $('#journal-reader').hidden = true;
+    $('#journal-recommendations').hidden = true;
+    $('#journal-recommendations').innerHTML = '';
     $('#journal-index').hidden = false;
     updateHead(null);
     if (updateUrl) history.pushState({}, '', 'blog.html');
@@ -247,6 +298,9 @@
       const slug = new URLSearchParams(window.location.search).get('blog');
       if (slug) openArticle(slug, false);
       else closeArticle(false);
+    });
+    document.addEventListener('gob:catalog-sync', () => {
+      if (state.current) renderRecommendations(state.current);
     });
     loadJournal();
   });

@@ -1,5 +1,11 @@
 /* Do not silently drop links at desktop widths.  At tighter widths the full
    set moves into the existing Menu control instead of being clipped. */
+.notice { overflow: hidden; min-height: 35px; white-space: nowrap; }
+.notice .gob-live-ticker { display: flex; width: max-content; animation: gob-live-ticker 30s linear infinite; }
+.notice .gob-live-ticker span { display: block; flex: none; padding-right: 42px; color: #fff8e9; font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.notice:hover .gob-live-ticker { animation-play-state: paused; }
+@keyframes gob-live-ticker { to { transform: translateX(-50%); } }
+
 @media (min-width: 1181px) {
   .compact-nav a:nth-of-type(n) { display: inline-flex !important; }
   .compact-nav { gap: clamp(10px, 1.55vw, 24px) !important; }
@@ -25,6 +31,8 @@
 }
 
 @media (max-width: 760px) {
+  .notice .gob-live-ticker { animation-duration: 23s; }
+  .notice .gob-live-ticker span { font-size: 9px; }
   /* Keep the two floating actions in one reliable right-hand stack. */
   .wheel-launch {
     position: fixed !important;

@@ -20,8 +20,10 @@
 <link rel="stylesheet" href="blog-seo.css?v=1">
 <script id="journal-schema" type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"Game of Bones Journal","url":"https://gameofbones.in/blog.html"}</script>
 <script defer src="api-client.js?v=blogs-1"></script>
+<script defer src="catalog.js?v=1"></script>
+<script defer src="catalog-sync.js?v=1"></script>
 <script defer src="site.js?v=journal-2"></script>
-<script defer src="header-navigation.js?v=1"></script>
+<script defer src="header-navigation.js?v=live-ticker-2"></script>
 <script defer src="blog-library.js?v=1"></script>
 </head>
 <body>
@@ -68,6 +70,7 @@
     <img id="journal-reader-cover" class="journal-reader-cover" src="" alt="" hidden>
     <div class="journal-reader-actions"><div class="journal-reader-tags" id="journal-reader-tags" aria-label="Article topics"></div><button class="journal-save" id="journal-save" type="button">☆ Save article</button></div>
     <div class="journal-reader-body" id="journal-reader-body"></div>
+    <section class="journal-recommendations" id="journal-recommendations" hidden aria-labelledby="journal-recommendations-title"></section>
     <aside class="journal-next" id="journal-next" aria-label="Continue reading"></aside>
   </article>
 </main>
