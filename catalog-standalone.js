@@ -54,7 +54,22 @@
       const merged = catalogue.map(product => {
         const source = byName.get(slug(productName(product)));
         if (!source) return product;
-        return { ...product, p: productPrice(source) || productPrice(product), w: productWeight(source) || productWeight(product), i: productImage(source) || productImage(product), id: productId(product), sizes: source.sizes, images: source.images, videos: source.videos };
+        // The catalogue spreadsheet is the verified source for pack weights.
+        // A few historical admin records contain an incorrect first-pack
+        // weight; do not let that change the customer-facing quantity.
+        // Prices and media remain live from the admin record.
+        const referencePacks = window.GOB_CATALOGUE_REFERENCE?.packs?.(productName(product));
+        const firstReference = Array.isArray(referencePacks) ? referencePacks[0] : null;
+        return {
+          ...product,
+          p: productPrice(source) || productPrice(product),
+          w: firstReference?.weight || firstReference?.label || productWeight(source) || productWeight(product),
+          i: productImage(source) || productImage(product),
+          id: productId(product),
+          sizes: referencePacks || source.sizes,
+          images: source.images,
+          videos: source.videos,
+        };
       });
       remote.forEach(product => { if (!merged.some(item => slug(productName(item)) === slug(product.name))) merged.push({ n: product.name, c: 'Treats', p: productPrice(product), w: productWeight(product), i: productImage(product), d: 'Single-ingredient dog treat.', id: slug(product.name), sizes: product.sizes, images: product.images, videos: product.videos }); });
       catalogue = merged;
