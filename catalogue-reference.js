@@ -1,33 +1,32 @@
-/* Canonical product packs from Product Catalogue.xlsx.  This keeps the
-   storefront accurate while product records are maintained in the admin. */
+/* Canonical product packs from the COGS Calculator Master List. This is the
+   verified selling-price and quantity source until the admin records are
+   reconciled to the same workbook. */
 (() => {
   const reference = {
-    'whole-quail': [['1 piece',399],['2 pieces',799],['3 pieces',1149],['4 pieces',1499]],
-    'chicken-wings': [['5 pieces',399],['10 pieces',799],['15 pieces',1149]],
-    'trachea-chew': [['1 piece',299],['2 pieces',599],['3 pieces',849]],
-    'goat-trotter': [['1 piece',299],['2 pieces',599],['3 pieces',849],['4 pieces',1099]],
-    'goat-ear': [['6 pieces',299],['12 pieces',599],['18 pieces',899],['24 pieces',1049]],
-    'chicken-neck': [[70,300],[140,599],[210,849],[280,1049]],
-    'chicken-feet': [[70,300],[140,599],[210,849],[280,1049]],
+    'whole-quail': [['1 piece',275],['2 pieces',550],['3 pieces',825],['4 pieces',1100]],
+    'chicken-wings': [['5 pieces',350],['10 pieces',700],['15 pieces',1050]],
+    'trachea-chew': [['1 piece',100],['2 pieces',200],['3 pieces',300]],
+    'goat-trotter': [['1 piece',250],['2 pieces',500],['3 pieces',750],['4 pieces',1000]],
+    'goat-ear': [['6 pieces',350],['12 pieces',700],['18 pieces',1050],['24 pieces',1400]],
+    'chicken-neck': [[70,300],[140,600],[210,900],[280,1200]],
+    'chicken-feet': [[70,300],[140,600],[210,900],[280,1200]],
     'chicken-jerky': [[60,329],[120,658],[180,987],[240,1316]],
-    'chicken-neck-and-feet': [[70,300],[140,599],[210,849],[280,1049]],
-    'chicken-bones': [[100,349],[200,679],[300,999],[400,1199]],
-    'chicken-gizzards': [[60,359],[120,699],[180,1049],[240,1249]],
-    'chicken-liver': [[60,359],[120,699],[180,1049],[240,1249]],
+    'chicken-bones': [[100,200],[200,400],[300,600],[400,800]],
+    'chicken-gizzards': [[60,300],[120,600],[180,900],[240,1200]],
+    'chicken-liver': [[60,300],[120,600],[180,900],[240,1200]],
     'chicken-bites': [[60,329],[120,658],[180,987],[240,1316]],
-    'goat-liver': [[60,549],[120,1049],[180,1549],[240,2049]],
-    'goat-lungs': [[60,549],[120,1049],[180,1549],[240,2049]],
-    'goat-heart-and-kidney-mix': [[60,549],[120,1049],[180,1549],[240,2049]],
-    'goat-spleen': [[60,549],[120,1049],[180,1549],[240,2049]],
-    'bombay-duck': [[60,499],[120,949],[180,1349],[240,1849]],
-    'mackerel-whole': [[100,629],[200,1199],[300,1799]],
-    'anchovies': [[60,449],[120,849],[180,1249],[240,1549]],
-    'prawns': [[60,649],[120,1249],[180,1849],[240,2499]],
-    'sardines': [[60,549],[120,1049],[180,1549],[240,2099]],
-    'tuna': [[60,649],[120,1249],[180,1849],[240,2499]],
-    'fish-bites': [[60,549],[120,1049],[180,1549],[240,2099]],
-    'mackerel-fillet': [[60,599],[120,1199],[180,1749],[240,2249]],
-    'buff-jerky': [[60,449],[120,898],[180,1299],[240,1599]],
+    'goat-liver': [[60,450],[120,900],[180,1350],[240,1800]],
+    'goat-lungs': [[60,450],[120,900],[180,1350],[240,1800]],
+    'goat-heart-and-kidney-mix': [[60,500],[120,1000],[180,1500],[240,2000]],
+    'goat-spleen': [[60,450],[120,900],[180,1350],[240,1800]],
+    'bombay-duck': [[60,450],[120,900],[180,1350],[240,1800]],
+    'mackerel-whole': [[100,600],[200,1200],[300,1800]],
+    'anchovies': [[60,350],[120,700],[180,1050],[240,1400]],
+    'prawns': [[60,600],[120,1200],[180,1800],[240,2400]],
+    'sardines': [[60,400],[120,800],[180,1200],[240,1600]],
+    'tuna': [[60,500],[120,1000],[180,1500],[240,2000]],
+    'mackerel-fillet': [[60,650],[120,1300],[180,1950],[240,2600]],
+    'buff-jerky': [[60,449],[120,898],[180,1347],[240,1796]],
   };
   const aliases = { 'goat-trachea': 'trachea-chew', 'whole-mackerel': 'mackerel-whole' };
   const slug = value => String(value || '').toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
