@@ -18,6 +18,10 @@
     if (!response.ok) throw new Error(data.error || 'The service could not complete that request.');
     return data;
   }
+  const customerHeaders = () => {
+    const token = window.sessionStorage.getItem('gob-customer-token');
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  };
   const api = {
     base, request,
     catalogue: async () => {
@@ -43,8 +47,8 @@
     spinWheel: body => request('/spin-wheel', { method: 'POST', body: JSON.stringify(body) }),
     abandonedCart: body => request('/abandoned-cart', { method: 'POST', body: JSON.stringify(body) }),
     orderAttempt: body => request('/order-attempt-alert', { method: 'POST', body: JSON.stringify(body) }),
-    saveOrder: body => request('/save-order', { method: 'POST', body: JSON.stringify(body) }),
-    createRazorpayOrder: body => request('/razorpay-order', { method: 'POST', body: JSON.stringify(body) }),
+    saveOrder: body => request('/save-order', { method: 'POST', headers: customerHeaders(), body: JSON.stringify(body) }),
+    createRazorpayOrder: body => request('/razorpay-order', { method: 'POST', headers: customerHeaders(), body: JSON.stringify(body) }),
     loyaltySummary: phone => request('/public-loyalty-summary', { method: 'POST', body: JSON.stringify({ phone }) }),
     trackOrder: ref => request('/public-order-tracking', { method: 'POST', body: JSON.stringify({ ref }) }),
   };
