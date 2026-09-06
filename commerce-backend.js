@@ -8,7 +8,9 @@
   const fullName = () => [get('[autocomplete="given-name"]'), get('[autocomplete="family-name"]')].filter(Boolean).join(' ');
   const items = () => cart().map(line => {
     const product = GOB_PRODUCTS[line.id];
-    return product && { name: product.name, pack_label: product.tag || '', price: Number(product.price), pack_price: Number(product.price), quantity: Number(line.quantity), qty: Number(line.quantity) };
+    if (!product) return null;
+    const legacyPack = String(product.name || '').match(/^(.+?)\s+—\s+(.+)$/);
+    return { name: legacyPack?.[1] || product.name, pack_label: product.packLabel || legacyPack?.[2] || '', price: Number(product.price), pack_price: Number(product.price), quantity: Number(line.quantity), qty: Number(line.quantity) };
   }).filter(Boolean);
   const subtotal = () => items().reduce((sum, item) => sum + item.price * item.quantity, 0);
   const method = () => form.querySelector('[name="payment"]:checked')?.value === 'cod' ? 'cod' : 'online';
