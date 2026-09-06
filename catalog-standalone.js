@@ -13,7 +13,10 @@
   const productId = product => product.id || slug(product.n || product.name);
   const productName = product => product.n || product.name || 'Game of Bones treat';
   const productImage = product => product.i || product.image_url || product.images?.[0] || 'assets/gob-logo.png';
-  const productPrice = product => product.p ?? product.price ?? product.sizes?.[0]?.price ?? 0;
+  // A product's first pack is the sellable base option.  Some older admin
+  // records still have a stale top-level price, so always prefer the first
+  // pack price when it is available.
+  const productPrice = product => product.sizes?.[0]?.price ?? product.p ?? product.price ?? 0;
   const productWeight = product => product.w || (Number(product.sizes?.[0]?.weight_grams) ? `${product.sizes[0].weight_grams} g` : 'Pack');
   const productCategory = product => product.c || 'Treats';
 
