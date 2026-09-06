@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chicken Jerky — Game of Bones</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+<style>
+:root{--forest:#102c22;--moss:#315b45;--gold:#bd812a;--cream:#f7f0e4;--paper:#fffdf8;--bone:#ead6a5;--line:rgba(16,44,34,.16)}*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--forest);font-family:"DM Sans",sans-serif}.announce{background:var(--forest);color:#fff;text-align:center;padding:10px;font-size:11px;letter-spacing:.12em;font-weight:700}.nav{height:70px;background:var(--paper);display:flex;align-items:center;justify-content:space-between;padding:0 5vw;border-bottom:1px solid var(--line)}.nav img{width:46px}.nav span{font-size:12px;text-transform:uppercase;letter-spacing:.09em;font-weight:700}.crumb{max-width:1320px;margin:auto;padding:24px 5vw 12px;font-size:13px;color:var(--moss)}.hero{max-width:1320px;margin:auto;display:grid;grid-template-columns:1.04fr .96fr;padding:0 5vw 68px;gap:0}.art{background:var(--bone);min-height:570px;position:relative;overflow:hidden}.art:before{content:"ONE INGREDIENT / REAL FOOD /";position:absolute;top:26px;left:-18px;transform:rotate(-90deg);transform-origin:left top;color:rgba(16,44,34,.42);font-size:10px;letter-spacing:.2em;font-weight:700}.art .plate{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;mix-blend-mode:multiply;opacity:.23}.pouch{position:absolute;width:55%;max-height:83%;object-fit:contain;left:26%;bottom:4%;filter:drop-shadow(18px 24px 18px rgba(16,44,34,.25))}.copy{background:var(--paper);padding:clamp(34px,6vw,76px);display:flex;flex-direction:column;justify-content:center}.eyebrow{margin:0 0 16px;color:var(--gold);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}.copy h1,.story h2,.related h2{font:700 clamp(46px,5vw,72px)/.96 Fraunces,serif;letter-spacing:-.055em;margin:0}.rating{margin:20px 0;font-size:14px}.rating b{color:var(--gold);letter-spacing:.12em}.price{font-size:23px;font-weight:700;margin:0 0 20px}.desc{color:var(--moss);font-size:16px;line-height:1.65;margin:0 0 24px}.packs{display:flex;gap:10px;margin-bottom:18px}.packs button{background:transparent;border:1px solid var(--line);padding:11px 15px;font-weight:700;color:var(--forest)}.packs button:first-child{border:2px solid var(--forest);padding:10px 14px}.actions{display:grid;grid-template-columns:104px 1fr;gap:10px}.qty,.add,.whatsapp{min-height:52px;display:flex;align-items:center;justify-content:center}.qty{border:1px solid var(--line);font-weight:700}.add{background:var(--forest);color:#fff;border:0;font:700 12px "DM Sans";letter-spacing:.1em;text-transform:uppercase}.whatsapp{margin-top:10px;border:1px solid var(--moss);color:var(--moss);font-size:12px;font-weight:700;text-decoration:none}.quick{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);margin-top:25px}.quick div{padding:13px 10px 0 0;font-size:12px;line-height:1.45}.quick b{display:block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}.band{background:var(--forest);color:var(--paper);padding:19px 5vw;display:flex;justify-content:space-around;gap:20px;text-align:center;font-size:12px;font-weight:700;letter-spacing:.06em}.story{max-width:1320px;margin:auto;padding:88px 5vw;display:grid;grid-template-columns:.9fr 1.1fr;gap:70px;align-items:center}.story h2{font-size:clamp(37px,4vw,56px)}.story p{color:var(--moss);line-height:1.7;max-width:490px}.facts{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--forest)}.fact{background:#e8d8b5;padding:30px}.fact:nth-child(2),.fact:nth-child(3){background:var(--paper)}.fact b{font:600 24px Fraunces,serif;display:block;margin-bottom:8px}.fact span{font-size:13px;line-height:1.5;color:var(--moss)}.related{background:#d9c29a;padding:76px 5vw}.related-in{max-width:1320px;margin:auto}.related h2{font-size:42px;margin-bottom:30px}.pair{background:var(--paper);display:grid;grid-template-columns:150px 1fr auto;gap:22px;align-items:center;padding:18px;max-width:780px}.pair img{height:132px;width:150px;object-fit:contain;background:#76523b}.pair h3{font:600 26px Fraunces,serif;margin:0 0 7px}.pair p{font-size:13px;color:var(--moss);margin:0}.pair button{background:var(--gold);border:0;color:#fff;padding:14px 17px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}@media(max-width:760px){.hero,.story{grid-template-columns:1fr}.art{min-height:440px}.copy{padding:38px 26px}.band{display:grid;grid-template-columns:1fr 1fr}.story{padding:58px 5vw;gap:35px}.facts{grid-template-columns:1fr}.pair{grid-template-columns:100px 1fr}.pair img{width:100px;height:100px}.pair button{grid-column:1/-1}.nav span:not(:last-child){display:none}}
+</style>
+<style>.announce{padding:7px}.nav{height:58px}.crumb{padding-top:14px;padding-bottom:8px}.hero{padding-bottom:44px}.art{min-height:650px}.pouch{width:68%;max-height:90%;left:17%;bottom:2%}@media(max-width:760px){.art{min-height:520px}.pouch{width:72%;left:14%}}</style>
+</head>
+<body>
+<div class="announce">FREE SHIPPING ACROSS INDIA · REAL FOOD, SIMPLY MADE</div>
+<nav class="nav">
+<img src="assets/gob-logo.png" alt="Game of Bones">
+<span>Shop</span>
+<span>Treat guide</span>
+<span>Bag · 0</span>
+</nav>
+<div class="crumb">Shop / Chicken treats / <b>Chicken Jerky</b>
+</div>
+<main>
+<section class="hero">
+<div class="art">
+<img class="plate" src="assets/goat-trotter-plate.png" alt="">
+<img class="pouch" src="assets/chicken-jerky-pouch.png" alt="Chicken Jerky pouch">
+</div>
+<div class="copy">
+<p class="eyebrow">Chicken · single ingredient</p>
+<h1>Chicken<br>Jerky</h1>
+<div class="rating">
+<b>★★★★★</b> &nbsp;Made for real treat moments</div>
+<p class="price">From ₹299</p>
+<p class="desc">Slowly dehydrated chicken for training rewards, walks, and the look your dog gives you when the treat jar opens.</p>
+<div class="packs">
+<button>60 g · ₹299</button>
+<button>120 g · ₹549</button>
+</div>
+<div class="actions">
+<div class="qty">− &nbsp; 1 &nbsp; +</div>
+<button class="add">Add to bag · ₹299</button>
+</div>
+<a class="whatsapp" href="https://wa.me/919082503295" target="_blank" rel="noopener">Need help choosing? Chat on WhatsApp</a>
+<div class="quick">
+<div>
+<b>Ingredient</b>100% chicken</div>
+<div>
+<b>Texture</b>Crunchy reward</div>
+<div>
+<b>Dispatch</b>Within 24 hours</div>
+</div>
+</div>
+</section>
+<section class="band">
+<div>NO FILLERS</div>
+<div>NO PRESERVATIVES</div>
+<div>MADE IN KALYAN</div>
+<div>PACKED FRESH</div>
+</section>
+<section class="story">
+<div>
+<p class="eyebrow">Why this one works</p>
+<h2>One honest ingredient, with a proper point of view.</h2>
+<p>Simple information should feel good to read. This section tells a parent what they are buying, how to use it, and when to ask for help—without turning the page into a wall of claims.</p>
+</div>
+<div class="facts">
+<div class="fact">
+<b>For everyday wins</b>
+<span>A versatile reward for training, recall, or a small moment of celebration.</span>
+</div>
+<div class="fact">
+<b>Start small</b>
+<span>Introduce a new protein gradually and choose a piece suited to your dog.</span>
+</div>
+<div class="fact">
+<b>Always supervise</b>
+<span>Keep fresh water nearby and supervise any dog while they enjoy treats.</span>
+</div>
+<div class="fact">
+<b>Need a match?</b>
+<span>Use WhatsApp to ask about chewing style, age, or protein preferences.</span>
+</div>
+</div>
+</section>
+<section class="related">
+<div class="related-in">
+<p class="eyebrow">Build a treat ritual</p>
+<h2>Give them a chew to match.</h2>
+<article class="pair">
+<img src="assets/goat-trachea-pouch.png" alt="Goat Trachea pouch">
+<div>
+<h3>Goat Trachea</h3>
+<p>Add a longer-lasting chew alongside fast, everyday Chicken Jerky. A useful pairing, not a random upsell.</p>
+</div>
+<button>Add to bag</button>
+</article>
+</div>
+</section>
+</main>
+</body>
+</html>

@@ -1,0 +1,26 @@
+.wheel-card{position:relative;max-height:calc(100dvh - 24px);overflow-y:auto;overscroll-behavior:contain;border:1px solid var(--ink)}
+.wheel-card .wheel-close{position:absolute;z-index:5;top:12px;right:12px;width:44px;height:44px;line-height:1;color:var(--ink)}
+.wheel-card .wheel-intro{max-width:38ch;margin:0 0 18px;color:var(--muted)}
+.wheel-card .wheel-form-label{display:grid;grid-template-columns:1fr;gap:6px;align-items:stretch;color:var(--ink);font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.wheel-card .wheel-form-label input{box-sizing:border-box;min-width:0;width:100%;font:16px/1.3 var(--body);color:var(--ink)}
+.wheel-card .wheel-continue{margin-top:6px;min-height:48px}
+.wheel-stage{position:relative;display:grid;place-items:center;min-height:300px;padding:28px 0 6px}
+.wheel-pointer{position:absolute;z-index:3;top:12px;left:50%;width:0;height:0;transform:translateX(-50%);border-right:17px solid transparent;border-left:17px solid transparent;border-top:31px solid var(--ink);filter:drop-shadow(0 2px 0 var(--paper))}
+.prize-wheel{position:relative;width:min(70vw,278px);aspect-ratio:1;border:8px solid var(--paper);border-radius:50%;background:conic-gradient(from -30deg,var(--gold-soft) 0deg 60deg,var(--ink) 60deg 120deg,#d26e40 120deg 180deg,#e5eee0 180deg 240deg,var(--gold) 240deg 300deg,#345746 300deg 360deg);box-shadow:0 0 0 1px var(--ink),0 16px 28px rgba(16,44,34,.18);transition:transform 4.1s cubic-bezier(.12,.75,.12,1);will-change:transform}
+.prize-wheel::before{content:"";position:absolute;inset:13%;border:1px dashed rgba(255,255,255,.6);border-radius:50%}
+.wheel-segment{position:absolute;z-index:1;width:72px;text-align:center;font:800 11px/1.08 var(--body);letter-spacing:.035em;color:var(--ink);pointer-events:none}
+.wheel-segment.dark{color:var(--paper)}
+.wheel-s1{top:12%;left:50%;transform:translateX(-50%)}.wheel-s2{top:31%;right:4%;transform:rotate(60deg)}.wheel-s3{right:4%;bottom:17%;transform:rotate(120deg)}.wheel-s4{bottom:9%;left:50%;transform:translateX(-50%) rotate(180deg)}.wheel-s5{bottom:17%;left:4%;transform:rotate(240deg)}.wheel-s6{top:31%;left:4%;transform:rotate(300deg)}
+.wheel-hub{position:absolute;z-index:2;display:grid;place-items:center;inset:50% auto auto 50%;width:76px;aspect-ratio:1;transform:translate(-50%,-50%);border:3px solid var(--ink);border-radius:50%;background:var(--paper);color:var(--ink);font:800 12px/1 var(--body);letter-spacing:.1em}
+.wheel-status{min-height:0;margin:8px 0 0;text-align:center;font-weight:700}
+.wheel-prize{display:grid;gap:4px;margin-top:8px;padding:16px;background:#e4ebdf;border:1px solid var(--ink);text-align:center}
+.wheel-prize strong{display:block;margin:6px 0;font:34px/.95 var(--display)}
+.wheel-code{display:inline-flex;justify-content:center;align-self:center;margin-top:4px;padding:7px 10px;border:1px dashed var(--ink);background:var(--paper);font-size:12px;letter-spacing:.08em}
+.wheel-status small{display:block;max-width:34ch;margin:12px auto 0;color:var(--muted);font-weight:600;line-height:1.45}
+.wheel-shop{display:flex;align-items:center;justify-content:center;min-height:44px;margin-top:14px}
+.wheel-again{display:flex;align-items:center;justify-content:center;width:max-content;min-height:44px;margin:10px auto 0;padding:0 18px;border:1px solid var(--ink);background:transparent;color:var(--ink);font:800 12px/1 var(--body);letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+.wheel-again:focus-visible,.wheel-card input:focus-visible,.wheel-close:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.wheel-launch{min-width:58px;min-height:58px;touch-action:manipulation}.wheel-launch:active,.wheel-again:active{transform:scale(.96)}
+.wheel-card.wheel-result-ready .wheel-intro{display:none}
+@media(max-width:460px){.wheel-card{padding:24px 18px}.wheel-card h2{font-size:38px}.wheel-stage{min-height:286px}.prize-wheel{width:min(76vw,268px)}.wheel-segment{width:62px;font-size:10px}.wheel-hub{width:66px}}
+@media(prefers-reduced-motion:reduce){.prize-wheel{transition-duration:.01ms}.wheel-launch:active,.wheel-again:active{transform:none}}

@@ -1,0 +1,30 @@
+/* Shared storefront shell — deliberately scoped so legacy page and checkout
+   components keep their own layout while the navigation migrates first. */
+#gobOfferBar{position:relative;z-index:1002;display:flex;align-items:center;justify-content:center;min-height:36px;padding:0 52px;background:#102c22;color:#fffdf8;overflow:hidden}
+#gobOfferBar .gob-offer-copy{display:inline-block;max-width:72ch;color:#fffdf8;font:800 10px/1.3 'Jost',sans-serif;letter-spacing:.11em;text-align:center;text-transform:uppercase;transition:opacity .18s ease,transform .18s ease}
+#gobOfferBar .gob-offer-copy.is-changing{opacity:0;transform:translateY(-5px)}
+#gobOfferBar .gob-offer-pause{position:absolute;right:7px;display:grid;place-items:center;width:34px;height:34px;border:0;background:transparent;color:#f0dfaa;cursor:pointer}
+#gobOfferBar .gob-offer-pause:focus-visible,#mainNav.gob-modern-shell button:focus-visible,#mainNav.gob-modern-shell a:focus-visible{outline:3px solid #c8973a;outline-offset:3px}
+#announceBanner,#promoBannerStrip[data-shell-legacy-promo="true"]{display:none!important}
+.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+
+#mainNav.gob-modern-shell{top:0;border-color:#e9dfd0;box-shadow:none}
+#mainNav.gob-modern-shell .nav-inner{height:72px;gap:22px}
+#mainNav.gob-modern-shell .logo{gap:8px}
+#mainNav.gob-modern-shell .logo img{width:44px;height:44px;object-fit:contain}
+#mainNav.gob-modern-shell .logo-text{font:800 10px/1 'Jost',sans-serif;letter-spacing:.13em;text-transform:uppercase}
+#mainNav.gob-modern-shell .compact-nav{gap:clamp(4px,1.25vw,14px)}
+#mainNav.gob-modern-shell .compact-nav a{padding:10px 7px;color:#1a1008;font-size:11px;font-weight:800;letter-spacing:.095em}
+#mainNav.gob-modern-shell .compact-nav a.active{border-color:#c8973a}
+#mainNav.gob-modern-shell .compact-nav [data-shell-secondary]{display:none}
+#mainNav.gob-modern-shell .nav-actions{gap:5px;margin-left:auto}
+#mainNav.gob-modern-shell .login-trigger{display:none!important;min-height:42px;padding:0 9px;color:#1a1008;font:800 11px/1 'Jost',sans-serif;letter-spacing:.09em;text-transform:uppercase;white-space:nowrap}
+#mainNav.gob-modern-shell .jar-trigger{position:relative;display:grid;place-items:center;width:46px;height:46px;padding:0;border:1px solid #1a1008!important;border-radius:50%;background:#fff;color:#1a1008}
+#mainNav.gob-modern-shell .jar-trigger svg{width:21px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#mainNav.gob-modern-shell .jar-trigger .cart-badge{top:-6px;right:-6px;background:#c8973a;color:#1a1008}
+#mainNav.gob-modern-shell .hamburger-btn{margin-left:2px}
+
+@media(min-width:901px){#mainNav.gob-modern-shell .login-trigger{display:inline-flex!important}}
+@media(max-width:900px){#mainNav.gob-modern-shell .logo-text{display:none}#mainNav.gob-modern-shell .compact-nav{gap:0}#mainNav.gob-modern-shell .compact-nav [data-shell-secondary]{display:block}}
+@media(max-width:768px){#gobOfferBar{min-height:42px;padding:0 44px 0 12px}#gobOfferBar .gob-offer-copy{font-size:9px;letter-spacing:.07em}#mainNav.gob-modern-shell .nav-inner{height:60px;padding:0 15px}#mainNav.gob-modern-shell .logo img{width:38px;height:38px}#mainNav.gob-modern-shell .jar-trigger{width:42px;height:42px}}
+@media(prefers-reduced-motion:reduce){#gobOfferBar .gob-offer-copy{transition:none}}

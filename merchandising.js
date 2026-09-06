@@ -1,0 +1,1 @@
+document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('.buy-tier').forEach(tier=>tier.addEventListener('click',()=>document.querySelector('#liveCatalog')?.scrollIntoView({behavior:'smooth',block:'start'})));});

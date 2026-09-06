@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chicken Jerky — Game of Bones</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#102c22;--gold:#c58b30;--cream:#f8f0e2;--paper:#fffdf8;--clay:#76523b;--muted:#4d6659}*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font-family:"DM Sans",sans-serif}.nav{height:58px;background:var(--paper);display:flex;justify-content:space-between;align-items:center;padding:0 5vw;border-bottom:1px solid #dfd0b7;position:sticky;top:0;z-index:5}.nav img{width:41px}.nav b{font-size:12px;letter-spacing:.1em;text-transform:uppercase}.hero{min-height:calc(100dvh - 58px);display:grid;grid-template-columns:1.05fr .95fr;overflow:hidden}.visual{background:#ebd6a9;position:relative;display:grid;place-items:center}.visual:after{content:"CRUNCHY • NATURAL • REAL";position:absolute;bottom:25px;left:25px;font-size:11px;font-weight:700;letter-spacing:.16em}.plate{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.25;mix-blend-mode:multiply}.pouch{position:relative;z-index:1;width:min(62%,480px);filter:drop-shadow(25px 30px 18px #76523b66);animation:float 4s ease-in-out infinite}.buy{background:var(--paper);display:flex;align-items:center;padding:clamp(28px,6vw,90px)}.eyebrow{color:var(--gold);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}.buy h1,.section h2{font:700 clamp(53px,7vw,93px)/.9 Fraunces,serif;letter-spacing:-.06em;margin:17px 0}.buy p{max-width:440px;color:var(--muted);line-height:1.7}.price{font-size:21px;font-weight:700}.choices{display:flex;gap:8px;margin:22px 0}.choices button{padding:12px 15px;background:transparent;border:1px solid #cdbb9b;font-weight:700}.choices .on{border:2px solid var(--ink);padding:11px 14px}.cta{width:100%;min-height:54px;background:var(--ink);color:white;border:0;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}.wa{display:block;text-align:center;margin-top:12px;padding:13px;border:1px solid var(--ink);font-size:12px;font-weight:700;color:var(--ink);text-decoration:none}.marquee{background:var(--ink);color:#f8f0e2;padding:18px 0;overflow:hidden;white-space:nowrap;font-weight:700;letter-spacing:.1em;font-size:12px}.marquee span{display:inline-block;animation:slide 16s linear infinite}.section{min-height:85vh;padding:10vw 7vw;display:grid;grid-template-columns:.9fr 1.1fr;gap:8vw;align-items:center}.section h2{font-size:clamp(42px,5vw,72px)}.section p{color:var(--muted);line-height:1.75;max-width:500px}.tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px}.tile{padding:28px;min-height:190px;background:var(--paper);border:1px solid #dfd0b7;transition:transform .35s ease,background .35s}.tile:hover{transform:translateY(-9px);background:#ead6a5}.tile b{font:600 24px Fraunces,serif;display:block;margin-bottom:10px}.pair{background:var(--clay);color:white;padding:7vw;display:grid;grid-template-columns:1fr 260px;gap:50px;align-items:center}.pair h2{font:700 clamp(42px,5vw,70px)/.95 Fraunces,serif;margin:15px 0}.pair p{line-height:1.7;color:#f3e4c8}.pair img{width:100%;filter:drop-shadow(12px 18px 15px #0005)}.pair button{padding:15px 19px;border:0;background:var(--gold);color:white;font-weight:700;text-transform:uppercase;letter-spacing:.08em}@keyframes float{50%{transform:translateY(-14px) rotate(1deg)}}@keyframes slide{to{transform:translateX(-50%)}}.reveal{opacity:0;transform:translateY(36px);transition:.7s ease}.reveal.show{opacity:1;transform:none}@media(max-width:760px){.hero,.section,.pair{grid-template-columns:1fr}.hero{min-height:auto}.visual{min-height:54vh}.buy{padding:45px 7vw}.section{min-height:auto;padding:80px 7vw}.pair{padding:70px 7vw}.pair img{max-width:230px}.tiles{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav class="nav">
+<img src="assets/gob-logo.png" alt="Game of Bones">
+<b>Shop</b>
+<b>Bag · <span id="bag">0</span>
+</b>
+</nav>
+<main>
+<section class="hero">
+<div class="visual">
+<img class="plate" src="assets/goat-trotter-plate.png" alt="">
+<img class="pouch" src="assets/chicken-jerky-pouch.png" alt="Chicken Jerky pouch">
+</div>
+<div class="buy">
+<div>
+<span class="eyebrow">Chicken · one ingredient</span>
+<h1>Chicken<br>Jerky</h1>
+<p class="price">₹299 · 60 g</p>
+<p>Slowly dehydrated chicken for training rewards, walks, and the exact moment the treat jar opens.</p>
+<div class="choices">
+<button class="on">60 g · ₹299</button>
+<button>120 g · ₹549</button>
+</div>
+<button class="cta" id="add">Add to bag · ₹299</button>
+<a class="wa" href="https://wa.me/919082503295" target="_blank">Ask us on WhatsApp</a>
+</div>
+</div>
+</section>
+<div class="marquee">
+<span>NO FILLERS &nbsp;•&nbsp; NO PRESERVATIVES &nbsp;•&nbsp; MADE IN KALYAN &nbsp;•&nbsp; PACKED FRESH &nbsp;•&nbsp; NO FILLERS &nbsp;•&nbsp; NO PRESERVATIVES &nbsp;•&nbsp; MADE IN KALYAN &nbsp;•&nbsp; PACKED FRESH &nbsp;•&nbsp;</span>
+</div>
+<section class="section reveal">
+<div>
+<span class="eyebrow">The good stuff</span>
+<h2>Nothing to read between the lines.</h2>
+<p>A product page should feel like a tactile discovery, not a specification sheet. Every section answers a real buying question and lets the photography carry some of the story.</p>
+</div>
+<div class="tiles">
+<div class="tile">
+<b>100% chicken</b>
+<span>One named ingredient. No filler list to decode.</span>
+</div>
+<div class="tile">
+<b>Everyday reward</b>
+<span>Easy to portion for training and little wins.</span>
+</div>
+<div class="tile">
+<b>Start small</b>
+<span>Introduce new proteins gradually.</span>
+</div>
+<div class="tile">
+<b>Ask first</b>
+<span>WhatsApp us for chew and puppy guidance.</span>
+</div>
+</div>
+</section>
+<section class="pair reveal">
+<div>
+<span class="eyebrow" style="color:#efc76f">Build a ritual</span>
+<h2>Fast reward.<br>Long chew.</h2>
+<p>Pair Chicken Jerky with Goat Trachea for a useful treat box, not a generic upsell. One is for the quick “good dog”; the other is for settling in.</p>
+<button id="pairAdd">Add Goat Trachea · ₹349</button>
+</div>
+<img src="assets/goat-trachea-pouch.png" alt="Goat Trachea pouch">
+</section>
+</main>
+<script>const bag=document.getElementById('bag');let n=0;function add(label){n++;bag.textContent=n;label.textContent='Added to bag';setTimeout(()=>label.textContent=label.id==='add'?'Add to bag · ₹299':'Add Goat Trachea · ₹349',1300)}document.getElementById('add').onclick=e=>add(e.target);document.getElementById('pairAdd').onclick=e=>add(e.target);new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting&&e.target.classList.add('show')),{threshold:.18}).observe(document.querySelector('.section'));document.querySelectorAll('.choices button').forEach(b=>b.onclick=()=>{document.querySelector('.choices .on').classList.remove('on');b.classList.add('on')});</script>
+</body>
+</html>
