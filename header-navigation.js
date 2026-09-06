@@ -24,13 +24,13 @@
     if (!document.querySelector('link[data-gob-offer-banner]')) {
       const offerStyles = document.createElement('link');
       offerStyles.rel = 'stylesheet';
-      offerStyles.href = 'offer-banner.css?v=1';
+      offerStyles.href = 'offer-banner.css?v=2';
       offerStyles.dataset.gobOfferBanner = 'true';
       document.head.append(offerStyles);
     }
     if (!document.querySelector('script[data-gob-offer-banner]')) {
       const offerScript = document.createElement('script');
-      offerScript.src = 'offer-banner.js?v=1';
+      offerScript.src = 'offer-banner.js?v=2';
       offerScript.dataset.gobOfferBanner = 'true';
       document.head.append(offerScript);
     }
