@@ -2,6 +2,27 @@ function commerceProduct(item){return GOB_PRODUCTS[item.id]||item.product||null}
 function cartValue(){return cart().reduce((total,item)=>total+(commerceProduct(item)?.price||0)*item.quantity,0)}
 function bulkRate(count){return count>=10?.15:count>=8?.12:count>=5?.08:count>=3?.05:0}
 
+const commerceSlug=value=>String(value||'').toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'')
+async function recoverUnknownCartLines(){
+  const lines=cart(),missing=lines.filter(line=>!commerceProduct(line))
+  if(!missing.length||!window.GOB_API?.catalogue)return
+  try{
+    const response=await window.GOB_API.catalogue(),products=Array.isArray(response?.products)?response.products:[]
+    let changed=false
+    missing.forEach(line=>{
+      const id=String(line.id||''),packMatch=id.match(/-pack-(\d+)$/),baseId=packMatch?id.slice(0,packMatch.index):id
+      const source=products.find(product=>String(product.id||'')===baseId||commerceSlug(product.name)===baseId)
+      if(!source)return
+      const packIndex=Math.max(0,Number(packMatch?.[1]||1)-1),pack=Array.isArray(source.sizes)?source.sizes[packIndex]||source.sizes[0]:null
+      const price=Number(pack?.price??source.price)
+      if(!Number.isFinite(price)||price<=0)return
+      line.product={name:source.name,price,image:source.image_url||source.images?.[0]||'',tag:'Game of Bones treat',packLabel:pack?.label||''}
+      changed=true
+    })
+    if(changed){saveCart(lines);updateCart();renderCommerceCart()}
+  }catch(error){console.warn('Cart item recovery will retry when the catalogue is available.',error)}
+}
+
 function renderCommerceCart(){
   const root=document.querySelector('#commerceCart')
   if(!root)return
@@ -129,7 +150,7 @@ async function loadCheckoutEligibility(){
 }
 
 function setupCommerce(){
-  ensureLoyaltyEarn();ensureBulkDiscount();ensureCheckoutOptions();renderCommerceCart();loadCheckoutEligibility()
+  ensureLoyaltyEarn();ensureBulkDiscount();ensureCheckoutOptions();renderCommerceCart();recoverUnknownCartLines();loadCheckoutEligibility()
   document.querySelector('#promoForm')?.addEventListener('submit',event=>{
     event.preventDefault()
     const code=document.querySelector('#promoCode').value.trim().toUpperCase(),message=document.querySelector('#promoMessage')
@@ -148,4 +169,4 @@ function setupCommerce(){
 }
 
 document.addEventListener('DOMContentLoaded',setupCommerce)
-document.addEventListener('gob:catalog-sync',()=>renderCommerceCart())
+document.addEventListener('gob:catalog-sync',()=>{renderCommerceCart();recoverUnknownCartLines()})
