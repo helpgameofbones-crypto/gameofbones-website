@@ -70,7 +70,17 @@
       const store = productStore();
       merged.forEach(item => {
         const id = item.id || slug(item.n);
-        store[id] = { name: item.n, price: safeMoney(item.p), image: item.i, tag: item.c };
+        const source = byName.get(slug(item.n));
+        const packs = Array.isArray(item.packs) ? item.packs : [];
+        const base = { name: item.n, price: safeMoney(item.p), image: item.i, tag: item.c, packLabel: packs[0]?.label || '' };
+        store[id] = base;
+        if (source?.id) store[source.id] = base;
+        packs.forEach((pack, index) => {
+          const selected = { name: item.n, price: safeMoney(pack.price), image: item.i, tag: item.c, packLabel: pack.label || '' };
+          const packId = `${id}-pack-${index + 1}`;
+          store[packId] = selected;
+          if (source?.id) store[`${source.id}-pack-${index + 1}`] = selected;
+        });
       });
       document.dispatchEvent(new CustomEvent('gob:catalog-sync', { detail: { count: merged.length } }));
     } catch (error) {

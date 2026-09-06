@@ -1,4 +1,5 @@
-function cartValue(){return cart().reduce((total,item)=>total+(GOB_PRODUCTS[item.id]?.price||0)*item.quantity,0)}
+function commerceProduct(item){return GOB_PRODUCTS[item.id]||item.product||null}
+function cartValue(){return cart().reduce((total,item)=>total+(commerceProduct(item)?.price||0)*item.quantity,0)}
 function bulkRate(count){return count>=10?.15:count>=8?.12:count>=5?.08:count>=3?.05:0}
 
 function renderCommerceCart(){
@@ -12,7 +13,7 @@ function renderCommerceCart(){
     return
   }
   root.innerHTML=items.map(item=>{
-    const product=GOB_PRODUCTS[item.id]
+    const product=commerceProduct(item)
     if(!product)return ''
     return `<article class="cart-line"><img src="${product.image}" alt="${product.name}"><div><h2>${product.name}</h2><p>${product.tag||'Game of Bones treat'}</p><div class="line-actions"><div class="mini-qty"><button data-change="${item.id}" data-amount="-1" aria-label="Decrease ${product.name}">−</button><span>${item.quantity}</span><button data-change="${item.id}" data-amount="1" aria-label="Increase ${product.name}">+</button></div><button class="remove-link" data-delete="${item.id}">Remove</button></div></div><div class="line-price">${money(product.price*item.quantity)}</div></article>`
   }).join('')
@@ -147,3 +148,4 @@ function setupCommerce(){
 }
 
 document.addEventListener('DOMContentLoaded',setupCommerce)
+document.addEventListener('gob:catalog-sync',()=>renderCommerceCart())

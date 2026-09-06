@@ -7,7 +7,7 @@
   const phone = () => get('[autocomplete="tel"]').replace(/\D/g, '').replace(/^91/, '');
   const fullName = () => [get('[autocomplete="given-name"]'), get('[autocomplete="family-name"]')].filter(Boolean).join(' ');
   const items = () => cart().map(line => {
-    const product = GOB_PRODUCTS[line.id];
+    const product = GOB_PRODUCTS[line.id] || line.product;
     if (!product) return null;
     const legacyPack = String(product.name || '').match(/^(.+?)\s+—\s+(.+)$/);
     return { name: legacyPack?.[1] || product.name, pack_label: product.packLabel || legacyPack?.[2] || '', price: Number(product.price), pack_price: Number(product.price), quantity: Number(line.quantity), qty: Number(line.quantity) };
