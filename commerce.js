@@ -89,6 +89,14 @@ function ensureCheckoutOptions(){
   </section>`)
   total.insertAdjacentHTML('beforebegin','<div class="order-row"><span>Offer saving</span><span data-coupon-discount>—</span></div><div class="order-row"><span>Payment adjustment</span><span data-payment-change>−₹30</span></div>')
   form.querySelectorAll('[name="coupon"],[name="payment"]').forEach(input=>input.addEventListener('change',updateCommerceTotals))
+
+  // A code applied from the bag is only carried to this secure checkout; it
+  // is still checked against the signed-in customer's eligibility below.
+  const storedCoupon=window.sessionStorage.getItem('gob-checkout-coupon')
+  const requestedCoupon=['WELCOME15','MEGA20'].includes(storedCoupon)?storedCoupon:''
+  const requestedInput=requestedCoupon&&form.querySelector(`[name="coupon"][value="${requestedCoupon}"]`)
+  if(requestedInput) requestedInput.checked=true
+  window.sessionStorage.removeItem('gob-checkout-coupon')
 }
 
 function updateWelcomeOfferVisibility(){
@@ -124,7 +132,16 @@ function setupCommerce(){
   document.querySelector('#promoForm')?.addEventListener('submit',event=>{
     event.preventDefault()
     const code=document.querySelector('#promoCode').value.trim().toUpperCase(),message=document.querySelector('#promoMessage')
-    message.textContent=code==='MEGA20'&&cartValue()>=2199?'MEGA20 will be applied by the live checkout.':code==='MEGA20'?'MEGA20 applies to orders of ₹2,199 or more.':'Enter MEGA20 for 20% off orders ₹2,199+.'
+    if(code==='WELCOME15'){
+      window.sessionStorage.setItem('gob-checkout-coupon',code)
+      message.innerHTML='WELCOME15 is ready for secure checkout. <a href="checkout.html">Log in or continue to checkout</a> to verify that this is your first order.'
+    }else if(code==='MEGA20'){
+      window.sessionStorage.setItem('gob-checkout-coupon',code)
+      message.textContent=cartValue()>=2199?'MEGA20 is ready for secure checkout.':'MEGA20 needs a treat subtotal of ₹2,199 or more; you can still continue to checkout.'
+    }else{
+      window.sessionStorage.removeItem('gob-checkout-coupon')
+      message.textContent='Use WELCOME15 for 15% off a verified first order, or MEGA20 for 20% off orders ₹2,199+.'
+    }
   })
   document.querySelector('#checkoutForm')?.addEventListener('submit',event=>{event.preventDefault();const success=document.querySelector('#checkoutSuccess');success.classList.add('show');success.focus()})
 }
