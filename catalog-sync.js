@@ -31,7 +31,7 @@
         if (!source) { items.push(item); return items; }
         known.add(slug(item.n));
         if (!source.is_active) return items;
-        const productPacks = window.GOB_CATALOGUE_REFERENCE?.packs(source.name) || packs(source.sizes);
+        const productPacks = packs(source.sizes) || window.GOB_CATALOGUE_REFERENCE?.packs(source.name);
         const productMedia = [...media(source.images, 'image'), ...media(source.videos, 'video')].slice(0, 6);
         const first = productPacks[0];
         const price = first?.price || safeMoney(source.price) || item.p;
@@ -49,7 +49,7 @@
 
       remote.forEach(source => {
         if (!source.is_active || known.has(slug(source.name))) return;
-        const productPacks = window.GOB_CATALOGUE_REFERENCE?.packs(source.name) || packs(source.sizes);
+        const productPacks = packs(source.sizes) || window.GOB_CATALOGUE_REFERENCE?.packs(source.name);
         const first = productPacks[0];
         const productMedia = [...media(source.images, 'image'), ...media(source.videos, 'video')].slice(0, 6);
         merged.push({
