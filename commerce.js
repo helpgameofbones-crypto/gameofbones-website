@@ -1,6 +1,7 @@
 function commerceProduct(item){return GOB_PRODUCTS[item.id]||item.product||null}
 function cartValue(){return cart().reduce((total,item)=>total+(commerceProduct(item)?.price||0)*item.quantity,0)}
 function bulkRate(count){return count>=10?.15:count>=8?.12:count>=5?.08:count>=3?.05:0}
+const POINT_VALUE_RUPEES=.3,MAX_POINTS_DISCOUNT_RUPEES=100,MAX_REDEMPTION_POINTS=Math.floor(MAX_POINTS_DISCOUNT_RUPEES/POINT_VALUE_RUPEES)
 
 const commerceSlug=value=>String(value||'').toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'')
 async function recoverUnknownCartLines(){
@@ -58,8 +59,8 @@ function updateCommerceTotals(){
   const couponDiscount=Math.round(subtotal*couponRate),saving=Math.max(bulk,couponDiscount)
   const payment=document.querySelector('[name="payment"]:checked')?.value||'online'
   const requestedPoints=Number(document.querySelector('[name="loyalty_points_redeemed"]')?.value||0)
-  const pointsRedeemed=eligibility.signedIn?Math.min(Math.max(Math.floor(requestedPoints)||0,0),100,Number(eligibility.points||0)):0
-  const pointsDiscount=Math.round(pointsRedeemed*.3)
+  const pointsRedeemed=eligibility.signedIn?Math.min(Math.max(Math.floor(requestedPoints)||0,0),MAX_REDEMPTION_POINTS,Number(eligibility.points||0)):0
+  const pointsDiscount=Math.min(MAX_POINTS_DISCOUNT_RUPEES,Math.round(pointsRedeemed*POINT_VALUE_RUPEES))
   const paymentChange=payment==='cod'?40:-30,total=Math.max(0,subtotal-saving-pointsDiscount+paymentChange)
   const pointsEarned=Math.floor(total/10),pointsValue=pointsEarned*.3
   document.querySelectorAll('[data-commerce-subtotal]').forEach(el=>el.textContent=money(subtotal))
@@ -110,7 +111,7 @@ function ensureCheckoutOptions(){
     <label><input type="radio" name="coupon" value="none" checked><span>Use automatic buy-more saving <small>We’ll apply your best eligible saving. It cannot be combined with a code.</small></span></label>
     <label data-welcome-offer><input type="radio" name="coupon" value="WELCOME15"><span>WELCOME15 — 15% off your first order <small>Verified new accounts only · one use · disappears after the first completed order.</small></span></label>
     <label><input type="radio" name="coupon" value="MEGA20"><span>MEGA20 — 20% off orders ₹2,199+ <small>Eligible treat subtotal must reach ₹2,199 · excludes buy-more savings.</small></span></label>
-    <label data-loyalty-redeem hidden><input type="number" name="loyalty_points_redeemed" min="0" max="100" step="1" value="0" inputmode="numeric"><span>Use reward points <small>Use up to 100 points per order. Every point is worth ₹0.30 and can be combined with one eligible coupon.</small></span></label>
+    <label data-loyalty-redeem hidden><input type="number" name="loyalty_points_redeemed" min="0" max="333" step="1" value="0" inputmode="numeric"><span>Use reward points <small>Use up to ₹100 off per order (maximum 333 points). Every point is worth ₹0.30 and can be combined with one eligible coupon.</small></span></label>
     <p class="perk-status" data-coupon-status role="status" aria-live="polite"></p>
   </section>`)
   total.insertAdjacentHTML('beforebegin','<div class="order-row"><span>Offer saving</span><span data-coupon-discount>—</span></div><div class="order-row" data-loyalty-discount-row hidden><span>Reward points</span><span data-points-discount>—</span></div><div class="order-row"><span>Payment adjustment</span><span data-payment-change>−₹30</span></div>')
@@ -139,7 +140,7 @@ function updateWelcomeOfferVisibility(){
 function updateLoyaltyRedemptionVisibility(){
   const eligibility=window.GOB_CHECKOUT_ELIGIBILITY||{},control=document.querySelector('[data-loyalty-redeem]'),row=document.querySelector('[data-loyalty-discount-row]')
   if(!control||!row)return
-  const available=Math.min(100,Math.max(0,Math.floor(Number(eligibility.points||0))))
+  const available=Math.min(MAX_REDEMPTION_POINTS,Math.max(0,Math.floor(Number(eligibility.points||0))))
   control.hidden=!eligibility.signedIn||available<=0
   row.hidden=!eligibility.signedIn||available<=0
   const input=control.querySelector('[name="loyalty_points_redeemed"]')

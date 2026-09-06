@@ -1,6 +1,7 @@
 /* The new checkout calls the existing API. It does not store PII in browser
    storage; the server encrypts order data before writing it to Supabase. */
 (() => {
+  const POINT_VALUE_RUPEES = .3, MAX_POINTS_DISCOUNT_RUPEES = 100, MAX_REDEMPTION_POINTS = Math.floor(MAX_POINTS_DISCOUNT_RUPEES / POINT_VALUE_RUPEES);
   const form = document.querySelector('#checkoutForm');
   if (!form || !window.GOB_API) return;
   const get = selector => form.querySelector(selector)?.value.trim() || '';
@@ -25,8 +26,8 @@
     const couponRate = coupon === 'WELCOME15' && eligibility.signedIn && eligibility.firstOrder ? .15 : coupon === 'MEGA20' && value >= 2199 ? .2 : 0;
     const discount = Math.round(value * Math.max(bulk, couponRate));
     const requestedPoints = Math.floor(Number(form.querySelector('[name="loyalty_points_redeemed"]')?.value || 0));
-    const points = eligibility.signedIn ? Math.min(Math.max(requestedPoints, 0), 100, Number(eligibility.points || 0)) : 0;
-    const pointsDiscount = Math.round(points * .3), cod = method() === 'cod' ? 40 : -30;
+    const points = eligibility.signedIn ? Math.min(Math.max(requestedPoints, 0), MAX_REDEMPTION_POINTS, Number(eligibility.points || 0)) : 0;
+    const pointsDiscount = Math.min(MAX_POINTS_DISCOUNT_RUPEES, Math.round(points * POINT_VALUE_RUPEES)), cod = method() === 'cod' ? 40 : -30;
     return { value, discount, points, coupon: couponRate ? coupon : '', grand: Math.max(1, value - discount - pointsDiscount + cod) };
   };
   const result = (html, failed = false) => { const el = document.querySelector('#checkoutSuccess'); if (!el) return; el.classList.add('show'); el.style.background = failed ? '#f9e1da' : '#e4ebdf'; el.innerHTML = html; el.focus(); };
