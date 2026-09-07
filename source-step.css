@@ -9,10 +9,17 @@
   background-image: url('assets/source-preparation.png');
 }
 
+.slow-dry-step,
+.slow-dry-step:hover {
+  background-image: url('assets/slow-dry.png');
+}
+
 .source-step,
 .source-step:hover,
 .prepare-step,
-.prepare-step:hover {
+.prepare-step:hover,
+.slow-dry-step,
+.slow-dry-step:hover {
   background-position: center;
   background-size: cover;
   color: var(--ink);
@@ -20,10 +27,12 @@
 }
 
 .source-step .step-num,
-.prepare-step .step-num { color: var(--gold); }
+.prepare-step .step-num,
+.slow-dry-step .step-num { color: var(--gold); }
 
 .source-step p,
-.prepare-step p { color: #fffaf0; }
+.prepare-step p,
+.slow-dry-step p { color: #fffaf0; }
 
 .process-step-copy {
   align-self: center;
@@ -48,5 +57,6 @@
 
 @media (max-width: 560px) {
   .source-step,
-  .prepare-step { min-height: 230px; display: flex; align-items: center; }
+  .prepare-step,
+  .slow-dry-step { min-height: 230px; display: flex; align-items: center; }
 }
