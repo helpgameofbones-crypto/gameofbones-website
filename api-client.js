@@ -44,6 +44,7 @@
     account: token => request('/customer-account', { headers: { Authorization: `Bearer ${token}` } }),
     updateAccount: (token, body) => request('/customer-account', { method: 'PATCH', headers: { Authorization: `Bearer ${token}` }, body: JSON.stringify(body) }),
     capture: body => request('/public-email-capture', { method: 'POST', body: JSON.stringify(body) }),
+    contactInquiry: body => request('/contact-inquiries', { method: 'POST', body: JSON.stringify(body) }),
     spinWheel: body => request('/spin-wheel', { method: 'POST', body: JSON.stringify(body) }),
     abandonedCart: body => request('/abandoned-cart', { method: 'POST', body: JSON.stringify(body) }),
     orderAttempt: body => request('/order-attempt-alert', { method: 'POST', body: JSON.stringify(body) }),

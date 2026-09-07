@@ -11,6 +11,8 @@
 <script defer src="site.js?v=search-unique-1">
 </script>
 <script defer src="header-navigation.js?v=live-ticker-2"></script>
+<script defer src="api-client.js?v=contact-inquiries-1"></script>
+<script defer src="contact-form.js?v=1"></script>
 </head>
 <body>
 <div class="notice">
@@ -45,12 +47,12 @@
 <p class="lead">For product, order or delivery questions, the Game of Bones team responds personally from Kalyan. WhatsApp is the fastest way to reach the team on business days.</p>
 </header>
 <section class="section">
-<form class="form-panel" data-demo-form>
-<label class="field">Your name<input required autocomplete="name" placeholder="Your name">
+<form class="form-panel" id="contactForm">
+<label class="field">Your name<input name="name" required autocomplete="name" placeholder="Your name">
 </label>
-<label class="field">Email address<input required type="email" autocomplete="email" placeholder="you@email.com">
+<label class="field">Email address<input name="email" required type="email" autocomplete="email" placeholder="you@email.com">
 </label>
-<label class="field">What can we help with?<select>
+<label class="field">What can we help with?<select name="subject" required>
 <option>Product question</option>
 <option>Existing order</option>
 <option>Shipping question</option>
@@ -58,11 +60,11 @@
 <option>Something else</option>
 </select>
 </label>
-<label class="field">Your message<textarea required placeholder="Tell us a little more">
+<label class="field">Your message<textarea name="message" required minlength="10" placeholder="Tell us a little more">
 </textarea>
 </label>
 <button class="button" type="submit">Send message</button>
-<p class="form-success">Thanks—we have received your message. The live site will send this to the support inbox.</p>
+<p class="form-success" id="contactStatus" aria-live="polite"></p>
 </form>
 <div style="text-align:center;margin-top:28px">
 <p><strong>WhatsApp / Phone:</strong> <a href="https://wa.me/919082503295" target="_blank" rel="noreferrer">+91 90825 03295</a><br><strong>Email:</strong> <a href="mailto:helpgameofbones@gmail.com">helpgameofbones@gmail.com</a><br><strong>From:</strong> Kalyan West, Thane District, Maharashtra — 421301</p><a class="text-link" href="https://wa.me/919082503295?text=Hi%20Game%20of%20Bones%2C%20I%20need%20help." target="_blank" rel="noreferrer">Chat with us on WhatsApp</a>
