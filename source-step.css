@@ -1,22 +1,18 @@
-/* A real preparation image makes the first process step tangible while the
-   deep green treatment keeps the editorial copy legible. */
-.source-step {
+/* The process photo stays bright; a soft paper wash keeps the dark editorial
+   type readable without changing appearance on hover. */
+.source-step,
+.source-step:hover {
   background-image:
-    linear-gradient(135deg, rgba(9, 31, 23, .9), rgba(9, 31, 23, .42)),
+    linear-gradient(135deg, rgba(255, 253, 248, .9), rgba(255, 253, 248, .28)),
     url('assets/source-preparation.png');
   background-position: center;
   background-size: cover;
-  color: #fffdf8;
+  color: var(--ink);
+  transition: none;
 }
 
-.source-step:hover {
-  background-image:
-    linear-gradient(135deg, rgba(9, 31, 23, .84), rgba(9, 31, 23, .3)),
-    url('assets/source-preparation.png');
-}
-
-.source-step .step-num { color: #f4cf76; }
-.source-step p { color: rgba(255, 253, 248, .9); }
+.source-step .step-num { color: var(--gold); }
+.source-step p { color: var(--ink-soft); }
 
 @media (max-width: 560px) {
   .source-step { min-height: 230px; }
