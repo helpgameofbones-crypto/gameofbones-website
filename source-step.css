@@ -23,17 +23,27 @@
 .prepare-step .step-num { color: var(--gold); }
 
 .source-step p,
-.prepare-step p { color: var(--ink-soft); }
+.prepare-step p { color: #fffaf0; }
 
 .process-step-copy {
   align-self: center;
   max-width: 100%;
   padding: 14px;
-  background: rgba(255, 253, 248, .82);
-  box-shadow: 0 8px 20px rgba(16, 44, 34, .12);
+  color: #fffaf0;
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, .95),
+    1px 0 2px rgba(0, 0, 0, .8),
+    -1px 0 2px rgba(0, 0, 0, .8);
 }
 
-.process-step-copy h3 { margin: 9px 0 8px; }
+.process-step-copy h3 {
+  margin: 9px 0 8px;
+  color: #fffaf0;
+  text-shadow:
+    0 2px 3px rgba(0, 0, 0, .95),
+    1px 0 2px rgba(0, 0, 0, .9),
+    -1px 0 2px rgba(0, 0, 0, .9);
+}
 .process-step-copy p { margin: 0; }
 
 @media (max-width: 560px) {
