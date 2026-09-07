@@ -1,10 +1,7 @@
-/* The process photo stays bright; a soft paper wash keeps the dark editorial
-   type readable without changing appearance on hover. */
+/* Preserve the supplied photograph exactly as shot, including on hover. */
 .source-step,
 .source-step:hover {
-  background-image:
-    linear-gradient(135deg, rgba(255, 253, 248, .9), rgba(255, 253, 248, .28)),
-    url('assets/source-preparation.png');
+  background-image: url('assets/source-preparation.png');
   background-position: center;
   background-size: cover;
   color: var(--ink);
