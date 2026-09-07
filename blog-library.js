@@ -9,8 +9,27 @@
     { slug: 'new-dog-parent-guide', category: 'New Dog Parent Guide', title: 'A New Dog Parent’s Guide to Treats', excerpt: 'How to choose an appropriate size, introduce treats thoughtfully and supervise every chew.', read_time: 4, body: '<p>Treats complement a complete diet. Choose the right size and texture for your dog, offer water, and supervise chews from start to finish.</p>' },
   ];
 
+  // Replace the synthetic infographic covers from the content feed with a
+  // fixed set of real dog photographs across listing, feature and reader views.
+  const realPhotoCovers = [
+    'https://images.unsplash.com/photo-1577849304422-d019fdd6f29f?auto=format&fit=crop&fm=jpg&q=85&w=1600',
+    'https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&fm=jpg&q=85&w=1600',
+    'https://images.unsplash.com/photo-1558788353-f76d92427f16?auto=format&fit=crop&fm=jpg&q=85&w=1600',
+    'https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&fm=jpg&q=85&w=1600',
+    'https://images.unsplash.com/photo-1560807707-8cc77767d783?auto=format&fit=crop&fm=jpg&q=85&w=1600',
+    'https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&fm=jpg&q=85&w=1600',
+    'https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&fm=jpg&q=85&w=1600',
+    'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&fm=jpg&q=85&w=1600',
+    'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&fm=jpg&q=85&w=1600',
+  ];
+  const photoIndex = value => [...String(value || '')].reduce((total, character) => (total * 31 + character.charCodeAt(0)) >>> 0, 7) % realPhotoCovers.length;
+  const useRealPhotography = articles => articles.map((article, index) => ({
+    ...article,
+    cover_image: realPhotoCovers[photoIndex(`${article.slug || article.title || index}-${article.category || ''}`)],
+  }));
+
   const readSaved = () => { try { return new Set(JSON.parse(localStorage.getItem('gob-saved-articles') || '[]')); } catch { return new Set(); } };
-  const state = { articles: fallback, category: 'All', query: '', shown: 9, current: null, saved: readSaved() };
+  const state = { articles: useRealPhotography(fallback), category: 'All', query: '', shown: 9, current: null, saved: readSaved() };
   const $ = selector => document.querySelector(selector);
   const escapeHtml = value => String(value || '').replace(/[&<>'"]/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[character]);
   const readingTime = value => `${Math.max(1, Number(value) || 3)} min read`;
@@ -259,7 +278,7 @@
   async function loadJournal() {
     try {
       const response = await window.GOB_API?.blogs?.();
-      if (Array.isArray(response?.blogs) && response.blogs.length) state.articles = response.blogs;
+      if (Array.isArray(response?.blogs) && response.blogs.length) state.articles = useRealPhotography(response.blogs);
     } catch (error) {
       console.warn('Showing saved journal previews until the live articles are available.', error);
     }
