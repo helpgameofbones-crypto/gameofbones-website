@@ -1,17 +1,31 @@
-/* Preserve the supplied photograph exactly as shot, including on hover. */
+/* Preserve each supplied photograph exactly as shot, including on hover. */
 .source-step,
 .source-step:hover {
+  background-image: url('assets/source-ingredients.png');
+}
+
+.prepare-step,
+.prepare-step:hover {
   background-image: url('assets/source-preparation.png');
+}
+
+.source-step,
+.source-step:hover,
+.prepare-step,
+.prepare-step:hover {
   background-position: center;
   background-size: cover;
   color: var(--ink);
   transition: none;
 }
 
-.source-step .step-num { color: var(--gold); }
-.source-step p { color: var(--ink-soft); }
+.source-step .step-num,
+.prepare-step .step-num { color: var(--gold); }
 
-.source-step-copy {
+.source-step p,
+.prepare-step p { color: var(--ink-soft); }
+
+.process-step-copy {
   align-self: center;
   max-width: 100%;
   padding: 14px;
@@ -19,9 +33,10 @@
   box-shadow: 0 8px 20px rgba(16, 44, 34, .12);
 }
 
-.source-step-copy h3 { margin: 9px 0 8px; }
-.source-step-copy p { margin: 0; }
+.process-step-copy h3 { margin: 9px 0 8px; }
+.process-step-copy p { margin: 0; }
 
 @media (max-width: 560px) {
-  .source-step { min-height: 230px; display: flex; align-items: center; }
+  .source-step,
+  .prepare-step { min-height: 230px; display: flex; align-items: center; }
 }
