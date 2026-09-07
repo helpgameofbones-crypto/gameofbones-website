@@ -9,23 +9,41 @@
     { slug: 'new-dog-parent-guide', category: 'New Dog Parent Guide', title: 'A New Dog Parent’s Guide to Treats', excerpt: 'How to choose an appropriate size, introduce treats thoughtfully and supervise every chew.', read_time: 4, body: '<p>Treats complement a complete diet. Choose the right size and texture for your dog, offer water, and supervise chews from start to finish.</p>' },
   ];
 
-  // Replace the synthetic infographic covers from the content feed with a
-  // fixed set of real dog photographs across listing, feature and reader views.
-  const realPhotoCovers = [
-    'https://images.unsplash.com/photo-1577849304422-d019fdd6f29f?auto=format&fit=crop&fm=jpg&q=85&w=1600',
-    'https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&fm=jpg&q=85&w=1600',
-    'https://images.unsplash.com/photo-1558788353-f76d92427f16?auto=format&fit=crop&fm=jpg&q=85&w=1600',
-    'https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&fm=jpg&q=85&w=1600',
-    'https://images.unsplash.com/photo-1560807707-8cc77767d783?auto=format&fit=crop&fm=jpg&q=85&w=1600',
-    'https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&fm=jpg&q=85&w=1600',
-    'https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&fm=jpg&q=85&w=1600',
-    'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&fm=jpg&q=85&w=1600',
-    'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&fm=jpg&q=85&w=1600',
-  ];
-  const photoIndex = value => [...String(value || '')].reduce((total, character) => (total * 31 + character.charCodeAt(0)) >>> 0, 7) % realPhotoCovers.length;
-  const useRealPhotography = articles => articles.map((article, index) => ({
+  // Use a real, editorial image that matches the subject—not a generic dog
+  // portrait—on every public card and the corresponding article page.
+  const editorialCovers = {
+    chews: 'assets/goat-trotter-plate.png',
+    dental: 'assets/goat-trachea-pouch.png',
+    ingredients: 'assets/source-ingredients.png',
+    process: 'assets/source-preparation.png',
+    storage: 'assets/chicken-jerky-pouch.png',
+    training: 'https://images.pexels.com/photos/10013053/pexels-photo-10013053.jpeg?auto=compress&cs=tinysrgb&w=1600',
+    feeding: 'https://images.pexels.com/photos/8434633/pexels-photo-8434633.jpeg?auto=compress&cs=tinysrgb&w=1600',
+    fish: 'https://images.pexels.com/photos/725990/pexels-photo-725990.jpeg?auto=compress&cs=tinysrgb&w=1600',
+    cats: 'assets/cat-fish-treat.png',
+    community: 'assets/dog-outdoor-treat.png',
+    senior: 'assets/dog-with-chew.png',
+    puppy: 'assets/dog-training-reward.png',
+    general: 'assets/good-food-collage.png',
+  };
+  const coverFor = article => {
+    const topic = `${article.slug || ''} ${article.category || ''} ${article.title || ''}`.toLowerCase();
+    if (/cat|feline/.test(topic)) return editorialCovers.cats;
+    if (/fish|anchov|sardine|mackerel/.test(topic)) return editorialCovers.fish;
+    if (/dental|teeth|tooth/.test(topic)) return editorialCovers.dental;
+    if (/chew|aggressive|trotter|bone|trachea/.test(topic)) return editorialCovers.chews;
+    if (/train|behavio/.test(topic)) return editorialCovers.training;
+    if (/puppy|new-dog/.test(topic)) return editorialCovers.puppy;
+    if (/label|filler|preserv|grain|ingredient/.test(topic)) return editorialCovers.ingredients;
+    if (/storage|store|fresh|pack/.test(topic)) return editorialCovers.storage;
+    if (/feed|nutrition|food|portion|transition/.test(topic)) return editorialCovers.feeding;
+    if (/vaccin|rabies|community|safety|health/.test(topic)) return editorialCovers.community;
+    if (/senior/.test(topic)) return editorialCovers.senior;
+    return editorialCovers.general;
+  };
+  const useRealPhotography = articles => articles.map(article => ({
     ...article,
-    cover_image: realPhotoCovers[photoIndex(`${article.slug || article.title || index}-${article.category || ''}`)],
+    cover_image: coverFor(article),
   }));
 
   const readSaved = () => { try { return new Set(JSON.parse(localStorage.getItem('gob-saved-articles') || '[]')); } catch { return new Set(); } };
