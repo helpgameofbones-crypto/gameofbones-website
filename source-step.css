@@ -11,6 +11,17 @@
 .source-step .step-num { color: var(--gold); }
 .source-step p { color: var(--ink-soft); }
 
+.source-step-copy {
+  align-self: center;
+  max-width: 100%;
+  padding: 14px;
+  background: rgba(255, 253, 248, .82);
+  box-shadow: 0 8px 20px rgba(16, 44, 34, .12);
+}
+
+.source-step-copy h3 { margin: 9px 0 8px; }
+.source-step-copy p { margin: 0; }
+
 @media (max-width: 560px) {
-  .source-step { min-height: 230px; }
+  .source-step { min-height: 230px; display: flex; align-items: center; }
 }
