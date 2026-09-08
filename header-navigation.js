@@ -1,15 +1,15 @@
 /* One complete navigation source for every customer-facing page. */
 (() => {
   const navigation = [
-    ['index.html', 'Home'],
-    ['products.html', 'Products'],
-    ['our-story.html', 'Our story'],
-    ['bundles.html', 'Bundles'],
-    ['blog.html', 'Blog'],
-    ['contact.html', 'Contact us'],
-    ['rewards.html', 'Rewards'],
-    ['track.html', 'Track'],
-    ['learn.html', 'Learn'],
+    ['/', 'Home'],
+    ['/products', 'Products'],
+    ['/our-story', 'Our story'],
+    ['/bundles', 'Bundles'],
+    ['/blog', 'Blog'],
+    ['/contact', 'Contact us'],
+    ['/rewards', 'Rewards'],
+    ['/track', 'Track'],
+    ['/learn', 'Learn'],
   ];
   const installLiveTicker = () => {
     const notice = document.querySelector('.notice');
@@ -31,7 +31,7 @@
   const nav = document.querySelector('.nav');
   if (!nav || nav.dataset.minimalHeader === 'true') return;
   const pathname = location.pathname.toLowerCase();
-  const activeHref = pathname.endsWith('product.html') ? 'products.html' : navigation.find(([href]) => pathname.endsWith(href))?.[0];
+  const activeHref = pathname.endsWith('product.html') || pathname === '/product' ? '/products' : navigation.find(([href]) => href === '/' ? pathname === '/' || pathname.endsWith('/index.html') : pathname === href || pathname.endsWith(href + '.html'))?.[0];
   const links = nav.querySelector('.nav-links') || document.createElement('div');
   links.className = 'nav-links compact-nav';
   links.setAttribute('aria-label', 'Site sections');
