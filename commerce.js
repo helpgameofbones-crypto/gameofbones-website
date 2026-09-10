@@ -29,8 +29,8 @@ function renderCommerceCart(){
   if(!root)return
   const items=cart()
   if(!items.length){
-    root.innerHTML='<div class="empty-cart"><h2>Your bowl is ready when you are.</h2><p>Pick a single-ingredient treat and come back when you are ready to check out.</p><a class="button" href="products.html">Shop all treats</a></div>'
-    document.querySelector('#checkoutLink')?.setAttribute('href','products.html')
+    root.innerHTML='<div class="empty-cart"><h2>Your bowl is ready when you are.</h2><p>Pick a single-ingredient treat and come back when you are ready to check out.</p><a class="button" href="/products">Shop all treats</a></div>'
+    document.querySelector('#checkoutLink')?.setAttribute('href','/products')
     updateCommerceTotals()
     return
   }
@@ -173,7 +173,7 @@ function setupCommerce(){
     const code=document.querySelector('#promoCode').value.trim().toUpperCase(),message=document.querySelector('#promoMessage')
     if(code==='WELCOME15'){
       window.sessionStorage.setItem('gob-checkout-coupon',code)
-      message.innerHTML='WELCOME15 is ready for secure checkout. <a href="checkout.html">Log in or continue to checkout</a> to verify that this is your first order.'
+      message.innerHTML='WELCOME15 is ready for secure checkout. <a href="/checkout">Log in or continue to checkout</a> to verify that this is your first order.'
     }else if(code==='MEGA20'){
       window.sessionStorage.setItem('gob-checkout-coupon',code)
       message.textContent=cartValue()>=2199?'MEGA20 is ready for secure checkout.':'MEGA20 needs a treat subtotal of ₹2,199 or more; you can still continue to checkout.'
