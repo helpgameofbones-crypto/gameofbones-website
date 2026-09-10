@@ -182,7 +182,6 @@ function setupCommerce(){
       message.textContent='Use WELCOME15 for 15% off a verified first order, or MEGA20 for 20% off orders ₹2,199+.'
     }
   })
-  document.querySelector('#checkoutForm')?.addEventListener('submit',event=>{event.preventDefault();const success=document.querySelector('#checkoutSuccess');success.classList.add('show');success.focus()})
 }
 
 document.addEventListener('DOMContentLoaded',setupCommerce)

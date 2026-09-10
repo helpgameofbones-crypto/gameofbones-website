@@ -6,11 +6,14 @@
   const local = ['localhost', '127.0.0.1'].includes(window.location.hostname);
   const production = ['gameofbones.in', 'www.gameofbones.in'].includes(window.location.hostname);
   const staging = /(^|\.)gameofbones-website(?:-[a-z0-9-]+)?-gameofbones\.vercel\.app$/i.test(window.location.hostname);
-  const base = (configured || (local ? 'http://localhost:3001/api' : production ? 'https://gameofbones-admin.vercel.app/api' : '')).replace(/\/$/, '');
+  // Production uses the storefront's own /api path. Vercel securely proxies
+  // that path to the order service, avoiding a browser-side dependency on a
+  // second hostname during checkout.
+  const base = (configured || (local ? 'http://localhost:3001/api' : production ? '/api' : '')).replace(/\/$/, '');
   // Catalogue reads are safe for the stable staging preview too. Other
   // customer actions deliberately remain disconnected there, so test orders
   // and personal data never land in production by accident.
-  const catalogueBase = (configured || (local ? 'http://localhost:3001/api' : (production || staging) ? 'https://gameofbones-admin.vercel.app/api' : '')).replace(/\/$/, '');
+  const catalogueBase = (configured || (local ? 'http://localhost:3001/api' : production ? '/api' : staging ? 'https://gameofbones-admin.vercel.app/api' : '')).replace(/\/$/, '');
   async function request(path, options = {}) {
     if (!base) throw new Error('The API bridge is not configured for this preview.');
     const response = await fetch(`${base}${path}`, { ...options, headers: { 'Content-Type': 'application/json', ...(options.headers || {}) } });
