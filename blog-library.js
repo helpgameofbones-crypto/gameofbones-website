@@ -1,7 +1,7 @@
 /* Public journal renderer. Articles remain authored in the admin dashboard;
    this page adds accessible, crawlable structure and shareable article URLs. */
 (() => {
-  const journalUrl = 'https://gameofbones.in/blog.html';
+  const journalUrl = 'https://gameofbones.in/blog';
   const fallback = [
     { slug: '7-day-transition-plan', category: 'Feeding Guide', title: 'The 7-Day Transition Plan for New Dog Treats', excerpt: 'A gradual, supervised routine for introducing a new treat without rushing your dog.', read_time: 4, body: '<p>Introduce one new treat at a time, begin with a small amount, and observe your dog. Fresh water and supervision should always be part of the routine.</p>' },
     { slug: 'hidden-truth-dog-treats', category: 'Ingredients', title: 'How to Read What Is Really in Your Dog’s Treat', excerpt: 'A practical guide to reading an ingredient label beyond the claims on the front of the pack.', read_time: 5, body: '<p>Start with the ingredient list. Clear, named ingredients and straightforward feeding guidance help you make a considered choice for your dog.</p>' },
@@ -51,8 +51,9 @@
   const $ = selector => document.querySelector(selector);
   const escapeHtml = value => String(value || '').replace(/[&<>'"]/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[character]);
   const readingTime = value => `${Math.max(1, Number(value) || 3)} min read`;
-  const articleUrl = slug => `${journalUrl}?blog=${encodeURIComponent(slug)}`;
+  const articleUrl = slug => `${journalUrl}/${encodeURIComponent(slug)}`;
   const productId = item => item?.id || String(item?.n || '').toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  const productUrl = item => `/products/${encodeURIComponent(String(item?.n || item?.name || productId(item)).toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''))}`;
   const productRecommendations = {
     'treats-for-aggressive-chewers': ['chicken-feet', 'chicken-neck', 'chicken-bones'],
     'best-treats-for-training': ['jerky', 'chicken-bites', 'buff-jerky'],
@@ -190,7 +191,7 @@
       : '<span class="journal-placeholder" aria-hidden="true">🐾</span>';
     const date = dateLabel(article.created_at);
     return `<article class="post journal-post">
-      <a class="journal-card-link" href="?blog=${encodeURIComponent(article.slug)}" data-open-article="${escapeHtml(article.slug)}" aria-label="Read ${escapeHtml(article.title)}">
+      <a class="journal-card-link" href="/blog/${encodeURIComponent(article.slug)}" data-open-article="${escapeHtml(article.slug)}" aria-label="Read ${escapeHtml(article.title)}">
         <div class="journal-card-image">${image}</div>
         <div class="journal-card-copy">
           <p class="tag">${escapeHtml(article.category || 'Guide')}</p>
@@ -230,7 +231,7 @@
     section.innerHTML = `
       <div class="journal-recommendations-heading">
         <div><p class="eyebrow">Picked for this guide</p><h2 id="journal-recommendations-title">Continue with a treat your dog can get excited about.</h2></div>
-        <a class="text-link" href="products.html">Shop all treats</a>
+        <a class="text-link" href="/products">Shop all treats</a>
       </div>
       <div class="journal-product-grid">
         ${products.map(product => {
@@ -238,8 +239,8 @@
           const image = product.image || product.i || product.images?.[0] || '';
           const price = Number(product.p || product.price || 0);
           return `<article class="journal-product-card">
-            <a href="product.html?catalog=${encodeURIComponent(id)}" class="journal-product-image">${image ? `<img src="${escapeHtml(image)}" alt="${escapeHtml(product.n)}" loading="lazy">` : '<span aria-hidden="true">🐾</span>'}</a>
-            <div class="journal-product-copy"><p>${escapeHtml(product.cat || product.c || 'Natural dog treat')}</p><h3><a href="product.html?catalog=${encodeURIComponent(id)}">${escapeHtml(product.n)}</a></h3><strong>${price ? `₹${price.toLocaleString('en-IN')}` : 'View product'}</strong></div>
+            <a href="${productUrl(product)}" class="journal-product-image">${image ? `<img src="${escapeHtml(image)}" alt="${escapeHtml(product.n)}" loading="lazy">` : '<span aria-hidden="true">🐾</span>'}</a>
+            <div class="journal-product-copy"><p>${escapeHtml(product.cat || product.c || 'Natural dog treat')}</p><h3><a href="${productUrl(product)}">${escapeHtml(product.n)}</a></h3><strong>${price ? `₹${price.toLocaleString('en-IN')}` : 'View product'}</strong></div>
             <button class="journal-product-add" type="button" data-recommend-add="${escapeHtml(id)}" aria-label="Add ${escapeHtml(product.n)} to treat jar">Add to jar <span aria-hidden="true">+</span></button>
           </article>`;
         }).join('')}
@@ -247,7 +248,7 @@
     section.querySelectorAll('[data-recommend-add]').forEach(button => button.addEventListener('click', () => {
       const id = button.dataset.recommendAdd;
       if (typeof window.addToCart === 'function') window.addToCart(id);
-      else window.location.href = `product.html?catalog=${encodeURIComponent(id)}`;
+      else window.location.href = `/products/${encodeURIComponent(id)}`;
     }));
   }
 
@@ -278,7 +279,7 @@
     $('#journal-index').hidden = true;
     reader.hidden = false;
     updateHead(article);
-    if (updateUrl) history.pushState({ blog: article.slug }, '', `?blog=${encodeURIComponent(article.slug)}`);
+    if (updateUrl) history.pushState({ blog: article.slug }, '', `/blog/${encodeURIComponent(article.slug)}`);
     window.scrollTo(0, 0);
   }
 
@@ -289,7 +290,7 @@
     $('#journal-recommendations').innerHTML = '';
     $('#journal-index').hidden = false;
     updateHead(null);
-    if (updateUrl) history.pushState({}, '', 'blog.html');
+    if (updateUrl) history.pushState({}, '', '/blog');
     window.scrollTo(0, 0);
   }
 
@@ -303,7 +304,8 @@
     renderFilters();
     renderFeature();
     renderGrid();
-    const slug = new URLSearchParams(window.location.search).get('blog');
+    const routeSlug = location.pathname.match(/^\/blog\/([^/]+)\/?$/)?.[1];
+    const slug = routeSlug ? decodeURIComponent(routeSlug) : new URLSearchParams(window.location.search).get('blog');
     if (slug) openArticle(slug, false);
     else updateHead(null);
   }
@@ -332,7 +334,8 @@
       openArticle(state.current.slug, false);
     });
     window.addEventListener('popstate', () => {
-      const slug = new URLSearchParams(window.location.search).get('blog');
+      const routeSlug = location.pathname.match(/^\/blog\/([^/]+)\/?$/)?.[1];
+      const slug = routeSlug ? decodeURIComponent(routeSlug) : new URLSearchParams(window.location.search).get('blog');
       if (slug) openArticle(slug, false);
       else closeArticle(false);
     });

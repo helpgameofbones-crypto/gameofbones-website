@@ -5,8 +5,9 @@ const setText = (selector, value) => { const element = document.querySelector(se
 
 function currentProduct() {
   const params = new URLSearchParams(location.search);
-  const id = params.get('catalog') || params.get('product');
-  return id && window.GOB_LIVE_CATALOG.find(item => (item.id || gobSlug(item.n)) === id);
+  const routeSlug = location.pathname.match(/^\/products\/([^/]+)\/?$/)?.[1];
+  const id = params.get('catalog') || params.get('product') || (routeSlug ? decodeURIComponent(routeSlug) : '');
+  return id && window.GOB_LIVE_CATALOG.find(item => (item.id || gobSlug(item.n)) === id || gobSlug(item.n) === id);
 }
 
 function hydrateCatalogCards(root) {
@@ -16,7 +17,7 @@ function hydrateCatalogCards(root) {
     const id = product.id || gobSlug(product.n);
     gobProducts()[id] = { name: product.n, price: Number(product.p) || 0, image: product.i, tag: product.c };
     const link = card.querySelector('a');
-    if (link) link.href = `product.html?catalog=${id}`;
+    if (link) link.href = `/products/${encodeURIComponent(gobSlug(product.n))}`;
     const image = card.querySelector('.product-image img');
     if (image && product.i) { image.src = product.i; image.alt = product.n; }
     const price = card.querySelector('.card-bottom span');
@@ -32,6 +33,15 @@ function hydrateProduct() {
   window.GOB_CURRENT_PRODUCT = product;
   gobProducts()[id] = { name: product.n, price: Number(product.p) || 0, image: product.i, tag: product.c };
   document.title = `${product.n} — Game of Bones`;
+  const cleanUrl = `https://gameofbones.in/products/${encodeURIComponent(gobSlug(product.n))}`;
+  let canonical = document.querySelector('link[rel="canonical"]');
+  if (!canonical) { canonical = document.createElement('link'); canonical.rel = 'canonical'; document.head.append(canonical); }
+  canonical.href = cleanUrl;
+  const description = `${product.n}: ${product.d || 'single-ingredient dog treat from Game of Bones.'}`;
+  let descriptionMeta = document.querySelector('meta[name="description"]');
+  if (!descriptionMeta) { descriptionMeta = document.createElement('meta'); descriptionMeta.name = 'description'; document.head.append(descriptionMeta); }
+  descriptionMeta.content = description;
+  document.querySelector('meta[property="og:url"]')?.setAttribute('content', cleanUrl);
   setText('#productName', product.n);
   setText('#productPrice', product.p ? `₹${Number(product.p).toLocaleString('en-IN')}` : 'Contact us');
   setText('#productTag', `${product.c} · Made in Kalyan`);

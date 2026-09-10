@@ -3,7 +3,8 @@
 (() => {
   document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(location.search);
-    const productId = params.get('catalog') || params.get('product') || 'jerky';
+    const routeSlug = location.pathname.match(/^\/products\/([^/]+)\/?$/)?.[1];
+    const productId = params.get('catalog') || params.get('product') || (routeSlug ? decodeURIComponent(routeSlug) : '') || 'jerky';
     const fallback = {
       jerky: { n: 'Chicken Jerky', c: 'Jerky', w: '70 g', p: 329, i: 'assets/chicken-jerky-pouch.png', id: 'jerky', packs: [{ label: '1 pouch', weight: '70 g', price: 329 }, { label: '2 pouches', weight: '140 g', price: 658 }, { label: '3 pouches', weight: '210 g', price: 987 }, { label: '4 pouches', weight: '280 g', price: 1316 }] },
       trachea: { n: 'Goat Trachea', c: 'Chews & bones', w: '60 g', p: 100, i: 'assets/goat-trachea-pouch.png', id: 'trachea' },

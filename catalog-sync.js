@@ -18,6 +18,13 @@
     price: safeMoney(size?.price),
     compare_price: safeMoney(size?.compare_price),
   })).filter(size => size.label);
+  // The approved COGS workbook is the source of truth for known treats.
+  // An empty (or older) admin sizes array must never replace those packs.
+  const approvedPacks = (name, sizes) => {
+    const reference = window.GOB_CATALOGUE_REFERENCE?.packs?.(name);
+    const uploaded = packs(sizes);
+    return Array.isArray(reference) && reference.length ? reference : uploaded;
+  };
 
   async function syncCatalogue() {
     if (!window.GOB_API?.catalogue || !Array.isArray(window.GOB_LIVE_CATALOG)) return;
@@ -31,7 +38,7 @@
         if (!source) { items.push(item); return items; }
         known.add(slug(item.n));
         if (!source.is_active) return items;
-        const productPacks = packs(source.sizes) || window.GOB_CATALOGUE_REFERENCE?.packs(source.name);
+        const productPacks = approvedPacks(source.name, source.sizes);
         const productMedia = [...media(source.images, 'image'), ...media(source.videos, 'video')].slice(0, 6);
         const first = productPacks[0];
         const price = first?.price || safeMoney(source.price) || item.p;
@@ -49,7 +56,7 @@
 
       remote.forEach(source => {
         if (!source.is_active || known.has(slug(source.name))) return;
-        const productPacks = packs(source.sizes) || window.GOB_CATALOGUE_REFERENCE?.packs(source.name);
+        const productPacks = approvedPacks(source.name, source.sizes);
         const first = productPacks[0];
         const productMedia = [...media(source.images, 'image'), ...media(source.videos, 'video')].slice(0, 6);
         merged.push({

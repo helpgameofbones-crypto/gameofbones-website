@@ -40,7 +40,8 @@
     { "source": "/privacy", "destination": "/policies.html" },
     { "source": "/shipping", "destination": "/policies.html" },
     { "source": "/returns", "destination": "/policies.html" },
-    { "source": "/products/:slug", "destination": "/product.html?catalog=:slug" }
+    { "source": "/products/:slug", "destination": "/product.html?catalog=:slug" },
+    { "source": "/blog/:slug", "destination": "/blog.html?blog=:slug" }
   ],
   "headers": [
     {
