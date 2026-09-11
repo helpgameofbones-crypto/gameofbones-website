@@ -24,6 +24,34 @@ function addPolicyLinks(){const help=document.querySelector('footer.footer .foot
 function installRewardShortcut(){if(document.querySelector('.reward-shortcut')||location.pathname.endsWith('rewards.html')||location.pathname.replace(/\/+$/,'')==='/rewards')return;if(!document.querySelector('link[data-gob-reward-shortcut]')){const styles=document.createElement('link');styles.rel='stylesheet';styles.href='reward-shortcut.css?v=1';styles.dataset.gobRewardShortcut='true';document.head.append(styles)}document.body.insertAdjacentHTML('beforeend','<a class="reward-shortcut" href="rewards.html" aria-label="Open Game of Bones rewards" title="Rewards"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 2.4 5 5.5.8-4 3.9.9 5.5-4.8-2.6-4.8 2.6.9-5.5-4-3.9L9.6 7 12 2Z"/><path d="M7 20h10"/></svg><span>Rewards</span></a>')}
 function init(){ensureCart();enhanceHeader();setupAnnouncement();setupSearch();installFooter();addPolicyLinks();installRewardShortcut();cleanStorefrontUrls();new MutationObserver(records=>records.forEach(record=>record.addedNodes.forEach(node=>{if(node.nodeType===1)cleanStorefrontUrls(node)}))).observe(document.body,{childList:true,subtree:true});document.querySelectorAll('[data-add]').forEach(button=>button.addEventListener('click',()=>addToCart(button.dataset.add,Number(button.dataset.quantity||1))));document.querySelectorAll('[data-open-cart]').forEach(button=>button.addEventListener('click',openCart));document.querySelectorAll('[data-close-cart]').forEach(button=>button.addEventListener('click',closeCart));document.querySelector('#scrim')?.addEventListener('click',closeCart);document.querySelector('.menu-toggle')?.addEventListener('click',()=>{const links=document.querySelector('.nav-links'),open=links.classList.toggle('open');document.querySelector('.menu-toggle').setAttribute('aria-expanded',open)});document.querySelectorAll('.option').forEach(button=>button.addEventListener('click',()=>{button.parentElement.querySelectorAll('.option').forEach(x=>x.classList.remove('selected'));button.classList.add('selected')}));document.querySelectorAll('[data-demo-form]').forEach(form=>form.addEventListener('submit',event=>{event.preventDefault();form.querySelector('.form-success')?.classList.add('show');form.reset()}));const io='IntersectionObserver'in window?new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('visible');io.unobserve(entry.target)}}),{threshold:.14}):null;document.querySelectorAll('.reveal').forEach(el=>io?io.observe(el):el.classList.add('visible'));updateCart()}
 document.addEventListener('DOMContentLoaded',init);
+
+// Footer sign-ups must create real leads, not merely display a success state.
+// A capture-phase handler runs before the older presentation-only listener above.
+function bindNewsletterCapture(){
+  document.querySelectorAll('[data-demo-form]').forEach(form=>{
+    if(form.dataset.newsletterBound)return;
+    form.dataset.newsletterBound='true';
+    form.addEventListener('submit',async event=>{
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      if(!form.reportValidity())return;
+      const input=form.querySelector('input[type="email"]'),button=form.querySelector('button[type="submit"]'),status=form.querySelector('.form-success');
+      const email=input?.value.trim().toLowerCase();
+      if(!email||!button)return;
+      button.disabled=true;button.textContent='Joining…';
+      try{
+        const response=await fetch('/api/public-email-capture',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,source:'footer_newsletter'})});
+        const body=await response.json().catch(()=>({}));
+        if(!response.ok)throw new Error(body.error||'We could not save your email.');
+        if(status){status.textContent='You’re on the list.';status.classList.add('show')}
+        form.reset();
+      }catch(error){
+        if(status){status.textContent=error.message||'Please try again.';status.classList.add('show');status.style.color='#a22c22'}
+      }finally{button.disabled=false;button.textContent='Join →'}
+    },true);
+  });
+}
+document.addEventListener('DOMContentLoaded',bindNewsletterCapture);
 // Catalogue synchronisation retains internal IDs for selected packs and legacy
 // records. A search should present one result per product, never every alias.
 function dedupeSearchResults(){const results=document.querySelector('#productSearchResults');if(!results)return;let cleaning=false;const clean=()=>{if(cleaning)return;cleaning=true;const seen=new Set;results.querySelectorAll(':scope>a').forEach(result=>{const name=result.querySelector('b')?.textContent.trim().toLowerCase();if(!name)return;if(seen.has(name))result.remove();else seen.add(name)});cleaning=false};new MutationObserver(clean).observe(results,{childList:true});clean()}
