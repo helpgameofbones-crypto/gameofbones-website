@@ -7564,10 +7564,8 @@ function submitReviewData(productId, dogName, productName, reviewText, photoUrl,
   })
   .then(r => {
     if (r.status === 201) {
-      // Review saved successfully - award points
-      awardReviewPoints(_currentCustomerPhone, dogName);
-      
-      // Show success message
+      // Points are awarded only after an admin approves the review.
+      document.getElementById('reviewSuccess').textContent = '✓ Review submitted for approval. You will receive 50 points once it is approved.';
       document.getElementById('reviewSuccess').style.display = 'block';
       document.getElementById('reviewFormError').style.display = 'none';
       
@@ -7600,43 +7598,6 @@ function submitReviewData(productId, dogName, productName, reviewText, photoUrl,
       submitBtn.style.opacity = '1';
     }
   });
-}
-
-function awardReviewPoints(phone, customerName) {
-  // Award 50 points for writing a review — logged in the rewards table,
-  // which checkRewards()/checkLoyaltyAtCheckout() both read from.
-  if (!phone) return;
-  try {
-    var rewardRecord = {
-      customer_phone: phone,
-      customer_name: customerName || null,
-      type: 'review',
-      description: REVIEW_POINTS + ' points earned for writing a review',
-      coupon_code: null,
-      discount_value: REVIEW_POINTS,
-      is_used: false,
-      expires_at: new Date(Date.now() + 365*24*60*60*1000).toISOString()
-    };
-    fetch(SUPABASE_URL + '/rest/v1/rewards', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'apikey': SUPABASE_ANON_KEY,
-        'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
-      },
-      body: JSON.stringify(rewardRecord)
-    })
-    .then(r => {
-      if (r.status === 201) {
-        console.log('✓ Awarded 50 review points to', phone);
-      } else {
-        console.warn('Review points award failed, status:', r.status);
-      }
-    })
-    .catch(err => console.warn('Review points award failed:', err.message));
-  } catch(e) {
-    console.log('Could not award points:', e);
-  }
 }
 
 // loadExistingReviews()/updateReviewStats() removed (2026-07-19): dead code,
@@ -8105,34 +8066,8 @@ function _finaliseOrder(ref, phoneVal, orderItems, razorpayPaymentId) {
             }, { eventID: ref });
     }
 
-    // ═══════════════════════ SEND ORDER CONFIRMATION EMAIL (non-blocking) ═══════════════════════
-    try {
-      var emailPayload = {
-        order: {
-          ref: ref,
-          customer_name: fname + ' ' + lname,
-          customer_email: email,
-          customer_phone: phoneVal,
-          payment_method: selectedPayment === 'cod' ? 'cod' : 'prepaid',
-          items: itemsWithDetails.map(function(it) {
-            return { name: it.product_name, size: it.pack_label, qty: it.quantity, price: it.pack_price };
-          }),
-          subtotal: subtotal,
-          discount: totalDiscountApplied,
-          shipping: shippingCharge,
-          grand_total: grandTotal,
-          shipping_address: { line1: addr1, line2: addr2, city: city, state: state, pincode: pin }
-        }
-      };
-      fetch('https://gameofbones-admin.vercel.app/api/order-confirmation', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(emailPayload)
-      })
-      .then(function(r) { return r.json(); })
-      .then(function(d) { console.log('Order confirmation email:', d.success ? 'sent' : (d.error || 'failed')); })
-      .catch(function(e) { console.warn('Email skipped:', e.message); });
-    } catch(e) { console.warn('Email call skipped:', e.message); }
+    // save-order sends the single, branded confirmation email after it creates
+    // the order. Do not send a second legacy confirmation from the browser.
 
     // ═══════════════════════ CREATE DELHIVERY SHIPMENT (non-blocking) ═══════════════════════
     // Calls the Edge Function to auto-create a shipment in Delhivery and get an AWB.
