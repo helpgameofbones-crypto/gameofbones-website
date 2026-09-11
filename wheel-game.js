@@ -30,6 +30,7 @@
     form.innerHTML = `<label class="wheel-form-label">Name <input required name="name" autocomplete="name" placeholder="Your name"></label><label class="wheel-form-label">Email <input required name="email" type="email" autocomplete="email" placeholder="you@example.com"></label><label class="wheel-form-label">Mobile number <input required name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="10-digit mobile number" pattern="[0-9]{10}" title="Enter a 10-digit mobile number"></label><button class="button wheel-continue" type="submit">Continue to the wheel</button>`;
     modal.querySelector('#wheelResult')?.remove();
     const close = () => modal.classList.remove('open');
+    modal.querySelector('[data-wheel-close]')?.addEventListener('click', close);
     document.addEventListener('keydown', event => { if (event.key === 'Escape' && modal.classList.contains('open')) close(); });
     modal.addEventListener('click', event => { if (event.target === modal) close(); });
 
