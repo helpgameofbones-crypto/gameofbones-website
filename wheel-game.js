@@ -20,8 +20,8 @@
     const modal = document.querySelector('#wheelModal');
     const form = document.querySelector('#wheelForm');
     if (!modal || !form) return;
-    if (!document.querySelector('link[href="wheel-game.css?v=wheel-6"]')) {
-      const stylesheet = document.createElement('link'); stylesheet.rel = 'stylesheet'; stylesheet.href = 'wheel-game.css?v=wheel-6'; document.head.append(stylesheet);
+    if (!document.querySelector('link[href="wheel-game.css?v=wheel-7"]')) {
+      const stylesheet = document.createElement('link'); stylesheet.rel = 'stylesheet'; stylesheet.href = 'wheel-game.css?v=wheel-7'; document.head.append(stylesheet);
     }
 
     const intro = modal.querySelector('.wheel-card > p:not(.eyebrow)');
