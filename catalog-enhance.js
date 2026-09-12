@@ -37,6 +37,7 @@ function hydrateProduct() {
   let canonical = document.querySelector('link[rel="canonical"]');
   if (!canonical) { canonical = document.createElement('link'); canonical.rel = 'canonical'; document.head.append(canonical); }
   canonical.href = cleanUrl;
+  window.GOB_SEO?.setProductSchema(product, cleanUrl);
   const description = `${product.n}: ${product.d || 'single-ingredient dog treat from Game of Bones.'}`;
   let descriptionMeta = document.querySelector('meta[name="description"]');
   if (!descriptionMeta) { descriptionMeta = document.createElement('meta'); descriptionMeta.name = 'description'; document.head.append(descriptionMeta); }

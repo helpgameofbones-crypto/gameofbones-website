@@ -1,3 +1,47 @@
+/* SEO essentials are kept here because this file is loaded by every customer
+   page. That makes canonical URLs and baseline business markup resilient when
+   a static page is added later. Product pages replace the WebPage node with a
+   product-specific Product, Offer and BreadcrumbList as their live catalogue
+   record becomes available. */
+const GOB_SEO=(()=>{
+  const origin='https://gameofbones.in';
+  const cleanPath=()=>{
+    let path=location.pathname.replace(/\\/g,'/').replace(/\/index\.html$/,'/').replace(/\.html$/,'');
+    const aliases={'/shop':'/products','/about':'/our-story','/refer':'/rewards','/reviews':'/blog','/faq':'/learn','/privacy':'/policies','/shipping':'/policies','/returns':'/policies'};
+    path=aliases[path]||path;
+    return path==='/'?'/':(path.replace(/\/+$/,'')||'/');
+  };
+  const ensureCanonical=url=>{
+    let tag=document.querySelector('link[rel="canonical"]');
+    if(!tag){tag=document.createElement('link');tag.rel='canonical';document.head.append(tag)}
+    tag.href=url;
+    return url;
+  };
+  const script=(id,data)=>{let tag=document.getElementById(id);if(!tag){tag=document.createElement('script');tag.id=id;tag.type='application/ld+json';document.head.append(tag)}tag.textContent=JSON.stringify(data)};
+  const absoluteImage=value=>!value?'':(/^https?:\/\//i.test(value)?value:origin+'/'+String(value).replace(/^\/+/,''));
+  const baseUrl=ensureCanonical(origin+cleanPath());
+  script('gob-site-schema',{'@context':'https://schema.org','@graph':[
+    {'@type':'Organization','@id':origin+'/#organization',name:'Game of Bones',url:origin+'/',logo:absoluteImage('assets/gob-logo.png'),description:'Single-ingredient, naturally dehydrated dog treats made in Kalyan, Maharashtra.'},
+    {'@type':'WebSite','@id':origin+'/#website',url:origin+'/',name:'Game of Bones',publisher:{'@id':origin+'/#organization'}},
+    {'@type':'WebPage','@id':baseUrl+'#webpage',url:baseUrl,name:document.title,isPartOf:{'@id':origin+'/#website'}}
+  ]});
+  const setProductSchema=(product,url)=>{
+    if(!product)return;
+    const name=product.n||product.name||'Game of Bones treat';
+    const price=Number(product.p??product.price??0);
+    const id=String(product.id||name).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+    const image=absoluteImage(product.i||product.image);
+    const productUrl=ensureCanonical(url||origin+'/products/'+id);
+    const availability=Number.isFinite(Number(product.stock))&&Number(product.stock)<=0?'https://schema.org/OutOfStock':'https://schema.org/InStock';
+    script('gob-product-schema',{'@context':'https://schema.org','@graph':[
+      {'@type':'Product','@id':productUrl+'#product',name,description:product.d||product.desc||'Single-ingredient, naturally dehydrated pet treat from Game of Bones.',image:image?[image]:undefined,sku:id,category:product.c||product.category||undefined,brand:{'@type':'Brand',name:'Game of Bones'},offers:{'@type':'Offer',url:productUrl,priceCurrency:'INR',price:price.toFixed(2),availability,itemCondition:'https://schema.org/NewCondition',seller:{'@id':origin+'/#organization'}}},
+      {'@type':'BreadcrumbList','@id':productUrl+'#breadcrumb',itemListElement:[{'@type':'ListItem',position:1,name:'Home',item:origin+'/'},{'@type':'ListItem',position:2,name:'Products',item:origin+'/products'},{'@type':'ListItem',position:3,name,item:productUrl}]}
+    ]});
+  };
+  return Object.freeze({setProductSchema});
+})();
+window.GOB_SEO=GOB_SEO;
+
 const GOB_PRODUCTS={jerky:{name:'Chicken Jerky',price:329,image:'assets/chicken-jerky-pouch.png',tag:'Boneless jerky'},'jerky-pack-2':{name:'Chicken Jerky — 2 pouch value pack',price:625,image:'assets/chicken-jerky-pouch.png',tag:'Boneless jerky · save ₹33'},trachea:{name:'Goat Trachea',price:100,image:'assets/goat-trachea-pouch.png',tag:'Chews & bones'},trotter:{name:'Goat Trotter',price:250,image:'assets/goat-trotter-plate.png',tag:'Chews & bones'}};
 // Keep the catalogue store on window as well, so every deferred storefront script shares it reliably.
 window.GOB_PRODUCTS = GOB_PRODUCTS;

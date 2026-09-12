@@ -4,7 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Game of Bones — Naturally better treats</title>
-<meta name="description" content="Single-ingredient, thoughtfully dehydrated dog treats from Game of Bones.">
+<meta name="description" content="Game of Bones makes single-ingredient, naturally dehydrated dog treats in Kalyan, Maharashtra—without fillers, preservatives or confusing labels.">
+<link rel="canonical" href="https://gameofbones.in/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Game of Bones">
+<meta property="og:title" content="Game of Bones — Naturally better treats">
+<meta property="og:description" content="Single-ingredient, naturally dehydrated dog treats made in Kalyan, Maharashtra.">
+<meta property="og:url" content="https://gameofbones.in/">
+<meta property="og:image" content="https://gameofbones.in/assets/hero-real-dogs.png">
+<script id="gob-home-schema" type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://gameofbones.in/#organization","name":"Game of Bones","url":"https://gameofbones.in/","logo":"https://gameofbones.in/assets/gob-logo.png","description":"Single-ingredient, naturally dehydrated dog treats made in Kalyan, Maharashtra."},{"@type":"WebSite","@id":"https://gameofbones.in/#website","url":"https://gameofbones.in/","name":"Game of Bones","publisher":{"@id":"https://gameofbones.in/#organization"}},{"@type":"WebPage","@id":"https://gameofbones.in/#webpage","url":"https://gameofbones.in/","name":"Game of Bones — Naturally better treats","isPartOf":{"@id":"https://gameofbones.in/#website"},"about":{"@id":"https://gameofbones.in/#organization"}}]}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
@@ -18,7 +26,14 @@
 <script defer src="homepage-rich.js?v=home-journal-2"></script>
 <script defer src="conversion-extras.js"></script>
 <script defer src="api-client.js"></script>
-<script defer src="wheel-game.js?v=wheel-7"></script>
+<script>
+/* The wheel is a secondary engagement feature. Loading it after the main
+   content is interactive keeps its work out of the homepage's critical path. */
+window.addEventListener('load',()=>{
+  const loadWheel=()=>{const script=document.createElement('script');script.src='wheel-game.js?v=wheel-7';document.body.append(script)};
+  if('requestIdleCallback'in window)requestIdleCallback(loadWheel,{timeout:2500});else setTimeout(loadWheel,1200);
+},{once:true});
+</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
