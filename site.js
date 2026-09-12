@@ -54,5 +54,21 @@ function bindNewsletterCapture(){
 document.addEventListener('DOMContentLoaded',bindNewsletterCapture);
 // Catalogue synchronisation retains internal IDs for selected packs and legacy
 // records. A search should present one result per product, never every alias.
-function dedupeSearchResults(){const results=document.querySelector('#productSearchResults');if(!results)return;let cleaning=false;const clean=()=>{if(cleaning)return;cleaning=true;const seen=new Set;results.querySelectorAll(':scope>a').forEach(result=>{const name=result.querySelector('b')?.textContent.trim().toLowerCase();if(!name)return;if(seen.has(name))result.remove();else seen.add(name)});cleaning=false};new MutationObserver(clean).observe(results,{childList:true});clean()}
+function dedupeSearchResults(){const results=document.querySelector('#productSearchResults');if(!results)return;let cleaning=false;const clean=()=>{if(cleaning)return;cleaning=true;const seen=new Set;results.querySelectorAll(':scope>a').forEach(result=>{const name=result.querySelector('b')?.textContent.trim().toLowerCase();if(!name)return;if(seen.has(name))result.remove();else seen.add(name)});results.dataset.uniqueReady='true';cleaning=false};new MutationObserver(clean).observe(results,{childList:true});clean()}
 document.addEventListener('DOMContentLoaded',dedupeSearchResults);
+
+// Pack aliases keep a selected pack priced correctly in the bag, but they are
+// not separate products. Keep them directly addressable without exposing them
+// to the catalogue search's Object.entries() call.
+function hidePackAliasesFromSearch(){
+  const products=window.GOB_PRODUCTS;
+  if(!products)return;
+  Object.keys(products).forEach(id=>{
+    if(!/-pack-\d+$/.test(id))return;
+    const descriptor=Object.getOwnPropertyDescriptor(products,id);
+    if(!descriptor?.enumerable)return;
+    Object.defineProperty(products,id,{...descriptor,enumerable:false});
+  });
+}
+document.addEventListener('DOMContentLoaded',hidePackAliasesFromSearch);
+document.addEventListener('gob:catalog-sync',hidePackAliasesFromSearch);
