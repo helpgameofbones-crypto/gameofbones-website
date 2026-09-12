@@ -10,8 +10,12 @@
   const items = () => cart().map(line => {
     const product = GOB_PRODUCTS[line.id] || line.product;
     if (!product) return null;
-    const legacyPack = String(product.name || '').match(/^(.+?)\s+—\s+(.+)$/);
-    return { name: legacyPack?.[1] || product.name, pack_label: product.packLabel || legacyPack?.[2] || '', price: Number(product.price), pack_price: Number(product.price), quantity: Number(line.quantity), qty: Number(line.quantity) };
+    // Cart snapshots can outlive catalogue edits. Only send a pack label when
+    // the current catalogue entry explicitly provides one; never resurrect a
+    // legacy label from an old localStorage snapshot.
+    const name = String(product.name || '').replace(/\s+—\s+.+$/, '').trim();
+    const packLabel = typeof product.packLabel === 'string' ? product.packLabel.trim() : '';
+    return { name, pack_label: packLabel, price: Number(product.price), pack_price: Number(product.price), quantity: Number(line.quantity), qty: Number(line.quantity) };
   }).filter(Boolean);
   const subtotal = () => items().reduce((sum, item) => sum + item.price * item.quantity, 0);
   const method = () => form.querySelector('[name="payment"]:checked')?.value === 'cod' ? 'cod' : 'online';
@@ -19,7 +23,17 @@
   const addressDetails = () => ({ line1: get('[autocomplete="street-address"]'), line2: get('[autocomplete="address-line2"]'), city: get('[autocomplete="address-level2"]'), state: get('[autocomplete="address-level1"]'), pincode: get('[autocomplete="postal-code"]') });
   const dog = () => ({ name: get('[name="dog_name"]'), birthday: get('[name="dog_birthday"]') });
   const reference = () => `GOB-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
-  const valid = () => /^\d{10}$/.test(phone()) && Boolean(fullName()) && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(get('[autocomplete="email"]')) && /^\d{6}$/.test(get('[autocomplete="postal-code"]')) && Boolean(address()) && items().length;
+  const missingFields = () => {
+    const missing = [];
+    if (!get('[autocomplete="given-name"]') || !get('[autocomplete="family-name"]')) missing.push('name');
+    if (!/^\d{10}$/.test(phone())) missing.push('10-digit mobile number');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(get('[autocomplete="email"]'))) missing.push('email');
+    if (!get('[autocomplete="street-address"]') || !get('[autocomplete="address-level2"]') || !get('[autocomplete="address-level1"]')) missing.push('delivery address');
+    if (!/^\d{6}$/.test(get('[autocomplete="postal-code"]'))) missing.push('6-digit PIN code');
+    if (!items().length) missing.push('at least one treat');
+    return missing;
+  };
+  const valid = () => missingFields().length === 0;
   const total = () => {
     const value = subtotal(), count = cartCount(), bulk = count >= 10 ? .15 : count >= 8 ? .12 : count >= 5 ? .08 : count >= 3 ? .05 : 0;
     const coupon = form.querySelector('[name="coupon"]:checked')?.value || '', eligibility = window.GOB_CHECKOUT_ELIGIBILITY || {};
