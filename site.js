@@ -48,7 +48,10 @@ window.GOB_PRODUCTS = GOB_PRODUCTS;
 const money=n=>`₹${Number(n).toLocaleString('en-IN')}`;
 const cart=()=>JSON.parse(localStorage.getItem('gob-preview-cart')||'[]');
 const saveCart=value=>localStorage.setItem('gob-preview-cart',JSON.stringify(value));
-const cartProduct=item=>GOB_PRODUCTS[item.id]||item.product||null;
+// Cart lines keep the product snapshot from add-to-cart time. Prefer it so a
+// later catalogue sync cannot silently change an existing basket's image,
+// name, or displayed price; checkout still revalidates current server pricing.
+const cartProduct=item=>item.product||GOB_PRODUCTS[item.id]||null;
 function cartCount(){return cart().reduce((total,item)=>total+item.quantity,0)}
 function notice(message,kind='info'){const el=document.querySelector('#toast');if(!el)return;el.className=`toast${kind==='jar'?' jar-toast':''}`;el.innerHTML=kind==='jar'?`<span class="toast-jar" aria-hidden="true"><svg viewBox="0 0 32 36" fill="none"><path d="M9 8V5h14v3M7 9h18l2 22H5L7 9Z" stroke="currentColor" stroke-width="2"/><path d="M10 16h12M11 21h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><span><b>In your treat jar</b>${message}</span>`:message;el.classList.add('show');clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>el.classList.remove('show'),3200)}
 function updateCart(){const items=cart(),count=cartCount();document.querySelectorAll('[data-cart-count]').forEach(el=>el.textContent=count);const list=document.querySelector('#cartItems'),total=document.querySelector('#cartTotal');if(!list||!total)return;if(!items.length){list.innerHTML='<p class="empty">Your bag is waiting for something delicious.</p>';total.textContent=money(0);return}list.innerHTML=items.map(item=>{const p=cartProduct(item);if(!p)return '';return `<div class="cart-item"><img src="${p.image}" alt=""><div><strong>${p.name}</strong><small>${item.quantity} × ${money(p.price)}</small></div><button class="remove" data-remove="${item.id}">Remove</button></div>`}).join('');total.textContent=money(items.reduce((sum,item)=>sum+(cartProduct(item)?.price||0)*item.quantity,0));document.querySelectorAll('[data-remove]').forEach(button=>button.addEventListener('click',()=>{saveCart(cart().filter(item=>item.id!==button.dataset.remove));updateCart();notice('Removed from your bag.')}))}

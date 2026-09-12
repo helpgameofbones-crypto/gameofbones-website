@@ -1,4 +1,6 @@
-function commerceProduct(item){return GOB_PRODUCTS[item.id]||item.product||null}
+// Preserve the product snapshot selected by the customer. Live catalogue
+// syncs must not rewrite an existing cart line's presentation.
+function commerceProduct(item){return item.product||GOB_PRODUCTS[item.id]||null}
 function cartValue(){return cart().reduce((total,item)=>total+(commerceProduct(item)?.price||0)*item.quantity,0)}
 function bulkRate(count){return count>=10?.15:count>=8?.12:count>=5?.08:count>=3?.05:0}
 const POINT_VALUE_RUPEES=.3,MAX_POINTS_DISCOUNT_RUPEES=100,MAX_REDEMPTION_POINTS=Math.floor(MAX_POINTS_DISCOUNT_RUPEES/POINT_VALUE_RUPEES)
