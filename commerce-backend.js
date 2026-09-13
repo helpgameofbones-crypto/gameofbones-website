@@ -36,10 +36,11 @@
     return missing;
   };
   const valid = () => missingFields().length === 0;
+  const saleBasket = () => cart().some(line => { const product = line.product || GOB_PRODUCTS[line.id]; return Number(product?.comparePrice) > Number(product?.price); });
   const total = () => {
-    const value = subtotal(), count = cartCount(), bulk = count >= 10 ? .15 : count >= 8 ? .12 : count >= 5 ? .08 : count >= 3 ? .05 : 0;
+    const value = subtotal(), count = cartCount(), hasSale = saleBasket(), bulk = hasSale ? 0 : count >= 10 ? .15 : count >= 8 ? .12 : count >= 5 ? .08 : count >= 3 ? .05 : 0;
     const coupon = form.querySelector('[name="coupon"]:checked')?.value || '', eligibility = window.GOB_CHECKOUT_ELIGIBILITY || {};
-    const couponRate = coupon === 'WELCOME15' && eligibility.signedIn && eligibility.firstOrder ? .15 : coupon === 'MEGA20' && value >= 2199 ? .2 : 0;
+    const couponRate = !hasSale && (coupon === 'WELCOME15' && eligibility.signedIn && eligibility.firstOrder ? .15 : coupon === 'MEGA20' && value >= 2199 ? .2 : 0);
     const discount = Math.round(value * Math.max(bulk, couponRate));
     const requestedPoints = Math.floor(Number(form.querySelector('[name="loyalty_points_redeemed"]')?.value || 0));
     const points = eligibility.signedIn ? Math.min(Math.max(requestedPoints, 0), MAX_REDEMPTION_POINTS, Number(eligibility.points || 0)) : 0;

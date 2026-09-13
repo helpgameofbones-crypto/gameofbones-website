@@ -45,6 +45,7 @@
         items.push({
           ...item,
           p: price,
+          cp: first?.compare_price || safeMoney(source.compare_price),
           w: first?.weight || item.w,
           i: source.image_url || source.images?.[0] || item.i,
           packs: productPacks,
@@ -64,6 +65,7 @@
           c: 'Treats',
           w: first?.weight || '',
           p: first?.price || safeMoney(source.price),
+          cp: first?.compare_price || safeMoney(source.compare_price),
           d: 'Single-ingredient treat from Game of Bones.',
           i: source.image_url || source.images?.[0] || 'assets/gob-logo.png',
           id: slug(source.name),
@@ -79,11 +81,11 @@
         const id = item.id || slug(item.n);
         const source = byName.get(slug(item.n));
         const packs = Array.isArray(item.packs) ? item.packs : [];
-        const base = { name: item.n, price: safeMoney(item.p), image: item.i, tag: item.c, packLabel: packs[0]?.label || '' };
+        const base = { name: item.n, price: safeMoney(item.p), comparePrice: safeMoney(item.cp), image: item.i, tag: item.c, packLabel: packs[0]?.label || '' };
         store[id] = base;
         if (source?.id) store[source.id] = base;
         packs.forEach((pack, index) => {
-          const selected = { name: item.n, price: safeMoney(pack.price), image: item.i, tag: item.c, packLabel: pack.label || '' };
+          const selected = { name: item.n, price: safeMoney(pack.price), comparePrice: safeMoney(pack.compare_price), image: item.i, tag: item.c, packLabel: pack.label || '' };
           const packId = `${id}-pack-${index + 1}`;
           store[packId] = selected;
           if (source?.id) store[`${source.id}-pack-${index + 1}`] = selected;

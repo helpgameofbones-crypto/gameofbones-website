@@ -36,7 +36,7 @@
         const tone = index % 3 === 0 ? 'cream' : index % 3 === 1 ? 'sage' : 'brown';
         return `<article class="product-card" data-product-id="${escapeHtml(id)}">
           <a href="product.html?catalog=${encodeURIComponent(id)}" aria-label="View ${escapeHtml(product.n)}">
-            <div class="product-image ${tone}"><img src="${escapeHtml(image)}" alt="${escapeHtml(product.n)}" loading="lazy"></div>
+            <div class="product-image ${tone}"><img src="${escapeHtml(image)}" alt="${escapeHtml(product.n)} natural dog treat" width="600" height="600" loading="lazy" decoding="async"></div>
           </a>
           <div class="card-copy">
             <p class="tag">${escapeHtml(product.c || 'Natural treat')}</p>

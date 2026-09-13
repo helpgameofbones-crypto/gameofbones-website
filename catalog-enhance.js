@@ -31,7 +31,7 @@ function hydrateProduct() {
   const [method, bestFor] = gobMethod(product);
   const id = product.id || gobSlug(product.n);
   window.GOB_CURRENT_PRODUCT = product;
-  gobProducts()[id] = { name: product.n, price: Number(product.p) || 0, image: product.i, tag: product.c };
+  gobProducts()[id] = { name: product.n, price: Number(product.p) || 0, comparePrice: Number(product.cp) || 0, image: product.i, tag: product.c };
   document.title = `${product.n} — Game of Bones`;
   const cleanUrl = `https://gameofbones.in/products/${encodeURIComponent(gobSlug(product.n))}`;
   let canonical = document.querySelector('link[rel="canonical"]');

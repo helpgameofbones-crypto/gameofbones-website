@@ -2,6 +2,7 @@
 // syncs must not rewrite an existing cart line's presentation.
 function commerceProduct(item){return item.product||GOB_PRODUCTS[item.id]||null}
 function cartValue(){return cart().reduce((total,item)=>total+(commerceProduct(item)?.price||0)*item.quantity,0)}
+function cartHasSaleItems(){return cart().some(item=>{const product=commerceProduct(item);return Number(product?.comparePrice)>Number(product?.price)})}
 function bulkRate(count){return count>=10?.15:count>=8?.12:count>=5?.08:count>=3?.05:0}
 const POINT_VALUE_RUPEES=.3,MAX_POINTS_DISCOUNT_RUPEES=100,MAX_REDEMPTION_POINTS=Math.floor(MAX_POINTS_DISCOUNT_RUPEES/POINT_VALUE_RUPEES)
 
@@ -19,7 +20,7 @@ async function recoverUnknownCartLines(){
       const packIndex=Math.max(0,Number(packMatch?.[1]||1)-1),pack=Array.isArray(source.sizes)?source.sizes[packIndex]||source.sizes[0]:null
       const price=Number(pack?.price??source.price)
       if(!Number.isFinite(price)||price<=0)return
-      line.product={name:source.name,price,image:source.image_url||source.images?.[0]||'',tag:'Game of Bones treat',packLabel:pack?.label||''}
+      line.product={name:source.name,price,comparePrice:Number(pack?.compare_price??source.compare_price)||0,image:source.image_url||source.images?.[0]||'',tag:'Game of Bones treat',packLabel:pack?.label||''}
       changed=true
     })
     if(changed){saveCart(lines);updateCart();renderCommerceCart()}
@@ -34,12 +35,14 @@ function renderCommerceCart(){
     root.innerHTML='<div class="empty-cart"><h2>Your bowl is ready when you are.</h2><p>Pick a single-ingredient treat and come back when you are ready to check out.</p><a class="button" href="/products">Shop all treats</a></div>'
     document.querySelector('#checkoutLink')?.setAttribute('href','/products')
     updateCommerceTotals()
+    updateSaleOfferControls()
     return
   }
   root.innerHTML=items.map(item=>{
     const product=commerceProduct(item)
     if(!product)return ''
-    return `<article class="cart-line"><img src="${product.image}" alt="${product.name}"><div><h2>${product.name}</h2><p>${product.tag||'Game of Bones treat'}</p><div class="line-actions"><div class="mini-qty"><button data-change="${item.id}" data-amount="-1" aria-label="Decrease ${product.name}">−</button><span>${item.quantity}</span><button data-change="${item.id}" data-amount="1" aria-label="Increase ${product.name}">+</button></div><button class="remove-link" data-delete="${item.id}">Remove</button></div></div><div class="line-price">${money(product.price*item.quantity)}</div></article>`
+    const sale=Number(product.comparePrice)>Number(product.price)
+    return `<article class="cart-line"><img src="${product.image}" alt="${product.name}"><div><h2>${product.name}</h2><p>${product.tag||'Game of Bones treat'}${sale?' · <b>Sale</b>':''}</p><div class="line-actions"><div class="mini-qty"><button data-change="${item.id}" data-amount="-1" aria-label="Decrease ${product.name}">−</button><span>${item.quantity}</span><button data-change="${item.id}" data-amount="1" aria-label="Increase ${product.name}">+</button></div><button class="remove-link" data-delete="${item.id}">Remove</button></div></div><div class="line-price">${sale?`<s>${money(product.comparePrice*item.quantity)}</s> `:''}${money(product.price*item.quantity)}</div></article>`
   }).join('')
   root.querySelectorAll('[data-change]').forEach(button=>button.addEventListener('click',()=>{
     const items=cart(),entry=items.find(item=>item.id===button.dataset.change)
@@ -51,13 +54,14 @@ function renderCommerceCart(){
     saveCart(cart().filter(item=>item.id!==button.dataset.delete));updateCart();renderCommerceCart()
   }))
   updateCommerceTotals()
+  updateSaleOfferControls()
 }
 
 function updateCommerceTotals(){
-  const subtotal=cartValue(),count=cartCount(),rate=bulkRate(count),bulk=Math.round(subtotal*rate)
+  const subtotal=cartValue(),count=cartCount(),saleBasket=cartHasSaleItems(),rate=saleBasket?0:bulkRate(count),bulk=Math.round(subtotal*rate)
   const coupon=document.querySelector('[name="coupon"]:checked')?.value||'none'
   const eligibility=window.GOB_CHECKOUT_ELIGIBILITY||{signedIn:false,firstOrder:false,checking:false,points:0}
-  const couponRate=coupon==='WELCOME15'&&eligibility.firstOrder ? .15 : coupon==='MEGA20'&&subtotal>=2199 ? .2 : 0
+  const couponRate=!saleBasket&&(coupon==='WELCOME15'&&eligibility.firstOrder ? .15 : coupon==='MEGA20'&&subtotal>=2199 ? .2 : 0)
   const couponDiscount=Math.round(subtotal*couponRate),saving=Math.max(bulk,couponDiscount)
   const payment=document.querySelector('[name="payment"]:checked')?.value||'online'
   const requestedPoints=Number(document.querySelector('[name="loyalty_points_redeemed"]')?.value||0)
@@ -67,8 +71,8 @@ function updateCommerceTotals(){
   const pointsEarned=Math.floor(total/10),pointsValue=pointsEarned*.3
   document.querySelectorAll('[data-commerce-subtotal]').forEach(el=>el.textContent=money(subtotal))
   document.querySelectorAll('[data-commerce-total]').forEach(el=>el.textContent=money(total))
-  document.querySelectorAll('[data-bulk-discount]').forEach(el=>el.textContent=bulk?`−${money(bulk)}`:'Add 3 items to save 5%')
-  document.querySelectorAll('[data-bulk-label]').forEach(el=>el.textContent=bulk?`${rate*100}% buy-more saving`:'Buy more, save more')
+  document.querySelectorAll('[data-bulk-discount]').forEach(el=>el.textContent=saleBasket?'Sale price applied':bulk?`−${money(bulk)}`:'Add 3 items to save 5%')
+  document.querySelectorAll('[data-bulk-label]').forEach(el=>el.textContent=saleBasket?'Sale pricing':'Buy more, save more')
   document.querySelectorAll('[data-coupon-discount]').forEach(el=>el.textContent=saving?`−${money(saving)}`:'—')
   document.querySelectorAll('[data-payment-change]').forEach(el=>el.textContent=payment==='cod'?`+${money(40)}`:`−${money(30)}`)
   document.querySelectorAll('[data-points-discount]').forEach(el=>el.textContent=pointsDiscount?`−${money(pointsDiscount)}`:'—')
@@ -77,7 +81,9 @@ function updateCommerceTotals(){
   document.querySelectorAll('[data-commerce-count]').forEach(el=>el.textContent=count)
   const status=document.querySelector('[data-coupon-status]')
   if(status){
-    if(coupon==='WELCOME15'){
+    if(saleBasket){
+      status.textContent='A sale-priced product is in your bag. Coupon codes and buy-more savings cannot be used with sale pricing. You can still use reward points.'
+    }else if(coupon==='WELCOME15'){
       status.textContent=!eligibility.signedIn?'WELCOME15 is not applied: log in with your email OTP first. It is for a verified account with no completed orders, is limited to one use, and cannot be combined with buy-more savings.':eligibility.checking?'Checking whether this account is eligible for WELCOME15…':eligibility.firstOrder?'WELCOME15 is available for this first order. It replaces, rather than stacks with, buy-more savings.':'WELCOME15 is not applied: this account already has a completed order, or its first-order status could not be verified.'
     } else if(coupon==='MEGA20'){
       const remaining=Math.max(0,2199-subtotal)
@@ -110,9 +116,9 @@ function ensureCheckoutOptions(){
   const payment=form.querySelector('.form-section:last-of-type')
   payment.insertAdjacentHTML('beforebegin',`<section class="form-section checkout-perks">
     <h3>Offers & rewards</h3>
-    <label><input type="radio" name="coupon" value="none" checked><span>Use automatic buy-more saving <small>We’ll apply your best eligible saving. It cannot be combined with a code.</small></span></label>
+    <label data-automatic-offer><input type="radio" name="coupon" value="none" checked><span><b data-automatic-offer-title>Use automatic buy-more saving</b> <small data-automatic-offer-copy>We’ll apply your best eligible saving. It cannot be combined with a code.</small></span></label>
     <label data-welcome-offer><input type="radio" name="coupon" value="WELCOME15"><span>WELCOME15 — 15% off your first order <small>Verified new accounts only · one use · disappears after the first completed order.</small></span></label>
-    <label><input type="radio" name="coupon" value="MEGA20"><span>MEGA20 — 20% off orders ₹2,199+ <small>Eligible treat subtotal must reach ₹2,199 · excludes buy-more savings.</small></span></label>
+    <label data-mega-offer><input type="radio" name="coupon" value="MEGA20"><span>MEGA20 — 20% off orders ₹2,199+ <small>Eligible treat subtotal must reach ₹2,199 · excludes buy-more savings.</small></span></label>
     <label data-loyalty-redeem hidden><input type="number" name="loyalty_points_redeemed" min="0" max="333" step="1" value="0" inputmode="numeric"><span>Use reward points <small>Use up to ₹100 off per order (maximum 333 points). Every point is worth ₹0.30 and can be combined with one eligible coupon.</small></span></label>
     <p class="perk-status" data-coupon-status role="status" aria-live="polite"></p>
   </section>`)
@@ -126,6 +132,19 @@ function ensureCheckoutOptions(){
   const requestedInput=requestedCoupon&&form.querySelector(`[name="coupon"][value="${requestedCoupon}"]`)
   if(requestedInput) requestedInput.checked=true
   window.sessionStorage.removeItem('gob-checkout-coupon')
+  updateSaleOfferControls()
+}
+
+function updateSaleOfferControls(){
+  const saleBasket=cartHasSaleItems(),none=document.querySelector('[name="coupon"][value="none"]')
+  document.querySelectorAll('[name="coupon"]').forEach(input=>{if(input.value!=='none')input.disabled=saleBasket})
+  if(saleBasket){
+    if(!none?.checked) none.checked=true
+    window.sessionStorage.removeItem('gob-checkout-coupon')
+  }
+  const title=document.querySelector('[data-automatic-offer-title]'),copy=document.querySelector('[data-automatic-offer-copy]')
+  if(title)title.textContent=saleBasket?'Sale price in your bag':'Use automatic buy-more saving'
+  if(copy)copy.textContent=saleBasket?'Sale pricing cannot combine with a coupon or buy-more saving. Reward points are still available.':'We’ll apply your best eligible saving. It cannot be combined with a code.'
 }
 
 function updateWelcomeOfferVisibility(){
@@ -169,11 +188,14 @@ async function loadCheckoutEligibility(){
 }
 
 function setupCommerce(){
-  ensureLoyaltyEarn();ensureBulkDiscount();ensureCheckoutOptions();renderCommerceCart();recoverUnknownCartLines();loadCheckoutEligibility()
+  ensureLoyaltyEarn();ensureBulkDiscount();ensureCheckoutOptions();renderCommerceCart();updateSaleOfferControls();recoverUnknownCartLines();loadCheckoutEligibility()
   document.querySelector('#promoForm')?.addEventListener('submit',event=>{
     event.preventDefault()
     const code=document.querySelector('#promoCode').value.trim().toUpperCase(),message=document.querySelector('#promoMessage')
-    if(code==='WELCOME15'){
+    if(cartHasSaleItems()){
+      window.sessionStorage.removeItem('gob-checkout-coupon')
+      message.textContent='This bag has a sale-priced product, so coupon codes and buy-more savings cannot be used. Reward points can still be used at checkout.'
+    }else if(code==='WELCOME15'){
       window.sessionStorage.setItem('gob-checkout-coupon',code)
       message.innerHTML='WELCOME15 is ready for secure checkout. <a href="/checkout">Log in or continue to checkout</a> to verify that this is your first order.'
     }else if(code==='MEGA20'){
@@ -187,4 +209,4 @@ function setupCommerce(){
 }
 
 document.addEventListener('DOMContentLoaded',setupCommerce)
-document.addEventListener('gob:catalog-sync',()=>{renderCommerceCart();recoverUnknownCartLines()})
+document.addEventListener('gob:catalog-sync',()=>{renderCommerceCart();updateSaleOfferControls();recoverUnknownCartLines()})

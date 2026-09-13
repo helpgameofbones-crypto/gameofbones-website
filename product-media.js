@@ -29,10 +29,10 @@ function renderProductMedia(){
     thumbs.querySelectorAll('.thumb').forEach((button,buttonIndex)=>{button.classList.toggle('active',buttonIndex===index);button.setAttribute('aria-pressed',String(buttonIndex===index))})
     if(item.type==='video'){
       stage.innerHTML=item.src?`<video controls playsinline poster="${item.poster||''}" aria-label="${item.alt||item.label}"><source src="${item.src}"></video>`:`<div class="media-video-poster"><img src="${item.poster||''}" alt="${item.alt||''}"><span aria-hidden="true">▶</span><strong>Product video</strong><small>Video slot ready for upload</small></div>`
-    }else stage.innerHTML=`<img id="productImage" src="${item.src}" alt="${item.alt||item.label||'Product photo'}">`
+    }else stage.innerHTML=`<img id="productImage" src="${item.src}" alt="${item.alt||item.label||'Product photo'}" width="1000" height="1000" decoding="async" fetchpriority="high">`
     count.textContent=`${index+1} of ${media.length} media`
   }
-  thumbs.innerHTML=media.map((item,index)=>`<button class="thumb media-thumb${index===0?' active':''}" type="button" aria-pressed="${index===0}" aria-label="View ${item.label||`media ${index+1}`}"><img src="${item.type==='video'?(item.poster||''):item.src}" alt=""><span>${item.type==='video'?'▶':''}</span></button>`).join('')
+  thumbs.innerHTML=media.map((item,index)=>`<button class="thumb media-thumb${index===0?' active':''}" type="button" aria-pressed="${index===0}" aria-label="View ${item.label||`media ${index+1}`}"><img src="${item.type==='video'?(item.poster||''):item.src}" alt="" width="120" height="120" loading="lazy" decoding="async"><span>${item.type==='video'?'▶':''}</span></button>`).join('')
   thumbs.querySelectorAll('.thumb').forEach((button,index)=>button.addEventListener('click',()=>select(index)))
   select(0)
 }

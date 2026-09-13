@@ -42,7 +42,7 @@
         const pack = packs[selectedPack];
         const id = product.id || productId;
         const cartId = selectedPack === 0 ? id : `${id}-pack-${selectedPack + 1}`;
-        GOB_PRODUCTS[cartId] = { name: `${product.n} — ${pack.label}`, price: Number(pack.price) || 0, image: product.i, tag: `${product.c} · ${pack.weight || 'Pack'}` };
+        GOB_PRODUCTS[cartId] = { name: `${product.n} — ${pack.label}`, price: Number(pack.price) || 0, comparePrice: Number(pack.compare_price) || Number(product.cp) || 0, image: product.i, tag: `${product.c} · ${pack.weight || 'Pack'}` };
         addToCart(cartId, quantity);
       };
     }
