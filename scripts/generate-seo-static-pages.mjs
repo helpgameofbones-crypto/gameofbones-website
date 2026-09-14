@@ -28,6 +28,11 @@ const products = [
   ['tuna', 'Tuna', 500, 'Lean, high-protein dehydrated tuna.', '', 'Fish treats'],
   ['prawns', 'Prawns', 599, 'A premium dehydrated prawn treat.', '', 'Fish treats'],
   ['whole-quail', 'Whole Quail', 275, 'Whole dehydrated quail with meat, bone and organs.', '', 'Whole prey'],
+  ['cat-trial-box', 'Cat Trial Box', 729, 'A fish-forward tasting box of five single-ingredient treats.', 'assets/goat-trotter-plate.png', 'Bundles'],
+  ['surprise-me-box', 'Surprise Me Box', 1299, 'A team-curated, assorted selection of treats.', 'assets/chicken-jerky-pouch.png', 'Bundles'],
+  ['small-treat-box', 'Small Treat Box', 699, 'A starter box across jerky, chews, organs and fish.', 'assets/goat-trachea-pouch.png', 'Bundles'],
+  ['medium-treat-box', 'Medium Treat Box', 1749, 'A full-size discovery box across the range.', 'assets/chicken-jerky-pouch.png', 'Bundles'],
+  ['large-treat-box', 'Large Treat Box', null, 'A larger selection across the current range. Contact us for current availability and pricing.', 'assets/goat-trotter-plate.png', 'Bundles'],
 ];
 
 const articles = [
@@ -65,7 +70,7 @@ const schemaTag = data => `<script type="application/ld+json">${JSON.stringify(d
 const productHtml = (template, [slug, name, price, description, image, category]) => {
   const url = `${origin}/products/${slug}`;
   const schema = { '@context': 'https://schema.org', '@graph': [
-    { '@type': 'Product', '@id': `${url}#product`, name, description, image: image ? [`${origin}/${image}`] : undefined, sku: slug, category, brand: { '@type': 'Brand', name: 'Game of Bones' }, offers: { '@type': 'Offer', url, priceCurrency: 'INR', price: price.toFixed(2), availability: 'https://schema.org/InStock', itemCondition: 'https://schema.org/NewCondition', seller: { '@id': `${origin}/#organization` } } },
+    { '@type': 'Product', '@id': `${url}#product`, name, description, image: image ? [`${origin}/${image}`] : undefined, sku: slug, category, brand: { '@type': 'Brand', name: 'Game of Bones' }, offers: Number.isFinite(price) ? { '@type': 'Offer', url, priceCurrency: 'INR', price: price.toFixed(2), availability: 'https://schema.org/InStock', itemCondition: 'https://schema.org/NewCondition', seller: { '@id': `${origin}/#organization` } } : undefined },
     { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: `${origin}/` }, { '@type': 'ListItem', position: 2, name: 'Products', item: `${origin}/products` }, { '@type': 'ListItem', position: 3, name, item: url }] },
   ] };
   return template
@@ -76,7 +81,7 @@ const productHtml = (template, [slug, name, price, description, image, category]
     .replace(/<script id="gob-static-product-schema" type="application\/ld\+json">[\s\S]*?<\/script>/, schemaTag(schema))
     .replace(/<h1 id="productName">[\s\S]*?<\/h1>/, `<h1 id="productName">${escape(name)}</h1>`)
     .replace(/<p class="eyebrow" id="productTag">[\s\S]*?<\/p>/, `<p class="eyebrow" id="productTag">${escape(category)} · Made in Kalyan</p>`)
-    .replace(/<p class="price" id="productPrice">[\s\S]*?<\/p>/, `<p class="price" id="productPrice">₹${price.toLocaleString('en-IN')}</p>`)
+    .replace(/<p class="price" id="productPrice">[\s\S]*?<\/p>/, `<p class="price" id="productPrice">${Number.isFinite(price) ? `₹${price.toLocaleString('en-IN')}` : 'Contact us'}</p>`)
     .replace(/<p class="lead" id="productDesc">[\s\S]*?<\/p>/, `<p class="lead" id="productDesc">${escape(description)}</p>`)
     .replace(/<img id="productImage"[^>]*>/, image ? `<img id="productImage" src="${escape(image)}" alt="${escape(name)} pouch">` : '<img id="productImage" src="assets/gob-logo.png" alt="Game of Bones product">');
 };
