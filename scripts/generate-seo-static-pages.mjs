@@ -74,7 +74,11 @@ const productHtml = (template, [slug, name, price, description, image, category]
     .replace(/<meta name="description" content="[^"]*">/, `<meta name="description" content="${escape(description)}">`)
     .replace(/<link rel="canonical" href="[^"]*">/, `<link rel="canonical" href="${url}"><meta property="og:type" content="product"><meta property="og:title" content="${escape(name)} — Game of Bones"><meta property="og:description" content="${escape(description)}"><meta property="og:url" content="${url}">`)
     .replace(/<script id="gob-static-product-schema" type="application\/ld\+json">[\s\S]*?<\/script>/, schemaTag(schema))
-    .replace(/<h1 id="productName">[\s\S]*?<\/h1>/, `<h1 id="productName">${escape(name)}</h1>`);
+    .replace(/<h1 id="productName">[\s\S]*?<\/h1>/, `<h1 id="productName">${escape(name)}</h1>`)
+    .replace(/<p class="eyebrow" id="productTag">[\s\S]*?<\/p>/, `<p class="eyebrow" id="productTag">${escape(category)} · Made in Kalyan</p>`)
+    .replace(/<p class="price" id="productPrice">[\s\S]*?<\/p>/, `<p class="price" id="productPrice">₹${price.toLocaleString('en-IN')}</p>`)
+    .replace(/<p class="lead" id="productDesc">[\s\S]*?<\/p>/, `<p class="lead" id="productDesc">${escape(description)}</p>`)
+    .replace(/<img id="productImage"[^>]*>/, image ? `<img id="productImage" src="${escape(image)}" alt="${escape(name)} pouch">` : '<img id="productImage" src="assets/gob-logo.png" alt="Game of Bones product">');
 };
 
 const articleHtml = (template, [slug, title, description]) => {
@@ -93,7 +97,8 @@ const articleHtml = (template, [slug, title, description]) => {
     .replace(/<meta property="og:description" content="[^"]*">/, `<meta property="og:description" content="${escape(description)}">`)
     .replace(/<meta property="og:url" content="[^"]*">/, `<meta property="og:url" content="${url}">`)
     .replace(/<script id="journal-schema" type="application\/ld\+json">[\s\S]*?<\/script>/, schemaTag(schema))
-    .replace(/<h1 class="display">[\s\S]*?<\/h1>/, `<h1 class="display">${escape(title)}</h1>`);
+    .replace(/<h1 class="display">[\s\S]*?<\/h1>/, `<h1 class="display">${escape(title)}</h1>`)
+    .replace(/<p class="lead">[\s\S]*?<\/p>/, `<p class="lead">${escape(description)}</p>`);
 };
 
 const root = fileURLToPath(new URL('..', import.meta.url));
