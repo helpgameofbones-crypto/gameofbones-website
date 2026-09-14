@@ -72,7 +72,7 @@ const productHtml = (template, [slug, name, price, description, image, category]
     .replace('<head>', '<head><base href="/">')
     .replace(/<title>[\s\S]*?<\/title>/, `<title>${escape(name)} — Game of Bones</title>`)
     .replace(/<meta name="description" content="[^"]*">/, `<meta name="description" content="${escape(description)}">`)
-    .replace(/<link rel="canonical" href="[^"]*">/, `<link rel="canonical" href="${url}">`)
+    .replace(/<link rel="canonical" href="[^"]*">/, `<link rel="canonical" href="${url}"><meta property="og:type" content="product"><meta property="og:title" content="${escape(name)} — Game of Bones"><meta property="og:description" content="${escape(description)}"><meta property="og:url" content="${url}">`)
     .replace(/<script id="gob-static-product-schema" type="application\/ld\+json">[\s\S]*?<\/script>/, schemaTag(schema))
     .replace(/<h1 id="productName">[\s\S]*?<\/h1>/, `<h1 id="productName">${escape(name)}</h1>`);
 };
@@ -88,6 +88,10 @@ const articleHtml = (template, [slug, title, description]) => {
     .replace(/<title>[\s\S]*?<\/title>/, `<title>${escape(title)} | Game of Bones Journal</title>`)
     .replace(/<meta name="description" content="[^"]*">/, `<meta name="description" content="${escape(description)}">`)
     .replace(/<link rel="canonical" href="[^"]*">/, `<link rel="canonical" href="${url}">`)
+    .replace(/<meta property="og:type" content="[^"]*">/, '<meta property="og:type" content="article">')
+    .replace(/<meta property="og:title" content="[^"]*">/, `<meta property="og:title" content="${escape(title)} | Game of Bones Journal">`)
+    .replace(/<meta property="og:description" content="[^"]*">/, `<meta property="og:description" content="${escape(description)}">`)
+    .replace(/<meta property="og:url" content="[^"]*">/, `<meta property="og:url" content="${url}">`)
     .replace(/<script id="journal-schema" type="application\/ld\+json">[\s\S]*?<\/script>/, schemaTag(schema))
     .replace(/<h1 class="display">[\s\S]*?<\/h1>/, `<h1 class="display">${escape(title)}</h1>`);
 };

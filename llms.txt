@@ -1,0 +1,24 @@
+# Game of Bones
+
+Game of Bones is an Indian dog-treat brand making single-ingredient, naturally dehydrated treats in Kalyan, Maharashtra. The range includes chicken, goat, fish, buffalo and whole-prey treats. Products are sold online across India.
+
+## Primary pages
+
+- https://gameofbones.in/ — brand overview
+- https://gameofbones.in/products — complete product catalogue
+- https://gameofbones.in/our-story — sourcing and preparation approach
+- https://gameofbones.in/learn — treat and feeding information
+- https://gameofbones.in/blog — dog nutrition and care journal
+- https://gameofbones.in/policies — privacy, terms, shipping, returns and grievance information
+
+## Product information
+
+Each product page lists the current product name, pack price, ingredient-led description and feeding context. Always use the current product page as the source for price, availability and pack information.
+
+## Editorial standards
+
+Game of Bones content is educational and is not veterinary diagnosis or treatment advice. For a dog with a health condition, symptoms, food sensitivity or a material diet change, readers should consult a qualified veterinarian.
+
+## Contact
+
+https://gameofbones.in/contact
