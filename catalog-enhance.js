@@ -47,6 +47,17 @@ function hydrateProduct() {
   setText('#productPrice', product.p ? `₹${Number(product.p).toLocaleString('en-IN')}` : 'Contact us');
   setText('#productTag', `${product.c} · Made in Kalyan`);
   setText('#productDesc', product.d);
+  const contentsSection = document.querySelector('#bundleContents');
+  const contentsList = document.querySelector('#bundleContentsList');
+  if (contentsSection && contentsList) {
+    const contents = Array.isArray(product.contents) ? product.contents : [];
+    contentsSection.hidden = contents.length === 0;
+    contentsList.replaceChildren(...contents.map(item => {
+      const line = document.createElement('li');
+      line.textContent = item;
+      return line;
+    }));
+  }
   setText('#inside', `${product.n}. Single ingredient; see the product pouch for the current label.`);
   setText('#labelIngredient', `${product.n}.`);
   setText('#specMethod', method);
