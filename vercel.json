@@ -1,6 +1,6 @@
 {
   "redirects": [
-    { "source": "/:path*", "has": [{ "type": "host", "value": "www.gameofbones.in" }], "destination": "https://gameofbones.in/:path*", "permanent": true },
+    { "source": "/(.*)", "has": [{ "type": "host", "value": "www.gameofbones.in" }], "destination": "https://gameofbones.in/$1", "permanent": true },
     { "source": "/collections", "destination": "/products", "permanent": true },
     { "source": "/collections/:path*", "destination": "/products", "permanent": true },
     { "source": "/pages/:path*", "destination": "/", "permanent": true },
