@@ -28,11 +28,11 @@ const products = [
   ['tuna', 'Tuna', 500, 'Lean, high-protein dehydrated tuna.', '', 'Fish treats'],
   ['prawns', 'Prawns', 599, 'A premium dehydrated prawn treat.', '', 'Fish treats'],
   ['whole-quail', 'Whole Quail', 275, 'Whole dehydrated quail with meat, bone and organs.', '', 'Whole prey'],
-  ['cat-trial-box', 'Cat Trial Box', 729, 'A fish-forward 120 g tasting box with five clearly listed single-ingredient treats.', 'assets/goat-trotter-plate.png', 'Bundles'],
-  ['surprise-me-box', 'Surprise Me Box', 1299, 'A team-curated mix across chicken, fish and natural chews.', 'assets/chicken-jerky-pouch.png', 'Bundles'],
-  ['small-treat-box', 'Small Treat Box', 699, 'Nine labelled 15 g mini samples across jerky, organs, fish and chews.', 'assets/goat-trachea-pouch.png', 'Bundles'],
-  ['medium-treat-box', 'Medium Treat Box', 1749, 'A full-size discovery box across chicken, fish, organs and natural chews.', 'assets/chicken-jerky-pouch.png', 'Bundles'],
-  ['large-treat-box', 'Large Treat Box', 2499, 'A generous full-range discovery box across jerky, fish, organs and natural chews.', 'assets/goat-trotter-plate.png', 'Bundles'],
+  ['cat-trial-box', 'Cat Trial Box', 749, 'A fish-forward 120 g tasting box with five clearly listed single-ingredient treats.', 'assets/goat-trotter-plate.png', 'Bundles'],
+  ['surprise-me-box', 'Surprise Me Box', 1400, 'A team-curated mix across chicken, fish and natural chews.', 'assets/chicken-jerky-pouch.png', 'Bundles'],
+  ['small-treat-box', 'Small Treat Box', 650, 'Nine labelled 15 g mini samples across jerky, organs, fish and chews.', 'assets/goat-trachea-pouch.png', 'Bundles'],
+  ['medium-treat-box', 'Medium Treat Box', 2150, 'A full-size discovery box across chicken, fish, organs and natural chews.', 'assets/chicken-jerky-pouch.png', 'Bundles'],
+  ['large-treat-box', 'Large Treat Box', 2850, 'A generous full-range discovery box across jerky, fish, organs and natural chews.', 'assets/goat-trotter-plate.png', 'Bundles'],
 ];
 
 const articles = [
