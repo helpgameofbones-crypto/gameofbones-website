@@ -22,12 +22,14 @@
 <link rel="stylesheet" href="source-step.css?v=4">
 <link rel="stylesheet" href="hero-image.css?v=1">
 <link rel="stylesheet" href="homepage-rich.css?v=home-journal-2">
+<link rel="stylesheet" href="homepage-videos.css?v=1">
 <script defer src="site.js?v=search-unique-1">
 </script>
 <script defer src="header-navigation.js?v=live-ticker-2"></script>
 <script defer src="homepage-rich.js?v=home-journal-2"></script>
 <script defer src="conversion-extras.js"></script>
 <script defer src="api-client.js"></script>
+<script defer src="homepage-videos.js?v=1"></script>
 <script>
 /* The wheel is a secondary engagement feature. Loading it after the main
    content is interactive keeps its work out of the homepage's critical path. */
@@ -82,6 +84,20 @@ window.addEventListener('load',()=>{
 <div class="hero-media">
 <img class="hero-real-dogs" src="assets/hero-real-dogs.png" alt="A dog enjoying a natural treat outdoors" width="1086" height="1448" fetchpriority="high" decoding="async">
 <aside class="floating-note">“Nothing to decode. Everything to love.”</aside>
+</div>
+</section>
+<section class="dog-video-section" aria-labelledby="dog-video-title">
+<div class="section-head dog-video-head reveal">
+<div>
+<p class="eyebrow">Real dogs. Real reactions.</p>
+<h2 class="section-title" id="dog-video-title">Watch the good stuff happen.</h2>
+</div>
+<p class="dog-video-intro">Short, quiet clips from our treat-loving pack. Videos only play when they are on screen.</p>
+</div>
+<div class="dog-video-grid">
+<article class="dog-video-card reveal"><div class="dog-video-frame"><video class="dog-video" muted loop playsinline preload="none" poster="assets/hero-real-dogs.png" aria-label="A dog enjoying a Game of Bones treat"><source data-src="assets/dog-videos/20260321_091519.mp4" type="video/mp4"></video><span class="dog-video-caption">First sniff. Then full tail-wag.</span></div></article>
+<article class="dog-video-card reveal"><div class="dog-video-frame"><video class="dog-video" muted loop playsinline preload="none" poster="assets/hero-real-dogs.png" aria-label="A dog tasting a naturally dehydrated treat"><source data-src="assets/dog-videos/20260321_091608.mp4" type="video/mp4"></video><span class="dog-video-caption">The crunch says it all.</span></div></article>
+<article class="dog-video-card reveal"><div class="dog-video-frame"><video class="dog-video" muted loop playsinline preload="none" poster="assets/hero-real-dogs.png" aria-label="A happy dog with a Game of Bones treat"><source data-src="assets/dog-videos/20260531_084748.mp4" type="video/mp4"></video><span class="dog-video-caption">Good treats. Very good dogs.</span></div></article>
 </div>
 </section>
 <section class="trust" aria-label="Our commitments">

@@ -1,4 +1,4 @@
-import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
@@ -8,31 +8,31 @@ const products = [
   ['buff-jerky', 'Buff Jerky', 449, 'Single-ingredient buffalo jerky with a richer flavour profile.', '', 'Jerky'],
   ['chicken-feet', 'Chicken Feet', 300, 'Whole dehydrated chicken feet for supervised chewing.', '', 'Chews & bones'],
   ['chicken-neck', 'Chicken Neck', 300, 'Whole chicken neck, slowly dehydrated and bone-in.', '', 'Chews & bones'],
-  ['chicken-bites', 'Chicken Bites', 329, 'Bite-sized dehydrated chicken pieces for training.', '', 'Jerky'],
-  ['chicken-wings', 'Chicken Wings', 350, 'Crunchy dehydrated chicken wings for supervised chewing.', '', 'Chews & bones'],
-  ['chicken-bones', 'Chicken Bones', 200, 'Assorted dehydrated chicken bone pieces for supervised chewing.', '', 'Chews & bones'],
+  ['chicken-bites', 'Chicken Bites', 329, 'Bite-sized dehydrated chicken pieces for training.', 'assets/catalogue-v3/chicken-bites.webp', 'Jerky'],
+  ['chicken-wings', 'Chicken Wings', 350, 'Crunchy dehydrated chicken wings for supervised chewing.', 'assets/catalogue-v3/chicken-wings.webp', 'Chews & bones'],
+  ['chicken-bones', 'Chicken Bones', 200, 'Assorted dehydrated chicken bone pieces for supervised chewing.', 'assets/catalogue-v3/chicken-bones.webp', 'Chews & bones'],
   ['goat-trachea', 'Goat Trachea', 100, 'A cartilage-rich chew for supervised chew time.', 'assets/goat-trachea-pouch.png', 'Chews & bones'],
   ['goat-trotter', 'Goat Trotter', 250, 'A dense natural chew with bone, skin and cartilage.', 'assets/goat-trotter-plate.png', 'Chews & bones'],
-  ['goat-ear', 'Goat Ear', 350, 'Thin, crunchy goat ears for supervised chew time.', '', 'Chews & bones'],
-  ['chicken-gizzards', 'Chicken Gizzards', 300, 'Single-ingredient dehydrated chicken gizzards.', '', 'Organ treats'],
-  ['chicken-heart-liver', 'Chicken Heart & Liver', 300, 'A single-ingredient chicken heart and liver mix.', '', 'Organ treats'],
-  ['goat-liver', 'Goat Liver', 450, 'Single-ingredient dehydrated goat liver.', '', 'Organ treats'],
-  ['goat-lungs', 'Goat Lungs', 450, 'Lightweight, crunchy dehydrated goat lungs.', '', 'Organ treats'],
-  ['goat-heart-kidney-mix', 'Goat Heart & Kidney Mix', 500, 'A single-ingredient goat heart and kidney mix.', '', 'Organ treats'],
-  ['goat-spleen', 'Goat Spleen', 450, 'Single-ingredient dehydrated goat spleen.', '', 'Organ treats'],
-  ['anchovies', 'Anchovies', 350, 'Wild-caught whole anchovies.', '', 'Fish treats'],
-  ['bombay-duck', 'Bombay Duck', 450, 'Traditional Bombil, a coastal single-ingredient treat.', '', 'Fish treats'],
-  ['whole-mackerel', 'Whole Mackerel', 600, 'Whole dehydrated mackerel.', '', 'Fish treats'],
-  ['mackerel-fillet', 'Mackerel Fillet', 650, 'Boneless dehydrated mackerel fillet.', '', 'Fish treats'],
-  ['sardines', 'Sardines', 400, 'Whole dehydrated sardines.', '', 'Fish treats'],
-  ['tuna', 'Tuna', 500, 'Lean, high-protein dehydrated tuna.', '', 'Fish treats'],
-  ['prawns', 'Prawns', 599, 'A premium dehydrated prawn treat.', '', 'Fish treats'],
-  ['whole-quail', 'Whole Quail', 275, 'Whole dehydrated quail with meat, bone and organs.', '', 'Whole prey'],
-  ['cat-trial-box', 'Cat Trial Box', 749, 'A fish-forward 120 g tasting box with five clearly listed single-ingredient treats.', 'assets/goat-trotter-plate.png', 'Bundles'],
-  ['surprise-me-box', 'Surprise Me Box', 1400, 'A team-curated mix across chicken, fish and natural chews.', 'assets/chicken-jerky-pouch.png', 'Bundles'],
-  ['small-treat-box', 'Small Treat Box', 650, 'Nine labelled 15 g mini samples across jerky, organs, fish and chews.', 'assets/goat-trachea-pouch.png', 'Bundles'],
-  ['medium-treat-box', 'Medium Treat Box', 2150, 'A full-size discovery box across chicken, fish, organs and natural chews.', 'assets/chicken-jerky-pouch.png', 'Bundles'],
-  ['large-treat-box', 'Large Treat Box', 2850, 'A generous full-range discovery box across jerky, fish, organs and natural chews.', 'assets/goat-trotter-plate.png', 'Bundles'],
+  ['goat-ear', 'Goat Ear', 350, 'Thin, crunchy goat ears for supervised chew time.', 'assets/catalogue-v3/goat-ear.webp', 'Chews & bones'],
+  ['chicken-gizzards', 'Chicken Gizzards', 300, 'Single-ingredient dehydrated chicken gizzards.', 'assets/catalogue-v3/chicken-gizzards.webp', 'Organ treats'],
+  ['chicken-heart-liver', 'Chicken Heart & Liver', 300, 'A single-ingredient chicken heart and liver mix.', 'assets/catalogue-v3/chicken-heart-liver.webp', 'Organ treats'],
+  ['goat-liver', 'Goat Liver', 450, 'Single-ingredient dehydrated goat liver.', 'assets/catalogue-v3/goat-liver.webp', 'Organ treats'],
+  ['goat-lungs', 'Goat Lungs', 450, 'Lightweight, crunchy dehydrated goat lungs.', 'assets/catalogue-v3/goat-lungs.webp', 'Organ treats'],
+  ['goat-heart-kidney-mix', 'Goat Heart & Kidney Mix', 500, 'A single-ingredient goat heart and kidney mix.', 'assets/catalogue-v3/goat-heart-kidney.webp', 'Organ treats'],
+  ['goat-spleen', 'Goat Spleen', 450, 'Single-ingredient dehydrated goat spleen.', 'assets/catalogue-v3/goat-spleen.webp', 'Organ treats'],
+  ['anchovies', 'Anchovies', 350, 'Wild-caught whole anchovies.', 'assets/catalogue-v3/anchovies.webp', 'Fish treats'],
+  ['bombay-duck', 'Bombay Duck', 450, 'Traditional Bombil, a coastal single-ingredient treat.', 'assets/catalogue-v3/bombay-duck.webp', 'Fish treats'],
+  ['whole-mackerel', 'Whole Mackerel', 600, 'Whole dehydrated mackerel.', 'assets/catalogue-v3/whole-mackerel.webp', 'Fish treats'],
+  ['mackerel-fillet', 'Mackerel Fillet', 650, 'Boneless dehydrated mackerel fillet.', 'assets/catalogue-v3/mackerel-fillet.webp', 'Fish treats'],
+  ['sardines', 'Sardines', 400, 'Whole dehydrated sardines.', 'assets/catalogue-v3/sardines.webp', 'Fish treats'],
+  ['tuna', 'Tuna', 500, 'Lean, high-protein dehydrated tuna.', 'assets/catalogue-v3/tuna.webp', 'Fish treats'],
+  ['prawns', 'Prawns', 599, 'A premium dehydrated prawn treat.', 'assets/catalogue-v3/prawns.webp', 'Fish treats'],
+  ['whole-quail', 'Whole Quail', 275, 'Whole dehydrated quail with meat, bone and organs.', 'assets/catalogue-v3/whole-quail.webp', 'Whole prey'],
+  ['cat-trial-box', 'Cat Trial Box', 749, 'A fish-forward 120 g tasting box with five clearly listed single-ingredient treats.', 'assets/catalogue-v3/cat-trial-box.webp', 'Bundles'],
+  ['surprise-me-box', 'Surprise Me Box', 1400, 'A team-curated mix across chicken, fish and natural chews.', 'assets/catalogue-v3/surprise-me-box.webp', 'Bundles'],
+  ['small-treat-box', 'Small Treat Box', 650, 'Nine labelled 15 g mini samples across jerky, organs, fish and chews.', 'assets/catalogue-v3/small-treat-box.webp', 'Bundles'],
+  ['medium-treat-box', 'Medium Treat Box', 2150, 'A full-size discovery box across chicken, fish, organs and natural chews.', 'assets/catalogue-v3/medium-treat-box.webp', 'Bundles'],
+  ['large-treat-box', 'Large Treat Box', 2850, 'A generous full-range discovery box across jerky, fish, organs and natural chews.', 'assets/catalogue-v3/large-treat-box.webp', 'Bundles'],
 ];
 
 const articles = [
@@ -83,7 +83,7 @@ const productHtml = (template, [slug, name, price, description, image, category]
     .replace(/<p class="eyebrow" id="productTag">[\s\S]*?<\/p>/, `<p class="eyebrow" id="productTag">${escape(category)} · Made in Kalyan</p>`)
     .replace(/<p class="price" id="productPrice">[\s\S]*?<\/p>/, `<p class="price" id="productPrice">${Number.isFinite(price) ? `₹${price.toLocaleString('en-IN')}` : 'Contact us'}</p>`)
     .replace(/<p class="lead" id="productDesc">[\s\S]*?<\/p>/, `<p class="lead" id="productDesc">${escape(description)}</p>`)
-    .replace(/<img id="productImage"[^>]*>/, image ? `<img id="productImage" src="${escape(image)}" alt="${escape(name)} pouch">` : '<img id="productImage" src="assets/gob-logo.png" alt="Game of Bones product">');
+    .replace(/<img id="productImage"[^>]*>/, image ? `<img id="productImage" src="${escape(image)}" alt="${escape(name)} pouch" width="1200" height="1200">` : '<img id="productImage" src="assets/gob-logo.png" alt="Game of Bones product" width="512" height="512">');
 };
 
 const articleHtml = (template, [slug, title, description]) => {
@@ -108,7 +108,6 @@ const articleHtml = (template, [slug, title, description]) => {
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const output = join(root, 'seo-static');
-await rm(output, { recursive: true, force: true });
 for (const [kind, templateName, entries, renderer] of [
   ['products', 'product.html', products, productHtml],
   ['blog', 'blog.html', articles, articleHtml],
