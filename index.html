@@ -22,14 +22,14 @@
 <link rel="stylesheet" href="source-step.css?v=4">
 <link rel="stylesheet" href="hero-image.css?v=1">
 <link rel="stylesheet" href="homepage-rich.css?v=home-journal-2">
-<link rel="stylesheet" href="homepage-videos.css?v=1">
+<link rel="stylesheet" href="homepage-videos.css?v=2">
 <script defer src="site.js?v=search-unique-1">
 </script>
 <script defer src="header-navigation.js?v=live-ticker-2"></script>
 <script defer src="homepage-rich.js?v=home-journal-2"></script>
 <script defer src="conversion-extras.js"></script>
 <script defer src="api-client.js"></script>
-<script defer src="homepage-videos.js?v=1"></script>
+<script defer src="homepage-videos.js?v=2"></script>
 <script>
 /* The wheel is a secondary engagement feature. Loading it after the main
    content is interactive keeps its work out of the homepage's critical path. */
@@ -94,6 +94,9 @@ window.addEventListener('load',()=>{
 </div>
 <p class="dog-video-intro">Short, quiet clips from our treat-loving pack. Videos only play when they are on screen.</p>
 </div>
+<div class="dog-video-carousel reveal" aria-label="Game of Bones dog video carousel">
+<button class="dog-video-arrow dog-video-arrow--previous" type="button" aria-label="Show previous videos" disabled><span aria-hidden="true">←</span></button>
+<div class="dog-video-viewport" tabindex="0" aria-label="Dog videos. Use the arrow buttons or left and right arrow keys to browse.">
 <div class="dog-video-grid">
 <article class="dog-video-card reveal"><div class="dog-video-frame"><video class="dog-video" muted loop playsinline preload="none" poster="assets/hero-real-dogs.png" aria-label="A dog enjoying a Game of Bones treat"><source data-src="assets/dog-videos/20260321_091519.mp4" type="video/mp4"></video><span class="dog-video-caption">First sniff. Then full tail-wag.</span></div></article>
 <article class="dog-video-card reveal"><div class="dog-video-frame"><video class="dog-video" muted loop playsinline preload="none" poster="assets/hero-real-dogs.png" aria-label="A dog tasting a naturally dehydrated treat"><source data-src="assets/dog-videos/20260321_091608.mp4" type="video/mp4"></video><span class="dog-video-caption">The crunch says it all.</span></div></article>
@@ -103,6 +106,9 @@ window.addEventListener('load',()=>{
 <article class="dog-video-card reveal"><div class="dog-video-frame"><video class="dog-video" muted loop playsinline preload="none" poster="assets/hero-real-dogs.png" aria-label="A dog enjoying a Game of Bones treat"><source data-src="assets/dog-videos/20260321_091727.mp4" type="video/mp4"></video><span class="dog-video-caption">Approved by very good dogs.</span></div></article>
 <article class="dog-video-card reveal"><div class="dog-video-frame"><video class="dog-video" muted loop playsinline preload="none" poster="assets/hero-real-dogs.png" aria-label="A dog enjoying a Game of Bones treat"><source data-src="assets/dog-videos/20260531_084607.mp4" type="video/mp4"></video><span class="dog-video-caption">A proper tail-wag moment.</span></div></article>
 <article class="dog-video-card reveal"><div class="dog-video-frame"><video class="dog-video" muted loop playsinline preload="none" poster="assets/hero-real-dogs.png" aria-label="A dog enjoying a Game of Bones treat"><source data-src="assets/dog-videos/20260531_091858.mp4" type="video/mp4"></video><span class="dog-video-caption">Snack break, best break.</span></div></article>
+</div>
+</div>
+<button class="dog-video-arrow dog-video-arrow--next" type="button" aria-label="Show next videos"><span aria-hidden="true">→</span></button>
 </div>
 </section>
 <section class="trust" aria-label="Our commitments">
