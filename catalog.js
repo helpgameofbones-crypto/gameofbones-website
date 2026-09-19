@@ -4,7 +4,7 @@ window.GOB_LIVE_CATALOG=[
 {n:'Chicken Feet',c:'Chews & bones',w:'70 g',p:300,d:'Whole dehydrated chicken feet for supervised chewing.',i:'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/cac553a3-463f-4cf6-92dd-48c054f82bfe/image-0-1782712513139.png'},
 {n:'Chicken Neck',c:'Chews & bones',w:'70 g',p:300,d:'Whole chicken neck, slowly dehydrated and bone-in.',i:'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/373c6199-f75b-4294-8626-4f173fda9f5d/image-0-1782712577445.png'},
 {n:'Chicken Bites',c:'Jerky',w:'60 g',p:329,d:'Bite-sized dehydrated chicken pieces for training.',i:'assets/catalogue-v3/chicken-bites.webp'},
-{n:'Chicken Wings',c:'Chews & bones',w:'5 pieces',p:350,d:'Crunchy dehydrated chicken wings for supervised chewing.',i:'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/ef9d3dbe-f6d7-4e59-b673-ffe451e0ab5a/image-0-1782712167008.png'},
+{n:'Chicken Wings',c:'Chews & bones',w:'5 pieces',p:350,d:'Crunchy dehydrated chicken wings for supervised chewing.',i:'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/ef9d3dbe-f6d7-4e59-b673-ffe451e0ab5a/image-1-1782745780140.png'},
 {n:'Chicken Bones',c:'Chews & bones',w:'100 g',p:200,d:'Assorted dehydrated chicken bone pieces for supervised chewing.',i:'assets/catalogue-v3/chicken-bones.webp'},
 {n:'Goat Trachea',c:'Chews & bones',w:'1 piece',p:100,d:'A cartilage-rich chew for supervised chew time.',i:'assets/catalogue-v3/goat-trachea.webp',id:'trachea'},
 {n:'Goat Trotter',c:'Chews & bones',w:'1 piece',p:250,d:'A dense natural chew with bone, skin and cartilage.',i:'assets/goat-trotter-plate.png',id:'trotter'},
