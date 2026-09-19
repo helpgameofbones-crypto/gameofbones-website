@@ -17,7 +17,7 @@ window.GOB_LIVE_CATALOG=[
 {n:'Goat Spleen',c:'Organ treats',w:'60 g',p:450,d:'Single-ingredient dehydrated goat spleen.',i:'assets/catalogue-plates/goat-spleen.webp'},
 {n:'Anchovies',c:'Fish treats',w:'60 g',p:350,d:'Wild-caught whole anchovies.',i:'assets/catalogue-plates/anchovies.webp'},
 {n:'Bombay Duck',c:'Fish treats',w:'60 g',p:450,d:'Traditional Bombil, a coastal single-ingredient treat.',i:'assets/catalogue-plates/bombay-duck.webp'},
-{n:'Whole Mackerel',c:'Fish treats',w:'100 g',p:600,d:'Whole dehydrated mackerel.',i:'assets/catalogue-v3/whole-mackerel.webp'},
+{n:'Whole Mackerel',c:'Fish treats',w:'100 g',p:600,d:'Whole dehydrated mackerel.',i:'assets/catalogue-plates/whole-mackerel.webp'},
 {n:'Mackerel Fillet',c:'Fish treats',w:'60 g',p:650,d:'Boneless dehydrated mackerel fillet.',i:'assets/catalogue-plates/mackerel-fillet.webp'},
 {n:'Sardines',c:'Fish treats',w:'60 g',p:400,d:'Whole dehydrated sardines.',i:'assets/catalogue-plates/sardines.webp'},
 {n:'Tuna',c:'Fish treats',w:'60 g',p:500,d:'Lean, high-protein dehydrated tuna.',i:'assets/catalogue-plates/tuna.webp'},
