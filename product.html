@@ -27,6 +27,17 @@
 <link rel="stylesheet" href="product-reference.css?v=live-product-data-1">
 <link rel="stylesheet" href="product-stability.css?v=1">
 <link rel="stylesheet" href="sale-pricing.css?v=1">
+<style>html.product-loading main{visibility:hidden}</style>
+<script>
+  (() => {
+    const params = new URLSearchParams(location.search);
+    if (!location.pathname.startsWith('/products/') && !params.has('catalog') && !params.has('product')) return;
+    document.documentElement.classList.add('product-loading');
+    document.addEventListener('gob:product-ready', () => {
+      document.documentElement.classList.remove('product-loading');
+    }, { once: true });
+  })();
+</script>
 <script defer src="site.js?v=search-unique-1">
 </script>
 <script defer src="header-navigation.js?v=live-ticker-2"></script>
