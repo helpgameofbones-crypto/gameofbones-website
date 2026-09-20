@@ -19,6 +19,11 @@
   background-image: url('assets/process-check-collection.webp');
 }
 
+.pack-step,
+.pack-step:hover {
+  background-image: url('assets/process-pack-sealing.webp');
+}
+
 .source-step,
 .source-step:hover,
 .prepare-step,
@@ -26,7 +31,9 @@
 .slow-dry-step,
 .slow-dry-step:hover,
 .check-step,
-.check-step:hover {
+.check-step:hover,
+.pack-step,
+.pack-step:hover {
   background-position: center;
   background-size: cover;
   color: var(--ink);
@@ -36,12 +43,14 @@
 .source-step .step-num,
 .prepare-step .step-num,
 .slow-dry-step .step-num,
-.check-step .step-num { color: var(--gold); }
+.check-step .step-num,
+.pack-step .step-num { color: var(--gold); }
 
 .source-step p,
 .prepare-step p,
 .slow-dry-step p,
-.check-step p { color: #fffaf0; }
+.check-step p,
+.pack-step p { color: #fffaf0; }
 
 .process-step-copy {
   align-self: center;
@@ -68,5 +77,6 @@
   .source-step,
   .prepare-step,
   .slow-dry-step,
-  .check-step { min-height: 230px; display: flex; align-items: center; }
+  .check-step,
+  .pack-step { min-height: 230px; display: flex; align-items: center; }
 }
