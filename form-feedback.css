@@ -1,0 +1,19 @@
+/* Shared, accessible feedback for native storefront forms. */
+:where(input, select, textarea)[aria-invalid="true"] {
+  border-color: #a22d2d !important;
+  box-shadow: 0 0 0 3px rgba(162, 45, 45, .13) !important;
+}
+
+.field-error {
+  margin: .35rem 0 0;
+  color: #9d2525;
+  font-size: .86rem;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+button:disabled,
+.button[aria-disabled="true"] {
+  cursor: wait;
+  opacity: .68;
+}

@@ -66,9 +66,11 @@ const articles = [
 
 const escape = value => String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
 const schemaTag = data => `<script type="application/ld+json">${JSON.stringify(data)}</script>`;
+const defaultSocialImage = `${origin}/assets/hero-real-dogs.png`;
 
 const productHtml = (template, [slug, name, price, description, image, category]) => {
   const url = `${origin}/products/${slug}`;
+  const socialImage = image ? `${origin}/${image}` : defaultSocialImage;
   const schema = { '@context': 'https://schema.org', '@graph': [
     { '@type': 'Product', '@id': `${url}#product`, name, description, image: image ? [`${origin}/${image}`] : undefined, sku: slug, category, brand: { '@type': 'Brand', name: 'Game of Bones' }, offers: Number.isFinite(price) ? { '@type': 'Offer', url, priceCurrency: 'INR', price: price.toFixed(2), availability: 'https://schema.org/InStock', itemCondition: 'https://schema.org/NewCondition', seller: { '@id': `${origin}/#organization` } } : undefined },
     { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: `${origin}/` }, { '@type': 'ListItem', position: 2, name: 'Products', item: `${origin}/products` }, { '@type': 'ListItem', position: 3, name, item: url }] },
@@ -77,7 +79,7 @@ const productHtml = (template, [slug, name, price, description, image, category]
     .replace('<head>', '<head><base href="/">')
     .replace(/<title>[\s\S]*?<\/title>/, `<title>${escape(name)} — Game of Bones</title>`)
     .replace(/<meta name="description" content="[^"]*">/, `<meta name="description" content="${escape(description)}">`)
-    .replace(/<link rel="canonical" href="[^"]*">/, `<link rel="canonical" href="${url}"><meta property="og:type" content="product"><meta property="og:title" content="${escape(name)} — Game of Bones"><meta property="og:description" content="${escape(description)}"><meta property="og:url" content="${url}">`)
+    .replace(/<link rel="canonical" href="[^"]*">/, `<link rel="canonical" href="${url}"><link rel="icon" href="/favicon.ico" sizes="any"><meta property="og:type" content="product"><meta property="og:title" content="${escape(name)} — Game of Bones"><meta property="og:description" content="${escape(description)}"><meta property="og:url" content="${url}"><meta property="og:image" content="${socialImage}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${escape(name)} — Game of Bones"><meta name="twitter:description" content="${escape(description)}"><meta name="twitter:image" content="${socialImage}">`)
     .replace(/<script id="gob-static-product-schema" type="application\/ld\+json">[\s\S]*?<\/script>/, schemaTag(schema))
     .replace(/<h1 id="productName">[\s\S]*?<\/h1>/, `<h1 id="productName">${escape(name)}</h1>`)
     .replace(/<p class="eyebrow" id="productTag">[\s\S]*?<\/p>/, `<p class="eyebrow" id="productTag">${escape(category)} · Made in Kalyan</p>`)
@@ -96,7 +98,7 @@ const articleHtml = (template, [slug, title, description]) => {
     .replace('<head>', '<head><base href="/">')
     .replace(/<title>[\s\S]*?<\/title>/, `<title>${escape(title)} | Game of Bones Journal</title>`)
     .replace(/<meta name="description" content="[^"]*">/, `<meta name="description" content="${escape(description)}">`)
-    .replace(/<link rel="canonical" href="[^"]*">/, `<link rel="canonical" href="${url}">`)
+    .replace(/<link rel="canonical" href="[^"]*">/, `<link rel="canonical" href="${url}"><link rel="icon" href="/favicon.ico" sizes="any"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${escape(title)} | Game of Bones Journal"><meta name="twitter:description" content="${escape(description)}"><meta name="twitter:image" content="${defaultSocialImage}">`)
     .replace(/<meta property="og:type" content="[^"]*">/, '<meta property="og:type" content="article">')
     .replace(/<meta property="og:title" content="[^"]*">/, `<meta property="og:title" content="${escape(title)} | Game of Bones Journal">`)
     .replace(/<meta property="og:description" content="[^"]*">/, `<meta property="og:description" content="${escape(description)}">`)
@@ -108,6 +110,46 @@ const articleHtml = (template, [slug, title, description]) => {
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const output = join(root, 'seo-static');
+
+const storefrontPages = {
+  'index.html': ['/', 'Naturally dehydrated dog treats, chews and discovery boxes made with clear ingredients by Game of Bones.'],
+  'products.html': ['/products', 'Explore naturally dehydrated dog treats, chews, fish treats and discovery boxes from Game of Bones.'],
+  'product.html': ['/product', 'Explore naturally dehydrated dog treats and supervised chews from Game of Bones.'],
+  'bundles.html': ['/bundles', 'Discover Game of Bones treat boxes, curated for variety, gifting and first-time tasting.'],
+  'our-story.html': ['/our-story', 'Learn why Game of Bones makes naturally dehydrated treats with clear ingredients and thoughtful care.'],
+  'blog.html': ['/blog', 'Practical dog-care guides, treat education and feeding notes from the Game of Bones Journal.'],
+  'learn.html': ['/learn', 'Explore practical dog-care resources, feeding guidance and treat education from Game of Bones.'],
+  'contact.html': ['/contact', 'Contact Game of Bones for help with dog treats, orders, delivery and product questions.'],
+  'rewards.html': ['/rewards', 'Join the Game of Bones rewards programme and discover benefits for returning dog parents.'],
+  'track.html': ['/track', 'Track your Game of Bones order and find delivery support when you need it.'],
+  'cart.html': ['/cart', 'Review your selected Game of Bones treats before checkout.'],
+  'checkout.html': ['/checkout', 'Complete your Game of Bones order securely.'],
+  'login.html': ['/login', 'Log in to your Game of Bones account to view orders, delivery details and rewards.'],
+  'account.html': ['/account', 'Manage your Game of Bones account, orders, delivery details and rewards.'],
+  'policies.html': ['/policies', 'Read Game of Bones shipping, returns, privacy and store policies.'],
+  'emergency-contacts.html': ['/emergency-contacts', 'Save key emergency contacts and pet-care information in your Game of Bones account.'],
+  'feeding-health-log.html': ['/feeding-health-log', 'Record feeding and health notes for your dog with Game of Bones.'],
+  'sterilization-records.html': ['/sterilization-records', 'Keep your dog’s sterilization record accessible in your Game of Bones account.'],
+  'vaccination-records.html': ['/vaccination-records', 'Keep your dog’s vaccination record accessible in your Game of Bones account.'],
+  'thank-you.html': ['/thank-you', 'Your Game of Bones order has been received.'],
+};
+
+const privatePages = new Set(['login.html', 'account.html', 'cart.html', 'checkout.html', 'thank-you.html', 'emergency-contacts.html', 'feeding-health-log.html', 'sterilization-records.html', 'vaccination-records.html']);
+
+const ensureStaticMetadata = (html, [path, fallbackDescription], isPrivate) => {
+  const canonical = `${origin}${path}`;
+  const title = html.match(/<title>([\s\S]*?)<\/title>/i)?.[1] || 'Game of Bones';
+  const description = html.match(/<meta\s+name="description"\s+content="([^"]*)"\s*\/?\s*>/i)?.[1] || escape(fallbackDescription);
+  let outputHtml = html;
+  if (!/<meta\s+name="description"/i.test(outputHtml)) outputHtml = outputHtml.replace(/<\/title>/i, `</title><meta name="description" content="${description}">`);
+  if (!/<link\s+rel="canonical"/i.test(outputHtml)) outputHtml = outputHtml.replace(/<\/title>/i, `</title><link rel="canonical" href="${canonical}">`);
+  if (!/<link\s+rel="(?:icon|shortcut icon)"/i.test(outputHtml)) outputHtml = outputHtml.replace(/<\/head>/i, '<link rel="icon" href="/favicon.ico" sizes="any"></head>');
+  if (isPrivate && !/<meta\s+name="robots"/i.test(outputHtml)) outputHtml = outputHtml.replace(/<\/head>/i, '<meta name="robots" content="noindex,follow"></head>');
+  if (!/<meta\s+property="og:image"/i.test(outputHtml)) outputHtml = outputHtml.replace(/<\/head>/i, `<meta property="og:type" content="website"><meta property="og:title" content="${title}"><meta property="og:description" content="${description}"><meta property="og:url" content="${canonical}"><meta property="og:image" content="${defaultSocialImage}"></head>`);
+  if (!/<meta\s+name="twitter:card"/i.test(outputHtml)) outputHtml = outputHtml.replace(/<\/head>/i, `<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${title}"><meta name="twitter:description" content="${description}"><meta name="twitter:image" content="${defaultSocialImage}"></head>`);
+  return outputHtml;
+};
+
 for (const [kind, templateName, entries, renderer] of [
   ['products', 'product.html', products, productHtml],
   ['blog', 'blog.html', articles, articleHtml],
@@ -119,4 +161,12 @@ for (const [kind, templateName, entries, renderer] of [
     await writeFile(target, renderer(template, entry));
   }
 }
+for (const [filename, metadata] of Object.entries(storefrontPages)) {
+  const target = join(root, filename);
+  const source = await readFile(target, 'utf8');
+  await writeFile(target, ensureStaticMetadata(source, metadata, privatePages.has(filename)));
+}
+const sitemapPath = join(root, 'sitemap.xml');
+const sitemap = await readFile(sitemapPath, 'utf8');
+await writeFile(sitemapPath, sitemap.replace(/<lastmod>[^<]+<\/lastmod>/g, '<lastmod>2026-09-28</lastmod>'));
 console.log(`Generated ${products.length} product and ${articles.length} article crawl-visible pages.`);

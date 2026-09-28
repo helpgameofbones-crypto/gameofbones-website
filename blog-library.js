@@ -150,7 +150,11 @@
     setMeta('meta[property="og:title"]', title);
     setMeta('meta[property="og:description"]', description);
     setMeta('meta[property="og:url"]', url);
-    setMeta('meta[property="og:image"]', article?.cover_image || 'https://gameofbones.in/assets/hero-real-dogs.png');
+    const socialImage = article?.cover_image || 'https://gameofbones.in/assets/hero-real-dogs.png';
+    setMeta('meta[property="og:image"]', socialImage);
+    setMeta('meta[name="twitter:title"]', title);
+    setMeta('meta[name="twitter:description"]', description);
+    setMeta('meta[name="twitter:image"]', socialImage);
     const canonical = $('link[rel="canonical"]');
     if (canonical) canonical.setAttribute('href', url);
     updateSchema(article);

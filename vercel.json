@@ -18,7 +18,8 @@
     { "source": "/checkout.html", "destination": "/checkout", "permanent": true },
     { "source": "/login.html", "destination": "/login", "permanent": true },
     { "source": "/account.html", "destination": "/account", "permanent": true },
-    { "source": "/policies.html", "destination": "/policies", "permanent": true }
+    { "source": "/policies.html", "destination": "/policies", "permanent": true },
+    { "source": "/thank-you.html", "destination": "/thank-you", "permanent": true }
   ],
   "rewrites": [
     { "source": "/api/:path*", "destination": "https://gameofbones-admin.vercel.app/api/:path*" },
@@ -36,6 +37,7 @@
     { "source": "/login", "destination": "/login.html" },
     { "source": "/account", "destination": "/account.html" },
     { "source": "/policies", "destination": "/policies.html" },
+    { "source": "/thank-you", "destination": "/thank-you.html" },
     { "source": "/shop", "destination": "/products.html" },
     { "source": "/about", "destination": "/our-story.html" },
     { "source": "/refer", "destination": "/rewards.html" },

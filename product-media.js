@@ -28,7 +28,7 @@ function renderProductMedia(){
     const item=media[index]
     thumbs.querySelectorAll('.thumb').forEach((button,buttonIndex)=>{button.classList.toggle('active',buttonIndex===index);button.setAttribute('aria-pressed',String(buttonIndex===index))})
     if(item.type==='video'){
-      stage.innerHTML=item.src?`<video controls playsinline poster="${item.poster||''}" aria-label="${item.alt||item.label}"><source src="${item.src}"></video>`:`<div class="media-video-poster"><img src="${item.poster||''}" alt="${item.alt||''}"><span aria-hidden="true">▶</span><strong>Product video</strong><small>Video slot ready for upload</small></div>`
+      stage.innerHTML=item.src?`<video controls playsinline poster="${item.poster||''}" aria-label="${item.alt||item.label}"><source src="${item.src}"></video>`:`<div class="media-video-poster"><img src="${item.poster||''}" alt="${item.alt||item.label||'Product video preview'}"><span aria-hidden="true">▶</span><strong>Product video</strong><small>Video slot ready for upload</small></div>`
     }else stage.innerHTML=`<img id="productImage" src="${item.src}" alt="${item.alt||item.label||'Product photo'}" width="1000" height="1000" decoding="async" fetchpriority="high">`
     count.textContent=`${index+1} of ${media.length} media`
   }

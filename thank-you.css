@@ -1,0 +1,12 @@
+.confirmation-wrap{min-height:calc(100svh - 119px);display:grid;place-items:center;padding:clamp(48px,8vw,100px) 24px;background:linear-gradient(135deg,#f7f0e4,#e4ebdf)}
+.confirmation-card{width:min(720px,100%);padding:clamp(28px,6vw,64px);background:var(--paper);border:1px solid var(--line);box-shadow:var(--shadow)}
+.confirmation-card .lead{max-width:54ch}
+.confirmation-details{margin:34px 0;border-block:1px solid var(--line)}
+.confirmation-details div{display:grid;grid-template-columns:170px 1fr;gap:20px;padding:18px 0;border-bottom:1px solid var(--line)}
+.confirmation-details div:last-child{border-bottom:0}
+.confirmation-details dt{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.confirmation-details dd{margin:0;font-size:14px;font-weight:600}
+.confirmation-actions{display:flex;flex-wrap:wrap;gap:10px}
+.confirmation-note{margin:24px 0 0;color:var(--muted);font-size:13px}
+.confirmation-note a{text-decoration:underline;text-underline-offset:3px}
+@media(max-width:560px){.confirmation-wrap{min-height:auto;padding:40px 16px 70px}.confirmation-details div{grid-template-columns:1fr;gap:5px}.confirmation-actions .button{width:100%}}
