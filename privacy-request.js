@@ -14,7 +14,9 @@
     submit.disabled = true; submit.textContent = 'Sending…'; response.textContent = '';
     try {
       if (values.action === 'access') {
-        const result = await fetch('/api/public-data-export', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: String(values.email).trim(), phone }) });
+        const token = window.sessionStorage.getItem('gob-customer-token');
+        if (!token) throw new Error('Please sign in to your account before downloading your data.');
+        const result = await fetch('/api/public-data-export', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` } });
         const data = await result.json().catch(() => ({}));
         if (!result.ok) throw new Error(data.error || 'Your data could not be prepared right now.');
         download(data); show('Your data export has downloaded. Keep it private and contact us if anything needs correcting.');
