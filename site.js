@@ -45,12 +45,15 @@ const GOB_SEO=(()=>{
   ensureDescription(basePath);
   markPrivatePath();
   const baseUrl=ensureCanonical(origin+basePath);
-  script('gob-site-schema',{'@context':'https://schema.org','@graph':[
+  const staticProductSchema=Boolean(document.getElementById('gob-static-product-schema')&&/^\/products\/[^/]+\/?$/.test(location.pathname));
+  const hasServerSchema=Boolean(document.getElementById('gob-home-schema')||staticProductSchema||document.getElementById('gob-static-article-schema'));
+  if(!hasServerSchema)script('gob-site-schema',{'@context':'https://schema.org','@graph':[
     {'@type':'Organization','@id':origin+'/#organization',name:'Game of Bones',url:origin+'/',logo:absoluteImage('assets/gob-logo.png'),description:'Single-ingredient, naturally dehydrated dog treats made in Kalyan, Maharashtra.'},
     {'@type':'WebSite','@id':origin+'/#website',url:origin+'/',name:'Game of Bones',publisher:{'@id':origin+'/#organization'}},
     {'@type':'WebPage','@id':baseUrl+'#webpage',url:baseUrl,name:document.title,isPartOf:{'@id':origin+'/#website'}}
   ]});
   const setProductSchema=(product,url)=>{
+    if(staticProductSchema)return;
     if(!product)return;
     const name=product.n||product.name||'Game of Bones treat';
     const price=Number(product.p??product.price??0);

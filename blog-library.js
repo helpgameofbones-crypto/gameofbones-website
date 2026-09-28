@@ -109,6 +109,9 @@
   }
 
   function updateSchema(article) {
+    // Crawl-visible article pages ship a complete static schema block. Do not
+    // overwrite it with the lighter client-side listing schema.
+    if (document.querySelector('#gob-static-article-schema')) return;
     const items = state.articles.map(entry => ({
       '@type': 'BlogPosting',
       headline: entry.title,
@@ -138,7 +141,8 @@
       url: journalUrl,
       mainEntity: { '@type': 'ItemList', itemListElement: items.map((item, index) => ({ '@type': 'ListItem', position: index + 1, item })) },
     };
-    $('#journal-schema').textContent = JSON.stringify(schema);
+    const target = $('#journal-schema');
+    if (target) target.textContent = JSON.stringify(schema);
   }
 
   function updateHead(article) {

@@ -19,7 +19,9 @@
     { "source": "/login.html", "destination": "/login", "permanent": true },
     { "source": "/account.html", "destination": "/account", "permanent": true },
     { "source": "/policies.html", "destination": "/policies", "permanent": true },
-    { "source": "/thank-you.html", "destination": "/thank-you", "permanent": true }
+    { "source": "/thank-you.html", "destination": "/thank-you", "permanent": true },
+    { "source": "/products/:slug/", "destination": "/products/:slug", "permanent": true },
+    { "source": "/blog/:slug/", "destination": "/blog/:slug", "permanent": true }
   ],
   "rewrites": [
     { "source": "/api/:path*", "destination": "https://gameofbones-admin.vercel.app/api/:path*" },
@@ -57,7 +59,8 @@
         { "key": "X-Content-Type-Options", "value": "nosniff" },
         { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
+        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" },
+        { "key": "Content-Security-Policy", "value": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; form-action 'self'; img-src 'self' data: https://*.supabase.co https://images.pexels.com; media-src 'self' https://*.supabase.co; script-src 'self' 'unsafe-inline' https://checkout.razorpay.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://gameofbones-admin.vercel.app https://*.supabase.co https://api.razorpay.com; frame-src https://checkout.razorpay.com" }
       ]
     }
   ]

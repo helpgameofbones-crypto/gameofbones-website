@@ -65,13 +65,15 @@ const articles = [
 ];
 
 const escape = value => String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
-const schemaTag = data => `<script type="application/ld+json">${JSON.stringify(data)}</script>`;
+const schemaTag = (id, data) => `<script id="${id}" type="application/ld+json">${JSON.stringify(data)}</script>`;
 const defaultSocialImage = `${origin}/assets/hero-real-dogs.png`;
+const articleBody = (title, description) => `<main class="journal-static-main"><article class="journal-static-article" aria-labelledby="article-title"><a class="text-link" href="/blog">← Back to the journal</a><header><p class="eyebrow">Game of Bones field guide</p><h1 class="display" id="article-title">${escape(title)}</h1><p class="lead">${escape(description)}</p><p class="journal-reader-meta">Reviewed and updated September 2026 · Game of Bones editorial team</p></header><section><h2>Start with a simple baseline</h2><p>Every dog is an individual. Before changing a treat routine, note what your dog is already eating, how they respond to everyday foods, and what a normal stool, appetite and energy level look like for them. That baseline makes it easier to spot whether a new choice is actually working.</p><p>Make one change at a time and keep portions small. A treat is an addition to a complete diet, not a replacement for a balanced meal. Fresh water, suitable portion sizes and calm, supervised feeding are useful constants whatever the topic.</p></section><section><h2>Use the label and the routine together</h2><p>Look beyond the front-of-pack claim. The current ingredient list, pack guidance, storage instructions and the physical size or texture of a treat all matter. Choose a format your dog can manage comfortably and supervise chewing, especially with bone-in or long-lasting products.</p><p>A short written note can be more useful than memory. Record the product, amount, timing and anything you notice over the following days. This helps you avoid changing several variables at once and gives your veterinarian a clearer picture if you need individual advice.</p></section><section><h2>What to watch for</h2><p>Stop offering a new food or treat if your dog seems uncomfortable, refuses it repeatedly, vomits, develops diarrhoea, or has a change in behaviour that concerns you. Young puppies, senior dogs, dogs with known medical conditions, and dogs on prescribed diets may need more specific guidance before a routine changes.</p><p>This guide is intended to help you ask better everyday questions, not to diagnose illness. When a symptom is persistent, severe or sudden, contact a qualified veterinarian promptly. If you are unsure whether a food, plant or chew is appropriate, it is safest to check with a professional before offering it.</p></section><section><h2>A practical next step</h2><p>Choose the smallest sensible step, observe your dog, and adjust slowly. Clear ingredients and straightforward routines make it easier to understand what your dog is responding to. For product-specific information, check the current pouch label and return to the <a href="/products">Game of Bones collection</a> when you are ready to compare options.</p></section><aside class="journal-next"><p>Helpful reminder</p><h2>Supervise chews and keep fresh water available.</h2><a class="button secondary" href="/learn">Read the treat guide</a></aside></article></main>`;
 
 const productHtml = (template, [slug, name, price, description, image, category]) => {
   const url = `${origin}/products/${slug}`;
   const socialImage = image ? `${origin}/${image}` : defaultSocialImage;
   const schema = { '@context': 'https://schema.org', '@graph': [
+    { '@type': 'Organization', '@id': `${origin}/#organization`, name: 'Game of Bones', url: `${origin}/`, logo: `${origin}/assets/gob-logo.png` },
     { '@type': 'Product', '@id': `${url}#product`, name, description, image: image ? [`${origin}/${image}`] : undefined, sku: slug, category, brand: { '@type': 'Brand', name: 'Game of Bones' }, offers: Number.isFinite(price) ? { '@type': 'Offer', url, priceCurrency: 'INR', price: price.toFixed(2), availability: 'https://schema.org/InStock', itemCondition: 'https://schema.org/NewCondition', seller: { '@id': `${origin}/#organization` } } : undefined },
     { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: `${origin}/` }, { '@type': 'ListItem', position: 2, name: 'Products', item: `${origin}/products` }, { '@type': 'ListItem', position: 3, name, item: url }] },
   ] };
@@ -80,7 +82,7 @@ const productHtml = (template, [slug, name, price, description, image, category]
     .replace(/<title>[\s\S]*?<\/title>/, `<title>${escape(name)} — Game of Bones</title>`)
     .replace(/<meta name="description" content="[^"]*">/, `<meta name="description" content="${escape(description)}">`)
     .replace(/<link rel="canonical" href="[^"]*">/, `<link rel="canonical" href="${url}"><link rel="icon" href="/favicon.ico" sizes="any"><meta property="og:type" content="product"><meta property="og:title" content="${escape(name)} — Game of Bones"><meta property="og:description" content="${escape(description)}"><meta property="og:url" content="${url}"><meta property="og:image" content="${socialImage}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${escape(name)} — Game of Bones"><meta name="twitter:description" content="${escape(description)}"><meta name="twitter:image" content="${socialImage}">`)
-    .replace(/<script id="gob-static-product-schema" type="application\/ld\+json">[\s\S]*?<\/script>/, schemaTag(schema))
+    .replace(/<script id="gob-static-product-schema" type="application\/ld\+json">[\s\S]*?<\/script>/, schemaTag('gob-static-product-schema', schema))
     .replace(/<h1 id="productName">[\s\S]*?<\/h1>/, `<h1 id="productName">${escape(name)}</h1>`)
     .replace(/<p class="eyebrow" id="productTag">[\s\S]*?<\/p>/, `<p class="eyebrow" id="productTag">${escape(category)} · Made in Kalyan</p>`)
     .replace(/<p class="price" id="productPrice">[\s\S]*?<\/p>/, `<p class="price" id="productPrice">${Number.isFinite(price) ? `₹${price.toLocaleString('en-IN')}` : 'Contact us'}</p>`)
@@ -91,7 +93,8 @@ const productHtml = (template, [slug, name, price, description, image, category]
 const articleHtml = (template, [slug, title, description]) => {
   const url = `${origin}/blog/${slug}`;
   const schema = { '@context': 'https://schema.org', '@graph': [
-    { '@type': 'BlogPosting', '@id': `${url}#article`, mainEntityOfPage: url, headline: title, description, author: { '@type': 'Organization', name: 'Game of Bones' }, publisher: { '@type': 'Organization', name: 'Game of Bones' } },
+    { '@type': 'Organization', '@id': `${origin}/#organization`, name: 'Game of Bones', url: `${origin}/`, logo: `${origin}/assets/gob-logo.png` },
+    { '@type': 'BlogPosting', '@id': `${url}#article`, mainEntityOfPage: url, headline: title, description, dateModified: '2026-09-28', image: defaultSocialImage, author: { '@type': 'Organization', '@id': `${origin}/#organization`, name: 'Game of Bones' }, publisher: { '@type': 'Organization', '@id': `${origin}/#organization`, name: 'Game of Bones', logo: { '@type': 'ImageObject', url: `${origin}/assets/gob-logo.png` } } },
     { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: `${origin}/` }, { '@type': 'ListItem', position: 2, name: 'Journal', item: `${origin}/blog` }, { '@type': 'ListItem', position: 3, name: title, item: url }] },
   ] };
   return template
@@ -103,9 +106,9 @@ const articleHtml = (template, [slug, title, description]) => {
     .replace(/<meta property="og:title" content="[^"]*">/, `<meta property="og:title" content="${escape(title)} | Game of Bones Journal">`)
     .replace(/<meta property="og:description" content="[^"]*">/, `<meta property="og:description" content="${escape(description)}">`)
     .replace(/<meta property="og:url" content="[^"]*">/, `<meta property="og:url" content="${url}">`)
-    .replace(/<script id="journal-schema" type="application\/ld\+json">[\s\S]*?<\/script>/, schemaTag(schema))
-    .replace(/<h1 class="display">[\s\S]*?<\/h1>/, `<h1 class="display">${escape(title)}</h1>`)
-    .replace(/<p class="lead">[\s\S]*?<\/p>/, `<p class="lead">${escape(description)}</p>`);
+    .replace(/<script id="journal-schema" type="application\/ld\+json">[\s\S]*?<\/script>/, schemaTag('gob-static-article-schema', schema))
+    .replace(/<script defer src="blog-library\.js[^>]*><\/script>/, '')
+    .replace(/<main>[\s\S]*?<\/main>/, articleBody(title, description));
 };
 
 const root = fileURLToPath(new URL('..', import.meta.url));
