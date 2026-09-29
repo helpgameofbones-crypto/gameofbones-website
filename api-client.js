@@ -44,6 +44,8 @@
     pincode: pin => request(`/pincode-check?pin=${encodeURIComponent(pin)}`),
     requestLoginCode: email => request('/customer-auth/request-code', { method: 'POST', body: JSON.stringify({ email }) }),
     verifyLoginCode: (email, code) => request('/customer-auth/verify-code', { method: 'POST', body: JSON.stringify({ email, code }) }),
+    requestAccountCreationCode: body => request('/customer-auth/create-account/request-code', { method: 'POST', body: JSON.stringify(body) }),
+    verifyAccountCreationCode: body => request('/customer-auth/create-account/verify-code', { method: 'POST', body: JSON.stringify(body) }),
     account: token => request('/customer-account', { headers: { Authorization: `Bearer ${token}` } }),
     updateAccount: (token, body) => request('/customer-account', { method: 'PATCH', headers: { Authorization: `Bearer ${token}` }, body: JSON.stringify(body) }),
     capture: body => request('/public-email-capture', { method: 'POST', body: JSON.stringify(body) }),
