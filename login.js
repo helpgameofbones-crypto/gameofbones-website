@@ -114,7 +114,15 @@
         await window.GOB_API.requestAccountCreationCode(details)
         lockRegistration(true); createCode.focus()
         message(createResult, 'We sent a six-digit verification code to your email. Check your inbox and spam folder.', 'success')
-      } catch (error) { message(createResult, error.message || 'Unable to create your account right now.') }
+      } catch (error) {
+        if (error.message === 'An account is already linked to these details. Please sign in instead.') {
+          selectMode('sign-in')
+          loginEmail.value = details.email
+          message(loginResult, 'You already have an account. Use Sign in to receive your secure code.', 'success')
+        } else {
+          message(createResult, error.message || 'Unable to create your account right now.')
+        }
+      }
       finally { submit.disabled = false }
     })
   })
