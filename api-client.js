@@ -42,8 +42,8 @@
       return data;
     },
     pincode: pin => request(`/pincode-check?pin=${encodeURIComponent(pin)}`),
-    requestLoginCode: phone => request('/customer-auth/request-code', { method: 'POST', body: JSON.stringify({ phone }) }),
-    verifyLoginCode: (phone, code) => request('/customer-auth/verify-code', { method: 'POST', body: JSON.stringify({ phone, code }) }),
+    requestLoginCode: email => request('/customer-auth/request-code', { method: 'POST', body: JSON.stringify({ email }) }),
+    verifyLoginCode: (email, code) => request('/customer-auth/verify-code', { method: 'POST', body: JSON.stringify({ email, code }) }),
     account: token => request('/customer-account', { headers: { Authorization: `Bearer ${token}` } }),
     updateAccount: (token, body) => request('/customer-account', { method: 'PATCH', headers: { Authorization: `Bearer ${token}` }, body: JSON.stringify(body) }),
     capture: body => request('/public-email-capture', { method: 'POST', body: JSON.stringify(body) }),
