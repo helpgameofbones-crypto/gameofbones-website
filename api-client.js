@@ -21,6 +21,13 @@
     if (!response.ok) throw new Error(data.error || 'The service could not complete that request.');
     return data;
   }
+  async function multipartRequest(path, token, body) {
+    if (!base) throw new Error('The API bridge is not configured for this preview.');
+    const response = await fetch(`${base}${path}`, { method: 'POST', headers: token ? { Authorization: `Bearer ${token}` } : {}, body });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.error || 'The service could not complete that request.');
+    return data;
+  }
   const customerHeaders = () => {
     const token = window.sessionStorage.getItem('gob-customer-token');
     return token ? { Authorization: `Bearer ${token}` } : {};
@@ -48,6 +55,9 @@
     verifyAccountCreationCode: body => request('/customer-auth/create-account/verify-code', { method: 'POST', body: JSON.stringify(body) }),
     account: token => request('/customer-account', { headers: { Authorization: `Bearer ${token}` } }),
     updateAccount: (token, body) => request('/customer-account', { method: 'PATCH', headers: { Authorization: `Bearer ${token}` }, body: JSON.stringify(body) }),
+    customerReviews: token => request('/customer-reviews', { headers: { Authorization: `Bearer ${token}` } }),
+    submitCustomerReview: (token, formData) => multipartRequest('/customer-reviews', token, formData),
+    publicProductReviews: product => request(`/public-product-reviews?product=${encodeURIComponent(product)}`),
     capture: body => request('/public-email-capture', { method: 'POST', body: JSON.stringify(body) }),
     contactInquiry: body => request('/contact-inquiries', { method: 'POST', body: JSON.stringify(body) }),
     spinWheel: body => request('/spin-wheel', { method: 'POST', body: JSON.stringify(body) }),
