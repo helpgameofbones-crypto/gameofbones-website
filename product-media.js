@@ -13,7 +13,13 @@ window.GOB_PRODUCT_MEDIA = window.GOB_PRODUCT_MEDIA || {
   ]
 }
 
-function productMediaId(){return new URLSearchParams(location.search).get('catalog')||'jerky'}
+function productMediaId(){
+  const params=new URLSearchParams(location.search)
+  const routeSlug=location.pathname.match(/^\/products\/([^/]+)\/?$/)?.[1]
+  // Product detail pages have clean URLs in production. The old query-only
+  // lookup silently treated every clean URL as Chicken Jerky.
+  return params.get('catalog')||params.get('product')||(routeSlug?decodeURIComponent(routeSlug):'jerky')
+}
 function galleryMedia(){
   const id=productMediaId(),configured=window.GOB_PRODUCT_MEDIA[id]
   if(configured?.length)return configured.slice(0,6)
