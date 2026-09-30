@@ -34,7 +34,7 @@
 /* The wheel is a secondary engagement feature. Loading it after the main
    content is interactive keeps its work out of the homepage's critical path. */
 window.addEventListener('load',()=>{
-  const loadWheel=()=>{const script=document.createElement('script');script.src='wheel-game.js?v=wheel-8';document.body.append(script)};
+  const loadWheel=()=>{const script=document.createElement('script');script.src='wheel-game.js?v=wheel-9';document.body.append(script)};
   if('requestIdleCallback'in window)requestIdleCallback(loadWheel,{timeout:2500});else setTimeout(loadWheel,1200);
 },{once:true});
 </script>

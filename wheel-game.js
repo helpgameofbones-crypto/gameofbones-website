@@ -85,5 +85,9 @@
       }, window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 100 : 4200);
     }, true);
   }
-  document.addEventListener('DOMContentLoaded', installWheel);
+  // index.html loads this optional feature after the page's load event to
+  // protect first-paint performance. By then DOMContentLoaded has already
+  // happened, so do not wait for an event that will never fire.
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', installWheel, { once: true });
+  else installWheel();
 })();
