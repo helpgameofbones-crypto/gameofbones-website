@@ -4,6 +4,9 @@
 .wheel-card .wheel-form-label{display:grid;grid-template-columns:1fr;gap:6px;align-items:stretch;color:var(--ink);font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
 .wheel-card .wheel-form-label input{box-sizing:border-box;min-width:0;width:100%;font:16px/1.3 var(--body);color:var(--ink)}
 .wheel-card .wheel-continue{margin-top:6px;min-height:48px}
+.wheel-card .wheel-consent{display:flex;gap:9px;align-items:flex-start;margin:15px 0 0;color:var(--muted);font-size:12px;line-height:1.45}
+.wheel-card .wheel-consent input{width:18px;height:18px;margin:0;flex:0 0 auto;accent-color:var(--ink)}
+.wheel-card .wheel-error{margin:12px 0 0;color:#9d3018;font-size:13px;font-weight:700;line-height:1.4}
 .wheel-stage{position:relative;display:grid;place-items:center;min-height:300px;padding:28px 0 6px}
 .wheel-pointer{position:absolute;z-index:3;top:12px;left:50%;width:0;height:0;transform:translateX(-50%);border-right:17px solid transparent;border-left:17px solid transparent;border-top:31px solid var(--ink);filter:drop-shadow(0 2px 0 var(--paper))}
 .prize-wheel{position:relative;width:min(70vw,278px);aspect-ratio:1;border:8px solid var(--paper);border-radius:50%;background:conic-gradient(from -30deg,var(--gold-soft) 0deg 60deg,var(--ink) 60deg 120deg,#d26e40 120deg 180deg,#e5eee0 180deg 240deg,var(--gold) 240deg 300deg,#345746 300deg 360deg);box-shadow:0 0 0 1px var(--ink),0 16px 28px rgba(16,44,34,.18);transition:transform 4.1s cubic-bezier(.12,.75,.12,1);will-change:transform}

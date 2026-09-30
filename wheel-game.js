@@ -1,8 +1,7 @@
 (() => {
   const prizes = [
-    { label: '15% off', detail: 'WELCOME15' }, { label: '₹75 off', detail: 'BONES75' },
-    { label: '10% off', detail: 'TAIL10' }, { label: 'Free shipping', detail: 'FREESHIP' },
-    { label: '₹50 off', detail: 'PAWS50' }, { label: '20% off', detail: 'MEGA20' },
+    { label: '10% off' }, { label: '15% off' }, { label: '20% off' },
+    { label: '10% off' }, { label: '15% off' }, { label: '20% off' },
   ];
 
   async function customerKey({ email, phone }) {
@@ -20,16 +19,23 @@
     const modal = document.querySelector('#wheelModal');
     const form = document.querySelector('#wheelForm');
     if (!modal || !form) return;
-    if (!document.querySelector('link[href="wheel-game.css?v=wheel-7"]')) {
-      const stylesheet = document.createElement('link'); stylesheet.rel = 'stylesheet'; stylesheet.href = 'wheel-game.css?v=wheel-7'; document.head.append(stylesheet);
+    if (!document.querySelector('link[href="wheel-game.css?v=wheel-8"]')) {
+      const stylesheet = document.createElement('link'); stylesheet.rel = 'stylesheet'; stylesheet.href = 'wheel-game.css?v=wheel-8'; document.head.append(stylesheet);
     }
 
     const intro = modal.querySelector('.wheel-card > p:not(.eyebrow)');
     intro?.classList.add('wheel-intro');
     intro.textContent = 'Fill in your details, then spin once to see the offer you landed on.';
-    form.innerHTML = `<label class="wheel-form-label">Name <input required name="name" autocomplete="name" placeholder="Your name"></label><label class="wheel-form-label">Email <input required name="email" type="email" autocomplete="email" placeholder="you@example.com"></label><label class="wheel-form-label">Mobile number <input required name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="10-digit mobile number" pattern="[0-9]{10}" title="Enter a 10-digit mobile number"></label><button class="button wheel-continue" type="submit">Continue to the wheel</button>`;
+    form.innerHTML = `<label class="wheel-form-label">Name <input required name="name" autocomplete="name" placeholder="Your name"></label><label class="wheel-form-label">Email <input required name="email" type="email" autocomplete="email" placeholder="you@example.com"></label><label class="wheel-form-label">Mobile number <input required name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="10-digit mobile number" pattern="[0-9]{10}" title="Enter a 10-digit mobile number"></label><label class="wheel-consent"><input required name="marketing_consent" type="checkbox" value="true"> <span>Send me this offer and occasional Game of Bones news. I can unsubscribe anytime.</span></label><button class="button wheel-continue" type="submit">Continue to the wheel</button>`;
     modal.querySelector('#wheelResult')?.remove();
     const close = () => modal.classList.remove('open');
+    const open = () => {
+      modal.classList.add('open');
+      form.hidden = false;
+      modal.querySelector('.wheel-play,.wheel-previous')?.remove();
+      modal.querySelector('input[name="name"]')?.focus();
+    };
+    document.querySelector('#wheelLaunch')?.addEventListener('click', open);
     modal.querySelector('[data-wheel-close]')?.addEventListener('click', close);
     document.addEventListener('keydown', event => { if (event.key === 'Escape' && modal.classList.contains('open')) close(); });
     modal.addEventListener('click', event => { if (event.target === modal) close(); });
@@ -38,6 +44,7 @@
       event.preventDefault(); event.stopImmediatePropagation();
       if (!form.reportValidity()) return;
       const capture = Object.fromEntries(new FormData(form));
+      capture.marketing_consent = capture.marketing_consent === 'true';
       const card = modal.querySelector('.wheel-card');
       const continueButton = form.querySelector('button[type="submit"]');
       continueButton.disabled = true; continueButton.textContent = 'Checking your spin…';
@@ -52,9 +59,10 @@
           alreadySpun = Boolean(serverAward.alreadySpun);
           localStorage.setItem(`gob-spin:${key}`, JSON.stringify(award));
         }
-      } catch (_) {
-        award = prizes[Math.floor(Math.random() * prizes.length)];
-        if (key) localStorage.setItem(`gob-spin:${key}`, JSON.stringify(award));
+      } catch (error) {
+        form.querySelector('.wheel-error')?.remove();
+        form.insertAdjacentHTML('beforeend', `<p class="wheel-error" role="alert">We could not create your offer right now. Please try again in a moment.</p>`);
+        return;
       } finally { continueButton.disabled = false; continueButton.textContent = 'Continue to the wheel'; }
 
       form.hidden = true;
@@ -69,7 +77,7 @@
       intro.textContent = 'Your welcome offer is on the wheel. It will stop on one prize.';
       card.insertAdjacentHTML('beforeend', `<section class="wheel-play" aria-label="Spin to win prize wheel"><div class="wheel-stage"><span class="wheel-pointer" aria-hidden="true"></span><div class="prize-wheel" id="prizeWheel" role="img" aria-label="Prize wheel with six welcome offers"><span class="wheel-segment wheel-s1">15%<br>OFF</span><span class="wheel-segment dark wheel-s2">₹75<br>OFF</span><span class="wheel-segment wheel-s3">10%<br>OFF</span><span class="wheel-segment wheel-s4">FREE<br>SHIP</span><span class="wheel-segment wheel-s5">₹50<br>OFF</span><span class="wheel-segment dark wheel-s6">20%<br>OFF</span><span class="wheel-hub">SPIN</span></div></div><p class="wheel-status" aria-live="polite">Spinning your welcome offer…</p></section>`);
       const wheel = card.querySelector('#prizeWheel'), status = card.querySelector('.wheel-status');
-      const chosenIndex = prizes.findIndex(prize => prize.detail === award.detail);
+      const chosenIndex = prizes.findIndex(prize => prize.label === award.label);
       requestAnimationFrame(() => { wheel.style.transform = `rotate(${2160 - Math.max(0, chosenIndex) * 60}deg)`; });
       window.setTimeout(() => {
         card.classList.add('wheel-result-ready'); card.scrollTo({ top: 0, behavior: 'smooth' });
