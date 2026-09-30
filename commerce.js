@@ -59,9 +59,10 @@ function renderCommerceCart(){
 
 function updateCommerceTotals(){
   const subtotal=cartValue(),count=cartCount(),saleBasket=cartHasSaleItems(),rate=saleBasket?0:bulkRate(count),bulk=Math.round(subtotal*rate)
-  const coupon=document.querySelector('[name="coupon"]:checked')?.value||'none'
+  const privateCoupon=document.querySelector('[name="private_coupon"]')?.value.trim().toUpperCase()||''
+  const coupon=privateCoupon||document.querySelector('[name="coupon"]:checked')?.value||'none'
   const eligibility=window.GOB_CHECKOUT_ELIGIBILITY||{signedIn:false,firstOrder:false,checking:false,points:0}
-  const couponRate=!saleBasket&&(coupon==='WELCOME15'&&eligibility.firstOrder ? .15 : coupon==='MEGA20'&&subtotal>=2199 ? .2 : 0)
+  const couponRate=!saleBasket&&(coupon==='WELCOME15'&&eligibility.firstOrder ? .15 : coupon==='MEGA20'&&subtotal>=2199 ? .2 : /^BDAY[A-Z0-9]+$/.test(coupon) ? .15 : 0)
   const couponDiscount=Math.round(subtotal*couponRate),saving=Math.max(bulk,couponDiscount)
   const payment=document.querySelector('[name="payment"]:checked')?.value||'online'
   const requestedPoints=Number(document.querySelector('[name="loyalty_points_redeemed"]')?.value||0)
@@ -88,6 +89,8 @@ function updateCommerceTotals(){
     } else if(coupon==='MEGA20'){
       const remaining=Math.max(0,2199-subtotal)
       status.textContent=remaining?`MEGA20 is not applied: add ${money(remaining)} of eligible treats to reach the ₹2,199 minimum. It cannot be combined with buy-more savings.`:'MEGA20 is available on this basket. It replaces, rather than stacks with, buy-more savings.'
+    } else if(privateCoupon){
+      status.textContent=/^BDAY[A-Z0-9]+$/.test(privateCoupon)?'Your private birthday reward is shown below and will be verified securely before payment. It is one use, valid for ₹499+ treat subtotal, and cannot combine with buy-more savings.':'Enter the private birthday code exactly as it appears in your message.'
     } else {
       status.textContent=bulk?'Your best automatic buy-more tier is applied. Codes cannot be combined with this saving.':'Automatic savings unlock at 3 items. You can instead choose a qualifying coupon; only one offer applies per order.'
     }
@@ -119,11 +122,12 @@ function ensureCheckoutOptions(){
     <label data-automatic-offer><input type="radio" name="coupon" value="none" checked><span><b data-automatic-offer-title>Use automatic buy-more saving</b> <small data-automatic-offer-copy>We’ll apply your best eligible saving. It cannot be combined with a code.</small></span></label>
     <label data-welcome-offer><input type="radio" name="coupon" value="WELCOME15"><span>WELCOME15 — 15% off your first order <small>Verified new accounts only · one use · disappears after the first completed order.</small></span></label>
     <label data-mega-offer><input type="radio" name="coupon" value="MEGA20"><span>MEGA20 — 20% off orders ₹2,199+ <small>Eligible treat subtotal must reach ₹2,199 · excludes buy-more savings.</small></span></label>
+    <details class="private-code"><summary>Have a private code from us?</summary><label>Private birthday code <input name="private_coupon" type="text" inputmode="text" autocomplete="off" maxlength="32" placeholder="Enter your private code"></label><small>Private rewards are sent directly to the pet parent and are not public offers.</small></details>
     <label data-loyalty-redeem hidden><input type="number" name="loyalty_points_redeemed" min="0" max="333" step="1" value="0" inputmode="numeric"><span>Use reward points <small>Use up to ₹100 off per order (maximum 333 points). Every point is worth ₹0.30 and can be combined with one eligible coupon.</small></span></label>
     <p class="perk-status" data-coupon-status role="status" aria-live="polite"></p>
   </section>`)
   total.insertAdjacentHTML('beforebegin','<div class="order-row"><span>Offer saving</span><span data-coupon-discount>—</span></div><div class="order-row" data-loyalty-discount-row hidden><span>Reward points</span><span data-points-discount>—</span></div><div class="order-row"><span>Payment adjustment</span><span data-payment-change>−₹30</span></div>')
-  form.querySelectorAll('[name="coupon"],[name="payment"],[name="loyalty_points_redeemed"]').forEach(input=>input.addEventListener('input',updateCommerceTotals))
+  form.querySelectorAll('[name="coupon"],[name="payment"],[name="loyalty_points_redeemed"],[name="private_coupon"]').forEach(input=>input.addEventListener('input',updateCommerceTotals))
 
   // A code applied from the bag is only carried to this secure checkout; it
   // is still checked against the signed-in customer's eligibility below.
@@ -138,8 +142,11 @@ function ensureCheckoutOptions(){
 function updateSaleOfferControls(){
   const saleBasket=cartHasSaleItems(),none=document.querySelector('[name="coupon"][value="none"]')
   document.querySelectorAll('[name="coupon"]').forEach(input=>{if(input.value!=='none')input.disabled=saleBasket})
+  const privateCoupon=document.querySelector('[name="private_coupon"]')
+  if(privateCoupon)privateCoupon.disabled=saleBasket
   if(saleBasket){
     if(!none?.checked) none.checked=true
+    if(privateCoupon)privateCoupon.value=''
     window.sessionStorage.removeItem('gob-checkout-coupon')
   }
   const title=document.querySelector('[data-automatic-offer-title]'),copy=document.querySelector('[data-automatic-offer-copy]')
@@ -203,7 +210,7 @@ function setupCommerce(){
       message.textContent=cartValue()>=2199?'MEGA20 is ready for secure checkout.':'MEGA20 needs a treat subtotal of ₹2,199 or more; you can still continue to checkout.'
     }else{
       window.sessionStorage.removeItem('gob-checkout-coupon')
-      message.textContent='Use WELCOME15 for 15% off a verified first order, or MEGA20 for 20% off orders ₹2,199+.'
+      message.textContent='Private birthday rewards are entered securely at checkout. Public offers: WELCOME15 or MEGA20.'
     }
   })
 }
