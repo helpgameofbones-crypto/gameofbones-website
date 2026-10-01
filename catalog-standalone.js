@@ -35,7 +35,7 @@
       if (!product) return;
       const id = productId(product);
       window.GOB_PRODUCTS ||= {};
-      window.GOB_PRODUCTS[id] = { name: productName(product), price: Number(productPrice(product)) || 0, image: productImage(product), tag: productCategory(product) };
+      window.GOB_PRODUCTS[id] = { name: productName(product), price: Number(productPrice(product)) || 0, image: productImage(product), tag: productCategory(product), catalog_slug: slug(productName(product)) };
       if (typeof window.addToCart === 'function') window.addToCart(id);
     }));
   }

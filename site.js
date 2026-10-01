@@ -70,17 +70,31 @@ const GOB_SEO=(()=>{
 })();
 window.GOB_SEO=GOB_SEO;
 
-const GOB_PRODUCTS={jerky:{name:'Chicken Jerky',price:329,image:'assets/chicken-jerky-pouch.png',tag:'Boneless jerky'},'jerky-pack-2':{name:'Chicken Jerky — 2 pouch value pack',price:625,image:'assets/chicken-jerky-pouch.png',tag:'Boneless jerky · save ₹33'},trachea:{name:'Goat Trachea',price:100,image:'assets/goat-trachea-pouch.png',tag:'Chews & bones'},trotter:{name:'Goat Trotter',price:250,image:'assets/goat-trotter-plate.png',tag:'Chews & bones'}};
+const GOB_PRODUCTS={'chicken-jerky':{name:'Chicken Jerky',price:329,image:'assets/chicken-jerky-pouch.png',tag:'Boneless jerky',catalog_slug:'chicken-jerky'},'chicken-jerky-pack-2':{name:'Chicken Jerky — 2 pouch value pack',price:625,image:'assets/chicken-jerky-pouch.png',tag:'Boneless jerky · save ₹33',catalog_slug:'chicken-jerky'},'goat-trachea':{name:'Goat Trachea',price:100,image:'assets/goat-trachea-pouch.png',tag:'Chews & bones',catalog_slug:'goat-trachea'},'goat-trotter':{name:'Goat Trotter',price:250,image:'assets/goat-trotter-plate.png',tag:'Chews & bones',catalog_slug:'goat-trotter'}};
 // Keep the catalogue store on window as well, so every deferred storefront script shares it reliably.
 window.GOB_PRODUCTS = GOB_PRODUCTS;
+// These aliases preserve existing product buttons and saved carts while every
+// new tracking event uses the catalog's public URL slug.
+const GOB_LEGACY_PRODUCT_KEYS=Object.freeze({jerky:'chicken-jerky','jerky-pack-2':'chicken-jerky-pack-2',trachea:'goat-trachea',trotter:'goat-trotter'});
+const canonicalCartId=id=>GOB_LEGACY_PRODUCT_KEYS[String(id||'')]||String(id||'');
+const catalogSlug=value=>String(value||'').toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+const catalogProductId=(product,fallbackId='')=>{
+  const explicit=String(product?.catalog_slug||product?.catalogSlug||product?.slug||'').trim();
+  if(explicit)return catalogSlug(explicit);
+  // Names remain stable when the admin catalogue is keyed by a database UUID.
+  const name=String(product?.name||product?.n||'').replace(/\s+—\s+.+$/,'').trim();
+  if(name)return catalogSlug(name);
+  const fallback=String(fallbackId||'');
+  return GOB_LEGACY_PRODUCT_KEYS[fallback]||catalogSlug(fallback);
+};
 const money=n=>`₹${Number(n).toLocaleString('en-IN')}`;
 const cart=()=>JSON.parse(localStorage.getItem('gob-preview-cart')||'[]');
 const saveCart=value=>{localStorage.setItem('gob-preview-cart',JSON.stringify(value));window.GOB_CART_TRACKING?.queue?.()};
 // Cart lines keep the product snapshot from add-to-cart time. Prefer it so a
 // later catalogue sync cannot silently change an existing basket's image,
 // name, or displayed price; checkout still revalidates current server pricing.
-const cartProduct=item=>item.product||GOB_PRODUCTS[item.id]||null;
-const META_PIXEL_ID='2097278950833218';function installMetaPixel(){if(window.GOB_META)return;window.GOB_META={track:(name,params={},eventID)=>{if(typeof window.fbq==='function')window.fbq('track',name,params,eventID?{eventID}:undefined)}};!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');window.fbq('init',META_PIXEL_ID);window.fbq('track','PageView')}installMetaPixel();
+const cartProduct=item=>item.product||GOB_PRODUCTS[canonicalCartId(item.id)]||null;
+const META_PIXEL_ID='2097278950833218';function installMetaPixel(){if(window.GOB_META)return;window.GOB_META={track:(name,params={},eventID)=>{if(typeof window.fbq==='function')window.fbq('track',name,params,eventID?{eventID}:undefined)},productId:catalogProductId};!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');window.fbq('init',META_PIXEL_ID);window.fbq('track','PageView')}installMetaPixel();
 
 // GA4 is loaded only after the visitor permits analytics cookies. Events never
 // include names, phone numbers, email addresses or delivery details.
@@ -97,7 +111,7 @@ function installAnalyticsConsent(){installAnalyticsTag();const choice=localStora
 function cartCount(){return cart().reduce((total,item)=>total+item.quantity,0)}
 function notice(message,kind='info'){const el=document.querySelector('#toast');if(!el)return;el.className=`toast${kind==='jar'?' jar-toast':''}`;el.innerHTML=kind==='jar'?`<span class="toast-jar" aria-hidden="true"><svg viewBox="0 0 32 36" fill="none"><path d="M9 8V5h14v3M7 9h18l2 22H5L7 9Z" stroke="currentColor" stroke-width="2"/><path d="M10 16h12M11 21h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><span><b>In your treat jar</b>${message}</span>`:message;el.classList.add('show');clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>el.classList.remove('show'),3200)}
 function updateCart(){const items=cart(),count=cartCount();document.querySelectorAll('[data-cart-count]').forEach(el=>el.textContent=count);const list=document.querySelector('#cartItems'),total=document.querySelector('#cartTotal');if(!list||!total)return;if(!items.length){list.innerHTML='<p class="empty">Your bag is waiting for something delicious.</p>';total.textContent=money(0);return}list.innerHTML=items.map(item=>{const p=cartProduct(item);if(!p)return '';const imageAlt=`${p.name||'Game of Bones treat'} product image`;return `<div class="cart-item"><img src="${p.image}" alt="${imageAlt}"><div><strong>${p.name}</strong><small>${item.quantity} × ${money(p.price)}</small></div><button class="remove" data-remove="${item.id}">Remove</button></div>`}).join('');total.textContent=money(items.reduce((sum,item)=>sum+(cartProduct(item)?.price||0)*item.quantity,0));document.querySelectorAll('[data-remove]').forEach(button=>button.addEventListener('click',()=>{saveCart(cart().filter(item=>item.id!==button.dataset.remove));updateCart();notice('Removed from your bag.')}))}
-function addToCart(id,quantity=1){const items=cart(),product=GOB_PRODUCTS[id],snapshot=product?{name:product.name,price:Number(product.price)||0,image:product.image||'',tag:product.tag||'',packLabel:product.packLabel||''}:null,found=items.find(item=>item.id===id);if(found){found.quantity+=quantity;if(snapshot)found.product=snapshot}else items.push({id,quantity,product:snapshot});saveCart(items);updateCart();const value=(Number(product?.price)||0)*quantity;window.GOB_META?.track('AddToCart',{content_ids:[id],content_name:product?.name||'Game of Bones treat',content_type:'product',currency:'INR',value});window.GOB_ANALYTICS?.track('add_to_cart',{currency:'INR',value,items:[{item_id:String(id),item_name:product?.name||'Game of Bones treat',price:Number(product?.price)||0,quantity}]});notice(`${product?.name||'Treat'} added.`,'jar')}
+function addToCart(id,quantity=1){id=canonicalCartId(id);const items=cart(),product=GOB_PRODUCTS[id],snapshot=product?{name:product.name,price:Number(product.price)||0,image:product.image||'',tag:product.tag||'',packLabel:product.packLabel||'',catalog_slug:catalogProductId(product,id)}:null,found=items.find(item=>canonicalCartId(item.id)===id);if(found){found.id=id;found.quantity+=quantity;if(snapshot)found.product=snapshot}else items.push({id,quantity,product:snapshot});saveCart(items);updateCart();const value=(Number(product?.price)||0)*quantity,catalogId=catalogProductId(product,id);window.GOB_META?.track('AddToCart',{content_ids:[catalogId],content_name:product?.name||'Game of Bones treat',content_type:'product',currency:'INR',value});window.GOB_ANALYTICS?.track('add_to_cart',{currency:'INR',value,items:[{item_id:catalogId,item_name:product?.name||'Game of Bones treat',price:Number(product?.price)||0,quantity}]});notice(`${product?.name||'Treat'} added.`,'jar')}
 function openCart(){document.querySelector('#cartDrawer')?.classList.add('open');document.querySelector('#scrim')?.classList.add('open');document.body.classList.add('locked')}
 function closeCart(){document.querySelector('#cartDrawer')?.classList.remove('open');document.querySelector('#scrim')?.classList.remove('open');document.body.classList.remove('locked')}
 // Customer-facing URLs stay clean even though the static files behind them use

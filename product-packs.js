@@ -4,12 +4,13 @@
   document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(location.search);
     const routeSlug = location.pathname.match(/^\/products\/([^/]+)\/?$/)?.[1];
-    const productId = params.get('catalog') || params.get('product') || (routeSlug ? decodeURIComponent(routeSlug) : '') || 'jerky';
+    const requestedProductId = params.get('catalog') || params.get('product') || (routeSlug ? decodeURIComponent(routeSlug) : '') || 'chicken-jerky';
+    const legacyProductId = { 'chicken-jerky': 'jerky', 'goat-trachea': 'trachea', 'goat-trotter': 'trotter' }[requestedProductId] || requestedProductId;
     const fallback = {
       jerky: { n: 'Chicken Jerky', c: 'Jerky', w: '70 g', p: 329, i: 'assets/chicken-jerky-pouch.png', id: 'jerky', packs: [{ label: '1 pouch', weight: '70 g', price: 329 }, { label: '2 pouches', weight: '140 g', price: 658 }, { label: '3 pouches', weight: '210 g', price: 987 }, { label: '4 pouches', weight: '280 g', price: 1316 }] },
       trachea: { n: 'Goat Trachea', c: 'Chews & bones', w: '60 g', p: 100, i: 'assets/goat-trachea-pouch.png', id: 'trachea' },
       trotter: { n: 'Goat Trotter', c: 'Chews & bones', w: '60 g', p: 250, i: 'assets/goat-trotter-plate.png', id: 'trotter' },
-    }[productId];
+    }[legacyProductId];
     const packOptions = document.querySelector('#packOptions');
     const addButton = document.querySelector('#addProduct');
     if (!packOptions || !addButton) return;
@@ -40,9 +41,9 @@
       choose(selectedPack);
       addButton.onclick = () => {
         const pack = packs[selectedPack];
-        const id = product.id || productId;
-        const cartId = selectedPack === 0 ? id : `${id}-pack-${selectedPack + 1}`;
-        GOB_PRODUCTS[cartId] = { name: `${product.n} — ${pack.label}`, price: Number(pack.price) || 0, comparePrice: Number(pack.compare_price) || Number(product.cp) || 0, image: product.i, tag: `${product.c} · ${pack.weight || 'Pack'}` };
+        const catalogId = window.GOB_META?.productId?.(product, requestedProductId) || String(requestedProductId || '');
+        const cartId = selectedPack === 0 ? catalogId : `${catalogId}-pack-${selectedPack + 1}`;
+        GOB_PRODUCTS[cartId] = { name: `${product.n} — ${pack.label}`, price: Number(pack.price) || 0, comparePrice: Number(pack.compare_price) || Number(product.cp) || 0, image: product.i, tag: `${product.c} · ${pack.weight || 'Pack'}`, catalog_slug: catalogId };
         addToCart(cartId, quantity);
       };
     }

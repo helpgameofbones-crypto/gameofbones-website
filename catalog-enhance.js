@@ -15,7 +15,7 @@ function hydrateCatalogCards(root) {
     const product = window.GOB_LIVE_CATALOG.find(item => item.n === card.querySelector('h3')?.textContent.trim());
     if (!product) return;
     const id = product.id || gobSlug(product.n);
-    gobProducts()[id] = { name: product.n, price: Number(product.p) || 0, image: product.i, tag: product.c };
+    gobProducts()[id] = { name: product.n, price: Number(product.p) || 0, image: product.i, tag: product.c, catalog_slug: gobSlug(product.n) };
     const link = card.querySelector('a');
     if (link) link.href = `/products/${encodeURIComponent(gobSlug(product.n))}`;
     const image = card.querySelector('.product-image img');
@@ -31,7 +31,8 @@ function hydrateProduct() {
   const [method, bestFor] = gobMethod(product);
   const id = product.id || gobSlug(product.n);
   window.GOB_CURRENT_PRODUCT = product;
-  gobProducts()[id] = { name: product.n, price: Number(product.p) || 0, comparePrice: Number(product.cp) || 0, image: product.i, tag: product.c };
+  const catalogId = window.GOB_META?.productId?.(product, id) || gobSlug(product.n);
+  gobProducts()[id] = { name: product.n, price: Number(product.p) || 0, comparePrice: Number(product.cp) || 0, image: product.i, tag: product.c, catalog_slug: catalogId };
   document.title = `${product.n} — Game of Bones`;
   const cleanUrl = `https://gameofbones.in/products/${encodeURIComponent(gobSlug(product.n))}`;
   let canonical = document.querySelector('link[rel="canonical"]');
@@ -70,6 +71,18 @@ function hydrateProduct() {
     else if (!window.GOB_PRODUCT_MEDIA?.[id]?.length && product.i) {
       window.GOB_SET_PRODUCT_MEDIA(id, [{ type: 'image', src: product.i, alt: product.n, label: 'Product photo' }]);
     }
+  }
+  // Catalog sync may hydrate this page more than once. Send exactly one view
+  // event for the product currently represented by this URL.
+  if (window.__gobViewContentSlug !== catalogId) {
+    window.__gobViewContentSlug = catalogId;
+    window.GOB_META?.track('ViewContent', {
+      content_ids: [catalogId],
+      content_type: 'product',
+      content_name: product.n,
+      currency: 'INR',
+      value: Number(product.p) || 0,
+    });
   }
   document.dispatchEvent(new CustomEvent('gob:product-ready', { detail: { product } }));
 }
