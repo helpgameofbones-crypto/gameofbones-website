@@ -19,12 +19,20 @@
     let selectedPack = 0;
     const format = value => Number(value || 0).toLocaleString('en-IN');
     const packsFor = product => Array.isArray(product?.packs) && product.packs.length ? product.packs : [{ label: '1 pouch', weight: product?.w || '', price: Number(product?.p) || 0 }];
+    const comparePriceFor = (pack, product) => Number(pack?.compare_price || pack?.comparePrice || product?.cp || product?.compare_price || 0);
+    const onSale = (pack, product) => Number(pack?.price || 0) > 0 && comparePriceFor(pack, product) > Number(pack?.price || 0);
 
     function render(product) {
       if (!product) return;
       const packs = packsFor(product);
       selectedPack = Math.min(selectedPack, packs.length - 1);
-      packOptions.innerHTML = packs.map((pack, index) => `<button class="option${index === selectedPack ? ' selected' : ''}" type="button">${pack.label}<small>${pack.weight || 'Pack'} · ₹${format(pack.price)}</small></button>`).join('');
+      packOptions.innerHTML = packs.map((pack, index) => {
+        const comparePrice = comparePriceFor(pack, product);
+        const priceText = onSale(pack, product)
+          ? `<s>₹${format(comparePrice)}</s> <strong>₹${format(pack.price)}</strong>`
+          : `₹${format(pack.price)}`;
+        return `<button class="option${index === selectedPack ? ' selected' : ''}" type="button">${pack.label}<small>${pack.weight || 'Pack'} · ${priceText}</small></button>`;
+      }).join('');
 
       const choose = index => {
         selectedPack = index;

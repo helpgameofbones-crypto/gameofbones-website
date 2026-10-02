@@ -5,6 +5,10 @@
     stylesheet.rel = 'stylesheet';
     stylesheet.href = 'conversion-extras.css?v=review-flow-2';
     document.head.append(stylesheet);
+    const paidTrafficStyles = document.createElement('link');
+    paidTrafficStyles.rel = 'stylesheet';
+    paidTrafficStyles.href = 'conversion-paid-traffic.css?v=1';
+    document.head.append(paidTrafficStyles);
     const reviewStyles = document.createElement('link');
     reviewStyles.rel = 'stylesheet';
     reviewStyles.href = 'review-public.css?v=verified-reviews-1';
@@ -33,11 +37,32 @@
           <form id="wheelForm"></form>
         </div>
       </div>`);
+
+    // Give visitors time to assess the page; reveal the opt-in only after
+    // engagement or clear exit intent instead of interrupting the first view.
+    const launch = document.querySelector('#wheelLaunch');
+    const revealWheel = () => launch?.classList.add('is-ready');
+    window.setTimeout(revealWheel, 18_000);
+    document.addEventListener('mouseout', event => {
+      if (event.relatedTarget || event.clientY > 0) return;
+      revealWheel();
+    }, { once: true });
   }
 
   function addProductExtras() {
     const buyRow = document.querySelector('.buy-row');
-    buyRow?.insertAdjacentHTML('afterend', '<button class="wish-btn" id="wishBtn">Save to wishlist</button>');
+    buyRow?.insertAdjacentHTML('afterend', `
+      <section class="paid-traffic-promise" aria-label="Order reassurance">
+        <span><b>Sale price applied</b><small>No code needed</small></span>
+        <span><b>Free shipping</b><small>Across India</small></span>
+        <span><b>₹30 off prepaid</b><small>UPI, cards & wallets</small></span>
+      </section>
+      <section class="quick-review-proof" id="quickReviewProof" aria-live="polite">
+        <span class="quick-review-stars" aria-hidden="true">★★★★★</span>
+        <span><b>Verified dog-parent reviews</b><small>Loading product feedback…</small></span>
+        <a href="#productReviewSection">Read reviews</a>
+      </section>
+      <button class="wish-btn" id="wishBtn">Save to wishlist</button>`);
     document.querySelector('#wishBtn')?.addEventListener('click', () => location.assign('login.html'));
 
     document.querySelector('.accordion')?.insertAdjacentHTML('afterend', `
@@ -51,12 +76,23 @@
     const renderReviews = async () => {
       const name = document.querySelector('#productName')?.textContent?.trim();
       const feed = document.querySelector('#productReviewFeed'); if (!name || !feed || !window.GOB_API?.publicProductReviews) return;
+      const quickProof = document.querySelector('#quickReviewProof');
       feed.innerHTML = '<p>Loading verified reviews…</p>';
       try {
         const data = await window.GOB_API.publicProductReviews(name), rows = Array.isArray(data.reviews) ? data.reviews : [];
         const stars = value => '★'.repeat(Math.max(0, Math.min(5, Number(value) || 0))) + '☆'.repeat(Math.max(0, 5 - Math.min(5, Number(value) || 0)));
+        if (quickProof) {
+          const firstReview = String(rows[0]?.review || '').replace(/\s+/g, ' ').trim();
+          const safeExcerpt = firstReview.replace(/[&<>'"]/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' })[char]);
+          quickProof.innerHTML = rows.length
+            ? `<span class="quick-review-stars" aria-hidden="true">${stars(Math.round(Number(data.average_rating || 0)))}</span><span><b>${Number(data.average_rating || 0).toFixed(1)} from verified dog parents</b><small>${safeExcerpt.slice(0, 96)}${safeExcerpt.length > 96 ? '…' : ''}</small></span><a href="#productReviewSection">Read ${data.review_count} review${Number(data.review_count) === 1 ? '' : 's'}</a>`
+            : '<span class="quick-review-stars" aria-hidden="true">★★★★★</span><span><b>Verified purchase reviews</b><small>Feedback is published after moderation.</small></span><a href="#productReviewSection">Learn more</a>';
+        }
         feed.innerHTML = rows.length ? `<div class="review-summary"><strong>${Number(data.average_rating || 0).toFixed(1)} / 5</strong><span aria-label="${Number(data.average_rating || 0)} out of 5 stars">${stars(Math.round(Number(data.average_rating || 0)))}</span><small>${data.review_count} verified review${Number(data.review_count) === 1 ? '' : 's'}</small></div><div class="public-review-list">${rows.map(row => `<article class="public-review"><div><strong>${String(row.name || 'Verified dog parent')}</strong><span aria-label="${Number(row.rating || 0)} out of 5 stars">${stars(row.rating)}</span></div><p>${String(row.review || '').replace(/[&<>'"]/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' })[char])}</p>${row.photo_url ? `<img src="${String(row.photo_url)}" alt="A dog enjoying ${name}" loading="lazy">` : ''}</article>`).join('')}</div>` : '<p class="review-empty">Be the first verified dog parent to share a note about this treat.</p>';
-      } catch { feed.innerHTML = '<p class="review-empty">Reviews are temporarily unavailable. Please check back soon.</p>'; }
+      } catch {
+        if (quickProof) quickProof.innerHTML = '<span class="quick-review-stars" aria-hidden="true">★★★★★</span><span><b>Verified purchase reviews</b><small>Reviews are shown after moderation.</small></span><a href="#productReviewSection">Learn more</a>';
+        feed.innerHTML = '<p class="review-empty">Reviews are temporarily unavailable. Please check back soon.</p>';
+      }
     };
     renderReviews();
     document.addEventListener('gob:product-ready', renderReviews);
