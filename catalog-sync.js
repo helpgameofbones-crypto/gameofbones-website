@@ -23,6 +23,11 @@
   const approvedPacks = (name, sizes) => {
     const reference = window.GOB_CATALOGUE_REFERENCE?.packs?.(name);
     const uploaded = packs(sizes);
+    // Reference packs provide a safe fallback for incomplete catalogue data,
+    // but an admin-set compare price is an explicit live sale and must win.
+    // Otherwise customers would see the old price while checkout charges the
+    // sale price from the order service.
+    if (uploaded.some(size => size.compare_price > size.price && size.price > 0)) return uploaded;
     return Array.isArray(reference) && reference.length ? reference : uploaded;
   };
 
