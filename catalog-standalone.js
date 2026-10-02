@@ -18,6 +18,7 @@
   // records still have a stale top-level price, so always prefer the first
   // pack price when it is available.
   const productPrice = product => product.sizes?.[0]?.price ?? product.p ?? product.price ?? 0;
+  const productComparePrice = product => product.sizes?.[0]?.compare_price ?? product.cp ?? product.compare_price ?? 0;
   const productWeight = product => product.w || (Number(product.sizes?.[0]?.weight_grams) ? `${product.sizes[0].weight_grams} g` : 'Pack');
   const productCategory = product => product.c || 'Treats';
 
@@ -27,7 +28,12 @@
       const id = productId(product), name = productName(product), image = productImage(product);
       const shade = index % 3 === 0 ? 'cream' : index % 3 === 1 ? 'sage' : 'brown';
       const path = productPath(product);
-      return `<article class="product-card"><a href="${path}" aria-label="View ${escapeHtml(name)}"><div class="product-image ${shade}"><img src="${escapeHtml(image)}" alt="${escapeHtml(name)} natural dog treat" width="600" height="600" loading="lazy" decoding="async"></div></a><div class="card-copy"><p class="tag">${escapeHtml(productCategory(product))}</p><h3><a href="${path}">${escapeHtml(name)}</a></h3><p class="catalog-desc">${escapeHtml(product.d || product.description || 'Single-ingredient dog treat.')}</p><div class="card-bottom"><span>${escapeHtml(productWeight(product))} · ${formatPrice(productPrice(product))}</span><button class="quick-add" type="button" data-product="${escapeHtml(id)}" aria-label="Add ${escapeHtml(name)} to bag">+</button></div></div></article>`;
+      const currentPrice = productPrice(product), comparePrice = productComparePrice(product);
+      const isSale = Number(comparePrice) > Number(currentPrice) && Number(currentPrice) > 0;
+      const displayedPrice = isSale
+        ? `<span class="catalog-price"><s>${formatPrice(comparePrice)}</s><strong>${formatPrice(currentPrice)}</strong></span>`
+        : formatPrice(currentPrice);
+      return `<article class="product-card"><a href="${path}" aria-label="View ${escapeHtml(name)}">${isSale ? '<span class="sale-badge">Sale</span>' : ''}<div class="product-image ${shade}"><img src="${escapeHtml(image)}" alt="${escapeHtml(name)} natural dog treat" width="600" height="600" loading="lazy" decoding="async"></div></a><div class="card-copy"><p class="tag">${escapeHtml(productCategory(product))}</p><h3><a href="${path}">${escapeHtml(name)}</a></h3><p class="catalog-desc">${escapeHtml(product.d || product.description || 'Single-ingredient dog treat.')}</p><div class="card-bottom"><span>${escapeHtml(productWeight(product))} · ${displayedPrice}</span><button class="quick-add" type="button" data-product="${escapeHtml(id)}" aria-label="Add ${escapeHtml(name)} to bag">+</button></div></div></article>`;
     }).join('');
     root.querySelectorAll('img').forEach(image => image.addEventListener('error', () => { image.src = 'assets/gob-logo.png'; image.alt = 'Game of Bones'; }, { once: true }));
     root.querySelectorAll('[data-product]').forEach(button => button.addEventListener('click', () => {
@@ -35,7 +41,7 @@
       if (!product) return;
       const id = productId(product);
       window.GOB_PRODUCTS ||= {};
-      window.GOB_PRODUCTS[id] = { name: productName(product), price: Number(productPrice(product)) || 0, image: productImage(product), tag: productCategory(product), catalog_slug: slug(productName(product)) };
+      window.GOB_PRODUCTS[id] = { name: productName(product), price: Number(productPrice(product)) || 0, comparePrice: Number(productComparePrice(product)) || 0, image: productImage(product), tag: productCategory(product), catalog_slug: slug(productName(product)) };
       if (typeof window.addToCart === 'function') window.addToCart(id);
     }));
   }
@@ -60,11 +66,13 @@
         const source = byName.get(slug(productName(product)));
         if (!source) return product;
         const referencePacks = window.GOB_CATALOGUE_REFERENCE?.packs?.(productName(product));
-        const sellablePacks = Array.isArray(referencePacks) && referencePacks.length ? referencePacks : source.sizes;
+        const liveSalePacks = Array.isArray(source.sizes) && source.sizes.some(pack => Number(pack?.compare_price) > Number(pack?.price) && Number(pack?.price) > 0);
+        const sellablePacks = liveSalePacks ? source.sizes : (Array.isArray(referencePacks) && referencePacks.length ? referencePacks : source.sizes);
         const firstPack = sellablePacks?.[0];
         return {
           ...product,
           p: firstPack?.price ?? (productPrice(source) || productPrice(product)),
+          cp: firstPack?.compare_price ?? source.compare_price ?? productComparePrice(product),
           w: firstPack?.weight || (Number(firstPack?.weight_grams) ? `${firstPack.weight_grams} g` : '') || productWeight(source) || productWeight(product),
           i: productImage(source) || productImage(product),
           id: productId(product),
@@ -76,9 +84,10 @@
       remote.forEach(product => {
         if (merged.some(item => slug(productName(item)) === slug(product.name))) return;
         const referencePacks = window.GOB_CATALOGUE_REFERENCE?.packs?.(product.name);
-        const sellablePacks = Array.isArray(referencePacks) && referencePacks.length ? referencePacks : product.sizes;
+        const liveSalePacks = Array.isArray(product.sizes) && product.sizes.some(pack => Number(pack?.compare_price) > Number(pack?.price) && Number(pack?.price) > 0);
+        const sellablePacks = liveSalePacks ? product.sizes : (Array.isArray(referencePacks) && referencePacks.length ? referencePacks : product.sizes);
         const firstPack = sellablePacks?.[0];
-        merged.push({ n: product.name, c: 'Treats', p: firstPack?.price ?? productPrice(product), w: firstPack?.weight || (Number(firstPack?.weight_grams) ? `${firstPack.weight_grams} g` : '') || productWeight(product), i: productImage(product), d: 'Single-ingredient dog treat.', id: slug(product.name), sizes: sellablePacks, images: product.images, videos: product.videos });
+        merged.push({ n: product.name, c: 'Treats', p: firstPack?.price ?? productPrice(product), cp: firstPack?.compare_price ?? product.compare_price ?? 0, w: firstPack?.weight || (Number(firstPack?.weight_grams) ? `${firstPack.weight_grams} g` : '') || productWeight(product), i: productImage(product), d: 'Single-ingredient dog treat.', id: slug(product.name), sizes: sellablePacks, images: product.images, videos: product.videos });
       });
       catalogue = merged;
       window.GOB_LIVE_CATALOG = merged;
