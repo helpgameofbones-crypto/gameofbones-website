@@ -38,7 +38,9 @@ function renderCommerceCart(){
     updateSaleOfferControls()
     return
   }
-  root.innerHTML=items.map(item=>{
+  const saleBasket=cartHasSaleItems()
+  const saleNote=saleBasket?'<aside class="cart-sale-note" role="status"><strong>Your listed sale price is locked in.</strong><span>Add one eligible code and/or reward points at secure checkout for extra savings.</span></aside>':''
+  root.innerHTML=saleNote+items.map(item=>{
     const product=commerceProduct(item)
     if(!product)return ''
     const sale=Number(product.comparePrice)>Number(product.price)

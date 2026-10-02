@@ -16,6 +16,11 @@
   }
 
   function addHomeExtras() {
+    document.querySelector('.hero .proof')?.insertAdjacentHTML('afterend', `
+      <aside class="home-sale-note" aria-label="Current sale details">
+        <strong>Sale prices are already included.</strong>
+        <span>10% off treats · 15% off Whole Mackerel · plus ₹30 off when you pay online.</span>
+      </aside>`);
     const target = document.querySelector('.subscribe');
     target?.insertAdjacentHTML('beforebegin', `
       <section class="conversion-block">
@@ -62,7 +67,7 @@
         <span><b>Verified dog-parent reviews</b><small>Loading product feedback…</small></span>
         <a href="#productReviewSection">Read reviews</a>
       </section>
-      <button class="wish-btn" id="wishBtn">Save to wishlist</button>`);
+      <button class="wish-btn" id="wishBtn">Sign in to save favourites</button>`);
     document.querySelector('#wishBtn')?.addEventListener('click', () => location.assign('login.html'));
 
     document.querySelector('.accordion')?.insertAdjacentHTML('afterend', `
