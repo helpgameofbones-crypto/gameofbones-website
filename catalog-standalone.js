@@ -64,7 +64,10 @@
       const byName = new Map(remote.map(product => [slug(product.name), product]));
       const merged = catalogue.map(product => {
         const source = byName.get(slug(productName(product)));
-        if (!source) return product;
+        // Once the live feed has loaded, it is the source of truth for
+        // availability. Do not leave an inactive static card visible with an
+        // old, non-sale price alongside the active sale range.
+        if (!source) return null;
         const referencePacks = window.GOB_CATALOGUE_REFERENCE?.packs?.(productName(product));
         const liveSalePacks = Array.isArray(source.sizes) && source.sizes.some(pack => Number(pack?.compare_price) > Number(pack?.price) && Number(pack?.price) > 0);
         const sellablePacks = liveSalePacks ? source.sizes : (Array.isArray(referencePacks) && referencePacks.length ? referencePacks : source.sizes);
@@ -80,7 +83,7 @@
           images: source.images,
           videos: source.videos,
         };
-      });
+      }).filter(Boolean);
       remote.forEach(product => {
         if (merged.some(item => slug(productName(item)) === slug(product.name))) return;
         const referencePacks = window.GOB_CATALOGUE_REFERENCE?.packs?.(product.name);
