@@ -3,7 +3,6 @@
 function commerceProduct(item){return item.product||GOB_PRODUCTS[item.id]||null}
 function cartValue(){return cart().reduce((total,item)=>total+(commerceProduct(item)?.price||0)*item.quantity,0)}
 function cartHasSaleItems(){return cart().some(item=>{const product=commerceProduct(item);return Number(product?.comparePrice)>Number(product?.price)})}
-function bulkRate(count){return count>=10?.15:count>=8?.12:count>=5?.08:count>=3?.05:0}
 const POINT_VALUE_RUPEES=.3,MAX_POINTS_DISCOUNT_RUPEES=100,MAX_REDEMPTION_POINTS=Math.floor(MAX_POINTS_DISCOUNT_RUPEES/POINT_VALUE_RUPEES)
 
 const commerceSlug=value=>String(value||'').toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'')
@@ -60,14 +59,13 @@ function renderCommerceCart(){
 }
 
 function updateCommerceTotals(){
-  const subtotal=cartValue(),count=cartCount(),saleBasket=cartHasSaleItems(),rate=saleBasket?0:bulkRate(count),bulk=Math.round(subtotal*rate)
+  const subtotal=cartValue(),count=cartCount(),saleBasket=cartHasSaleItems()
   const privateCoupon=document.querySelector('[name="private_coupon"]')?.value.trim().toUpperCase()||''
   const coupon=privateCoupon||document.querySelector('[name="coupon"]:checked')?.value||'none'
   const eligibility=window.GOB_CHECKOUT_ELIGIBILITY||{signedIn:false,firstOrder:false,checking:false,points:0}
-  // Sale prices are the catalogue price. A customer may still use one valid
-  // code and loyalty points; only the automatic buy-more tier is excluded.
+  // Listed sale prices, one valid code and loyalty points can be used together.
   const couponRate=(coupon==='WELCOME15'&&eligibility.firstOrder ? .15 : coupon==='MEGA20'&&subtotal>=2199 ? .2 : /^BDAY[A-Z0-9]+$/.test(coupon) ? .15 : 0)
-  const couponDiscount=Math.round(subtotal*couponRate),saving=Math.max(bulk,couponDiscount)
+  const couponDiscount=Math.round(subtotal*couponRate),saving=couponDiscount
   const payment=document.querySelector('[name="payment"]:checked')?.value||'online'
   const requestedPoints=Number(document.querySelector('[name="loyalty_points_redeemed"]')?.value||0)
   const pointsRedeemed=eligibility.signedIn?Math.min(Math.max(Math.floor(requestedPoints)||0,0),MAX_REDEMPTION_POINTS,Number(eligibility.points||0)):0
@@ -76,8 +74,6 @@ function updateCommerceTotals(){
   const pointsEarned=Math.floor(total/10),pointsValue=pointsEarned*.3
   document.querySelectorAll('[data-commerce-subtotal]').forEach(el=>el.textContent=money(subtotal))
   document.querySelectorAll('[data-commerce-total]').forEach(el=>el.textContent=money(total))
-  document.querySelectorAll('[data-bulk-discount]').forEach(el=>el.textContent=saleBasket?'Sale price applied':bulk?`−${money(bulk)}`:'Add 3 items to save 5%')
-  document.querySelectorAll('[data-bulk-label]').forEach(el=>el.textContent=saleBasket?'Sale pricing':'Buy more, save more')
   document.querySelectorAll('[data-coupon-discount]').forEach(el=>el.textContent=saving?`−${money(saving)}`:'—')
   document.querySelectorAll('[data-payment-change]').forEach(el=>el.textContent=payment==='cod'?`+${money(40)}`:`−${money(30)}`)
   document.querySelectorAll('[data-points-discount]').forEach(el=>el.textContent=pointsDiscount?`−${money(pointsDiscount)}`:'—')
@@ -89,14 +85,14 @@ function updateCommerceTotals(){
     if(saleBasket){
       status.textContent=coupon==='none'&&!privateCoupon?'Sale price is already applied. Add one eligible code and/or reward points at checkout for extra savings.':'Your sale price, eligible code and reward points are being applied.'
     }else if(coupon==='WELCOME15'){
-      status.textContent=!eligibility.signedIn?'WELCOME15 is not applied: log in with your email OTP first. It is for a verified account with no completed orders, is limited to one use, and cannot be combined with buy-more savings.':eligibility.checking?'Checking whether this account is eligible for WELCOME15…':eligibility.firstOrder?'WELCOME15 is available for this first order. It replaces, rather than stacks with, buy-more savings.':'WELCOME15 is not applied: this account already has a completed order, or its first-order status could not be verified.'
+      status.textContent=!eligibility.signedIn?'WELCOME15 is not applied: log in with your email OTP first. It is for a verified account with no completed orders and is limited to one use.':eligibility.checking?'Checking whether this account is eligible for WELCOME15…':eligibility.firstOrder?'WELCOME15 is available for this first order.':'WELCOME15 is not applied: this account already has a completed order, or its first-order status could not be verified.'
     } else if(coupon==='MEGA20'){
       const remaining=Math.max(0,2199-subtotal)
-      status.textContent=remaining?`MEGA20 is not applied: add ${money(remaining)} of eligible treats to reach the ₹2,199 minimum. It cannot be combined with buy-more savings.`:'MEGA20 is available on this basket. It replaces, rather than stacks with, buy-more savings.'
+      status.textContent=remaining?`MEGA20 is not applied: add ${money(remaining)} of eligible treats to reach the ₹2,199 minimum.`:'MEGA20 is available on this basket.'
     } else if(privateCoupon){
-      status.textContent='Your private code will be securely verified before payment. It replaces, rather than combines with, buy-more savings.'
+      status.textContent='Your private code will be securely verified before payment.'
     } else {
-      status.textContent=bulk?'Your best automatic buy-more tier is applied. Codes cannot be combined with this saving.':'Automatic savings unlock at 3 items. You can instead choose a qualifying coupon; only one offer applies per order.'
+      status.textContent='Your listed price is already applied. Choose one eligible code and/or use reward points for extra savings.'
     }
   }
 }
@@ -111,9 +107,8 @@ function ensureLoyaltyEarn(){
 
 function ensureBulkDiscount(){
   const total=document.querySelector('.order-row.total')
-  if(!total||document.querySelector('.bulk-discount'))return
-  const styles=document.createElement('link');styles.rel='stylesheet';styles.href='commerce-bulk.css';document.head.append(styles)
-  total.insertAdjacentHTML('beforebegin','<div class="order-row bulk-discount"><span data-bulk-label>Buy more, save more</span><strong data-bulk-discount>Add 3 items to save 5%</strong></div>')
+  if(!total)return
+  document.querySelector('.bulk-discount')?.remove()
 }
 
 function ensureCheckoutOptions(){
@@ -123,9 +118,9 @@ function ensureCheckoutOptions(){
   const payment=form.querySelector('.form-section:last-of-type')
   payment.insertAdjacentHTML('beforebegin',`<section class="form-section checkout-perks">
     <h3>Offers & rewards</h3>
-    <label data-automatic-offer><input type="radio" name="coupon" value="none" checked><span><b data-automatic-offer-title>Use automatic buy-more saving</b> <small data-automatic-offer-copy>We’ll apply your best eligible saving. It cannot be combined with a code.</small></span></label>
+    <label data-automatic-offer><input type="radio" name="coupon" value="none" checked><span><b data-automatic-offer-title>Continue with the listed price</b> <small data-automatic-offer-copy>Your sale price is already included where applicable. You may choose one eligible code below.</small></span></label>
     <label data-welcome-offer><input type="radio" name="coupon" value="WELCOME15"><span>WELCOME15 — 15% off your first order <small>Verified new accounts only · one use · disappears after the first completed order.</small></span></label>
-    <label data-mega-offer><input type="radio" name="coupon" value="MEGA20"><span>MEGA20 — 20% off orders ₹2,199+ <small>Eligible treat subtotal must reach ₹2,199 · excludes buy-more savings.</small></span></label>
+    <label data-mega-offer><input type="radio" name="coupon" value="MEGA20"><span>MEGA20 — 20% off orders ₹2,199+ <small>Eligible treat subtotal must reach ₹2,199.</small></span></label>
     <details class="private-code"><summary>Have a private code from us?</summary><label>Private birthday code <input name="private_coupon" type="text" inputmode="text" autocomplete="off" maxlength="32" placeholder="Enter your private code"></label><small>Private rewards are sent directly to the pet parent and are not public offers.</small></details>
     <label data-loyalty-redeem hidden><input type="number" name="loyalty_points_redeemed" min="0" max="333" step="1" value="0" inputmode="numeric"><span>Use reward points <small>Use up to ₹100 off per order (maximum 333 points). Every point is worth ₹0.30 and can be combined with one eligible coupon.</small></span></label>
     <p class="perk-status" data-coupon-status role="status" aria-live="polite"></p>
@@ -144,10 +139,9 @@ function ensureCheckoutOptions(){
 }
 
 function updateSaleOfferControls(){
-  const saleBasket=cartHasSaleItems()
   const title=document.querySelector('[data-automatic-offer-title]'),copy=document.querySelector('[data-automatic-offer-copy]')
-  if(title)title.textContent=saleBasket?'Sale price already applied':'Use automatic buy-more saving'
-  if(copy)copy.textContent=saleBasket?'Your sale price can be combined with one eligible code and reward points.':'We’ll apply your best eligible saving. It cannot be combined with a code.'
+  if(title)title.textContent='Continue with the listed price'
+  if(copy)copy.textContent='Your sale price is already included where applicable. You may choose one eligible code and use reward points.'
 }
 
 function updateWelcomeOfferVisibility(){

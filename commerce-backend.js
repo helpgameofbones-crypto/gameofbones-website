@@ -39,12 +39,12 @@
   const valid = () => missingFields().length === 0;
   const saleBasket = () => cart().some(line => { const product = line.product || GOB_PRODUCTS[line.id]; return Number(product?.comparePrice) > Number(product?.price); });
   const total = () => {
-    const value = subtotal(), count = cartCount(), hasSale = saleBasket(), bulk = hasSale ? 0 : count >= 10 ? .15 : count >= 8 ? .12 : count >= 5 ? .08 : count >= 3 ? .05 : 0;
+    const value = subtotal();
     const privateCoupon = form.querySelector('[name="private_coupon"]')?.value.trim().toUpperCase() || '', coupon = privateCoupon || form.querySelector('[name="coupon"]:checked')?.value || '', eligibility = window.GOB_CHECKOUT_ELIGIBILITY || {};
     // Catalogue sale pricing may be combined with one valid code and loyalty
-    // points. The automatic buy-more tier remains unavailable on sale baskets.
+    // points; no separate buy-more discount is active during this sale.
     const couponRate = coupon === 'WELCOME15' && eligibility.signedIn && eligibility.firstOrder ? .15 : coupon === 'MEGA20' && value >= 2199 ? .2 : /^BDAY[A-Z0-9]+$/.test(coupon) ? .15 : 0;
-    const discount = Math.round(value * Math.max(bulk, couponRate));
+    const discount = Math.round(value * couponRate);
     const requestedPoints = Math.floor(Number(form.querySelector('[name="loyalty_points_redeemed"]')?.value || 0));
     const points = eligibility.signedIn ? Math.min(Math.max(requestedPoints, 0), MAX_REDEMPTION_POINTS, Number(eligibility.points || 0)) : 0;
     const pointsDiscount = Math.min(MAX_POINTS_DISCOUNT_RUPEES, Math.round(points * POINT_VALUE_RUPEES)), cod = method() === 'cod' ? 40 : -30;
