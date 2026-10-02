@@ -41,7 +41,9 @@
   const total = () => {
     const value = subtotal(), count = cartCount(), hasSale = saleBasket(), bulk = hasSale ? 0 : count >= 10 ? .15 : count >= 8 ? .12 : count >= 5 ? .08 : count >= 3 ? .05 : 0;
     const privateCoupon = form.querySelector('[name="private_coupon"]')?.value.trim().toUpperCase() || '', coupon = privateCoupon || form.querySelector('[name="coupon"]:checked')?.value || '', eligibility = window.GOB_CHECKOUT_ELIGIBILITY || {};
-    const couponRate = !hasSale && (coupon === 'WELCOME15' && eligibility.signedIn && eligibility.firstOrder ? .15 : coupon === 'MEGA20' && value >= 2199 ? .2 : /^BDAY[A-Z0-9]+$/.test(coupon) ? .15 : 0);
+    // Catalogue sale pricing may be combined with one valid code and loyalty
+    // points. The automatic buy-more tier remains unavailable on sale baskets.
+    const couponRate = coupon === 'WELCOME15' && eligibility.signedIn && eligibility.firstOrder ? .15 : coupon === 'MEGA20' && value >= 2199 ? .2 : /^BDAY[A-Z0-9]+$/.test(coupon) ? .15 : 0;
     const discount = Math.round(value * Math.max(bulk, couponRate));
     const requestedPoints = Math.floor(Number(form.querySelector('[name="loyalty_points_redeemed"]')?.value || 0));
     const points = eligibility.signedIn ? Math.min(Math.max(requestedPoints, 0), MAX_REDEMPTION_POINTS, Number(eligibility.points || 0)) : 0;

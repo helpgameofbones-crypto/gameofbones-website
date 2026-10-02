@@ -62,7 +62,9 @@ function updateCommerceTotals(){
   const privateCoupon=document.querySelector('[name="private_coupon"]')?.value.trim().toUpperCase()||''
   const coupon=privateCoupon||document.querySelector('[name="coupon"]:checked')?.value||'none'
   const eligibility=window.GOB_CHECKOUT_ELIGIBILITY||{signedIn:false,firstOrder:false,checking:false,points:0}
-  const couponRate=!saleBasket&&(coupon==='WELCOME15'&&eligibility.firstOrder ? .15 : coupon==='MEGA20'&&subtotal>=2199 ? .2 : /^BDAY[A-Z0-9]+$/.test(coupon) ? .15 : 0)
+  // Sale prices are the catalogue price. A customer may still use one valid
+  // code and loyalty points; only the automatic buy-more tier is excluded.
+  const couponRate=(coupon==='WELCOME15'&&eligibility.firstOrder ? .15 : coupon==='MEGA20'&&subtotal>=2199 ? .2 : /^BDAY[A-Z0-9]+$/.test(coupon) ? .15 : 0)
   const couponDiscount=Math.round(subtotal*couponRate),saving=Math.max(bulk,couponDiscount)
   const payment=document.querySelector('[name="payment"]:checked')?.value||'online'
   const requestedPoints=Number(document.querySelector('[name="loyalty_points_redeemed"]')?.value||0)
@@ -83,7 +85,7 @@ function updateCommerceTotals(){
   const status=document.querySelector('[data-coupon-status]')
   if(status){
     if(saleBasket){
-      status.textContent='A sale-priced product is in your bag. Coupon codes and buy-more savings cannot be used with sale pricing. You can still use reward points.'
+      status.textContent=coupon==='none'&&!privateCoupon?'Sale price is already applied. Add one eligible code and/or reward points at checkout for extra savings.':'Your sale price, eligible code and reward points are being applied.'
     }else if(coupon==='WELCOME15'){
       status.textContent=!eligibility.signedIn?'WELCOME15 is not applied: log in with your email OTP first. It is for a verified account with no completed orders, is limited to one use, and cannot be combined with buy-more savings.':eligibility.checking?'Checking whether this account is eligible for WELCOME15…':eligibility.firstOrder?'WELCOME15 is available for this first order. It replaces, rather than stacks with, buy-more savings.':'WELCOME15 is not applied: this account already has a completed order, or its first-order status could not be verified.'
     } else if(coupon==='MEGA20'){
@@ -140,18 +142,10 @@ function ensureCheckoutOptions(){
 }
 
 function updateSaleOfferControls(){
-  const saleBasket=cartHasSaleItems(),none=document.querySelector('[name="coupon"][value="none"]')
-  document.querySelectorAll('[name="coupon"]').forEach(input=>{if(input.value!=='none')input.disabled=saleBasket})
-  const privateCoupon=document.querySelector('[name="private_coupon"]')
-  if(privateCoupon)privateCoupon.disabled=saleBasket
-  if(saleBasket){
-    if(!none?.checked) none.checked=true
-    if(privateCoupon)privateCoupon.value=''
-    window.sessionStorage.removeItem('gob-checkout-coupon')
-  }
+  const saleBasket=cartHasSaleItems()
   const title=document.querySelector('[data-automatic-offer-title]'),copy=document.querySelector('[data-automatic-offer-copy]')
-  if(title)title.textContent=saleBasket?'Sale price in your bag':'Use automatic buy-more saving'
-  if(copy)copy.textContent=saleBasket?'Sale pricing cannot combine with a coupon or buy-more saving. Reward points are still available.':'We’ll apply your best eligible saving. It cannot be combined with a code.'
+  if(title)title.textContent=saleBasket?'Sale price already applied':'Use automatic buy-more saving'
+  if(copy)copy.textContent=saleBasket?'Your sale price can be combined with one eligible code and reward points.':'We’ll apply your best eligible saving. It cannot be combined with a code.'
 }
 
 function updateWelcomeOfferVisibility(){
@@ -199,10 +193,7 @@ function setupCommerce(){
   document.querySelector('#promoForm')?.addEventListener('submit',event=>{
     event.preventDefault()
     const code=document.querySelector('#promoCode').value.trim().toUpperCase(),message=document.querySelector('#promoMessage')
-    if(cartHasSaleItems()){
-      window.sessionStorage.removeItem('gob-checkout-coupon')
-      message.textContent='This bag has a sale-priced product, so coupon codes and buy-more savings cannot be used. Reward points can still be used at checkout.'
-    }else if(code==='WELCOME15'){
+    if(code==='WELCOME15'){
       window.sessionStorage.setItem('gob-checkout-coupon',code)
       message.innerHTML='WELCOME15 is ready for secure checkout. <a href="/checkout">Log in or continue to checkout</a> to verify that this is your first order.'
     }else if(code==='MEGA20'){
