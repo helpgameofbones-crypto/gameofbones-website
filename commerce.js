@@ -90,7 +90,7 @@ function updateCommerceTotals(){
       const remaining=Math.max(0,2199-subtotal)
       status.textContent=remaining?`MEGA20 is not applied: add ${money(remaining)} of eligible treats to reach the ₹2,199 minimum. It cannot be combined with buy-more savings.`:'MEGA20 is available on this basket. It replaces, rather than stacks with, buy-more savings.'
     } else if(privateCoupon){
-      status.textContent=/^BDAY[A-Z0-9]+$/.test(privateCoupon)?'Your private birthday reward is shown below and will be verified securely before payment. It is one use, valid for ₹499+ treat subtotal, and cannot combine with buy-more savings.':'Enter the private birthday code exactly as it appears in your message.'
+      status.textContent='Your private code will be securely verified before payment. It replaces, rather than combines with, buy-more savings.'
     } else {
       status.textContent=bulk?'Your best automatic buy-more tier is applied. Codes cannot be combined with this saving.':'Automatic savings unlock at 3 items. You can instead choose a qualifying coupon; only one offer applies per order.'
     }

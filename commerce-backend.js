@@ -46,7 +46,10 @@
     const requestedPoints = Math.floor(Number(form.querySelector('[name="loyalty_points_redeemed"]')?.value || 0));
     const points = eligibility.signedIn ? Math.min(Math.max(requestedPoints, 0), MAX_REDEMPTION_POINTS, Number(eligibility.points || 0)) : 0;
     const pointsDiscount = Math.min(MAX_POINTS_DISCOUNT_RUPEES, Math.round(points * POINT_VALUE_RUPEES)), cod = method() === 'cod' ? 40 : -30;
-    return { value, discount, points, coupon: couponRate ? coupon : '', grand: Math.max(1, value - discount - pointsDiscount + cod) };
+    // Private codes are validated authoritatively by the checkout server.
+    // Preserve the entered code even when the browser cannot know its rate;
+    // this lets off-site customer codes work without advertising them here.
+    return { value, discount, points, coupon: privateCoupon || (couponRate ? coupon : ''), grand: Math.max(1, value - discount - pointsDiscount + cod) };
   };
   const result = (html, failed = false) => { const el = document.querySelector('#checkoutSuccess'); if (!el) return; el.classList.add('show'); el.style.background = failed ? '#f9e1da' : '#e4ebdf'; el.innerHTML = html; el.focus(); };
   const completeOrder = (ref, payment) => {
