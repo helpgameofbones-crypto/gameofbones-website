@@ -29,6 +29,10 @@
 <script defer src="homepage-rich.js?v=home-journal-2"></script>
 <script defer src="conversion-extras.js"></script>
 <script defer src="api-client.js"></script>
+<script defer src="catalog.js?v=commerce-6"></script>
+<script defer src="catalogue-reference.js?v=1"></script>
+<script defer src="catalog-sync.js?v=cart-recovery-1"></script>
+<script defer src="home-conversion.js?v=1"></script>
 <script defer src="homepage-videos.js?v=2"></script>
 <script>
 /* The wheel is a secondary engagement feature. Loading it after the main
@@ -126,8 +130,8 @@ window.addEventListener('load',()=>{
 <a class="text-link" href="products.html">Shop all treats</a>
 </div>
 <div class="products">
-<article class="product-card reveal">
-<a href="product.html">
+<article class="product-card reveal" data-home-product="chicken-jerky">
+<a href="/products/chicken-jerky">
 <div class="product-image cream">
 <span class="number">01</span>
 <img src="assets/chicken-jerky-pouch.png" alt="Chicken Jerky pouch" width="1000" height="1000" decoding="async">
@@ -136,7 +140,7 @@ window.addEventListener('load',()=>{
 <div class="card-copy">
 <p class="tag">Boneless jerky · Chicken</p>
 <h3>
-<a href="product.html">Chicken Jerky</a>
+<a href="/products/chicken-jerky">Chicken Jerky</a>
 </h3>
 <div class="card-bottom">
 <span>60 g · ₹329</span>
@@ -144,8 +148,8 @@ window.addEventListener('load',()=>{
 </div>
 </div>
 </article>
-<article class="product-card reveal">
-<a href="product.html?product=trachea">
+<article class="product-card reveal" data-home-product="goat-trachea">
+<a href="/products/goat-trachea">
 <div class="product-image brown">
 <span class="number">02</span>
 <img src="assets/goat-trachea-pouch.jpg" alt="Goat Trachea pouch" width="720" height="720" loading="lazy" decoding="async">
@@ -154,7 +158,7 @@ window.addEventListener('load',()=>{
 <div class="card-copy">
 <p class="tag">Chews & bones · Goat</p>
 <h3>
-<a href="product.html?product=trachea">Goat Trachea</a>
+<a href="/products/goat-trachea">Goat Trachea</a>
 </h3>
 <div class="card-bottom">
 <span>1 piece · ₹100</span>
@@ -162,8 +166,8 @@ window.addEventListener('load',()=>{
 </div>
 </div>
 </article>
-<article class="product-card reveal">
-<a href="product.html?product=trotter">
+<article class="product-card reveal" data-home-product="goat-trotter">
+<a href="/products/goat-trotter">
 <div class="product-image sage">
 <span class="number">03</span>
 <img src="assets/goat-trotter-plate.jpg" alt="Goat Trotter treat on a plate" width="720" height="720" loading="lazy" decoding="async">
@@ -172,7 +176,7 @@ window.addEventListener('load',()=>{
 <div class="card-copy">
 <p class="tag">Chews & bones · Goat</p>
 <h3>
-<a href="product.html?product=trotter">Goat Trotter</a>
+<a href="/products/goat-trotter">Goat Trotter</a>
 </h3>
 <div class="card-bottom">
 <span>1 piece · ₹250</span>
