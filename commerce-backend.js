@@ -2,6 +2,9 @@
    storage; the server encrypts order data before writing it to Supabase. */
 (() => {
   const POINT_VALUE_RUPEES = .3, MAX_POINTS_DISCOUNT_RUPEES = 100, MAX_REDEMPTION_POINTS = Math.floor(MAX_POINTS_DISCOUNT_RUPEES / POINT_VALUE_RUPEES);
+  // Match active private-offer families for the client-side preview. The
+  // server validates every code and computes the final payable amount.
+  const privateOfferRate = code => /^SAVE10-[A-Z0-9]+$/.test(code) || code === 'GOBFAMILY10' ? .1 : /^BDAY[A-Z0-9]+$/.test(code) || code === 'PAWTY25' ? .25 : 0;
   const form = document.querySelector('#checkoutForm');
   if (!form || !window.GOB_API) return;
   const get = selector => form.querySelector(selector)?.value.trim() || '';
@@ -43,9 +46,7 @@
     const privateCoupon = form.querySelector('[name="private_coupon"]')?.value.trim().toUpperCase() || '', coupon = privateCoupon || form.querySelector('[name="coupon"]:checked')?.value || '', eligibility = window.GOB_CHECKOUT_ELIGIBILITY || {};
     // Catalogue sale pricing may be combined with one valid code and loyalty
     // points; no separate buy-more discount is active during this sale.
-    // Keep the private family offer preview aligned with the server-side
-    // coupon quote. The server remains the authority for final payment.
-    const couponRate = coupon === 'WELCOME15' && eligibility.signedIn && eligibility.firstOrder ? .15 : coupon === 'MEGA20' && value >= 2199 ? .2 : coupon === 'GOBFAMILY10' ? .1 : /^BDAY[A-Z0-9]+$/.test(coupon) ? .15 : 0;
+    const couponRate = coupon === 'WELCOME15' && eligibility.signedIn && eligibility.firstOrder ? .15 : coupon === 'MEGA20' && value >= 2199 ? .2 : privateOfferRate(coupon);
     const discount = Math.round(value * couponRate);
     const requestedPoints = Math.floor(Number(form.querySelector('[name="loyalty_points_redeemed"]')?.value || 0));
     const points = eligibility.signedIn ? Math.min(Math.max(requestedPoints, 0), MAX_REDEMPTION_POINTS, Number(eligibility.points || 0)) : 0;

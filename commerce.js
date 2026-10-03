@@ -5,6 +5,16 @@ function cartValue(){return cart().reduce((total,item)=>total+(commerceProduct(i
 function cartHasSaleItems(){return cart().some(item=>{const product=commerceProduct(item);return Number(product?.comparePrice)>Number(product?.price)})}
 const POINT_VALUE_RUPEES=.3,MAX_POINTS_DISCOUNT_RUPEES=100,MAX_REDEMPTION_POINTS=Math.floor(MAX_POINTS_DISCOUNT_RUPEES/POINT_VALUE_RUPEES)
 
+// Private offers are still checked by the server before payment. These
+// families mirror the currently active campaign configuration so shoppers see
+// the same saving in the bag and at checkout.
+function privateOfferRate(code){
+  if(/^SAVE10-[A-Z0-9]+$/.test(code)||code==='GOBFAMILY10')return .1
+  if(/^BDAY[A-Z0-9]+$/.test(code)||code==='PAWTY25')return .25
+  return 0
+}
+function isPreviewablePrivateOffer(code){return privateOfferRate(code)>0}
+
 const commerceSlug=value=>String(value||'').toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'')
 async function recoverUnknownCartLines(){
   const lines=cart(),missing=lines.filter(line=>!commerceProduct(line))
@@ -67,9 +77,7 @@ function updateCommerceTotals(){
   const coupon=privateCoupon||storedCoupon||document.querySelector('[name="coupon"]:checked')?.value||'none'
   const eligibility=window.GOB_CHECKOUT_ELIGIBILITY||{signedIn:false,firstOrder:false,checking:false,points:0}
   // Listed sale prices, one valid code and loyalty points can be used together.
-  // GOBFAMILY10 is an active, unlisted family offer. Keep this preview in
-  // step with the server quote so customers see its saving before payment.
-  const couponRate=(coupon==='WELCOME15'&&eligibility.firstOrder ? .15 : coupon==='MEGA20'&&subtotal>=2199 ? .2 : coupon==='GOBFAMILY10' ? .1 : /^BDAY[A-Z0-9]+$/.test(coupon) ? .15 : 0)
+  const couponRate=(coupon==='WELCOME15'&&eligibility.firstOrder ? .15 : coupon==='MEGA20'&&subtotal>=2199 ? .2 : privateOfferRate(coupon))
   const couponDiscount=Math.round(subtotal*couponRate),saving=couponDiscount
   const payment=document.querySelector('[name="payment"]:checked')?.value||'online'
   const requestedPoints=Number(document.querySelector('[name="loyalty_points_redeemed"]')?.value||0)
@@ -94,8 +102,8 @@ function updateCommerceTotals(){
     } else if(coupon==='MEGA20'){
       const remaining=Math.max(0,2199-subtotal)
       status.textContent=remaining?`MEGA20 is not applied: add ${money(remaining)} of eligible treats to reach the ₹2,199 minimum.`:'MEGA20 is available on this basket.'
-    } else if(coupon==='GOBFAMILY10'){
-      status.textContent='GOBFAMILY10 is applied — 10% off this order.'
+    } else if(privateOfferRate(coupon)){
+      status.textContent=`${coupon} is applied — ${Math.round(privateOfferRate(coupon)*100)}% off this order.`
     } else if(privateCoupon){
       status.textContent='Your private code will be securely verified before payment.'
     } else {
@@ -141,7 +149,7 @@ function ensureCheckoutOptions(){
   const requestedCoupon=['WELCOME15','MEGA20'].includes(storedCoupon)?storedCoupon:''
   const requestedInput=requestedCoupon&&form.querySelector(`[name="coupon"][value="${requestedCoupon}"]`)
   if(requestedInput) requestedInput.checked=true
-  if(storedCoupon==='GOBFAMILY10'){
+  if(isPreviewablePrivateOffer(storedCoupon)){
     const privateCode=form.querySelector('[name="private_coupon"]')
     if(privateCode){privateCode.value=storedCoupon;privateCode.closest('details')?.setAttribute('open','')}
   }
@@ -206,10 +214,10 @@ function setupCommerce(){
     }else if(code==='MEGA20'){
       window.sessionStorage.setItem('gob-checkout-coupon',code)
       message.textContent=cartValue()>=2199?'MEGA20 is ready for secure checkout.':'MEGA20 needs a treat subtotal of ₹2,199 or more; you can still continue to checkout.'
-    }else if(code==='GOBFAMILY10'){
+    }else if(isPreviewablePrivateOffer(code)){
       window.sessionStorage.setItem('gob-checkout-coupon',code)
       updateCommerceTotals()
-      message.textContent='GOBFAMILY10 is applied — 10% off will carry through to secure checkout.'
+      message.textContent=`${code} is applied — ${Math.round(privateOfferRate(code)*100)}% off will carry through to secure checkout.`
     }else{
       window.sessionStorage.removeItem('gob-checkout-coupon')
       message.textContent='Private birthday rewards are entered securely at checkout. Public offers: WELCOME15 or MEGA20.'
