@@ -48,7 +48,7 @@
   if (!document.querySelector('link[data-gob-header-navigation]')) {
     const stylesheet = document.createElement('link');
     stylesheet.rel = 'stylesheet';
-    stylesheet.href = 'header-navigation.css?v=live-ticker-2';
+    stylesheet.href = 'header-navigation.css?v=live-ticker-3';
     stylesheet.dataset.gobHeaderNavigation = 'true';
     document.head.append(stylesheet);
   }

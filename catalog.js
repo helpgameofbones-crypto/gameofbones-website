@@ -20,7 +20,7 @@ window.GOB_LIVE_CATALOG=[
 {n:'Whole Mackerel',c:'Fish treats',w:'100 g',p:600,d:'Whole dehydrated mackerel.',i:'assets/catalogue-plates/whole-mackerel.webp'},
 {n:'Mackerel Fillet',c:'Fish treats',w:'60 g',p:650,d:'Boneless dehydrated mackerel fillet.',i:'assets/catalogue-plates/mackerel-fillet.webp'},
 {n:'Sardines',c:'Fish treats',w:'60 g',p:400,d:'Whole dehydrated sardines.',i:'assets/catalogue-plates/sardines.webp'},
-{n:'Tuna',c:'Fish treats',w:'60 g',p:500,d:'Lean, high-protein dehydrated tuna.',i:'assets/catalogue-plates/tuna.webp'},
+{n:'Tuna',c:'Fish treats',w:'60 g',p:500,d:'Lean, high-protein dehydrated tuna.',i:'assets/catalogue-plates/tuna-approved.png'},
 {n:'Prawns',c:'Fish treats',w:'60 g',p:599,d:'A premium dehydrated prawn treat.',i:'assets/catalogue-plates/prawns.webp'},
 {n:'Whole Quail',c:'Whole prey',w:'1 piece',p:275,d:'Whole dehydrated quail with meat, bone and organs.',i:'assets/catalogue-plates/whole-quail.webp'},
 {n:'Cat Trial Box',c:'Bundles',w:'5 fish treats · 120 g',p:749,cp:899,d:'A fish-forward tasting box with five clearly listed single-ingredient treats.',i:'assets/catalogue-v3/cat-trial-box.webp',contents:['Anchovies · 25 g','Sardines · 25 g','Mackerel Fillet · 25 g','Bombay Duck · 25 g','Tuna · 20 g']},
