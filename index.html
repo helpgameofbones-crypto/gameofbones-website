@@ -27,21 +27,13 @@
 </script>
 <script defer src="header-navigation.js?v=live-ticker-4"></script>
 <script defer src="homepage-rich.js?v=home-journal-2"></script>
-<script defer src="conversion-extras.js?v=wheel-auto-open-2"></script>
+<script defer src="conversion-extras.js?v=wheel-auto-open-3"></script>
 <script defer src="api-client.js"></script>
 <script defer src="catalog.js?v=commerce-6"></script>
 <script defer src="catalogue-reference.js?v=1"></script>
 <script defer src="catalog-sync.js?v=cart-recovery-1"></script>
 <script defer src="home-conversion.js?v=1"></script>
 <script defer src="homepage-videos.js?v=2"></script>
-<script>
-/* The wheel is a secondary engagement feature. Loading it after the main
-   content is interactive keeps its work out of the homepage's critical path. */
-window.addEventListener('load',()=>{
-  const loadWheel=()=>{const script=document.createElement('script');script.src='wheel-game.js?v=wheel-auto-open-2';document.body.append(script)};
-  if('requestIdleCallback'in window)requestIdleCallback(loadWheel,{timeout:2500});else setTimeout(loadWheel,1200);
-},{once:true});
-</script>
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Game of Bones — Naturally better treats"><meta name="twitter:description" content="Game of Bones makes single-ingredient, naturally dehydrated dog treats in Kalyan, Maharashtra—without fillers, preservatives or confusing labels."><meta name="twitter:image" content="https://gameofbones.in/assets/hero-real-dogs.png"></head>
 <body>
 <a class="skip" href="#main">Skip to content</a>

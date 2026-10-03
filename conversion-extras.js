@@ -15,22 +15,8 @@
     document.head.append(reviewStyles);
   }
 
-  function addHomeExtras() {
-    document.querySelector('.hero .proof')?.insertAdjacentHTML('afterend', `
-      <aside class="home-sale-note" aria-label="Current sale details">
-        <strong>Sale prices are already included.</strong>
-        <span>10% off treats · 15% off Whole Mackerel · plus ₹30 off when you pay online.</span>
-      </aside>`);
-    const target = document.querySelector('.subscribe');
-    target?.insertAdjacentHTML('beforebegin', `
-      <section class="conversion-block">
-        <div class="compare-grid">
-          <div><p class="eyebrow">The label check</p><h2>Game of Bones</h2><ul><li>One named ingredient per treat</li><li>No filler, artificial colour or flavour listed</li><li>Slow-dehydrated for a simple treat routine</li></ul></div>
-          <div><p class="eyebrow">Typical processed treats</p><h2>More to decode.</h2><ul><li>Ingredient lists can include binders and flavour systems</li><li>Processing and formulation vary by brand</li><li>Always read the current pouch label</li></ul></div>
-        </div>
-        <div class="bundle-cta"><div><p class="eyebrow">First order, made easy</p><h2>Build a treat box they’ll remember.</h2></div><a class="button" href="bundles.html">Build your bundle</a></div>
-      </section>`);
-
+  function addWheelPrompt() {
+    if (document.querySelector('#wheelModal')) return;
     document.body.insertAdjacentHTML('beforeend', `
       <button class="wheel-launch" id="wheelLaunch">Spin<br>to win</button>
       <div class="wheel-modal" id="wheelModal">
@@ -71,6 +57,40 @@
       if (event.relatedTarget || event.clientY > 0) return;
       revealWheel();
     }, { once: true });
+
+    // The wheel module is deliberately non-critical. Start loading it only
+    // after the page itself is interactive, but always mount it on both the
+    // homepage and product landing pages before its 15–20 second prompt.
+    const loadWheelGame = () => {
+      if (document.querySelector('script[data-gob-wheel-game]')) return;
+      const script = document.createElement('script');
+      script.dataset.gobWheelGame = 'true';
+      script.src = 'wheel-game.js?v=wheel-auto-open-3';
+      document.body.append(script);
+    };
+    const scheduleWheelLoad = () => {
+      if ('requestIdleCallback' in window) requestIdleCallback(loadWheelGame, { timeout: 2500 });
+      else window.setTimeout(loadWheelGame, 1200);
+    };
+    if (document.readyState === 'complete') scheduleWheelLoad();
+    else window.addEventListener('load', scheduleWheelLoad, { once: true });
+  }
+
+  function addHomeExtras() {
+    document.querySelector('.hero .proof')?.insertAdjacentHTML('afterend', `
+      <aside class="home-sale-note" aria-label="Current sale details">
+        <strong>Sale prices are already included.</strong>
+        <span>10% off treats · 15% off Whole Mackerel · plus ₹30 off when you pay online.</span>
+      </aside>`);
+    const target = document.querySelector('.subscribe');
+    target?.insertAdjacentHTML('beforebegin', `
+      <section class="conversion-block">
+        <div class="compare-grid">
+          <div><p class="eyebrow">The label check</p><h2>Game of Bones</h2><ul><li>One named ingredient per treat</li><li>No filler, artificial colour or flavour listed</li><li>Slow-dehydrated for a simple treat routine</li></ul></div>
+          <div><p class="eyebrow">Typical processed treats</p><h2>More to decode.</h2><ul><li>Ingredient lists can include binders and flavour systems</li><li>Processing and formulation vary by brand</li><li>Always read the current pouch label</li></ul></div>
+        </div>
+        <div class="bundle-cta"><div><p class="eyebrow">First order, made easy</p><h2>Build a treat box they’ll remember.</h2></div><a class="button" href="bundles.html">Build your bundle</a></div>
+      </section>`);
   }
 
   function addProductExtras() {
@@ -124,6 +144,7 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     ensureStyles();
+    addWheelPrompt();
     const isHome = location.pathname === '/' || location.pathname.endsWith('/index.html');
     if (isHome) addHomeExtras();
     if (document.querySelector('#addProduct')) addProductExtras();
