@@ -8,8 +8,13 @@
   const saleRate = item => productSlug(item) === 'whole-mackerel' ? .15 : .10;
   const withSalePrice = (pack, item) => {
     const price = Number(pack?.price || 0), compare = Number(pack?.compare_price || pack?.comparePrice || 0);
-    if (!price || compare > price) return { ...pack, price, compare_price: compare };
-    return { ...pack, price: Math.round(price * (1 - saleRate(item))), compare_price: price };
+    if (!price) return { ...pack, price, compare_price: compare };
+    // Some boxes had an older bundle saving in `price` plus a higher MRP in
+    // `compare_price`. During a sitewide sale the MRP is the only consistent
+    // base: otherwise a card could claim 10% while showing 12% (or another
+    // percentage). Recalculate every visible sale from that original price.
+    const originalPrice = compare > price ? compare : price;
+    return { ...pack, price: Math.round(originalPrice * (1 - saleRate(item))), compare_price: originalPrice };
   };
   const packsFor = item => {
     const original = Array.isArray(item?.packs) && item.packs.length
