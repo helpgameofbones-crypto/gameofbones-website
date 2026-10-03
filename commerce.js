@@ -95,23 +95,24 @@ function updateCommerceTotals(){
   document.querySelectorAll('[data-loyalty-points]').forEach(el=>el.textContent=pointsEarned.toLocaleString('en-IN'))
   document.querySelectorAll('[data-loyalty-value]').forEach(el=>el.textContent=pointsValue.toFixed(pointsValue%1?2:0))
   document.querySelectorAll('[data-commerce-count]').forEach(el=>el.textContent=count)
-  const status=document.querySelector('[data-coupon-status]')
-  if(status){
+  const statusMessage=()=>{
     if(saleBasket){
-      status.textContent=coupon==='none'&&!privateCoupon?'Sale price is already applied. Add one eligible code and/or reward points at checkout for extra savings.':'Your sale price, eligible code and reward points are being applied.'
+      return coupon==='none'&&!privateCoupon?'Sale price is already applied. Add one eligible code and/or reward points at checkout for extra savings.':'Your sale price, eligible code and reward points are being applied.'
     }else if(coupon==='WELCOME15'){
-      status.textContent=!eligibility.signedIn?'WELCOME15 is not applied: log in with your email OTP first. It is for a verified account with no completed orders and is limited to one use.':eligibility.checking?'Checking whether this account is eligible for WELCOME15…':eligibility.firstOrder?'WELCOME15 is available for this first order.':'WELCOME15 is not applied: this account already has a completed order, or its first-order status could not be verified.'
+      return !eligibility.signedIn?'WELCOME15 is not applied: log in with your email OTP first. It is for a verified account with no completed orders and is limited to one use.':eligibility.checking?'Checking whether this account is eligible for WELCOME15…':eligibility.firstOrder?'WELCOME15 is available for this first order.':'WELCOME15 is not applied: this account already has a completed order, or its first-order status could not be verified.'
     } else if(coupon==='MEGA20'){
       const remaining=Math.max(0,2199-subtotal)
-      status.textContent=remaining?`MEGA20 is not applied: add ${money(remaining)} of eligible treats to reach the ₹2,199 minimum.`:'MEGA20 is available on this basket.'
+      return remaining?`MEGA20 is not applied: add ${money(remaining)} of eligible treats to reach the ₹2,199 minimum.`:'MEGA20 is available on this basket.'
     } else if(privateOfferRate(coupon)){
-      status.textContent=`${coupon} is applied — ${Math.round(privateOfferRate(coupon)*100)}% off this order.`
+      return `${coupon} is applied — ${Math.round(privateOfferRate(coupon)*100)}% off this order.`
     } else if(privateCoupon){
-      status.textContent='Your private code will be securely verified before payment.'
+      return 'Your coupon will be securely verified before payment.'
     } else {
-      status.textContent='Your listed price is already applied. Choose one eligible code and/or use reward points for extra savings.'
+      return 'Your listed price is already applied. Choose one eligible code and/or use reward points for extra savings.'
     }
   }
+  const message=statusMessage()
+  document.querySelectorAll('[data-coupon-status],[data-checkout-coupon-status]').forEach(status=>status.textContent=message)
 }
 
 function ensureLoyaltyEarn(){
@@ -145,6 +146,20 @@ function ensureCheckoutOptions(){
   total.insertAdjacentHTML('beforebegin','<div class="order-row" data-coupon-row hidden><span data-coupon-label>Coupon</span><span data-coupon-discount>—</span></div><div class="order-row" data-loyalty-discount-row hidden><span>Reward points</span><span data-points-discount>—</span></div><div class="order-row"><span>Payment adjustment</span><span data-payment-change>−₹30</span></div>')
   form.querySelectorAll('[name="coupon"],[name="payment"],[name="loyalty_points_redeemed"],[name="private_coupon"]').forEach(input=>input.addEventListener('input',updateCommerceTotals))
 
+  const privateCode=form.querySelector('[name="private_coupon"]')
+  const summaryCode=document.querySelector('#checkoutCoupon')
+  const applySummaryCode=()=>{
+    if(!privateCode||!summaryCode)return
+    const code=summaryCode.value.trim().toUpperCase()
+    summaryCode.value=code
+    privateCode.value=code
+    if(code) privateCode.closest('details')?.setAttribute('open','')
+    updateCommerceTotals()
+  }
+  document.querySelector('[data-apply-checkout-coupon]')?.addEventListener('click',applySummaryCode)
+  summaryCode?.addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();applySummaryCode()}})
+  privateCode?.addEventListener('input',()=>{if(summaryCode)summaryCode.value=privateCode.value.trim().toUpperCase()})
+
   // A code applied from the bag is only carried to this secure checkout; it
   // is still checked against the signed-in customer's eligibility below.
   const storedCoupon=window.sessionStorage.getItem('gob-checkout-coupon')
@@ -152,9 +167,9 @@ function ensureCheckoutOptions(){
   const requestedInput=requestedCoupon&&form.querySelector(`[name="coupon"][value="${requestedCoupon}"]`)
   if(requestedInput) requestedInput.checked=true
   if(isPreviewablePrivateOffer(storedCoupon)){
-    const privateCode=form.querySelector('[name="private_coupon"]')
     if(privateCode){privateCode.value=storedCoupon;privateCode.closest('details')?.setAttribute('open','')}
   }
+  if(summaryCode&&privateCode)summaryCode.value=privateCode.value.trim().toUpperCase()
   window.sessionStorage.removeItem('gob-checkout-coupon')
   updateSaleOfferControls()
 }
