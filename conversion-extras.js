@@ -46,16 +46,27 @@
     // Let visitors orient themselves, then invite first-time visitors to play.
     // The modal is opened once per browser session; the small launcher remains
     // available afterwards for anyone who closes it and wants to return.
+    // Do not mark it as shown until the wheel is actually available and opened:
+    // the wheel script intentionally loads after the page so marking it earlier
+    // could permanently suppress the prompt on a slow connection.
     const launch = document.querySelector('#wheelLaunch');
+    const autoOpenKey = 'gob-wheel-auto-opened-v2';
     const revealWheel = () => launch?.classList.add('is-ready');
     const openWheelOnce = () => {
       revealWheel();
-      if (sessionStorage.getItem('gob-wheel-auto-opened')) return;
-      sessionStorage.setItem('gob-wheel-auto-opened', '1');
-      if (typeof window.GOB_openSpinWheel === 'function') window.GOB_openSpinWheel();
-      else document.addEventListener('gob:wheel-ready', () => window.GOB_openSpinWheel?.(), { once: true });
+      if (sessionStorage.getItem(autoOpenKey)) return;
+      const open = () => {
+        if (sessionStorage.getItem(autoOpenKey) || typeof window.GOB_openSpinWheel !== 'function') return;
+        window.GOB_openSpinWheel();
+        sessionStorage.setItem(autoOpenKey, '1');
+      };
+      if (typeof window.GOB_openSpinWheel === 'function') open();
+      else document.addEventListener('gob:wheel-ready', open, { once: true });
     };
-    window.setTimeout(openWheelOnce, 15_000);
+    // A small range feels less mechanical while guaranteeing the invitation is
+    // shown between 15 and 20 seconds after the visitor reaches the homepage.
+    const autoOpenDelay = 15_000 + Math.floor(Math.random() * 5_001);
+    window.setTimeout(openWheelOnce, autoOpenDelay);
     document.addEventListener('mouseout', event => {
       if (event.relatedTarget || event.clientY > 0) return;
       revealWheel();
