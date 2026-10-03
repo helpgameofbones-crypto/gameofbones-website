@@ -43,7 +43,9 @@
     const privateCoupon = form.querySelector('[name="private_coupon"]')?.value.trim().toUpperCase() || '', coupon = privateCoupon || form.querySelector('[name="coupon"]:checked')?.value || '', eligibility = window.GOB_CHECKOUT_ELIGIBILITY || {};
     // Catalogue sale pricing may be combined with one valid code and loyalty
     // points; no separate buy-more discount is active during this sale.
-    const couponRate = coupon === 'WELCOME15' && eligibility.signedIn && eligibility.firstOrder ? .15 : coupon === 'MEGA20' && value >= 2199 ? .2 : /^BDAY[A-Z0-9]+$/.test(coupon) ? .15 : 0;
+    // Keep the private family offer preview aligned with the server-side
+    // coupon quote. The server remains the authority for final payment.
+    const couponRate = coupon === 'WELCOME15' && eligibility.signedIn && eligibility.firstOrder ? .15 : coupon === 'MEGA20' && value >= 2199 ? .2 : coupon === 'GOBFAMILY10' ? .1 : /^BDAY[A-Z0-9]+$/.test(coupon) ? .15 : 0;
     const discount = Math.round(value * couponRate);
     const requestedPoints = Math.floor(Number(form.querySelector('[name="loyalty_points_redeemed"]')?.value || 0));
     const points = eligibility.signedIn ? Math.min(Math.max(requestedPoints, 0), MAX_REDEMPTION_POINTS, Number(eligibility.points || 0)) : 0;

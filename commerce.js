@@ -64,7 +64,9 @@ function updateCommerceTotals(){
   const coupon=privateCoupon||document.querySelector('[name="coupon"]:checked')?.value||'none'
   const eligibility=window.GOB_CHECKOUT_ELIGIBILITY||{signedIn:false,firstOrder:false,checking:false,points:0}
   // Listed sale prices, one valid code and loyalty points can be used together.
-  const couponRate=(coupon==='WELCOME15'&&eligibility.firstOrder ? .15 : coupon==='MEGA20'&&subtotal>=2199 ? .2 : /^BDAY[A-Z0-9]+$/.test(coupon) ? .15 : 0)
+  // GOBFAMILY10 is an active, unlisted family offer. Keep this preview in
+  // step with the server quote so customers see its saving before payment.
+  const couponRate=(coupon==='WELCOME15'&&eligibility.firstOrder ? .15 : coupon==='MEGA20'&&subtotal>=2199 ? .2 : coupon==='GOBFAMILY10' ? .1 : /^BDAY[A-Z0-9]+$/.test(coupon) ? .15 : 0)
   const couponDiscount=Math.round(subtotal*couponRate),saving=couponDiscount
   const payment=document.querySelector('[name="payment"]:checked')?.value||'online'
   const requestedPoints=Number(document.querySelector('[name="loyalty_points_redeemed"]')?.value||0)
@@ -89,6 +91,8 @@ function updateCommerceTotals(){
     } else if(coupon==='MEGA20'){
       const remaining=Math.max(0,2199-subtotal)
       status.textContent=remaining?`MEGA20 is not applied: add ${money(remaining)} of eligible treats to reach the ₹2,199 minimum.`:'MEGA20 is available on this basket.'
+    } else if(coupon==='GOBFAMILY10'){
+      status.textContent='GOBFAMILY10 is applied — 10% off this order.'
     } else if(privateCoupon){
       status.textContent='Your private code will be securely verified before payment.'
     } else {
