@@ -4,9 +4,19 @@
 (() => {
   const money = value => `₹${Number(value || 0).toLocaleString('en-IN')}`;
   const product = () => window.GOB_CURRENT_PRODUCT || null;
-  const packsFor = item => Array.isArray(item?.packs) && item.packs.length
-    ? item.packs
-    : [{ label: '1 pouch', price: Number(item?.p) || 0, compare_price: Number(item?.cp) || 0 }];
+  const productSlug = item => String(item?.id || item?.n || item?.name || '').toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  const saleRate = item => productSlug(item) === 'whole-mackerel' ? .15 : .10;
+  const withSalePrice = (pack, item) => {
+    const price = Number(pack?.price || 0), compare = Number(pack?.compare_price || pack?.comparePrice || 0);
+    if (!price || compare > price) return { ...pack, price, compare_price: compare };
+    return { ...pack, price: Math.round(price * (1 - saleRate(item))), compare_price: price };
+  };
+  const packsFor = item => {
+    const original = Array.isArray(item?.packs) && item.packs.length
+      ? item.packs
+      : [{ label: '1 pouch', price: Number(item?.p) || 0, compare_price: Number(item?.cp) || 0 }];
+    return original.map(pack => withSalePrice(pack, item));
+  };
   const selectedPack = item => {
     const buttons = [...document.querySelectorAll('#packOptions .option')];
     const index = Math.max(0, buttons.findIndex(button => button.classList.contains('selected')));
@@ -14,10 +24,21 @@
   };
   const isSale = pack => Number(pack?.compare_price) > Number(pack?.price);
 
+  function applyToProduct(item) {
+    if (!item || item.__gobSaleApplied) return;
+    const packs = packsFor(item);
+    if (!packs.length) return;
+    item.packs = packs;
+    item.p = Number(packs[0].price) || 0;
+    item.cp = Number(packs[0].compare_price) || 0;
+    item.__gobSaleApplied = true;
+  }
+
   function render() {
     const item = product();
     const price = document.querySelector('#productPrice');
     if (!item || !price) return;
+    applyToProduct(item);
     const pack = selectedPack(item), sale = isSale(pack);
     document.querySelector('#salePricePresentation')?.remove();
     if (!sale) { price.hidden = false; return; }
@@ -25,7 +46,7 @@
     const presentation = document.createElement('div');
     presentation.id = 'salePricePresentation';
     presentation.className = 'sale-price-presentation';
-    presentation.innerHTML = `<span class="sale-badge">Sale</span><s>${money(pack.compare_price)}</s><strong>${money(pack.price)}</strong>`;
+    presentation.innerHTML = `<span class="sale-badge">Sale</span><s>${money(pack.compare_price)}</s><strong>${money(pack.price)}</strong><small>${productSlug(item) === 'whole-mackerel' ? '15% off' : '10% off'}</small>`;
     price.insertAdjacentElement('afterend', presentation);
   }
 
@@ -41,12 +62,12 @@
 
   function bind() {
     document.addEventListener('click', event => {
-      if (event.target.closest('#packOptions .option')) setTimeout(render, 0);
+      if (event.target.closest('#packOptions .option')) setTimeout(() => { applyToProduct(product()); render(); }, 0);
       if (event.target.closest('#addProduct')) saveSelectedSnapshot();
     }, true);
-    render();
+    applyToProduct(product()); render();
   }
 
   document.addEventListener('DOMContentLoaded', bind);
-  document.addEventListener('gob:product-ready', () => setTimeout(render, 0));
+  document.addEventListener('gob:product-ready', () => setTimeout(() => { applyToProduct(product()); render(); }, 0));
 })();
