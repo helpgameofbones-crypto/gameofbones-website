@@ -1,8 +1,10 @@
 (() => {
+  // Must match the labels the spin-wheel server awards (admin lib/spin-gifts.ts).
   const prizes = [
-    { label: '10% off' }, { label: '15% off' }, { label: '20% off' },
-    { label: '10% off' }, { label: '15% off' }, { label: '20% off' },
+    { label: '2 free Chicken Wings' }, { label: '1 free pack of Chicken Feet' }, { label: '1 free Goat Trachea' },
+    { label: '2 free Chicken Wings' }, { label: '1 free pack of Chicken Feet' }, { label: '1 free Goat Trachea' },
   ];
+  const GIFT_MIN_ORDER = 499;
 
   async function customerKey({ email, phone }) {
     const value = `${email.trim().toLowerCase()}|${phone.replace(/\D/g, '').slice(-10)}`;
@@ -12,6 +14,9 @@
   }
 
   function awardMarkup(award, message) {
+    if (!/%/.test(award.label)) {
+      return `<span class="wheel-prize"><span>${message}</span><strong>${award.label}</strong><span class="wheel-code">No code needed</span></span><small>We add it to your order automatically at checkout when you use this mobile number or email on an order of ₹${GIFT_MIN_ORDER} or more. It works together with your reward points and any other coupon. Valid for 7 days. Reference: ${award.detail}</small><a class="button wheel-shop" href="products.html">Shop treats</a><button class="wheel-again" type="button">Close</button>`;
+    }
     return `<span class="wheel-prize"><span>${message}</span><strong>${award.label}</strong><span class="wheel-code">Your code: ${award.detail}</span></span><small>Keep this code for checkout. One spin is allowed per customer.</small><a class="button wheel-shop" href="products.html">Shop treats</a><button class="wheel-again" type="button">Close</button>`;
   }
 
@@ -19,14 +24,14 @@
     const modal = document.querySelector('#wheelModal');
     const form = document.querySelector('#wheelForm');
     if (!modal || !form) return;
-    if (!document.querySelector('link[href="wheel-game.css?v=wheel-9"]')) {
-      const stylesheet = document.createElement('link'); stylesheet.rel = 'stylesheet'; stylesheet.href = 'wheel-game.css?v=wheel-9'; document.head.append(stylesheet);
+    if (!document.querySelector('link[href="wheel-game.css?v=wheel-10"]')) {
+      const stylesheet = document.createElement('link'); stylesheet.rel = 'stylesheet'; stylesheet.href = 'wheel-game.css?v=wheel-10'; document.head.append(stylesheet);
     }
 
     const intro = modal.querySelector('.wheel-card > p:not(.eyebrow)');
     intro?.classList.add('wheel-intro');
-    intro.textContent = 'Fill in your details, then spin once to see the offer you landed on.';
-    form.innerHTML = `<div class="wheel-rewards" role="group" aria-label="Rewards on the wheel"><p class="wheel-rewards-title">Every spin wins one of these</p><ul><li><strong>10%</strong><span>off</span></li><li><strong>15%</strong><span>off</span></li><li><strong>20%</strong><span>off</span></li></ul><p class="wheel-rewards-note">Your code works on your next order for 7 days. One spin per customer.</p></div><label class="wheel-form-label">Name <input required name="name" autocomplete="name" placeholder="Your name"></label><label class="wheel-form-label">Email <input required name="email" type="email" autocomplete="email" placeholder="you@example.com"></label><label class="wheel-form-label">Mobile number <input required name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="10-digit mobile number" pattern="[0-9]{10}" title="Enter a 10-digit mobile number"></label><label class="wheel-consent"><input name="marketing_consent" type="checkbox" value="true"> <span>Send me this offer and occasional Game of Bones news. I can unsubscribe anytime.</span></label><button class="button wheel-continue" type="submit">Continue to the wheel</button>`;
+    intro.textContent = 'Fill in your details, then spin once to see which free treat you win.';
+    form.innerHTML = `<div class="wheel-rewards" role="group" aria-label="Free treats on the wheel"><p class="wheel-rewards-title">Every spin wins one free treat</p><ul><li><strong>2</strong><span>Chicken Wings</span></li><li><strong>1 pack</strong><span>Chicken Feet</span></li><li><strong>1</strong><span>Goat Trachea</span></li></ul><p class="wheel-rewards-note">Added to your order automatically on orders of ₹499+. Stacks with your reward points and other coupons. Valid 7 days. One spin per customer.</p></div><label class="wheel-form-label">Name <input required name="name" autocomplete="name" placeholder="Your name"></label><label class="wheel-form-label">Email <input required name="email" type="email" autocomplete="email" placeholder="you@example.com"></label><label class="wheel-form-label">Mobile number <input required name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="10-digit mobile number" pattern="[0-9]{10}" title="Enter a 10-digit mobile number"></label><label class="wheel-consent"><input name="marketing_consent" type="checkbox" value="true"> <span>Send me this offer and occasional Game of Bones news. I can unsubscribe anytime.</span></label><button class="button wheel-continue" type="submit">Continue to the wheel</button>`;
     modal.querySelector('#wheelResult')?.remove();
     const close = () => modal.classList.remove('open');
     const open = () => {
@@ -76,8 +81,8 @@
         return;
       }
 
-      intro.textContent = 'Your welcome offer is on the wheel. It will stop on one prize.';
-      card.insertAdjacentHTML('beforeend', `<section class="wheel-play" aria-label="Spin to win prize wheel"><div class="wheel-stage"><span class="wheel-pointer" aria-hidden="true"></span><div class="prize-wheel" id="prizeWheel" role="img" aria-label="Prize wheel with six welcome offers"><span class="wheel-segment wheel-s1">10%<br>OFF</span><span class="wheel-segment dark wheel-s2">15%<br>OFF</span><span class="wheel-segment wheel-s3">20%<br>OFF</span><span class="wheel-segment wheel-s4">10%<br>OFF</span><span class="wheel-segment wheel-s5">15%<br>OFF</span><span class="wheel-segment dark wheel-s6">20%<br>OFF</span><span class="wheel-hub">SPIN</span></div></div><p class="wheel-status" aria-live="polite">Spinning your welcome offer…</p></section>`);
+      intro.textContent = 'Your free treat is on the wheel. It will stop on one prize.';
+      card.insertAdjacentHTML('beforeend', `<section class="wheel-play" aria-label="Spin to win prize wheel"><div class="wheel-stage"><span class="wheel-pointer" aria-hidden="true"></span><div class="prize-wheel" id="prizeWheel" role="img" aria-label="Prize wheel with three free treats"><span class="wheel-segment wheel-s1">2 FREE<br>WINGS</span><span class="wheel-segment dark wheel-s2">FREE<br>FEET</span><span class="wheel-segment wheel-s3">FREE<br>TRACHEA</span><span class="wheel-segment wheel-s4">2 FREE<br>WINGS</span><span class="wheel-segment wheel-s5">FREE<br>FEET</span><span class="wheel-segment dark wheel-s6">FREE<br>TRACHEA</span><span class="wheel-hub">SPIN</span></div></div><p class="wheel-status" aria-live="polite">Spinning your welcome offer…</p></section>`);
       const wheel = card.querySelector('#prizeWheel'), status = card.querySelector('.wheel-status');
       const chosenIndex = prizes.findIndex(prize => prize.label === award.label);
       requestAnimationFrame(() => { wheel.style.transform = `rotate(${2160 - Math.max(0, chosenIndex) * 60}deg)`; });
