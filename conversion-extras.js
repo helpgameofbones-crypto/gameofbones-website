@@ -43,11 +43,19 @@
         </div>
       </div>`);
 
-    // Give visitors time to assess the page; reveal the opt-in only after
-    // engagement or clear exit intent instead of interrupting the first view.
+    // Let visitors orient themselves, then invite first-time visitors to play.
+    // The modal is opened once per browser session; the small launcher remains
+    // available afterwards for anyone who closes it and wants to return.
     const launch = document.querySelector('#wheelLaunch');
     const revealWheel = () => launch?.classList.add('is-ready');
-    window.setTimeout(revealWheel, 18_000);
+    const openWheelOnce = () => {
+      revealWheel();
+      if (sessionStorage.getItem('gob-wheel-auto-opened')) return;
+      sessionStorage.setItem('gob-wheel-auto-opened', '1');
+      if (typeof window.GOB_openSpinWheel === 'function') window.GOB_openSpinWheel();
+      else document.addEventListener('gob:wheel-ready', () => window.GOB_openSpinWheel?.(), { once: true });
+    };
+    window.setTimeout(openWheelOnce, 15_000);
     document.addEventListener('mouseout', event => {
       if (event.relatedTarget || event.clientY > 0) return;
       revealWheel();

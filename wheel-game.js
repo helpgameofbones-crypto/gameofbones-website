@@ -35,6 +35,8 @@
       modal.querySelector('.wheel-play,.wheel-previous')?.remove();
       modal.querySelector('input[name="name"]')?.focus();
     };
+    window.GOB_openSpinWheel = open;
+    document.dispatchEvent(new Event('gob:wheel-ready'));
     document.querySelector('#wheelLaunch')?.addEventListener('click', open);
     modal.querySelector('[data-wheel-close]')?.addEventListener('click', close);
     document.addEventListener('keydown', event => { if (event.key === 'Escape' && modal.classList.contains('open')) close(); });

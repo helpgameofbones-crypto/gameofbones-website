@@ -27,7 +27,7 @@
 </script>
 <script defer src="header-navigation.js?v=live-ticker-4"></script>
 <script defer src="homepage-rich.js?v=home-journal-2"></script>
-<script defer src="conversion-extras.js"></script>
+<script defer src="conversion-extras.js?v=wheel-auto-open-1"></script>
 <script defer src="api-client.js"></script>
 <script defer src="catalog.js?v=commerce-6"></script>
 <script defer src="catalogue-reference.js?v=1"></script>
@@ -38,7 +38,7 @@
 /* The wheel is a secondary engagement feature. Loading it after the main
    content is interactive keeps its work out of the homepage's critical path. */
 window.addEventListener('load',()=>{
-  const loadWheel=()=>{const script=document.createElement('script');script.src='wheel-game.js?v=wheel-9';document.body.append(script)};
+  const loadWheel=()=>{const script=document.createElement('script');script.src='wheel-game.js?v=wheel-auto-open-1';document.body.append(script)};
   if('requestIdleCallback'in window)requestIdleCallback(loadWheel,{timeout:2500});else setTimeout(loadWheel,1200);
 },{once:true});
 </script>
