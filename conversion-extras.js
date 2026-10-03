@@ -51,8 +51,20 @@
     };
     // A small range feels less mechanical while guaranteeing the invitation is
     // shown between 15 and 20 seconds after the visitor reaches the homepage.
+    // Visitors who arrive from a paid ad have already seen an offer and came
+    // to look at a product. A full-screen form 15 seconds in interrupts them
+    // mid-decision, so for these sessions only the small launcher is shown.
+    const paidLanding = (() => {
+      const key = 'gob-paid-landing';
+      try {
+        const params = new URLSearchParams(location.search);
+        if (params.has('fbclid') || params.has('gclid') || /^(paid|cpc|ppc|paid_social)$/i.test(params.get('utm_medium') || '')) sessionStorage.setItem(key, '1');
+        return sessionStorage.getItem(key) === '1';
+      } catch (_) { return false; }
+    })();
     const autoOpenDelay = 15_000 + Math.floor(Math.random() * 5_001);
-    window.setTimeout(openWheelOnce, autoOpenDelay);
+    if (paidLanding) window.setTimeout(revealWheel, autoOpenDelay);
+    else window.setTimeout(openWheelOnce, autoOpenDelay);
     document.addEventListener('mouseout', event => {
       if (event.relatedTarget || event.clientY > 0) return;
       revealWheel();
