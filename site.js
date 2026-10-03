@@ -102,7 +102,9 @@ const GOB_GA4_ID='G-N0KE06DGPV',GOB_CART_TOKEN_KEY='gob-cart-token';
 let analyticsEnabled=false,cartCaptureTimer;
 function analyticsCartItems(lines=cart()){return lines.map(line=>{const product=cartProduct(line);if(!product)return null;return {item_id:String(line.id),item_name:String(product.name||'Game of Bones treat'),price:Number(product.price)||0,quantity:Number(line.quantity)||1}}).filter(Boolean)}
 function installAnalyticsTag(){if(analyticsEnabled)return;analyticsEnabled=true;window.dataLayer=window.dataLayer||[];window.gtag=window.gtag||function(){window.dataLayer.push(arguments)};window.gtag('js',new Date());window.gtag('config',GOB_GA4_ID,{send_page_view:true});const script=document.createElement('script');script.async=true;script.src=`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(GOB_GA4_ID)}`;document.head.append(script)}
-window.GOB_ANALYTICS={track:(event,params={})=>{if(analyticsEnabled&&typeof window.gtag==='function')window.gtag('event',event,params)}};
+function trackAnalyticsEvent(event,params={}){if(analyticsEnabled&&typeof window.gtag==='function')window.gtag('event',event,params)}
+function trackAnalyticsEventBeforeNavigation(event,params={}){return new Promise(resolve=>{if(!analyticsEnabled||typeof window.gtag!=='function'){resolve(false);return}let complete=false;const done=()=>{if(complete)return;complete=true;resolve(true)};window.gtag('event',event,{...params,transport_type:'beacon',event_callback:done,event_timeout:1500});window.setTimeout(done,1600)})}
+window.GOB_ANALYTICS={track:trackAnalyticsEvent,trackAndWait:trackAnalyticsEventBeforeNavigation};
 // Microsoft Clarity is intentionally kept off pages that collect account,
 // payment or delivery details. Product discovery and public browsing sessions
 // remain available for conversion and UX analysis without recording checkout.
