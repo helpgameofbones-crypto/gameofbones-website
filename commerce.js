@@ -61,7 +61,10 @@ function renderCommerceCart(){
 function updateCommerceTotals(){
   const subtotal=cartValue(),count=cartCount(),saleBasket=cartHasSaleItems()
   const privateCoupon=document.querySelector('[name="private_coupon"]')?.value.trim().toUpperCase()||''
-  const coupon=privateCoupon||document.querySelector('[name="coupon"]:checked')?.value||'none'
+  // A recognised private code can be entered from the bag before the secure
+  // checkout form exists. Keep it in session storage and show the same quote.
+  const storedCoupon=window.sessionStorage.getItem('gob-checkout-coupon')||''
+  const coupon=privateCoupon||storedCoupon||document.querySelector('[name="coupon"]:checked')?.value||'none'
   const eligibility=window.GOB_CHECKOUT_ELIGIBILITY||{signedIn:false,firstOrder:false,checking:false,points:0}
   // Listed sale prices, one valid code and loyalty points can be used together.
   // GOBFAMILY10 is an active, unlisted family offer. Keep this preview in
@@ -138,6 +141,10 @@ function ensureCheckoutOptions(){
   const requestedCoupon=['WELCOME15','MEGA20'].includes(storedCoupon)?storedCoupon:''
   const requestedInput=requestedCoupon&&form.querySelector(`[name="coupon"][value="${requestedCoupon}"]`)
   if(requestedInput) requestedInput.checked=true
+  if(storedCoupon==='GOBFAMILY10'){
+    const privateCode=form.querySelector('[name="private_coupon"]')
+    if(privateCode){privateCode.value=storedCoupon;privateCode.closest('details')?.setAttribute('open','')}
+  }
   window.sessionStorage.removeItem('gob-checkout-coupon')
   updateSaleOfferControls()
 }
@@ -199,6 +206,10 @@ function setupCommerce(){
     }else if(code==='MEGA20'){
       window.sessionStorage.setItem('gob-checkout-coupon',code)
       message.textContent=cartValue()>=2199?'MEGA20 is ready for secure checkout.':'MEGA20 needs a treat subtotal of ₹2,199 or more; you can still continue to checkout.'
+    }else if(code==='GOBFAMILY10'){
+      window.sessionStorage.setItem('gob-checkout-coupon',code)
+      updateCommerceTotals()
+      message.textContent='GOBFAMILY10 is applied — 10% off will carry through to secure checkout.'
     }else{
       window.sessionStorage.removeItem('gob-checkout-coupon')
       message.textContent='Private birthday rewards are entered securely at checkout. Public offers: WELCOME15 or MEGA20.'
