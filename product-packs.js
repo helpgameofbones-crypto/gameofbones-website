@@ -20,6 +20,10 @@
     const format = value => Number(value || 0).toLocaleString('en-IN');
     const packsFor = product => Array.isArray(product?.packs) && product.packs.length ? product.packs : [{ label: '1 pouch', weight: product?.w || '', price: Number(product?.p) || 0 }];
     const comparePriceFor = (pack, product) => Number(pack?.compare_price || pack?.comparePrice || product?.cp || product?.compare_price || 0);
+    // Many catalogue packs store the same text as label and weight ("60 g" / "60 g").
+    // Show the weight only when it adds information.
+    const squash = value => String(value || '').toLowerCase().replace(/\s+/g, '');
+    const extraWeight = pack => pack?.weight && squash(pack.weight) !== squash(pack.label) ? pack.weight : '';
     const onSale = (pack, product) => Number(pack?.price || 0) > 0 && comparePriceFor(pack, product) > Number(pack?.price || 0);
 
     function render(product) {
@@ -31,7 +35,7 @@
         const priceText = onSale(pack, product)
           ? `<s>₹${format(comparePrice)}</s> <strong>₹${format(pack.price)}</strong>`
           : `₹${format(pack.price)}`;
-        return `<button class="option${index === selectedPack ? ' selected' : ''}" type="button">${pack.label}<small>${pack.weight || 'Pack'} · ${priceText}</small></button>`;
+        return `<button class="option${index === selectedPack ? ' selected' : ''}" type="button">${pack.label}<small>${extraWeight(pack) || 'Pack'} · ${priceText}</small></button>`;
       }).join('');
 
       const choose = index => {
@@ -42,7 +46,7 @@
         const stickyPrice = document.querySelector('#stickyPrice');
         const stickyLabel = document.querySelector('#stickyPackLabel');
         if (stickyPrice) stickyPrice.textContent = `₹${format(pack.price)}`;
-        if (stickyLabel) stickyLabel.textContent = `${pack.label} · ${pack.weight || 'Pack'}`;
+        if (stickyLabel) stickyLabel.textContent = extraWeight(pack) ? `${pack.label} · ${extraWeight(pack)}` : pack.label;
       };
 
       packOptions.querySelectorAll('.option').forEach((button, index) => button.addEventListener('click', () => choose(index)));
