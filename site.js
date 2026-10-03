@@ -95,6 +95,9 @@ const saveCart=value=>{localStorage.setItem('gob-preview-cart',JSON.stringify(va
 // name, or displayed price; checkout still revalidates current server pricing.
 const cartProduct=item=>item.product||GOB_PRODUCTS[canonicalCartId(item.id)]||null;
 const META_PIXEL_ID='2097278950833218';function installMetaPixel(){if(window.GOB_META)return;window.GOB_META={track:(name,params={},eventID)=>{if(typeof window.fbq==='function')window.fbq('track',name,params,eventID?{eventID}:undefined)},productId:catalogProductId};!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');window.fbq('init',META_PIXEL_ID);window.fbq('track','PageView')}installMetaPixel();
+/* Keep the ad-click id for this tab so checkout can rebuild _fbc if the pixel
+   cookie is blocked. Stored only in sessionStorage; never sent anywhere but Meta. */
+(function rememberFbclid(){try{const id=new URLSearchParams(location.search).get('fbclid');if(id&&/^[A-Za-z0-9_-]{10,500}$/.test(id))sessionStorage.setItem('gob-fbclid',JSON.stringify({id,ts:Date.now()}))}catch(_){}})();
 
 // GA4 is initialized for every visit. Events never include names, phone
 // numbers, email addresses or delivery details.
