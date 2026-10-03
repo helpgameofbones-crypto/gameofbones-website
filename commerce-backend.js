@@ -19,9 +19,17 @@
     // the current catalogue entry explicitly provides one; never resurrect a
     // legacy label from an old localStorage snapshot.
     const name = String(product.name || '').replace(/\s+—\s+.+$/, '').trim();
-    const packLabel = typeof product.packLabel === 'string' ? product.packLabel.trim() : '';
+    const explicitPackLabel = typeof product.packLabel === 'string' ? product.packLabel.trim() : '';
+    // Product pages label dynamically chosen packs in `tag` (for example,
+    // "Jerky · 120 g"). Preserve that canonical pack detail in checkout.
+    const taggedPackLabel = typeof product.tag === 'string' && product.tag.includes(' · ')
+      ? product.tag.split(' · ').pop().trim()
+      : '';
+    const packLabel = explicitPackLabel || taggedPackLabel;
     const catalog_id = window.GOB_META?.productId?.(product, line.id) || String(product.catalog_slug || line.id || '');
-    return { name, catalog_id, pack_label: packLabel, price: Number(product.price), pack_price: Number(product.price), quantity: Number(line.quantity), qty: Number(line.quantity) };
+    const unitPrice = Number(product.price);
+    const quantity = Number(line.quantity);
+    return { name, catalog_id, pack_label: packLabel, size: packLabel, price: unitPrice, pack_price: unitPrice, unit_price: unitPrice, line_total: unitPrice * quantity, quantity, qty: quantity };
   }).filter(Boolean);
   const subtotal = () => items().reduce((sum, item) => sum + item.price * item.quantity, 0);
   const method = () => form.querySelector('[name="payment"]:checked')?.value === 'cod' ? 'cod' : 'online';
