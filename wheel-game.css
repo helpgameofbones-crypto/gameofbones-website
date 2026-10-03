@@ -27,3 +27,11 @@
 .wheel-card.wheel-result-ready .wheel-intro{display:none}
 @media(max-width:460px){.wheel-card{padding:24px 18px}.wheel-card h2{font-size:38px}.wheel-stage{min-height:286px}.prize-wheel{width:min(76vw,268px)}.wheel-segment{width:62px;font-size:10px}.wheel-hub{width:66px}}
 @media(prefers-reduced-motion:reduce){.prize-wheel{transition-duration:.01ms}.wheel-launch:active,.wheel-again:active{transform:none}}
+.wheel-card .wheel-rewards{margin:0 0 18px;padding:14px 14px 12px;border:1px solid var(--line,rgba(16,44,34,.16));background:var(--gold-soft,#f4e6c9)}
+.wheel-card .wheel-rewards-title{margin:0 0 10px;color:var(--ink);font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.wheel-card .wheel-rewards ul{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0;padding:0;list-style:none}
+.wheel-card .wheel-rewards li{display:flex;flex-direction:column;align-items:center;padding:10px 4px;border:1px solid var(--ink);background:var(--paper,#fffdf8);color:var(--ink);line-height:1}
+.wheel-card .wheel-rewards li strong{font-family:var(--display);font-size:26px}
+.wheel-card .wheel-rewards li span{margin-top:4px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.wheel-card .wheel-rewards-note{margin:10px 0 0;color:var(--muted);font-size:12px;line-height:1.4}
+@media(max-width:560px){.wheel-card .wheel-rewards li strong{font-size:22px}}

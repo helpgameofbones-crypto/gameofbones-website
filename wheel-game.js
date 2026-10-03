@@ -19,14 +19,14 @@
     const modal = document.querySelector('#wheelModal');
     const form = document.querySelector('#wheelForm');
     if (!modal || !form) return;
-    if (!document.querySelector('link[href="wheel-game.css?v=wheel-8"]')) {
-      const stylesheet = document.createElement('link'); stylesheet.rel = 'stylesheet'; stylesheet.href = 'wheel-game.css?v=wheel-8'; document.head.append(stylesheet);
+    if (!document.querySelector('link[href="wheel-game.css?v=wheel-9"]')) {
+      const stylesheet = document.createElement('link'); stylesheet.rel = 'stylesheet'; stylesheet.href = 'wheel-game.css?v=wheel-9'; document.head.append(stylesheet);
     }
 
     const intro = modal.querySelector('.wheel-card > p:not(.eyebrow)');
     intro?.classList.add('wheel-intro');
     intro.textContent = 'Fill in your details, then spin once to see the offer you landed on.';
-    form.innerHTML = `<label class="wheel-form-label">Name <input required name="name" autocomplete="name" placeholder="Your name"></label><label class="wheel-form-label">Email <input required name="email" type="email" autocomplete="email" placeholder="you@example.com"></label><label class="wheel-form-label">Mobile number <input required name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="10-digit mobile number" pattern="[0-9]{10}" title="Enter a 10-digit mobile number"></label><label class="wheel-consent"><input name="marketing_consent" type="checkbox" value="true"> <span>Send me this offer and occasional Game of Bones news. I can unsubscribe anytime.</span></label><button class="button wheel-continue" type="submit">Continue to the wheel</button>`;
+    form.innerHTML = `<div class="wheel-rewards" role="group" aria-label="Rewards on the wheel"><p class="wheel-rewards-title">Every spin wins one of these</p><ul><li><strong>10%</strong><span>off</span></li><li><strong>15%</strong><span>off</span></li><li><strong>20%</strong><span>off</span></li></ul><p class="wheel-rewards-note">Your code works on your next order for 7 days. One spin per customer.</p></div><label class="wheel-form-label">Name <input required name="name" autocomplete="name" placeholder="Your name"></label><label class="wheel-form-label">Email <input required name="email" type="email" autocomplete="email" placeholder="you@example.com"></label><label class="wheel-form-label">Mobile number <input required name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="10-digit mobile number" pattern="[0-9]{10}" title="Enter a 10-digit mobile number"></label><label class="wheel-consent"><input name="marketing_consent" type="checkbox" value="true"> <span>Send me this offer and occasional Game of Bones news. I can unsubscribe anytime.</span></label><button class="button wheel-continue" type="submit">Continue to the wheel</button>`;
     modal.querySelector('#wheelResult')?.remove();
     const close = () => modal.classList.remove('open');
     const open = () => {
@@ -77,7 +77,7 @@
       }
 
       intro.textContent = 'Your welcome offer is on the wheel. It will stop on one prize.';
-      card.insertAdjacentHTML('beforeend', `<section class="wheel-play" aria-label="Spin to win prize wheel"><div class="wheel-stage"><span class="wheel-pointer" aria-hidden="true"></span><div class="prize-wheel" id="prizeWheel" role="img" aria-label="Prize wheel with six welcome offers"><span class="wheel-segment wheel-s1">15%<br>OFF</span><span class="wheel-segment dark wheel-s2">₹75<br>OFF</span><span class="wheel-segment wheel-s3">10%<br>OFF</span><span class="wheel-segment wheel-s4">FREE<br>SHIP</span><span class="wheel-segment wheel-s5">₹50<br>OFF</span><span class="wheel-segment dark wheel-s6">20%<br>OFF</span><span class="wheel-hub">SPIN</span></div></div><p class="wheel-status" aria-live="polite">Spinning your welcome offer…</p></section>`);
+      card.insertAdjacentHTML('beforeend', `<section class="wheel-play" aria-label="Spin to win prize wheel"><div class="wheel-stage"><span class="wheel-pointer" aria-hidden="true"></span><div class="prize-wheel" id="prizeWheel" role="img" aria-label="Prize wheel with six welcome offers"><span class="wheel-segment wheel-s1">10%<br>OFF</span><span class="wheel-segment dark wheel-s2">15%<br>OFF</span><span class="wheel-segment wheel-s3">20%<br>OFF</span><span class="wheel-segment wheel-s4">10%<br>OFF</span><span class="wheel-segment wheel-s5">15%<br>OFF</span><span class="wheel-segment dark wheel-s6">20%<br>OFF</span><span class="wheel-hub">SPIN</span></div></div><p class="wheel-status" aria-live="polite">Spinning your welcome offer…</p></section>`);
       const wheel = card.querySelector('#prizeWheel'), status = card.querySelector('.wheel-status');
       const chosenIndex = prizes.findIndex(prize => prize.label === award.label);
       requestAnimationFrame(() => { wheel.style.transform = `rotate(${2160 - Math.max(0, chosenIndex) * 60}deg)`; });
