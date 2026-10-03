@@ -47,7 +47,20 @@
 }
 
 @media (max-width: 760px) {
-  .notice .gob-live-ticker span { padding: 8px 12px; font-size: 9px; letter-spacing: .07em; }
+  /* The live deadline is a primary sale cue on ad traffic. Keep it readable
+     and pinned above the compact mobile navigation instead of letting it look
+     like a clipped decorative ticker. */
+  .notice { min-height: 40px; }
+  .notice .gob-live-ticker span {
+    min-height: 40px;
+    display: grid;
+    place-items: center;
+    padding: 8px 12px;
+    font-size: 10px;
+    letter-spacing: .055em;
+    line-height: 1.25;
+    white-space: normal;
+  }
   /* Keep the two floating actions in one reliable right-hand stack. */
   .wheel-launch {
     position: fixed !important;
