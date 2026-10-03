@@ -88,6 +88,8 @@ function updateCommerceTotals(){
   document.querySelectorAll('[data-commerce-subtotal]').forEach(el=>el.textContent=money(subtotal))
   document.querySelectorAll('[data-commerce-total]').forEach(el=>el.textContent=money(total))
   document.querySelectorAll('[data-coupon-discount]').forEach(el=>el.textContent=saving?`−${money(saving)}`:'—')
+  document.querySelectorAll('[data-coupon-row]').forEach(el=>el.hidden=!saving)
+  document.querySelectorAll('[data-coupon-label]').forEach(el=>el.textContent=saving?`Coupon — ${coupon}`:'Coupon')
   document.querySelectorAll('[data-payment-change]').forEach(el=>el.textContent=payment==='cod'?`+${money(40)}`:`−${money(30)}`)
   document.querySelectorAll('[data-points-discount]').forEach(el=>el.textContent=pointsDiscount?`−${money(pointsDiscount)}`:'—')
   document.querySelectorAll('[data-loyalty-points]').forEach(el=>el.textContent=pointsEarned.toLocaleString('en-IN'))
@@ -140,7 +142,7 @@ function ensureCheckoutOptions(){
     <label data-loyalty-redeem hidden><input type="number" name="loyalty_points_redeemed" min="0" max="333" step="1" value="0" inputmode="numeric"><span>Use reward points <small>Use up to ₹100 off per order (maximum 333 points). Every point is worth ₹0.30 and can be combined with one eligible coupon.</small></span></label>
     <p class="perk-status" data-coupon-status role="status" aria-live="polite"></p>
   </section>`)
-  total.insertAdjacentHTML('beforebegin','<div class="order-row"><span>Offer saving</span><span data-coupon-discount>—</span></div><div class="order-row" data-loyalty-discount-row hidden><span>Reward points</span><span data-points-discount>—</span></div><div class="order-row"><span>Payment adjustment</span><span data-payment-change>−₹30</span></div>')
+  total.insertAdjacentHTML('beforebegin','<div class="order-row" data-coupon-row hidden><span data-coupon-label>Coupon</span><span data-coupon-discount>—</span></div><div class="order-row" data-loyalty-discount-row hidden><span>Reward points</span><span data-points-discount>—</span></div><div class="order-row"><span>Payment adjustment</span><span data-payment-change>−₹30</span></div>')
   form.querySelectorAll('[name="coupon"],[name="payment"],[name="loyalty_points_redeemed"],[name="private_coupon"]').forEach(input=>input.addEventListener('input',updateCommerceTotals))
 
   // A code applied from the bag is only carried to this secure checkout; it
