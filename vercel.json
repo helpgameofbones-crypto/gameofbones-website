@@ -40,6 +40,7 @@
     { "source": "/login", "destination": "/login.html" },
     { "source": "/account", "destination": "/account.html" },
     { "source": "/policies", "destination": "/policies.html" },
+    { "source": "/terms", "destination": "/terms.html" },
     { "source": "/thank-you", "destination": "/thank-you.html" },
     { "source": "/shop", "destination": "/products.html" },
     { "source": "/about", "destination": "/our-story.html" },
