@@ -77,7 +77,10 @@
           p: firstPack?.price ?? (productPrice(source) || productPrice(product)),
           cp: firstPack?.compare_price ?? source.compare_price ?? productComparePrice(product),
           w: firstPack?.weight || (Number(firstPack?.weight_grams) ? `${firstPack.weight_grams} g` : '') || productWeight(source) || productWeight(product),
-          i: productImage(source) || productImage(product),
+          // The approved storefront photo is canonical for existing products.
+          // Admin sync may refresh availability and prices, but must not replace
+          // it with an unrelated uploaded image after initial render.
+          i: productImage(product) || productImage(source),
           id: productId(product),
           sizes: sellablePacks,
           images: source.images,
