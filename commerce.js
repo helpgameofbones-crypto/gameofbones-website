@@ -217,6 +217,23 @@ function updateLoyaltyRedemptionVisibility(){
     const title=control.querySelector('[data-loyalty-title]'),balance=Math.max(0,Math.floor(Number(eligibility.points||0)))
     if(title&&available>0)title.textContent=`Use ${available} reward points — save ₹${Math.min(100,Math.round(available*.3))} (you have ${balance})`
   }
+  // Also offer the points in the order summary, next to the coupon box, where shoppers look for savings.
+  let mirror=document.querySelector('[data-loyalty-mirror]')
+  const promo=document.querySelector('.checkout-promo')
+  if(!mirror&&promo&&toggle){
+    mirror=document.createElement('label');mirror.dataset.loyaltyMirror=''
+    mirror.style.cssText='display:flex;gap:10px;align-items:flex-start;margin:14px 0 0;padding:12px 14px;border:1px solid #c9a24a;background:#fff8e6;font-size:13px;line-height:1.45;cursor:pointer'
+    mirror.innerHTML='<input type="checkbox" style="margin-top:2px;flex:none"><span><b data-mirror-title></b><br><small>Up to ₹100 off per order. Works with one coupon.</small></span>'
+    promo.after(mirror)
+    const box=mirror.querySelector('input')
+    box.addEventListener('change',()=>{toggle.checked=box.checked;toggle.dispatchEvent(new Event('change'))})
+    toggle.addEventListener('change',()=>{box.checked=toggle.checked})
+  }
+  if(mirror&&toggle){
+    mirror.style.display=control.hidden?'none':'flex'
+    mirror.querySelector('input').checked=toggle.checked
+    const t=mirror.querySelector('[data-mirror-title]'),src=control.querySelector('[data-loyalty-title]');if(t&&src)t.textContent=src.textContent
+  }
 }
 
 async function loadCheckoutEligibility(){
