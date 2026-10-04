@@ -196,6 +196,10 @@ function updateLoyaltyRedemptionVisibility(){
   if(!control||!row)return
   const available=Math.min(MAX_REDEMPTION_POINTS,Math.max(0,Math.floor(Number(eligibility.points||0))))
   control.hidden=!eligibility.signedIn||available<=0
+  // Signed-out shoppers never see the points box, so tell them how to use their points.
+  let prompt=document.querySelector('[data-loyalty-login]')
+  if(!prompt){prompt=document.createElement('p');prompt.dataset.loyaltyLogin='';prompt.className='order-note loyalty-login-prompt';prompt.innerHTML=`Have reward points? <a href="/login?next=${encodeURIComponent(location.pathname)}">Log in</a> to use them on this order.`;control.before(prompt)}
+  prompt.hidden=Boolean(eligibility.signedIn)||Boolean(eligibility.checking)
   row.hidden=!eligibility.signedIn||available<=0
   const input=control.querySelector('[name="loyalty_points_redeemed"]')
   if(input){input.max=String(available);input.value=String(Math.min(Number(input.value)||0,available))}

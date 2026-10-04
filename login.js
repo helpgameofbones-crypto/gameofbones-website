@@ -1,4 +1,6 @@
 (() => {
+  // After logging in, return to the page the customer came from (e.g. /cart), if it is a safe on-site path.
+  const nextPage = () => { const next = new URLSearchParams(location.search).get('next') || ''; return /^\/(?!\/)[A-Za-z0-9\-_/]*$/.test(next) ? next : '/account' }
   function message(target, text, kind = 'error') {
     if (!target) return
     target.textContent = text
@@ -73,7 +75,7 @@
           const code = loginCode.value.replace(/\D/g, '')
           if (!/^\d{6}$/.test(code)) throw new Error('Enter the six-digit code from your email.')
           const session = await window.GOB_API.verifyLoginCode(email, code)
-          window.sessionStorage.setItem('gob-customer-token', session.token); window.location.assign('/account'); return
+          window.sessionStorage.setItem('gob-customer-token', session.token); window.location.assign(nextPage()); return
         }
         await window.GOB_API.requestLoginCode(email)
         loginCodeStep.hidden = false; loginCode.required = true; loginEmail.readOnly = true; changeEmail.hidden = false; resendLogin.hidden = false; loginCode.focus()
@@ -109,7 +111,7 @@
           const code = createCode.value.replace(/\D/g, '')
           if (!/^\d{6}$/.test(code)) throw new Error('Enter the six-digit code from your email.')
           const session = await window.GOB_API.verifyAccountCreationCode({ ...details, code })
-          window.sessionStorage.setItem('gob-customer-token', session.token); window.location.assign('/account'); return
+          window.sessionStorage.setItem('gob-customer-token', session.token); window.location.assign(nextPage()); return
         }
         await window.GOB_API.requestAccountCreationCode(details)
         lockRegistration(true); createCode.focus()
