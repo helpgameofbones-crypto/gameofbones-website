@@ -236,6 +236,24 @@ function updateLoyaltyRedemptionVisibility(){
   }
 }
 
+// Signed-in customers: fill any empty checkout fields from their saved account
+// (name, mobile, email, default address, dog), so they do not retype them each order.
+// The mobile comes from their own session, which also keeps reward points valid.
+function prefillCheckoutFromAccount(account,token){
+  const form=document.querySelector('#checkoutForm');if(!form||!account)return
+  const set=(sel,val)=>{const el=form.querySelector(sel);if(!el||val==null||!String(val).trim()||String(el.value||'').trim())return;el.value=String(val).trim();el.dispatchEvent(new Event('input',{bubbles:true}));el.dispatchEvent(new Event('change',{bubbles:true}))}
+  const p=account.profile||{},parts=String(p.name||'').trim().split(/\s+/)
+  set('[autocomplete="given-name"]',parts[0]);set('[autocomplete="family-name"]',parts.slice(1).join(' '))
+  set('[autocomplete="email"]',p.email)
+  let phone='';try{let b=String(token).split('.')[0].replace(/-/g,'+').replace(/_/g,'/');while(b.length%4)b+='=';phone=String(JSON.parse(atob(b)).phone||'').replace(/\D/g,'').slice(-10)}catch(_){}
+  set('[autocomplete="tel"]',phone)
+  const list=Array.isArray(account.addresses)?account.addresses.filter(Boolean):[]
+  const a=list.find(x=>x.is_default)||list[0]||{line1:p.address_line1,line2:p.address_line2,city:p.city,state:p.state,pincode:p.pincode}
+  set('[autocomplete="street-address"]',a.line1);set('[autocomplete="address-line2"]',a.line2);set('[autocomplete="address-level2"]',a.city);set('[autocomplete="address-level1"]',a.state);set('[autocomplete="postal-code"]',a.pincode)
+  const d=(Array.isArray(account.dogs)&&account.dogs[0])||{}
+  set('[name="dog_name"]',d.name||p.dog_name);set('[name="dog_birthday"]',String(d.birthday||p.dog_birthday||'').slice(0,10))
+}
+
 async function loadCheckoutEligibility(){
   const token=window.sessionStorage.getItem('gob-customer-token')
   window.GOB_CHECKOUT_ELIGIBILITY={signedIn:Boolean(token),firstOrder:false,checking:Boolean(token),points:0}
@@ -245,6 +263,7 @@ async function loadCheckoutEligibility(){
   if(!token)return
   try{
     const account=await window.GOB_API?.account(token)
+    try{prefillCheckoutFromAccount(account,token)}catch(_){}
     const orders=Array.isArray(account?.orders)?account.orders:[]
     window.GOB_CHECKOUT_ELIGIBILITY={signedIn:true,firstOrder:orders.length===0,checking:false,points:Number(account?.points?.available||0)}
   }catch(error){
