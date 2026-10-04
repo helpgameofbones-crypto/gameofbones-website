@@ -7,6 +7,21 @@
     target.className = `login-result ${kind}`
   }
 
+  // Emails can take a minute or two to arrive. Make customers wait 60 seconds
+  // before asking again, so they do not keep restarting the sign-in.
+  function cooldown(button, seconds = 60) {
+    if (!button) return
+    clearInterval(button._gobTimer)
+    const label = button.dataset.label || (button.dataset.label = button.textContent.trim() || 'Resend code')
+    let left = seconds
+    const tick = () => {
+      if (left <= 0) { clearInterval(button._gobTimer); button.disabled = false; button.textContent = label; return }
+      button.disabled = true; button.textContent = `${label} (${left}s)`; left -= 1
+    }
+    tick(); button._gobTimer = setInterval(tick, 1000)
+  }
+  const SENT_NOTE = 'It can take up to 2 minutes to arrive. Check your Spam and Promotions folders too. Any code we sent in the last 10 minutes will work.'
+
   function emailValid(value) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) }
   function phoneDigits(value) {
     const digits = String(value || '').replace(/\D/g, '')
@@ -55,15 +70,17 @@
     const resetLogin = () => {
       loginCodeStep.hidden = true; loginCode.required = false; loginCode.value = ''; loginEmail.readOnly = false
       changeEmail.hidden = true; resendLogin.hidden = true
+      clearInterval(resendLogin._gobTimer); resendLogin.disabled = false; if (resendLogin.dataset.label) resendLogin.textContent = resendLogin.dataset.label
       loginForm.querySelector('button[type="submit"]').textContent = 'Send secure code'
       message(loginResult, '')
     }
     changeEmail.addEventListener('click', () => { resetLogin(); loginEmail.focus() })
     resendLogin.addEventListener('click', async () => {
       resendLogin.disabled = true
-      try { await window.GOB_API.requestLoginCode(loginEmail.value.trim().toLowerCase()); loginCode.value = ''; loginCode.focus(); message(loginResult, 'A new code is on its way. Only the newest code will work.', 'success') }
+      let sent = false
+      try { await window.GOB_API.requestLoginCode(loginEmail.value.trim().toLowerCase()); sent = true; loginCode.value = ''; loginCode.focus(); message(loginResult, `Another code is on its way. ${SENT_NOTE}`, 'success') }
       catch (error) { message(loginResult, error.message || 'Unable to resend the code right now.') }
-      finally { resendLogin.disabled = false }
+      finally { if (sent) cooldown(resendLogin); else resendLogin.disabled = false }
     })
     loginForm.addEventListener('submit', async event => {
       event.preventDefault()
@@ -80,7 +97,8 @@
         await window.GOB_API.requestLoginCode(email)
         loginCodeStep.hidden = false; loginCode.required = true; loginEmail.readOnly = true; changeEmail.hidden = false; resendLogin.hidden = false; loginCode.focus()
         submit.textContent = 'Verify secure code'
-        message(loginResult, 'If this email is linked to an account, a six-digit code is on its way. Check your inbox and spam folder.', 'success')
+        message(loginResult, `If this email is linked to an account, a six-digit code is on its way. ${SENT_NOTE}`, 'success')
+        cooldown(resendLogin)
       } catch (error) { message(loginResult, error.message || 'Unable to continue right now.') }
       finally { submit.disabled = false }
     })
@@ -97,9 +115,10 @@
     changeRegistration.addEventListener('click', resetRegistration)
     resendCreate.addEventListener('click', async () => {
       const details = registration(); resendCreate.disabled = true
-      try { await window.GOB_API.requestAccountCreationCode(details); createCode.value = ''; createCode.focus(); message(createResult, 'A new code is on its way. Only the newest code will work.', 'success') }
+      let sent = false
+      try { await window.GOB_API.requestAccountCreationCode(details); sent = true; createCode.value = ''; createCode.focus(); message(createResult, `Another code is on its way. ${SENT_NOTE}`, 'success') }
       catch (error) { message(createResult, error.message || 'Unable to resend the code right now.') }
-      finally { resendCreate.disabled = false }
+      finally { if (sent) cooldown(resendCreate); else resendCreate.disabled = false }
     })
     createForm.addEventListener('submit', async event => {
       event.preventDefault()
@@ -115,7 +134,8 @@
         }
         await window.GOB_API.requestAccountCreationCode(details)
         lockRegistration(true); createCode.focus()
-        message(createResult, 'We sent a six-digit verification code to your email. Check your inbox and spam folder.', 'success')
+        message(createResult, `We sent a six-digit verification code to your email. ${SENT_NOTE}`, 'success')
+        cooldown(resendCreate)
       } catch (error) {
         if (error.message === 'An account is already linked to these details. Please sign in instead.') {
           selectMode('sign-in')
