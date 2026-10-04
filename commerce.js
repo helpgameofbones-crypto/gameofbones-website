@@ -203,6 +203,20 @@ function updateLoyaltyRedemptionVisibility(){
   row.hidden=!eligibility.signedIn||available<=0
   const input=control.querySelector('[name="loyalty_points_redeemed"]')
   if(input){input.max=String(available);input.value=String(Math.min(Number(input.value)||0,available))}
+  // The number box rendered as a tiny empty square, so customers could not see or enter points.
+  // Use a clear tick-box instead: ticking applies the most points allowed on this order.
+  let toggle=control.querySelector('[data-loyalty-toggle]')
+  if(!toggle&&input){
+    toggle=document.createElement('input');toggle.type='checkbox';toggle.dataset.loyaltyToggle=''
+    input.before(toggle);input.style.display='none'
+    const copy=control.querySelector('span');if(copy){const note=copy.querySelector('small');copy.innerHTML='<b data-loyalty-title>Use reward points</b> ';if(note)copy.append(note)}
+    toggle.addEventListener('change',()=>{input.value=toggle.checked?input.max:'0';input.dispatchEvent(new Event('input',{bubbles:true}))})
+  }
+  if(toggle&&input){
+    toggle.checked=Number(input.value)>0
+    const title=control.querySelector('[data-loyalty-title]'),balance=Math.max(0,Math.floor(Number(eligibility.points||0)))
+    if(title&&available>0)title.textContent=`Use ${available} reward points — save ₹${Math.min(100,Math.round(available*.3))} (you have ${balance})`
+  }
 }
 
 async function loadCheckoutEligibility(){
