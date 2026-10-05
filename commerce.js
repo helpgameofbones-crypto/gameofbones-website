@@ -9,7 +9,7 @@ const POINT_VALUE_RUPEES=.3,MAX_POINTS_DISCOUNT_RUPEES=100,MAX_REDEMPTION_POINTS
 // families mirror the currently active campaign configuration so shoppers see
 // the same saving in the bag and at checkout.
 function privateOfferRate(code){
-  if(/^SAVE10-[A-Z0-9]+$/.test(code)||code==='GOBFAMILY10')return .1
+  if(/^SAVE10-[A-Z0-9]+$/.test(code)||code==='GOBFAMILY10'||code==='BOWL10')return .1
   if(/^BDAY[A-Z0-9]+$/.test(code)||code==='PAWTY25')return .25
   return 0
 }
