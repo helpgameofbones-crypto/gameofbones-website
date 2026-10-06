@@ -231,3 +231,6 @@ function installFormFeedback(){
   });
 }
 document.addEventListener('DOMContentLoaded',installFormFeedback);
+
+// Bone Run game launcher on every storefront page (skipped on checkout/login).
+(function(){if(window.__gobBRInject)return;window.__gobBRInject=1;var add=function(){if(document.querySelector('script[src^="/bone-run-loader.js"]'))return;var s=document.createElement('script');s.src='/bone-run-loader.js?v=1';s.defer=true;document.body.appendChild(s);};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',add,{once:true});else add();})();

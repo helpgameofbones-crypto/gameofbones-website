@@ -1,0 +1,59 @@
+/* Bone Run launcher + loader for every storefront page (injected by site.js).
+   Shows the "Play & win a treat" button, opens the game once per browser
+   session 20 seconds after landing, and lazy-loads /bone-run.js. */
+(() => {
+  if (window.__gobBRLoaderRan) return; window.__gobBRLoaderRan = true;
+  if (/^\/(checkout|login|thank-you)(\.html)?\/?$/i.test(location.pathname)) return;
+  const init = () => {
+    if (document.querySelector('#wheelLaunch')) return;
+    const style = document.createElement('style');
+    style.textContent = `
+.br-launch{position:fixed;z-index:44;left:22px;bottom:22px;display:inline-flex;align-items:center;gap:10px;min-height:48px;border:1px solid #d8a52f;cursor:pointer;text-align:left;
+  background:#102c22;color:#fffdf8;border-radius:999px;padding:0 16px 0 6px;font:800 11px/1.15 "DM Sans",system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;
+  box-shadow:0 10px 28px rgba(16,44,34,.25);animation:brGlow 2.4s ease-in-out infinite;transition:transform .2s,background .2s}
+.br-launch:hover,.br-launch:focus-visible{background:#245b42;transform:translateY(-2px)}
+.br-launch .br-medal{flex:0 0 36px;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:17px;line-height:1;letter-spacing:0;background:radial-gradient(circle at 35% 30%,#f6dfa6,#c9963a 60%,#9a6e22)}
+.br-launch .br-txt{display:flex;flex-direction:column;align-items:flex-start}
+.br-launch small{font-weight:600;font-size:9.5px;letter-spacing:.06em;text-transform:none;opacity:.75;margin-top:2px;white-space:nowrap}
+@keyframes brGlow{0%,100%{box-shadow:0 10px 28px rgba(16,44,34,.25),0 0 0 0 rgba(201,150,58,.45)}50%{box-shadow:0 10px 28px rgba(16,44,34,.25),0 0 0 8px rgba(201,150,58,0)}}
+@media(max-width:560px){
+  /* Same column and size as the Rewards button (right side): Play below Rewards. */
+  .br-launch{left:auto;right:16px;bottom:18px;width:50px;height:50px;min-height:50px;padding:0;justify-content:center;border-radius:50%}
+  .br-launch .br-medal{width:42px;height:42px;flex-basis:42px;font-size:19px}
+  .br-launch .br-txt{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .reward-shortcut{bottom:82px!important}
+  body:has(.mobile-purchase-bar) .reward-shortcut{bottom:172px!important}
+  body:has(.mobile-purchase-bar) .br-launch{bottom:112px;z-index:53}
+  body:has(.cart-sticky-checkout:not([hidden])) .br-launch{bottom:86px}
+  body:has(.cart-sticky-checkout:not([hidden])) .reward-shortcut{bottom:146px!important}
+}
+@media(prefers-reduced-motion:reduce){.br-launch{animation:none}}`;
+    document.head.append(style);
+    document.body.insertAdjacentHTML('beforeend', `<button class="br-launch" id="wheelLaunch" type="button" aria-label="Play Bone Run and win a free treat"><span class="br-medal" aria-hidden="true">🦴</span><span class="br-txt">Play &amp; win a treat<small>Bone Run · free treats up to Mackerel</small></span></button>`);
+
+    // Open the game for everyone 20 seconds after landing, once per session.
+    const autoOpenKey = 'gob-wheel-auto-opened-v2';
+    const openOnce = () => {
+      try { if (sessionStorage.getItem(autoOpenKey)) return; } catch (_) {}
+      const open = () => {
+        try { if (sessionStorage.getItem(autoOpenKey)) return; sessionStorage.setItem(autoOpenKey, '1'); } catch (_) {}
+        if (typeof window.GOB_openSpinWheel === 'function') window.GOB_openSpinWheel();
+      };
+      if (typeof window.GOB_openSpinWheel === 'function') open();
+      else document.addEventListener('gob:wheel-ready', open, { once: true });
+    };
+    window.setTimeout(openOnce, 20_000);
+
+    const load = () => {
+      if (document.querySelector('script[data-gob-wheel-game]')) return;
+      const script = document.createElement('script');
+      script.dataset.gobWheelGame = 'true';
+      script.src = '/bone-run.js?v=7';
+      document.body.append(script);
+    };
+    if (document.readyState === 'complete') ('requestIdleCallback' in window ? requestIdleCallback(load, { timeout: 2500 }) : setTimeout(load, 1200));
+    else window.addEventListener('load', () => ('requestIdleCallback' in window ? requestIdleCallback(load, { timeout: 2500 }) : setTimeout(load, 1200)), { once: true });
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true });
+  else init();
+})();

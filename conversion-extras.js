@@ -16,67 +16,10 @@
   }
 
   function addWheelPrompt() {
-    // Bone Run (bone-run.js) replaced the spin wheel. This only adds the
-    // floating launcher; the game itself loads lazily after the page.
-    if (document.querySelector('#wheelLaunch')) return;
-    const launchStyle = document.createElement('style');
-    launchStyle.textContent = `.br-launch{position:fixed;z-index:38;left:18px;bottom:18px;display:inline-flex;align-items:center;gap:10px;border:0;cursor:pointer;text-align:left;
-      background:linear-gradient(135deg,#173a2d,#0a1f17);color:#f6efe2;border-radius:999px;padding:6px 16px 6px 6px;font:800 13.5px/1.15 "DM Sans",system-ui,sans-serif;
-      box-shadow:0 10px 24px rgba(10,31,23,.35),inset 0 0 0 1.5px rgba(231,194,122,.65);animation:brGlow 2.4s ease-in-out infinite}
-      .br-launch .br-medal{flex:0 0 34px;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:16px;line-height:1;background:radial-gradient(circle at 35% 30%,#f6dfa6,#c9963a 60%,#9a6e22)}
-      .br-launch .br-txt{display:flex;flex-direction:column;align-items:flex-start}
-      .br-launch small{font-weight:600;font-size:10.5px;opacity:.75;margin-top:2px;white-space:nowrap}
-      @keyframes brGlow{0%,100%{box-shadow:0 10px 24px rgba(10,31,23,.35),inset 0 0 0 1.5px rgba(231,194,122,.65),0 0 0 0 rgba(201,150,58,.45)}50%{box-shadow:0 10px 24px rgba(10,31,23,.35),inset 0 0 0 1.5px rgba(231,194,122,.9),0 0 0 8px rgba(201,150,58,0)}}
-      @media(max-width:650px){.br-launch{left:12px;bottom:14px;padding:5px 13px 5px 5px;font-size:12.5px}.br-launch small{display:none}}
-      @media(prefers-reduced-motion:reduce){.br-launch{animation:none}}`;
-    document.head.append(launchStyle);
-    document.body.insertAdjacentHTML('beforeend', `
-      <button class="br-launch" id="wheelLaunch" type="button" aria-label="Play Bone Run and win a free treat"><span class="br-medal" aria-hidden="true">🦴</span><span class="br-txt">Play &amp; win a treat<small>Bone Run · free treats up to Mackerel</small></span></button>`);
-
-    // Let visitors orient themselves, then invite first-time visitors to play.
-    // The modal is opened once per browser session; the small launcher remains
-    // available afterwards for anyone who closes it and wants to return.
-    // Do not mark it as shown until the wheel is actually available and opened:
-    // the wheel script intentionally loads after the page so marking it earlier
-    // could permanently suppress the prompt on a slow connection.
-    const launch = document.querySelector('#wheelLaunch');
-    const autoOpenKey = 'gob-wheel-auto-opened-v2';
-    const revealWheel = () => launch?.classList.add('is-ready');
-    const openWheelOnce = () => {
-      revealWheel();
-      if (sessionStorage.getItem(autoOpenKey)) return;
-      const open = () => {
-        if (sessionStorage.getItem(autoOpenKey) || typeof window.GOB_openSpinWheel !== 'function') return;
-        window.GOB_openSpinWheel();
-        sessionStorage.setItem(autoOpenKey, '1');
-      };
-      if (typeof window.GOB_openSpinWheel === 'function') open();
-      else document.addEventListener('gob:wheel-ready', open, { once: true });
-    };
-    // Bone Run opens for every visitor 20 seconds after landing, once per
-    // browser session. The launcher stays available afterwards.
-    window.setTimeout(openWheelOnce, 20_000);
-    document.addEventListener('mouseout', event => {
-      if (event.relatedTarget || event.clientY > 0) return;
-      revealWheel();
-    }, { once: true });
-
-    // The wheel module is deliberately non-critical. Start loading it only
-    // after the page itself is interactive, but always mount it on both the
-    // homepage and product landing pages before its 15–20 second prompt.
-    const loadWheelGame = () => {
-      if (document.querySelector('script[data-gob-wheel-game]')) return;
-      const script = document.createElement('script');
-      script.dataset.gobWheelGame = 'true';
-      script.src = 'bone-run.js?v=5';
-      document.body.append(script);
-    };
-    const scheduleWheelLoad = () => {
-      if ('requestIdleCallback' in window) requestIdleCallback(loadWheelGame, { timeout: 2500 });
-      else window.setTimeout(loadWheelGame, 1200);
-    };
-    if (document.readyState === 'complete') scheduleWheelLoad();
-    else window.addEventListener('load', scheduleWheelLoad, { once: true });
+    // The Bone Run launcher now lives in /bone-run-loader.js (loaded by
+    // site.js on every page). Load it here too in case site.js is older.
+    if (window.__gobBRLoaderRan || document.querySelector('script[src^="/bone-run-loader.js"]')) return;
+    const s = document.createElement('script'); s.src = '/bone-run-loader.js?v=1'; document.body.append(s);
   }
 
   function addHomeExtras() {

@@ -106,6 +106,15 @@
 .br-small{font-size:11.5px;color:rgba(246,239,226,.6);margin-top:10px;text-align:center}
 .br-w100{width:100%}
 @media (max-width:560px){
+  .br-modal .br-card{display:flex;flex-direction:column;justify-content:center;max-height:100dvh;padding-bottom:env(safe-area-inset-bottom)}
+  .br-head{padding:14px 56px 10px 14px}.br-head img{height:34px}.br-brand{font-size:22px}.br-brand small{font-size:9.5px;letter-spacing:.14em}
+  .br-ov{gap:7px;padding:12px}.br-ov p{font-size:12.5px}.br-hint{display:none}
+  .br-ov .br-btn{padding:12px 20px;font-size:14px}
+  .br-chip{padding:5px 10px}.br-chip b{font-size:19px}.br-chip.br-best b{font-size:14px}
+  .br-wonprize{padding:6px 10px 6px 6px}.br-wonprize .br-m{width:34px;height:34px;font-size:16px}
+  .br-unlock{top:22%;padding:9px 14px}.br-unlock b{font-size:16px}
+  .br-foot{padding:46px 14px 14px;font-size:10.5px}
+  .br-panel{padding:4px 16px 18px}.br-panel h3{font-size:24px}
   .br-modal{padding:0;align-items:stretch}
   .br-card{border-radius:0;width:100%;min-height:100%}
   .br-stage{margin:0 10px;border-radius:14px}
@@ -124,7 +133,7 @@ body.br-lock{overflow:hidden}
   document.body.insertAdjacentHTML('beforeend', `<div class="br-modal" id="br-modal" role="dialog" aria-modal="true" aria-label="Bone Run">
   <div class="br-card">
     <button class="br-close" id="br-closeGame" aria-label="Close">×</button>
-    <div class="br-head"><img src="assets/gob-logo.png" alt=""><div class="br-brand">Bone Run<small>Tap to jump · hold to jump higher</small></div></div>
+    <div class="br-head"><img src="/assets/gob-logo.png" alt=""><div class="br-brand">Bone Run<small>Tap to jump · hold to jump higher</small></div></div>
 
     <div id="br-playArea">
       <div class="br-stage" id="br-stage">
@@ -183,7 +192,11 @@ body.br-lock{overflow:hidden}
 </div>`);
 
   // ================= config =================
-  const W = 900, H = 380, GROUND = 312, MAX = 5000;
+  // Phones get a narrower world so everything is drawn bigger; speed and
+  // scoring are scaled so points per second stay the same.
+  const MOBILE = Math.min(window.innerWidth || 900, (window.screen && screen.width) || 900) < 640;
+  const W = MOBILE ? 560 : 900, H = 380, GROUND = 312, MAX = 5000;
+  const SPEED_K = MOBILE ? 0.8 : 1, PTS_DIV = MOBILE ? 8 : 10;
   const tiers = [
     { at: 800,  name: '2 free Goat Trachea', short: '2 Goat Trachea', icon: '🦴' },
     { at: 2500, name: '1 free pack of Chicken Feet (70 g)', short: 'Chicken Feet (70 g)', icon: '🐾' },
@@ -192,6 +205,7 @@ body.br-lock{overflow:hidden}
   const $ = id => document.getElementById('br-' + id);
   const cv = $('cv'), ctx = cv.getContext('2d');
   const DPR = Math.min(2, window.devicePixelRatio || 1);
+  cv.style.aspectRatio = W + ' / ' + H;
   cv.width = W * DPR; cv.height = H * DPR; ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
 
   let state = 'idle', raf = 0, best = 0, bestTier = -1, runTier = -1, unlockTimer = 0, runStart = 0, bestRun = null;
@@ -207,7 +221,7 @@ body.br-lock{overflow:hidden}
   function reset() {
     dog = { x: 120, y: GROUND, vy: 0, onGround: true, run: 0, squash: 0 };
     obs = []; bones = []; parts = [];
-    speed = 6; dist = 0; score = 0; bonus = 0; spawnIn = 420; boneIn = 90; t = 0; holding = false; shake = 0; flash = 0; runTier = -1;
+    speed = 6 * SPEED_K; dist = 0; score = 0; bonus = 0; spawnIn = 420; boneIn = 90; t = 0; holding = false; shake = 0; flash = 0; runTier = -1;
     last = performance.now();
   }
 
@@ -246,7 +260,7 @@ body.br-lock{overflow:hidden}
     stars.forEach(s => { ctx.globalAlpha = .25 + .35 * Math.sin(t * .05 + s.p) ** 2; ctx.fillStyle = '#f6efe2'; ell(s.x, s.y, s.r, s.r); ctx.fill(); });
     ctx.globalAlpha = 1;
     // sun + glow
-    const sx = 690, sy = GROUND - 46;
+    const sx = Math.round(W * 0.77), sy = GROUND - 46;
     const rg = ctx.createRadialGradient(sx, sy, 10, sx, sy, 190);
     rg.addColorStop(0, 'rgba(255,236,190,.95)'); rg.addColorStop(.18, 'rgba(246,215,150,.55)'); rg.addColorStop(1, 'rgba(246,215,150,0)');
     ctx.fillStyle = rg; ctx.fillRect(0, 0, W, GROUND);
@@ -423,7 +437,7 @@ body.br-lock{overflow:hidden}
   const hit = (a, b) => a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
   function step(now) {
     const dt = Math.min(2, (now - last) / 16.67); last = now; t += dt;
-    speed = Math.min(14, speed + 0.0019 * dt);
+    speed = Math.min(14 * SPEED_K, speed + 0.0019 * SPEED_K * dt);
     dist += speed * dt;
 
     // dog physics (hold = floatier jump)
@@ -466,7 +480,7 @@ body.br-lock{overflow:hidden}
       return b.x > -40;
     });
 
-    score = Math.min(MAX, Math.floor(dist / 10) + bonus);
+    score = Math.min(MAX, Math.floor(dist / PTS_DIV) + bonus);
     $('score').textContent = score.toLocaleString('en-IN');
     $('railFill').style.width = (score / MAX * 100) + '%';
     tiers.forEach((tier, i) => {
@@ -489,8 +503,17 @@ body.br-lock{overflow:hidden}
     unlockTimer = setTimeout(() => $('unlock').classList.remove('br-show'), 2200);
   }
   function paintMiles() { tiers.forEach((x, i) => $('m' + (i + 1)).classList.toggle('br-got', i <= bestTier)); }
+  // Anonymous play tracking for the admin Game Leads dashboard.
+  function track(event, extra) {
+    try {
+      if (!['gameofbones.in', 'www.gameofbones.in'].includes(location.hostname)) return;
+      let id = localStorage.getItem('gob-player-id');
+      if (!id) { id = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2)).replace(/[^a-z0-9-]/gi, ''); localStorage.setItem('gob-player-id', id); }
+      fetch('/api/bone-run/event', { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ player_id: id, event, ...(extra || {}) }) }).catch(() => {});
+    } catch (_) {}
+  }
   function start() {
-    reset(); state = 'run'; paintMiles(); runStart = performance.now();
+    reset(); state = 'run'; paintMiles(); runStart = performance.now(); track('start');
     $('startOv').hidden = true; $('overOv').hidden = true; $('unlock').classList.remove('br-show');
     raf = requestAnimationFrame(step);
   }
@@ -500,7 +523,7 @@ body.br-lock{overflow:hidden}
     requestAnimationFrame(tick);
   }
   function endRun(maxed) {
-    state = 'over'; cancelAnimationFrame(raf);
+    state = 'over'; cancelAnimationFrame(raf); track('end', { score });
     best = Math.max(best, score); $('best').textContent = best.toLocaleString('en-IN');
     try { localStorage.setItem('gob-bonerun-best', String(best)); } catch (_) {}
     const improved = runTier > bestTier;
