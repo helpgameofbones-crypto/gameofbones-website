@@ -7,6 +7,9 @@
   if (window.__gobBoneRun) return; window.__gobBoneRun = true;
   const style = document.createElement('style'); style.id = 'br-style';
   style.textContent = `/* ---------- Game modal ---------- */
+.br-modal{--g900:#0a1f17;--g800:#102c22;--g700:#173a2d;--g600:#1f4a39;--gold:#c9963a;--gold2:#e7c27a;--gold3:#f6dfa6;--cream:#f6efe2;--ink:#102c22;--serif:"Fraunces",Georgia,"Times New Roman",serif;--sans:"DM Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-family:var(--sans);color:var(--cream);text-align:left;line-height:1.4}
+.br-modal *{box-sizing:border-box}
+
 .br-modal{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;padding:14px;
   background:radial-gradient(ellipse at center,rgba(10,31,23,.72),rgba(5,15,11,.88));backdrop-filter:blur(4px)}
 .br-modal.br-open{display:flex;animation:fade .25s ease}
