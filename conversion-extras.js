@@ -77,7 +77,7 @@
       if (document.querySelector('script[data-gob-wheel-game]')) return;
       const script = document.createElement('script');
       script.dataset.gobWheelGame = 'true';
-      script.src = 'wheel-game.js?v=wheel-auto-open-3';
+      script.src = 'wheel-game.js?v=wheel-no-stack-1';
       document.body.append(script);
     };
     const scheduleWheelLoad = () => {

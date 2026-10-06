@@ -47,6 +47,13 @@
     } catch (_) { return null; }
   }
 
+  // Offers are not stackable: the free treat is skipped when a coupon code is used.
+  function couponInUse() {
+    let stored = '';
+    try { stored = sessionStorage.getItem('gob-checkout-coupon') || ''; } catch (_) {}
+    return (document.querySelector('#checkoutCoupon')?.value || stored || '').trim();
+  }
+
   let renderId = 0;
   async function render() {
     const id = ++renderId;
@@ -54,18 +61,24 @@
     const award = await savedAward();
     if (id !== renderId) return;
     const short = Math.max(0, MIN_ORDER - total);
-    note.classList.toggle('is-unlocked', Boolean(award) && short === 0);
-    if (award && short === 0) {
-      note.innerHTML = `<strong>Free treat included</strong>${award.label} will be added to this order at ₹0. It works together with your reward points and any coupon.`;
+    const coupon = couponInUse();
+    note.classList.toggle('is-unlocked', Boolean(award) && short === 0 && !coupon);
+    if (award && coupon) {
+      note.innerHTML = `<strong>Free treat or coupon — one per order</strong>Offers can't be combined, so ${award.label} won't be added while a coupon code is applied. Remove the code to get your free treat instead; it stays saved for 7 days.`;
+    } else if (award && short === 0) {
+      note.innerHTML = `<strong>Free treat included</strong>${award.label} will be added to this order at ₹0. You can still use reward points.`;
     } else if (award) {
       note.innerHTML = `<strong>Unlock your free treat</strong>Add ${rupees(short)} more to get ${award.label}. Spin-wheel treats are added automatically on orders of ${rupees(MIN_ORDER)} or more.`;
     } else {
-      note.innerHTML = `<strong>Won a free treat on our spin wheel?</strong>It is added automatically on orders of ${rupees(MIN_ORDER)} or more placed with the same mobile number or email. No code needed, and it stacks with reward points and other coupons.`;
+      note.innerHTML = `<strong>Won a free treat on our spin wheel?</strong>It is added automatically on orders of ${rupees(MIN_ORDER)} or more placed with the same mobile number or email. No code needed. It can't be combined with other coupon codes, but works with reward points.`;
     }
   }
 
   let timer;
-  form.addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(render, 300); });
+  const queue = () => { clearTimeout(timer); timer = setTimeout(render, 300); };
+  form.addEventListener('input', queue);
+  document.addEventListener('input', event => { if (event.target?.id === 'checkoutCoupon') queue(); });
+  document.addEventListener('click', () => setTimeout(queue, 50));
   window.addEventListener('storage', render);
   document.addEventListener('gob:cart-updated', render);
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', render, { once: true });
