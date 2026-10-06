@@ -16,16 +16,14 @@
 .br-launch .br-txt{display:flex;flex-direction:column;align-items:flex-start}
 .br-launch small{font-weight:600;font-size:9.5px;letter-spacing:.06em;text-transform:none;opacity:.75;margin-top:2px;white-space:nowrap}
 @keyframes brGlow{0%,100%{box-shadow:0 10px 28px rgba(16,44,34,.25),0 0 0 0 rgba(201,150,58,.45)}50%{box-shadow:0 10px 28px rgba(16,44,34,.25),0 0 0 8px rgba(201,150,58,0)}}
-@media(max-width:560px){
-  /* Same column and size as the Rewards button (right side): Play below Rewards. */
-  .br-launch{left:auto;right:16px;bottom:18px;width:50px;height:50px;min-height:50px;padding:0;justify-content:center;border-radius:50%}
-  .br-launch .br-medal{width:42px;height:42px;flex-basis:42px;font-size:19px}
+@media(max-width:760px){
+  /* Match the site's right-hand floating stack: Rewards sits 66px above this. */
+  .br-launch{left:auto!important;right:max(16px,env(safe-area-inset-right))!important;bottom:max(16px,env(safe-area-inset-bottom))!important;width:54px;height:54px;min-height:54px;padding:0;justify-content:center;border-radius:50%;z-index:54}
+  .br-launch .br-medal{width:44px;height:44px;flex-basis:44px;font-size:20px}
   .br-launch .br-txt{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-  .reward-shortcut{bottom:82px!important}
-  body:has(.mobile-purchase-bar) .reward-shortcut{bottom:172px!important}
-  body:has(.mobile-purchase-bar) .br-launch{bottom:112px;z-index:53}
-  body:has(.cart-sticky-checkout:not([hidden])) .br-launch{bottom:86px}
-  body:has(.cart-sticky-checkout:not([hidden])) .reward-shortcut{bottom:146px!important}
+  body:has(.mobile-purchase-bar) .br-launch{bottom:calc(max(16px,env(safe-area-inset-bottom)) + 66px)!important}
+  body:has(.cart-sticky-checkout:not([hidden])) .br-launch{bottom:calc(max(16px,env(safe-area-inset-bottom)) + 70px)!important}
+  body:has(.cart-sticky-checkout:not([hidden])) .reward-shortcut{bottom:calc(max(16px,env(safe-area-inset-bottom)) + 136px)!important}
 }
 @media(prefers-reduced-motion:reduce){.br-launch{animation:none}}`;
     document.head.append(style);
