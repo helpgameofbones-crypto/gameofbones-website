@@ -5,6 +5,12 @@
    and reward points. Loaded lazily by conversion-extras.js. */
 (() => {
   if (window.__gobBoneRun) return; window.__gobBoneRun = true;
+  // Prizes count only once claimed with the form; drop any unclaimed leftovers.
+  try {
+    localStorage.removeItem('gob-bonerun-pending');
+    const a = JSON.parse(localStorage.getItem('gob-bonerun-award') || 'null');
+    if (a && !a.claimed) localStorage.removeItem('gob-bonerun-award');
+  } catch (_) {}
   const style = document.createElement('style'); style.id = 'br-style';
   style.textContent = `/* ---------- Game modal ---------- */
 .br-modal{--g900:#0a1f17;--g800:#102c22;--g700:#173a2d;--g600:#1f4a39;--gold:#c9963a;--gold2:#e7c27a;--gold3:#f6dfa6;--cream:#f6efe2;--ink:#102c22;--serif:"Fraunces",Georgia,"Times New Roman",serif;--sans:"DM Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-family:var(--sans);color:var(--cream);text-align:left;line-height:1.4}
@@ -162,7 +168,7 @@ body.br-lock{overflow:hidden}
         <div class="br-field"><label>Email</label><input name="email" type="email" required autocomplete="email"></div>
         <div class="br-field"><label>Mobile number</label><input name="phone" type="tel" required inputmode="numeric" pattern="[0-9]{10}" autocomplete="tel" placeholder="10 digits"></div>
         <label class="br-consent"><input name="marketing_consent" type="checkbox" value="true" required> Email me my free treat details and occasional Game of Bones news. I can unsubscribe anytime.</label>
-        <p class="br-err" id="br-claimErr" role="alert" hidden></p><button class="br-btn br-w100" id="br-claimSubmit">Save my free treat</button>
+        <p class="br-err" id="br-claimErr" role="alert" hidden></p><button class="br-btn br-w100" id="br-claimSubmit">Claim my free treat</button><button type="button" class="br-btn br-ghost br-w100" id="br-claimLater" style="margin-top:8px">Not now, keep playing</button>
         <div class="br-small">Use the same mobile number or email at checkout and it's added automatically.</div>
       </form>
     </div>
@@ -500,10 +506,9 @@ body.br-lock{overflow:hidden}
     const improved = runTier > bestTier;
     if (improved) {
       bestTier = runTier; bestRun = { score, ms: Math.round(performance.now() - runStart) };
-      // Keep the unlocked prize on this device so it is added automatically
-      // at checkout (bag ₹499+), even if the player never fills the form.
-      try { localStorage.setItem('gob-bonerun-pending', JSON.stringify({ label: tiers[bestTier].name, score: bestRun.score, ms: bestRun.ms, at: Date.now() })); } catch (_) {}
-      saveDeviceAward(tiers[bestTier].name);
+      // The prize must be claimed with the form. Open it automatically so
+      // winners do not miss it.
+      setTimeout(() => { if (state === 'over' && !$('overOv').hidden) showClaim(); }, 1600);
     }
     countUp($('finalScore'), score);
     $('overTitle').textContent = maxed ? 'Legend. Maximum score! 🏆' : ['Bath time got you!', 'The vacuum wins this round.', 'Cone of shame!'][Math.floor(Math.random() * 3)];
@@ -512,7 +517,7 @@ body.br-lock{overflow:hidden}
       $('wonBox').hidden = false; $('wonIcon').textContent = tiers[runTier].icon; $('wonName').textContent = tiers[runTier].name;
       $('wonNote').textContent = improved ? 'Unlocked this run' : 'You already hold this prize or a better one';
     } else $('wonBox').hidden = true;
-    const saved = runTier >= 0 ? ' Saved on this device: it is added free to your order automatically when your bag is ₹499+.' : '';
+    const saved = improved ? ' Fill in your details to claim it. It is added free to your next order of ₹499+.' : '';
     $('overText').textContent = (maxed ? 'You beat Bone Run. The top prize is yours.' : next ? (next.at - score).toLocaleString('en-IN') + ' more points for ' + next.name + '.' : '') + saved;
     $('claimBtn').hidden = !improved;
     $('overOv').hidden = false;
@@ -563,7 +568,7 @@ body.br-lock{overflow:hidden}
   // Remembered on this device so the cart and checkout can show the prize
   // straight away. The server still matches it by phone/email at checkout.
   function saveDeviceAward(label, validUntil) {
-    try { localStorage.setItem('gob-bonerun-award', JSON.stringify({ label, valid_until: validUntil || new Date(Date.now() + 7 * 864e5).toISOString().slice(0, 10) })); } catch (_) {}
+    try { localStorage.setItem('gob-bonerun-award', JSON.stringify({ label, claimed: true, valid_until: validUntil || new Date(Date.now() + 7 * 864e5).toISOString().slice(0, 10) })); } catch (_) {}
     document.dispatchEvent(new Event('gob:prize-updated'));
   }
   const apiBase = ['gameofbones.in', 'www.gameofbones.in'].includes(location.hostname) ? '/api' : (localStorage.getItem('gob-api-base') || '');
@@ -582,13 +587,12 @@ body.br-lock{overflow:hidden}
       const tier = tiers.find(x => x.name === label);
       $('doneIcon').textContent = tier ? tier.icon : '🎁'; $('doneName').textContent = label;
       if (result.status === 'already_used') {
-        try { localStorage.removeItem('gob-bonerun-pending'); localStorage.removeItem('gob-bonerun-award'); } catch (_) {}
+        try { localStorage.removeItem('gob-bonerun-award'); } catch (_) {}
         $('doneTitle').textContent = 'Thanks for playing! 🐾';
         $('doneSub').textContent = 'You have already used your Bone Run prize on an order. Prizes are one per customer.';
         $('doneNote').textContent = 'Keep playing for fun and to beat your best score.';
       } else if (result.status === 'kept') {
         saveDeviceAward(label, result.valid_until);
-        try { localStorage.removeItem('gob-bonerun-pending'); } catch (_) {}
         $('doneTitle').textContent = 'You already have this one 🐾';
         $('doneSub').textContent = 'Your saved prize is the same or better, so we kept it.';
         $('doneNote').textContent = 'Added at ₹0 to your next order of ₹499+. Works with coupon codes and reward points.';
@@ -598,17 +602,17 @@ body.br-lock{overflow:hidden}
         $('doneNote').textContent = 'It will be added at ₹0 to your next order of ₹499+ in the next 7 days. Use any coupon code and your reward points too.';
         try { localStorage.setItem(`gob-spin:${await customerKey(String(data.email), String(data.phone))}`, JSON.stringify({ label, detail: result.coupon_code || '' })); } catch (_) {}
         saveDeviceAward(label, result.valid_until);
-        try { localStorage.removeItem('gob-bonerun-pending'); } catch (_) {}
       }
       $('claimPanel').classList.remove('br-show'); $('donePanel').classList.add('br-show');
       window.GOB_ANALYTICS?.track?.('bone_run_claim', { score: bestRun.score, prize: label, status: result.status });
     } catch (error) {
       err.textContent = error && error.message && !/failed to fetch|network/i.test(error.message) ? error.message : 'We could not save your prize right now. Please try again.';
       err.hidden = false;
-    } finally { button.disabled = false; button.textContent = 'Save my free treat'; }
+    } finally { button.disabled = false; button.textContent = 'Claim my free treat'; }
   };
   $('shopBtn').onclick = () => { close(); location.href = '/products'; };
   $('playMore').onclick = backToGame;
+  $('claimLater').onclick = backToGame;
   $('best').textContent = best.toLocaleString('en-IN');
   reset(); draw();
   window.GOB_openSpinWheel = open;

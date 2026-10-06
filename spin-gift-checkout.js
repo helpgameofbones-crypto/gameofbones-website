@@ -50,7 +50,7 @@
   function deviceAward() {
     try {
       const award = JSON.parse(localStorage.getItem('gob-bonerun-award') || 'null');
-      if (!award || !award.label) return null;
+      if (!award || !award.label || !award.claimed) return null;
       if (award.valid_until && String(award.valid_until).slice(0, 10) < new Date().toISOString().slice(0, 10)) return null;
       return award;
     } catch (_) { return null; }
@@ -95,60 +95,8 @@
     }
   }
 
-  // ---- Automatic claim at checkout ----
-  // A prize unlocked in Bone Run but not yet claimed is stored on this device.
-  // As soon as the checkout has a name, email and mobile number and the bag is
-  // ₹499+, claim it for that customer so the order gets the free item.
-  const PENDING = 'gob-bonerun-pending';
-  const pending = () => { try { const p = JSON.parse(localStorage.getItem(PENDING) || 'null'); return p && p.label && Date.now() - Number(p.at || 0) < 7 * 864e5 ? p : null; } catch (_) { return null; } };
-  const apiBase = ['gameofbones.in', 'www.gameofbones.in'].includes(location.hostname) ? '/api' : (localStorage.getItem('gob-api-base') || '');
-  let claiming = null;
-  function claimDetails() {
-    const name = [value('[autocomplete="given-name"]'), value('[autocomplete="family-name"]')].filter(Boolean).join(' ');
-    const email = value('[autocomplete="email"]').toLowerCase();
-    const phone = value('[autocomplete="tel"]').replace(/\D/g, '').slice(-10);
-    return name && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && /^[6-9]\d{9}$/.test(phone) ? { name, email, phone } : null;
-  }
-  function autoClaim() {
-    if (!form || claiming || !apiBase) return claiming;
-    const p = pending(), who = claimDetails();
-    if (!p || !who || subtotal() < MIN_ORDER) return null;
-    claiming = (async () => {
-      try {
-        const response = await fetch(`${apiBase}/bone-run`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...who, via: 'checkout', score: p.score, run_ms: p.ms }) });
-        const result = await response.json().catch(() => ({}));
-        if (response.ok) {
-          localStorage.removeItem(PENDING);
-          if (result.status === 'already_used') localStorage.removeItem('gob-bonerun-award');
-          else {
-            const bytes = new TextEncoder().encode(`gob-spin-v1:${who.email}|${who.phone}`);
-            const hash = [...new Uint8Array(await crypto.subtle.digest('SHA-256', bytes))].map(b => b.toString(16).padStart(2, '0')).join('');
-            localStorage.setItem(`gob-spin:${hash}`, JSON.stringify({ label: result.prize, detail: result.coupon_code || '' }));
-            localStorage.setItem('gob-bonerun-award', JSON.stringify({ label: result.prize, valid_until: result.valid_until }));
-          }
-        } else if (response.status === 400) {
-          localStorage.removeItem(PENDING); // run could not be verified; do not retry forever
-        }
-      } catch (_) { /* network: try again on the next change */ }
-      finally { claiming = null; queue(); }
-    })();
-    return claiming;
-  }
-  // Make sure the claim lands before the order is saved.
-  let resubmitting = false;
-  document.addEventListener('submit', event => {
-    if (!form || event.target !== form || resubmitting) return;
-    if (!pending() || !claimDetails() || subtotal() < MIN_ORDER) return;
-    event.preventDefault(); event.stopImmediatePropagation();
-    const job = autoClaim() || claiming || Promise.resolve();
-    Promise.race([job, new Promise(r => setTimeout(r, 5000))]).finally(() => {
-      resubmitting = true;
-      try { form.requestSubmit ? form.requestSubmit() : form.dispatchEvent(new Event('submit', { cancelable: true })); } finally { setTimeout(() => { resubmitting = false; }, 0); }
-    });
-  }, true);
-
   let timer;
-  const queue = () => { clearTimeout(timer); timer = setTimeout(() => { render(); autoClaim(); }, 250); };
+  const queue = () => { clearTimeout(timer); timer = setTimeout(render, 250); };
   form?.addEventListener('input', queue);
   document.addEventListener('click', () => setTimeout(queue, 60));
   window.addEventListener('storage', queue);
