@@ -45,7 +45,11 @@
 <h1 class="display">Good treats. <span class="accent">Good returns.</span>
 </h1>
 <p class="lead">Earn 1 point for every ₹10 spent, 50 points for a review, and 300 points when a referred friend places their first order.</p>
-<a class="button" href="contact.html">Join the rewards club</a>
+<div class="rewards-actions" style="display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin-top:8px">
+<a class="button" href="/login?next=/account" data-rewards-primary>Create free account &amp; start earning</a>
+<a href="products.html" style="font-weight:700;text-decoration:underline">Shop treats</a>
+</div>
+<p data-rewards-note style="margin-top:12px;font-size:14px;opacity:.85">Already have an account? <a href="/login?next=/account" style="text-decoration:underline">Log in to see your points</a>.</p>
 </header>
 <section class="section">
 <div class="section-head">
@@ -72,6 +76,31 @@
 </article>
 </div>
 </section>
+<section class="section">
+<div class="section-head">
+<div>
+<p class="eyebrow">Using your points</p>
+<h2 class="section-title">Three steps to a cheaper treat jar.</h2>
+</div>
+</div>
+<div class="rewards-grid">
+<article class="reward">
+<strong>01</strong>
+<h3>Log in</h3>
+<p>Sign in with the code we email you. Your points balance shows on your account page.</p>
+</article>
+<article class="reward">
+<strong>02</strong>
+<h3>Fill your bag</h3>
+<p>Add the treats your dog loves and head to checkout.</p>
+</article>
+<article class="reward">
+<strong>03</strong>
+<h3>Tick the points box</h3>
+<p>At checkout, tick the reward points box. Every 100 points saves ₹30, up to ₹100 off each order.</p>
+</article>
+</div>
+</section>
 <section class="quote-section">
 <div class="section">
 <p class="eyebrow">A clear account experience</p>
@@ -81,5 +110,8 @@
 </div>
 </section>
 </main>
+<script>
+document.addEventListener('DOMContentLoaded',function(){var s=false;try{s=Boolean(window.GOB_SIGNED_IN||sessionStorage.getItem('gob-customer-token'))}catch(e){}if(!s)return;var a=document.querySelector('[data-rewards-primary]');if(a){a.textContent='See my points';a.setAttribute('href','/account')}var n=document.querySelector('[data-rewards-note]');if(n)n.textContent='To use your points, tick the reward points box at checkout.'});
+</script>
 </body>
 </html>
