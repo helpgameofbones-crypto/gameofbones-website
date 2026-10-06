@@ -1,5 +1,5 @@
 /* Bone Run: the Game of Bones endless-runner prize game (replaces the spin wheel).
-   Tap/Space to jump, hold to jump higher. Milestones: 800 = Goat Trachea,
+   Tap/Space to jump, hold to jump higher. Milestones: 800 = 2 Goat Trachea,
    2,500 = Chicken Feet 70 g, 5,000 (max) = Mackerel Fillet 60 g. The prize is
    verified and saved by the admin API (/api/bone-run); gifts stack with coupons
    and reward points. Loaded lazily by conversion-extras.js. */
@@ -127,7 +127,7 @@ body.br-lock{overflow:hidden}
           <div class="br-chip"><b id="br-score">0</b><span>pts</span></div>
           <div class="br-chip br-best"><span>best</span><b id="br-best">0</b></div>
         </div>
-        <div class="br-unlock" id="br-unlock"><small>Prize unlocked</small><b id="br-unlockName">Goat Trachea</b><span>Keep running for a bigger one</span></div>
+        <div class="br-unlock" id="br-unlock"><small>Prize unlocked</small><b id="br-unlockName">2 Goat Trachea</b><span>Keep running for a bigger one</span></div>
 
         <div class="br-ov" id="br-startOv">
           <h3>Help Bambi outrun<br>bath time.</h3>
@@ -139,14 +139,14 @@ body.br-lock{overflow:hidden}
         <div class="br-ov" id="br-overOv" hidden>
           <div class="br-big" id="br-finalScore">0<small>POINTS</small></div>
           <h3 id="br-overTitle" style="font-size:24px">Cone of shame!</h3>
-          <div class="br-wonprize" id="br-wonBox" hidden><span class="br-m" id="br-wonIcon">🦴</span><div><b id="br-wonName">1 free Goat Trachea</b><span id="br-wonNote">Unlocked this run</span></div></div>
+          <div class="br-wonprize" id="br-wonBox" hidden><span class="br-m" id="br-wonIcon">🦴</span><div><b id="br-wonName">2 free Goat Trachea</b><span id="br-wonNote">Unlocked this run</span></div></div>
           <p id="br-overText"></p>
           <div class="br-row"><button class="br-btn" id="br-claimBtn" hidden>Claim my treat</button><button class="br-btn br-ghost" id="br-againBtn">Run again</button></div>
         </div>
       </div>
 
       <div class="br-rail" id="br-rail"><i id="br-railFill"></i>
-        <div class="br-ms" id="br-m1" style="left:16%"><div class="br-m">🦴</div><div class="br-t"><b>800</b>Goat Trachea</div></div>
+        <div class="br-ms" id="br-m1" style="left:16%"><div class="br-m">🦴</div><div class="br-t"><b>800</b>2 Goat Trachea</div></div>
         <div class="br-ms" id="br-m2" style="left:50%"><div class="br-m">🐾</div><div class="br-t"><b>2,500</b>Chicken Feet 70 g</div></div>
         <div class="br-ms" id="br-m3" style="left:100%"><div class="br-m">🐟</div><div class="br-t"><b>5,000</b>Mackerel Fillet 60 g</div></div>
       </div>
@@ -179,7 +179,7 @@ body.br-lock{overflow:hidden}
   // ================= config =================
   const W = 900, H = 380, GROUND = 312, MAX = 5000;
   const tiers = [
-    { at: 800,  name: '1 free Goat Trachea', short: 'Goat Trachea', icon: '🦴' },
+    { at: 800,  name: '2 free Goat Trachea', short: '2 Goat Trachea', icon: '🦴' },
     { at: 2500, name: '1 free pack of Chicken Feet (70 g)', short: 'Chicken Feet (70 g)', icon: '🐾' },
     { at: 5000, name: '1 free pack of Mackerel Fillet (60 g)', short: 'Mackerel Fillet (60 g)', icon: '🐟' },
   ];
@@ -553,6 +553,12 @@ body.br-lock{overflow:hidden}
     const hash = await crypto.subtle.digest('SHA-256', bytes);
     return [...new Uint8Array(hash)].map(b => b.toString(16).padStart(2, '0')).join('');
   }
+  // Remembered on this device so the cart and checkout can show the prize
+  // straight away. The server still matches it by phone/email at checkout.
+  function saveDeviceAward(label, validUntil) {
+    try { localStorage.setItem('gob-bonerun-award', JSON.stringify({ label, valid_until: validUntil || new Date(Date.now() + 7 * 864e5).toISOString().slice(0, 10) })); } catch (_) {}
+    document.dispatchEvent(new Event('gob:prize-updated'));
+  }
   const apiBase = ['gameofbones.in', 'www.gameofbones.in'].includes(location.hostname) ? '/api' : (localStorage.getItem('gob-api-base') || '');
   $('claimForm').onsubmit = async e => {
     e.preventDefault();
@@ -573,6 +579,7 @@ body.br-lock{overflow:hidden}
         $('doneSub').textContent = 'You have already used your Bone Run prize on an order. Prizes are one per customer.';
         $('doneNote').textContent = 'Keep playing for fun and to beat your best score.';
       } else if (result.status === 'kept') {
+        saveDeviceAward(label, result.valid_until);
         $('doneTitle').textContent = 'You already have this one 🐾';
         $('doneSub').textContent = 'Your saved prize is the same or better, so we kept it.';
         $('doneNote').textContent = 'Added at ₹0 to your next order of ₹499+. Works with coupon codes and reward points.';
@@ -581,6 +588,7 @@ body.br-lock{overflow:hidden}
         $('doneSub').textContent = 'We have emailed your free treat details.';
         $('doneNote').textContent = 'It will be added at ₹0 to your next order of ₹499+ in the next 7 days. Use any coupon code and your reward points too.';
         try { localStorage.setItem(`gob-spin:${await customerKey(String(data.email), String(data.phone))}`, JSON.stringify({ label, detail: result.coupon_code || '' })); } catch (_) {}
+        saveDeviceAward(label, result.valid_until);
       }
       $('claimPanel').classList.remove('br-show'); $('donePanel').classList.add('br-show');
       window.GOB_ANALYTICS?.track?.('bone_run_claim', { score: bestRun.score, prize: label, status: result.status });

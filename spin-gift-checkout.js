@@ -1,28 +1,39 @@
-/* Spin-to-win free treat: tell the customer at the end of checkout whether
-   their free treat is included, or how much more to add to unlock it.
-   The server decides the gift (admin lib/spin-gifts.ts); this is only a
-   helpful preview that reads the spin result saved on this device. */
+/* Free prize (Bone Run game, or an older spin-wheel gift) in the cart and at
+   checkout. When the bag is ₹499+ the prize is shown as a ₹0 line in the
+   order summary, because the server adds it to the order automatically
+   (admin lib/spin-gifts.ts, matched by the mobile number or email used to
+   claim it). This file only previews it; the server decides. */
 (() => {
   const MIN_ORDER = 499;
   const form = document.querySelector('#checkoutForm');
-  if (!form) return;
+  const cartPage = !form && document.querySelector('#checkoutLink');
+  if (!form && !cartPage) return;
 
   const style = document.createElement('style');
   style.textContent = `
 .spin-gift-note{margin:0 0 14px;padding:12px 14px;border:1px solid var(--ink,#102c22);background:var(--gold-soft,#f4e6c9);color:var(--ink,#102c22);font-size:13px;line-height:1.45}
 .spin-gift-note strong{display:block;margin-bottom:2px;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
-.spin-gift-note.is-unlocked{background:#e4ebdf}`;
+.spin-gift-note.is-unlocked{background:#e4ebdf}
+.order-row.prize-row{background:#fff4d6;margin:6px -8px;padding:8px;border-radius:6px;font-weight:700}
+.order-row.prize-row span:last-child{color:#16824a}`;
   document.head.append(style);
 
   const note = document.createElement('div');
   note.className = 'spin-gift-note';
   note.setAttribute('role', 'status');
   note.setAttribute('aria-live', 'polite');
-  const submit = form.querySelector('[type="submit"]');
-  (submit || form.lastElementChild)?.before(note);
+  note.hidden = true;
+  if (form) { const submit = form.querySelector('[type="submit"]'); (submit || form.lastElementChild)?.before(note); }
+  else cartPage.before(note);
 
-  const value = selector => form.querySelector(selector)?.value.trim() || '';
+  const prizeRow = document.createElement('div');
+  prizeRow.className = 'order-row prize-row';
+  prizeRow.hidden = true;
+  const placeRow = () => { const total = document.querySelector('.order-row.total'); if (total && prizeRow.nextElementSibling !== total) total.before(prizeRow); };
+
+  const value = selector => form?.querySelector(selector)?.value.trim() || '';
   const rupees = amount => `₹${Math.round(amount).toLocaleString('en-IN')}`;
+  const escapeHtml = text => String(text).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
   function subtotal() {
     try {
@@ -34,8 +45,17 @@
     } catch (_) { return 0; }
   }
 
-  // Same key the spin wheel uses to remember a customer's result on this device.
-  async function savedAward() {
+  // Prize claimed on this device (set by bone-run.js), or the per-customer
+  // record saved when they claimed with this email + mobile.
+  function deviceAward() {
+    try {
+      const award = JSON.parse(localStorage.getItem('gob-bonerun-award') || 'null');
+      if (!award || !award.label) return null;
+      if (award.valid_until && String(award.valid_until).slice(0, 10) < new Date().toISOString().slice(0, 10)) return null;
+      return award;
+    } catch (_) { return null; }
+  }
+  async function customerAward() {
     const email = value('[autocomplete="email"]').toLowerCase();
     const phone = value('[autocomplete="tel"]').replace(/\D/g, '').slice(-10);
     if (!email || phone.length !== 10 || !window.crypto?.subtle) return null;
@@ -51,25 +71,39 @@
   async function render() {
     const id = ++renderId;
     const total = subtotal();
-    const award = await savedAward();
+    const award = (form ? await customerAward() : null) || deviceAward();
     if (id !== renderId) return;
     const short = Math.max(0, MIN_ORDER - total);
-    note.classList.toggle('is-unlocked', Boolean(award) && short === 0);
-    if (award && short === 0) {
-      note.innerHTML = `<strong>Free treat included</strong>${award.label} will be added to this order at ₹0. It works together with your coupon code and reward points.`;
-    } else if (award) {
-      note.innerHTML = `<strong>Unlock your free treat</strong>Add ${rupees(short)} more to get ${award.label}. Free treats are added automatically on orders of ${rupees(MIN_ORDER)} or more.`;
-    } else {
+    const label = award ? escapeHtml(award.label) : '';
+    const item = award ? escapeHtml(award.label.replace(/\bfree\s+/i, '')) : '';
+    placeRow();
+    if (award && total > 0 && short === 0) {
+      prizeRow.innerHTML = `<span>🎁 FREE: ${item} (Bone Run prize)</span><span>₹0</span>`;
+      prizeRow.hidden = false;
+      note.hidden = false; note.classList.add('is-unlocked');
+      note.innerHTML = `<strong>Free treat added</strong>${label} is included in this order at ₹0. Check out with the same mobile number or email you used to claim it. Works together with your coupon code and reward points.`;
+    } else if (award && total > 0) {
+      prizeRow.hidden = true;
+      note.hidden = false; note.classList.remove('is-unlocked');
+      note.innerHTML = `<strong>Unlock your free treat</strong>Add ${rupees(short)} more and ${label} is added to this order automatically.`;
+    } else if (form && !award) {
+      prizeRow.hidden = true;
+      note.hidden = false; note.classList.remove('is-unlocked');
       note.innerHTML = `<strong>Won a free treat in Bone Run?</strong>It is added automatically on orders of ${rupees(MIN_ORDER)} or more placed with the same mobile number or email. No code needed, and it works together with coupon codes and reward points.`;
+    } else {
+      prizeRow.hidden = true; note.hidden = true;
     }
   }
 
   let timer;
-  const queue = () => { clearTimeout(timer); timer = setTimeout(render, 300); };
-  form.addEventListener('input', queue);
-    document.addEventListener('click', () => setTimeout(queue, 50));
-  window.addEventListener('storage', render);
-  document.addEventListener('gob:cart-updated', render);
+  const queue = () => { clearTimeout(timer); timer = setTimeout(render, 250); };
+  form?.addEventListener('input', queue);
+  document.addEventListener('click', () => setTimeout(queue, 60));
+  window.addEventListener('storage', queue);
+  document.addEventListener('gob:cart-updated', queue);
+  document.addEventListener('gob:prize-updated', queue);
+  const totalEl = document.querySelector('[data-commerce-total]');
+  if (totalEl) new MutationObserver(queue).observe(totalEl, { childList: true, characterData: true, subtree: true });
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', render, { once: true });
   else render();
 })();
