@@ -16,18 +16,22 @@
   }
 
   function addWheelPrompt() {
-    if (document.querySelector('#wheelModal')) return;
+    // Bone Run (bone-run.js) replaced the spin wheel. This only adds the
+    // floating launcher; the game itself loads lazily after the page.
+    if (document.querySelector('#wheelLaunch')) return;
+    const launchStyle = document.createElement('style');
+    launchStyle.textContent = `.br-launch{position:fixed;z-index:38;left:18px;bottom:18px;display:inline-flex;align-items:center;gap:10px;border:0;cursor:pointer;text-align:left;
+      background:linear-gradient(135deg,#173a2d,#0a1f17);color:#f6efe2;border-radius:999px;padding:6px 16px 6px 6px;font:800 13.5px/1.15 "DM Sans",system-ui,sans-serif;
+      box-shadow:0 10px 24px rgba(10,31,23,.35),inset 0 0 0 1.5px rgba(231,194,122,.65);animation:brGlow 2.4s ease-in-out infinite}
+      .br-launch .br-medal{flex:0 0 34px;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:16px;line-height:1;background:radial-gradient(circle at 35% 30%,#f6dfa6,#c9963a 60%,#9a6e22)}
+      .br-launch .br-txt{display:flex;flex-direction:column;align-items:flex-start}
+      .br-launch small{font-weight:600;font-size:10.5px;opacity:.75;margin-top:2px;white-space:nowrap}
+      @keyframes brGlow{0%,100%{box-shadow:0 10px 24px rgba(10,31,23,.35),inset 0 0 0 1.5px rgba(231,194,122,.65),0 0 0 0 rgba(201,150,58,.45)}50%{box-shadow:0 10px 24px rgba(10,31,23,.35),inset 0 0 0 1.5px rgba(231,194,122,.9),0 0 0 8px rgba(201,150,58,0)}}
+      @media(max-width:650px){.br-launch{left:12px;bottom:14px;padding:5px 13px 5px 5px;font-size:12.5px}.br-launch small{display:none}}
+      @media(prefers-reduced-motion:reduce){.br-launch{animation:none}}`;
+    document.head.append(launchStyle);
     document.body.insertAdjacentHTML('beforeend', `
-      <button class="wheel-launch" id="wheelLaunch">Spin<br>to win</button>
-      <div class="wheel-modal" id="wheelModal">
-        <div class="wheel-card">
-          <button class="wheel-close" data-wheel-close aria-label="Close spin to win">×</button>
-          <p class="eyebrow">New here?</p>
-          <h2>Spin for your first treat.</h2>
-          <p>Enter your details to reveal a welcome offer.</p>
-          <form id="wheelForm"></form>
-        </div>
-      </div>`);
+      <button class="br-launch" id="wheelLaunch" type="button" aria-label="Play Bone Run and win a free treat"><span class="br-medal" aria-hidden="true">🦴</span><span class="br-txt">Play &amp; win a treat<small>Bone Run · free treats up to Mackerel</small></span></button>`);
 
     // Let visitors orient themselves, then invite first-time visitors to play.
     // The modal is opened once per browser session; the small launcher remains
@@ -77,7 +81,7 @@
       if (document.querySelector('script[data-gob-wheel-game]')) return;
       const script = document.createElement('script');
       script.dataset.gobWheelGame = 'true';
-      script.src = 'wheel-game.js?v=wheel-no-stack-1';
+      script.src = 'bone-run.js?v=1';
       document.body.append(script);
     };
     const scheduleWheelLoad = () => {
