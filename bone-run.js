@@ -498,7 +498,13 @@ body.br-lock{overflow:hidden}
     best = Math.max(best, score); $('best').textContent = best.toLocaleString('en-IN');
     try { localStorage.setItem('gob-bonerun-best', String(best)); } catch (_) {}
     const improved = runTier > bestTier;
-    if (improved) { bestTier = runTier; bestRun = { score, ms: Math.round(performance.now() - runStart) }; }
+    if (improved) {
+      bestTier = runTier; bestRun = { score, ms: Math.round(performance.now() - runStart) };
+      // Keep the unlocked prize on this device so it is added automatically
+      // at checkout (bag ₹499+), even if the player never fills the form.
+      try { localStorage.setItem('gob-bonerun-pending', JSON.stringify({ label: tiers[bestTier].name, score: bestRun.score, ms: bestRun.ms, at: Date.now() })); } catch (_) {}
+      saveDeviceAward(tiers[bestTier].name);
+    }
     countUp($('finalScore'), score);
     $('overTitle').textContent = maxed ? 'Legend. Maximum score! 🏆' : ['Bath time got you!', 'The vacuum wins this round.', 'Cone of shame!'][Math.floor(Math.random() * 3)];
     const next = tiers.find(x => score < x.at);
@@ -506,7 +512,8 @@ body.br-lock{overflow:hidden}
       $('wonBox').hidden = false; $('wonIcon').textContent = tiers[runTier].icon; $('wonName').textContent = tiers[runTier].name;
       $('wonNote').textContent = improved ? 'Unlocked this run' : 'You already hold this prize or a better one';
     } else $('wonBox').hidden = true;
-    $('overText').textContent = maxed ? 'You beat Bone Run. The top prize is yours.' : next ? (next.at - score).toLocaleString('en-IN') + ' more points for ' + next.name + '.' : '';
+    const saved = runTier >= 0 ? ' Saved on this device: it is added free to your order automatically when your bag is ₹499+.' : '';
+    $('overText').textContent = (maxed ? 'You beat Bone Run. The top prize is yours.' : next ? (next.at - score).toLocaleString('en-IN') + ' more points for ' + next.name + '.' : '') + saved;
     $('claimBtn').hidden = !improved;
     $('overOv').hidden = false;
   }
@@ -575,11 +582,13 @@ body.br-lock{overflow:hidden}
       const tier = tiers.find(x => x.name === label);
       $('doneIcon').textContent = tier ? tier.icon : '🎁'; $('doneName').textContent = label;
       if (result.status === 'already_used') {
+        try { localStorage.removeItem('gob-bonerun-pending'); localStorage.removeItem('gob-bonerun-award'); } catch (_) {}
         $('doneTitle').textContent = 'Thanks for playing! 🐾';
         $('doneSub').textContent = 'You have already used your Bone Run prize on an order. Prizes are one per customer.';
         $('doneNote').textContent = 'Keep playing for fun and to beat your best score.';
       } else if (result.status === 'kept') {
         saveDeviceAward(label, result.valid_until);
+        try { localStorage.removeItem('gob-bonerun-pending'); } catch (_) {}
         $('doneTitle').textContent = 'You already have this one 🐾';
         $('doneSub').textContent = 'Your saved prize is the same or better, so we kept it.';
         $('doneNote').textContent = 'Added at ₹0 to your next order of ₹499+. Works with coupon codes and reward points.';
@@ -589,6 +598,7 @@ body.br-lock{overflow:hidden}
         $('doneNote').textContent = 'It will be added at ₹0 to your next order of ₹499+ in the next 7 days. Use any coupon code and your reward points too.';
         try { localStorage.setItem(`gob-spin:${await customerKey(String(data.email), String(data.phone))}`, JSON.stringify({ label, detail: result.coupon_code || '' })); } catch (_) {}
         saveDeviceAward(label, result.valid_until);
+        try { localStorage.removeItem('gob-bonerun-pending'); } catch (_) {}
       }
       $('claimPanel').classList.remove('br-show'); $('donePanel').classList.add('br-show');
       window.GOB_ANALYTICS?.track?.('bone_run_claim', { score: bestRun.score, prize: label, status: result.status });
