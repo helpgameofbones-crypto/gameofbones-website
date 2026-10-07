@@ -148,7 +148,7 @@ body.br-lock{overflow:hidden}
           <h3>Help Bambi outrun<br>bath time.</h3>
           <p>Dodge the vacuum, the tub and the vet's cone. Every milestone unlocks a free treat.</p>
           <div class="br-hint"><span>👆 Tap = jump</span><span>✋ Hold = higher</span><span>🦴 Bone = +25</span></div>
-          <button class="br-btn" id="br-startBtn">Start running</button>
+          <button class="br-btn" id="br-claimStart" hidden>🎁 Claim my free treat</button><button class="br-btn" id="br-startBtn">Start running</button>
         </div>
 
         <div class="br-ov" id="br-overOv" hidden>
@@ -210,6 +210,14 @@ body.br-lock{overflow:hidden}
 
   let state = 'idle', raf = 0, best = 0, bestTier = -1, runTier = -1, unlockTimer = 0, runStart = 0, bestRun = null;
   try { best = Math.max(0, Number(localStorage.getItem('gob-bonerun-best')) || 0); } catch (_) {}
+  // A won-but-unclaimed prize survives closing the game or changing page, so
+  // a mis-click never loses it. It only counts once the form is submitted.
+  const UNCLAIMED = 'gob-bonerun-unclaimed';
+  function unclaimed() {
+    try { const u = JSON.parse(localStorage.getItem(UNCLAIMED) || 'null'); return u && u.tier >= 0 && Date.now() - Number(u.at || 0) < 7 * 864e5 ? u : null; } catch (_) { return null; }
+  }
+  function setUnclaimed(u) { try { u ? localStorage.setItem(UNCLAIMED, JSON.stringify(u)) : localStorage.removeItem(UNCLAIMED); } catch (_) {} refreshClaimUi(); }
+  { const u = unclaimed(); if (u) { bestTier = u.tier; bestRun = { score: u.score, ms: u.ms }; } }
   let dog, obs, bones, parts, speed, dist, score, bonus, spawnIn, boneIn, last, t, holding, shake, flash;
 
   // ================= world layers (pre-generated) =================
@@ -514,6 +522,7 @@ body.br-lock{overflow:hidden}
   }
   function start() {
     reset(); state = 'run'; paintMiles(); runStart = performance.now(); track('start');
+    try { localStorage.setItem('gob-bonerun-played', '1'); } catch (_) {}
     $('startOv').hidden = true; $('overOv').hidden = true; $('unlock').classList.remove('br-show');
     raf = requestAnimationFrame(step);
   }
@@ -529,6 +538,7 @@ body.br-lock{overflow:hidden}
     const improved = runTier > bestTier;
     if (improved) {
       bestTier = runTier; bestRun = { score, ms: Math.round(performance.now() - runStart) };
+      setUnclaimed({ tier: bestTier, score: bestRun.score, ms: bestRun.ms, at: Date.now() });
       // The prize must be claimed with the form. Open it automatically so
       // winners do not miss it.
       setTimeout(() => { if (state === 'over' && !$('overOv').hidden) showClaim(); }, 1600);
@@ -540,9 +550,9 @@ body.br-lock{overflow:hidden}
       $('wonBox').hidden = false; $('wonIcon').textContent = tiers[runTier].icon; $('wonName').textContent = tiers[runTier].name;
       $('wonNote').textContent = improved ? 'Unlocked this run' : 'You already hold this prize or a better one';
     } else $('wonBox').hidden = true;
-    const saved = improved ? ' Fill in your details to claim it. It is added free to your next order of ₹499+.' : '';
+    const saved = unclaimed() ? ' Fill in your details to claim it. It is added free to your next order of ₹499+.' : '';
     $('overText').textContent = (maxed ? 'You beat Bone Run. The top prize is yours.' : next ? (next.at - score).toLocaleString('en-IN') + ' more points for ' + next.name + '.' : '') + saved;
-    $('claimBtn').hidden = !improved;
+    $('claimBtn').hidden = !unclaimed();
     $('overOv').hidden = false;
   }
   function showClaim() {
@@ -556,7 +566,18 @@ body.br-lock{overflow:hidden}
   function backToGame() {
     ['claimPanel', 'donePanel'].forEach(id => $(id).classList.remove('br-show'));
     $('playArea').style.display = ''; $('overOv').hidden = true; $('startOv').hidden = false;
-    reset(); paintMiles(); $('railFill').style.width = '0%'; draw();
+    reset(); paintMiles(); $('railFill').style.width = '0%'; draw(); refreshClaimUi();
+  }
+  // Keep a visible way back to the claim form while a prize is unclaimed.
+  function refreshClaimUi() {
+    const u = unclaimed();
+    const btn = $('claimStart'); if (btn) { btn.hidden = !u; if (u) btn.textContent = '🎁 Claim ' + tiers[u.tier].name; }
+    const launch = document.querySelector('#wheelLaunch');
+    if (launch) {
+      launch.classList.toggle('br-has-prize', Boolean(u));
+      const txt = launch.querySelector('.br-txt');
+      if (txt) txt.innerHTML = u ? 'Claim your free treat<small>' + tiers[u.tier].name.replace(/\bfree\s+/, '') + ' is waiting</small>' : 'Play &amp; win a treat<small>Bone Run · free treats up to Mackerel</small>';
+    }
   }
 
   // ================= events =================
@@ -574,9 +595,10 @@ body.br-lock{overflow:hidden}
   $('startBtn').onclick = start;
   $('againBtn').onclick = start;
   $('claimBtn').onclick = showClaim;
+  $('claimStart').onclick = showClaim;
   function open() {
     $('modal').classList.add('br-open'); document.body.classList.add('br-lock');
-    if (state !== 'run') backToGame();
+    if (state !== 'run') { backToGame(); if (unclaimed()) showClaim(); }
   }
   function close() { cancelAnimationFrame(raf); if (state === 'run') state = 'idle'; $('modal').classList.remove('br-open'); document.body.classList.remove('br-lock'); }
   $('closeGame').onclick = close;
@@ -607,6 +629,7 @@ body.br-lock{overflow:hidden}
       const result = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(result.error || 'We could not save your prize right now. Please try again.');
       const label = result.prize || tiers[bestTier].name;
+      setUnclaimed(null);
       const tier = tiers.find(x => x.name === label);
       $('doneIcon').textContent = tier ? tier.icon : '🎁'; $('doneName').textContent = label;
       if (result.status === 'already_used') {
@@ -638,6 +661,7 @@ body.br-lock{overflow:hidden}
   $('claimLater').onclick = backToGame;
   $('best').textContent = best.toLocaleString('en-IN');
   reset(); draw();
+  refreshClaimUi();
   window.GOB_openSpinWheel = open;
   document.querySelector('#wheelLaunch')?.addEventListener('click', open);
   document.dispatchEvent(new Event('gob:wheel-ready'));
