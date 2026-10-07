@@ -1,0 +1,25 @@
+/* /products: get visitors (mostly from Instagram ads, on phones) to the treats fast. */
+.page-hero.shop-hero{padding:clamp(26px,4vw,52px) max(4vw,24px) 6px}
+.shop-hero .display{font-size:clamp(34px,4.6vw,62px)}
+.shop-hero .lead{margin:12px auto 0;font-size:15px}
+.shop-trust{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;max-width:900px;margin:16px auto 0;padding:0;list-style:none}
+.shop-trust li{padding:7px 11px;border:1px solid var(--line);border-radius:999px;background:var(--paper);font-size:11px;font-weight:800;letter-spacing:.04em}
+.catalogue-section{padding-top:18px!important}
+.catalogue-section .section-head{margin-bottom:14px}
+.catalogue-section .section-title{font-size:clamp(26px,3vw,40px)}
+.bestseller-tag{display:inline-block;margin-right:4px;padding:2px 6px;border-radius:3px;background:#f0dfaa;color:#6b4410;letter-spacing:.06em}
+#liveCatalog .quick-add{width:auto;min-width:64px;padding:0 12px;border-radius:999px;font-size:12px;font-weight:800;letter-spacing:.04em;white-space:nowrap}
+#liveCatalog .quick-add:hover{transform:translateY(-1px)}
+@media(max-width:640px){
+  .page-hero.shop-hero{padding:18px 16px 4px;text-align:left}
+  .shop-hero .eyebrow{margin-bottom:8px}
+  .shop-hero .display{font-size:32px}
+  .shop-hero .lead{display:none}
+  .shop-trust{justify-content:flex-start;gap:6px;margin-top:12px}
+  .shop-trust li{padding:6px 9px;font-size:10px}
+  .catalogue-section .section-head .eyebrow{display:none}
+  .catalogue-section .section-title{font-size:24px}
+  #liveCatalog .card-bottom{flex-wrap:wrap;gap:8px}
+  #liveCatalog .quick-add{width:100%;height:36px;min-width:0;font-size:12px}
+  .bestseller-tag{font-size:8px}
+}

@@ -21,9 +21,14 @@
   const productComparePrice = product => product.sizes?.[0]?.compare_price ?? product.cp ?? product.compare_price ?? 0;
   const productWeight = product => product.w || (Number(product.sizes?.[0]?.weight_grams) ? `${product.sizes[0].weight_grams} g` : 'Pack');
   const productCategory = product => product.c || 'Treats';
+  // Top sellers from real orders (last 60 days). Shown first with a badge so
+  // visitors arriving from ads see the treats other dog parents buy most.
+  const BESTSELLERS = ['chicken-heart-and-liver', 'goat-trotter', 'goat-trachea', 'chicken-wings', 'chicken-jerky', 'sardines'];
+  const bestsellerRank = product => { const rank = BESTSELLERS.indexOf(slug(productName(product))); return rank === -1 ? 99 : rank; };
 
   function render() {
-    const items = catalogue.filter(product => activeCategory === 'All' || productCategory(product) === activeCategory);
+    const items = catalogue.filter(product => activeCategory === 'All' || productCategory(product) === activeCategory)
+      .map((product, order) => ({ product, order })).sort((a, b) => (bestsellerRank(a.product) - bestsellerRank(b.product)) || (a.order - b.order)).map(entry => entry.product);
     root.innerHTML = items.map((product, index) => {
       const id = productId(product), name = productName(product), image = productImage(product);
       const shade = index % 3 === 0 ? 'cream' : index % 3 === 1 ? 'sage' : 'brown';
@@ -33,7 +38,7 @@
       const displayedPrice = isSale
         ? `<span class="catalog-price"><s>${formatPrice(comparePrice)}</s><strong>${formatPrice(currentPrice)}</strong></span>`
         : formatPrice(currentPrice);
-      return `<article class="product-card"><a href="${path}" aria-label="View ${escapeHtml(name)}">${isSale ? '<span class="sale-badge">Sale</span>' : ''}<div class="product-image ${shade}"><img src="${escapeHtml(image)}" alt="${escapeHtml(name)} natural dog treat" width="600" height="600" loading="lazy" decoding="async"></div></a><div class="card-copy"><p class="tag">${escapeHtml(productCategory(product))}</p><h3><a href="${path}">${escapeHtml(name)}</a></h3><p class="catalog-desc">${escapeHtml(product.d || product.description || 'Single-ingredient dog treat.')}</p><div class="card-bottom"><span>${escapeHtml(productWeight(product))} · ${displayedPrice}</span><button class="quick-add" type="button" data-product="${escapeHtml(id)}" aria-label="Add ${escapeHtml(name)} to bag">+</button></div></div></article>`;
+      return `<article class="product-card"><a href="${path}" aria-label="View ${escapeHtml(name)}">${isSale ? '<span class="sale-badge">Sale</span>' : ''}<div class="product-image ${shade}"><img src="${escapeHtml(image)}" alt="${escapeHtml(name)} natural dog treat" width="600" height="600" loading="lazy" decoding="async"></div></a><div class="card-copy"><p class="tag">${bestsellerRank(product) < 99 ? '<span class="bestseller-tag">★ Bestseller</span> ' : ''}${escapeHtml(productCategory(product))}</p><h3><a href="${path}">${escapeHtml(name)}</a></h3><p class="catalog-desc">${escapeHtml(product.d || product.description || 'Single-ingredient dog treat.')}</p><div class="card-bottom"><span>${escapeHtml(productWeight(product))} · ${displayedPrice}</span><button class="quick-add" type="button" data-product="${escapeHtml(id)}" aria-label="Add ${escapeHtml(name)} to bag">Add +</button></div></div></article>`;
     }).join('');
     root.querySelectorAll('img').forEach(image => image.addEventListener('error', () => { image.src = 'assets/gob-logo.png'; image.alt = 'Game of Bones'; }, { once: true }));
     root.querySelectorAll('[data-product]').forEach(button => button.addEventListener('click', () => {
