@@ -1,6 +1,6 @@
 /* Bone Run: the Game of Bones endless-runner prize game (replaces the spin wheel).
    Tap/Space to jump, hold to jump higher. Milestones: 800 = 2 Goat Trachea,
-   2,500 = Chicken Feet 70 g, 5,000 = Mackerel Fillet 60 g, 20,000 (max) = all
+   2,500 = Chicken Feet 70 g, 5,000 = Mackerel 60 g, 20,000 (max) = all
    three treats free on orders of ₹2,500+. The prize is
    verified and saved by the admin API (/api/bone-run); gifts stack with coupons
    and reward points. Loaded lazily by conversion-extras.js. */
@@ -259,8 +259,8 @@ body.br-lock{overflow:hidden}
   const tiers = [
     { at: 800,  name: '2 free Goat Trachea', short: '2 Goat Trachea', icon: '🦴', min: 0, img: '/assets/catalogue-plates/goat-trachea.webp' },
     { at: 2500, name: '1 free pack of Chicken Feet (70 g)', short: 'Chicken Feet (70 g)', icon: '🐾', min: 499, img: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/cac553a3-463f-4cf6-92dd-48c054f82bfe/image-0-1782712513139.png' },
-    { at: 5000, name: '1 free pack of Mackerel Fillet (60 g)', short: 'Mackerel Fillet (60 g)', icon: '🐟', min: 499, img: '/assets/catalogue-plates/mackerel-fillet.webp' },
-    { at: 20000, name: 'All 3 treats free: 2 Goat Trachea, Chicken Feet 70 g & Mackerel Fillet 60 g', short: 'All 3 treats free', icon: '🏆', min: 2500, img: '/assets/gob-logo.png' },
+    { at: 5000, name: '1 free pack of Mackerel (60 g)', short: 'Mackerel (60 g)', icon: '🐟', min: 499, img: '/assets/catalogue-plates/mackerel-fillet.webp' },
+    { at: 20000, name: 'All 3 treats free: 2 Goat Trachea, Chicken Feet 70 g & Mackerel 60 g', short: 'All 3 treats free', icon: '🏆', min: 2500, img: '/assets/gob-logo.png' },
   ];
   const $ = id => document.getElementById('br-' + id);
   const minText = tier => tier && tier.min > 0 ? 'your next order of ₹' + tier.min.toLocaleString('en-IN') + '+' + (tier.min >= 2500 ? ' (after coupon discounts)' : '') : 'any order, no minimum';
@@ -812,9 +812,9 @@ body.br-lock{overflow:hidden}
   $('pauseBtn').addEventListener('pointerdown', e => e.stopPropagation());
   $('resumeBtn').onclick = resume;
   document.addEventListener('visibilitychange', () => { if (document.hidden) pause(); });
-  // Skip the form: the prize stays on this device and is claimed automatically
-  // at checkout with the name, mobile and email entered there.
-  const skipToCheckout = () => { const u = unclaimed(); if (u) setUnclaimed({ ...u, skip: true }); goOrder(); };
+  // Skip the form: close the game so the customer keeps browsing; the prize stays
+  // on this device and is claimed automatically at checkout with the name, mobile and email entered there.
+  const skipToCheckout = () => { const u = unclaimed(); if (u) setUnclaimed({ ...u, skip: true }); close(); };
   $('claimSkip').onclick = skipToCheckout;
   $('skipOver').onclick = skipToCheckout;
   function open() {

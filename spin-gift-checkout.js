@@ -74,7 +74,7 @@
   function unclaimedPrize() {
     try { const u = JSON.parse(localStorage.getItem('gob-bonerun-unclaimed') || 'null'); return u && u.tier >= 0 && Date.now() - Number(u.at || 0) < 7 * 864e5 ? u : null; } catch (_) { return null; }
   }
-  const TIER_LABELS = ['2 free Goat Trachea', '1 free pack of Chicken Feet (70 g)', '1 free pack of Mackerel Fillet (60 g)', 'All 3 treats free: 2 Goat Trachea, Chicken Feet 70 g & Mackerel Fillet 60 g'];
+  const TIER_LABELS = ['2 free Goat Trachea', '1 free pack of Chicken Feet (70 g)', '1 free pack of Mackerel (60 g)', 'All 3 treats free: 2 Goat Trachea, Chicken Feet 70 g & Mackerel 60 g'];
   let claimPromise = null, claimedKey = '', claimError = '';
   async function claimAtCheckout() {
     const u = unclaimedPrize(); if (!form || !u) return null;
