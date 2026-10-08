@@ -142,6 +142,27 @@
 .br-tiers b{display:block;font-size:15px}
 .br-tiers em{display:block;font-style:normal;color:var(--gold2);font-weight:700;font-size:10px;margin-top:2px}
 @media (max-width:560px){.br-tiers{display:none}.br-goal{top:48px;font-size:11px}.br-combo{top:84px}.br-shield{top:84px}.br-tiers div{font-size:10px}.br-tiers b{font-size:13px}.br-cta{font-size:12px}}
+.br-count{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;font-family:var(--serif);font-weight:700;font-size:96px;color:#fff7e3;text-shadow:0 8px 30px rgba(0,0,0,.45)}
+.br-count[hidden]{display:none}
+.br-count span{animation:brcount .8s ease-out both}
+@keyframes brcount{from{transform:scale(1.8);opacity:0}30%{opacity:1}to{transform:scale(.9);opacity:.9}}
+.br-pause{position:absolute;left:12px;bottom:10px;z-index:3;width:32px;height:32px;border-radius:50%;border:0;cursor:pointer;background:rgba(10,31,23,.5);color:var(--cream);font-size:13px;box-shadow:inset 0 0 0 1px rgba(231,194,122,.35)}
+.br-tiers img,.br-prizecard img.br-pimg{display:block;border-radius:12px;object-fit:cover;background:#f6efe2}
+.br-tiers img{width:100%;height:58px;margin-bottom:6px}
+.br-prizecard img.br-pimg{flex:0 0 64px;width:64px;height:64px;box-shadow:0 0 0 2px rgba(231,194,122,.7),0 0 22px rgba(231,194,122,.45)}
+.br-prizecard img.br-pimg[hidden]{display:none}
+.br-next{width:100%;max-width:360px}
+.br-next .br-bar{height:8px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden;margin-top:6px}
+.br-next .br-bar i{display:block;height:100%;background:linear-gradient(90deg,#9a6e22,var(--gold3));border-radius:99px;transition:width .8s cubic-bezier(.2,1,.3,1)}
+.br-next small{display:block;font-size:12px;color:rgba(246,239,226,.8)}
+.br-newbest{display:inline-block;margin-bottom:2px;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;background:linear-gradient(180deg,#f6dfa6,#c9963a);color:#0a1f17;animation:brpop .5s cubic-bezier(.2,1.6,.4,1)}
+@keyframes brpop{from{transform:scale(.4);opacity:0}to{transform:none;opacity:1}}
+.br-newbest[hidden]{display:none}
+.br-linkbtn{background:none;border:0;color:var(--gold2);font:700 13px var(--sans);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:6px}
+.br-linkbtn[hidden]{display:none}
+.br-skipnote{font-size:11.5px;color:rgba(246,239,226,.65);text-align:center;margin-top:6px}
+@media (max-width:560px){.br-card.br-running .br-head{display:none}.br-card.br-running .br-stage{margin-top:12px}.br-count{font-size:72px}.br-tiers img{height:44px}}
+@media (prefers-reduced-motion:reduce){.br-count span,.br-newbest,.br-goal.br-near{animation:none}}
 .br-err{margin:0 0 10px;padding:9px 11px;border-radius:10px;background:rgba(178,58,46,.18);color:#ffd9d2;font-size:12.5px}
 body.br-lock{overflow:hidden}
 .br-modal .br-card{max-height:calc(100dvh - 28px);overflow-y:auto}
@@ -165,23 +186,29 @@ body.br-lock{overflow:hidden}
         <div class="br-combo" id="br-combo">x2 combo</div>
         <div class="br-shield" id="br-shieldTag">🧸 Shield on</div>
         <button class="br-mute" id="br-mute" aria-label="Sound on or off">🔊</button>
+        <button class="br-pause" id="br-pauseBtn" aria-label="Pause" hidden>❚❚</button>
+        <div class="br-count" id="br-count" hidden aria-live="assertive"></div>
+        <div class="br-ov" id="br-pauseOv" hidden><h3>Paused</h3><p>Take a breather. Bambi will wait.</p><button class="br-btn" id="br-resumeBtn">▶ Resume</button></div>
         <div class="br-unlock" id="br-unlock"><small>Prize unlocked</small><b id="br-unlockName">2 Goat Trachea</b><span>Keep running for a bigger one</span></div>
 
         <div class="br-ov" id="br-startOv">
           <h3>Help Bambi outrun<br>bath time.</h3>
           <p>Dodge the vacuum, the tub and the vet's cone. Grab bones in a row for combos. Every milestone unlocks a free treat.</p>
           <div class="br-hint"><span>👆 Tap = jump</span><span>👆👆 Tap again = double jump</span><span>🦴 Bone +25 · combos x3</span><span>✨ Gold bone +100</span><span>🧸 Toy = shield</span></div>
-          <div class="br-tiers"><div><b>🦴 800</b>2 Goat Trachea<em>free with any order</em></div><div><b>🐾 2,500</b>Chicken Feet 70 g<em>orders ₹499+</em></div><div><b>🐟 5,000</b>Mackerel 60 g<em>orders ₹499+</em></div></div>
+          <div class="br-tiers"><div><img src="/assets/catalogue-plates/goat-trachea.webp" alt="" loading="lazy"><b>🦴 800</b>2 Goat Trachea<em>free with any order</em></div><div><img src="https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/cac553a3-463f-4cf6-92dd-48c054f82bfe/image-0-1782712513139.png" alt="" loading="lazy"><b>🐾 2,500</b>Chicken Feet 70 g<em>orders ₹499+</em></div><div><img src="/assets/catalogue-plates/mackerel-fillet.webp" alt="" loading="lazy"><b>🐟 5,000</b>Mackerel 60 g<em>orders ₹499+</em></div></div>
           <button class="br-btn" id="br-claimStart" hidden>🎁 Claim my free treat</button><button class="br-btn" id="br-startBtn">Start running</button>
         </div>
 
         <div class="br-ov" id="br-overOv" hidden>
+          <span class="br-newbest" id="br-newBest" hidden>🏅 New best</span>
           <div class="br-big" id="br-finalScore">0<small>POINTS</small></div>
           <h3 id="br-overTitle" style="font-size:24px">Cone of shame!</h3>
           <div class="br-wonprize" id="br-wonBox" hidden><span class="br-m" id="br-wonIcon">🦴</span><div><b id="br-wonName">2 free Goat Trachea</b><span id="br-wonNote">Unlocked this run</span></div></div>
           <p id="br-overText"></p>
+          <div class="br-next" id="br-next" hidden><small id="br-nextText"></small><div class="br-bar"><i id="br-nextFill" style="width:0"></i></div></div>
           <div class="br-row"><button class="br-btn" id="br-claimBtn" hidden>Claim my treat</button><button class="br-btn br-ghost" id="br-againBtn">Run again</button></div>
           <button class="br-btn br-ghost" id="br-orderBtn" hidden style="margin-top:2px">🛒 Place your order &amp; get your free treat</button>
+          <button class="br-linkbtn" id="br-skipOver" hidden>Skip the form · claim it at checkout</button>
         </div>
       </div>
 
@@ -197,13 +224,15 @@ body.br-lock{overflow:hidden}
     <div class="br-panel" id="br-claimPanel">
       <h3>It's yours! 🎉</h3>
       <div class="br-sub" id="br-claimSub">Best run: 2,612 points</div>
-      <div class="br-prizecard"><span class="br-m" id="br-claimIcon">🐾</span><div><b id="br-claimName">1 free pack of Chicken Feet (70 g)</b><span id="br-claimNote">Added at ₹0 to your next order · valid 7 days · works with coupons &amp; reward points</span></div></div>
+      <div class="br-prizecard"><img class="br-pimg" id="br-claimImg" alt="" hidden><span class="br-m" id="br-claimIcon">🐾</span><div><b id="br-claimName">1 free pack of Chicken Feet (70 g)</b><span id="br-claimNote">Added at ₹0 to your next order · valid 7 days · works with coupons &amp; reward points</span></div></div>
       <form id="br-claimForm">
         <div class="br-field"><label>Name</label><input name="name" required maxlength="100" autocomplete="name"></div>
         <div class="br-field"><label>Email</label><input name="email" type="email" required autocomplete="email"></div>
         <div class="br-field"><label>Mobile number</label><input name="phone" type="tel" required inputmode="numeric" pattern="[0-9]{10}" autocomplete="tel" placeholder="10 digits"></div>
         <label class="br-consent"><input name="marketing_consent" type="checkbox" value="true" required> Email me my free treat details and occasional Game of Bones news. I can unsubscribe anytime.</label>
-        <p class="br-err" id="br-claimErr" role="alert" hidden></p><button class="br-btn br-w100" id="br-claimSubmit">Claim my free treat</button><button type="button" class="br-btn br-ghost br-w100" id="br-claimLater" style="margin-top:8px">Not now, keep playing</button>
+        <p class="br-err" id="br-claimErr" role="alert" hidden></p><button class="br-btn br-w100" id="br-claimSubmit">Claim my free treat</button><button type="button" class="br-btn br-ghost br-w100" id="br-claimSkip" style="margin-top:8px">⏭ Skip · claim it at checkout</button>
+        <div class="br-skipnote">Skip the form: your prize is added automatically when you place your order on this device.</div>
+        <button type="button" class="br-linkbtn" id="br-claimLater" style="display:block;margin:6px auto 0">Keep playing</button>
         <div class="br-small">Use the same mobile number or email at checkout and it's added automatically.</div>
       </form>
     </div>
@@ -211,7 +240,7 @@ body.br-lock{overflow:hidden}
     <div class="br-panel" id="br-donePanel">
       <h3 id="br-doneTitle">Saved. Treat time! 🐾</h3>
       <div class="br-sub" id="br-doneSub">We have emailed your free treat details.</div>
-      <div class="br-prizecard"><span class="br-m" id="br-doneIcon">🐾</span><div><b id="br-doneName">1 free pack of Chicken Feet (70 g)</b><span id="br-doneNote">It will be added at ₹0 to your next order of ₹499+ in the next 7 days. Use any coupon code and your reward points too.</span></div></div>
+      <div class="br-prizecard"><img class="br-pimg" id="br-doneImg" alt="" hidden><span class="br-m" id="br-doneIcon">🐾</span><div><b id="br-doneName">1 free pack of Chicken Feet (70 g)</b><span id="br-doneNote">It will be added at ₹0 to your next order of ₹499+ in the next 7 days. Use any coupon code and your reward points too.</span></div></div>
       <div class="br-row"><button class="br-btn" id="br-shopBtn">🛒 Place my order now</button><button class="br-btn br-ghost" id="br-playMore">Run again to upgrade</button></div>
       <div class="br-small" id="br-doneHint">Your free treat is waiting. Order today so it ships with your treats.</div>
     </div>
@@ -225,13 +254,15 @@ body.br-lock{overflow:hidden}
   const W = MOBILE ? 560 : 900, H = 380, GROUND = 312, MAX = 5000;
   const SPEED_K = MOBILE ? 0.8 : 1, PTS_DIV = MOBILE ? 8 : 10;
   const tiers = [
-    { at: 800,  name: '2 free Goat Trachea', short: '2 Goat Trachea', icon: '🦴', min: 0 },
-    { at: 2500, name: '1 free pack of Chicken Feet (70 g)', short: 'Chicken Feet (70 g)', icon: '🐾', min: 499 },
-    { at: 5000, name: '1 free pack of Mackerel Fillet (60 g)', short: 'Mackerel Fillet (60 g)', icon: '🐟', min: 499 },
+    { at: 800,  name: '2 free Goat Trachea', short: '2 Goat Trachea', icon: '🦴', min: 0, img: '/assets/catalogue-plates/goat-trachea.webp' },
+    { at: 2500, name: '1 free pack of Chicken Feet (70 g)', short: 'Chicken Feet (70 g)', icon: '🐾', min: 499, img: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/cac553a3-463f-4cf6-92dd-48c054f82bfe/image-0-1782712513139.png' },
+    { at: 5000, name: '1 free pack of Mackerel Fillet (60 g)', short: 'Mackerel Fillet (60 g)', icon: '🐟', min: 499, img: '/assets/catalogue-plates/mackerel-fillet.webp' },
   ];
   const $ = id => document.getElementById('br-' + id);
   const minText = tier => tier && tier.min > 0 ? 'your next order of ₹' + tier.min + '+' : 'any order, no minimum';
   const tierByName = name => tiers.find(x => x.name === name);
+  const setPrizeImg = (id, tier) => { const im = $(id); if (!im) return; if (tier && tier.img) { im.src = tier.img; im.hidden = false; } else im.hidden = true; };
+  const reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   const cv = $('cv'), ctx = cv.getContext('2d');
   const DPR = Math.min(2, window.devicePixelRatio || 1);
   cv.style.aspectRatio = W + ' / ' + H;
@@ -293,7 +324,7 @@ body.br-lock{overflow:hidden}
     holding = true;
     if (dog.onGround) {
       dog.vy = -12.4; dog.onGround = false; dog.squash = -0.18; airJumps = 1;
-      puff(dog.x + 10, GROUND, 6, '#e9dcc0'); sfx.jump();
+      puff(dog.x + 10, GROUND, 6, '#e9dcc0'); sfx.jump(); try { navigator.vibrate && navigator.vibrate(8); } catch (_) {}
     } else if (airJumps > 0) {
       // second jump in mid-air
       airJumps = 0; dog.vy = -10.2; dog.squash = -0.14;
@@ -470,6 +501,21 @@ body.br-lock{overflow:hidden}
     ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(0, 0, 9, 0.4, 2.4); ctx.stroke();
     ctx.restore();
   }
+  // A prize arch appears on the path just before each milestone.
+  function drawGoalArch() {
+    if (state !== 'run') return;
+    const nxt = tiers.find(x => score < x.at); if (!nxt) return;
+    const left = nxt.at - score; if (left > 220) return;
+    const x = dog.x + 70 + left * PTS_DIV;
+    if (x > W + 120) return;
+    ctx.save();
+    ctx.fillStyle = '#c9963a'; rr(x - 4, GROUND - 150, 8, 150, 3); ctx.fill(); rr(x + 96, GROUND - 150, 8, 150, 3); ctx.fill();
+    const g = ctx.createLinearGradient(0, GROUND - 170, 0, GROUND - 130); g.addColorStop(0, '#f6dfa6'); g.addColorStop(1, '#c9963a');
+    ctx.fillStyle = g; rr(x - 14, GROUND - 176, 128, 40, 10); ctx.fill();
+    ctx.fillStyle = '#0a1f17'; ctx.font = '800 15px "DM Sans", system-ui, sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText(nxt.icon + ' ' + nxt.at.toLocaleString('en-IN'), x + 50, GROUND - 151);
+    ctx.textAlign = 'start'; ctx.restore();
+  }
   function drawBone(b) {
     const y = b.y + Math.sin(t * 0.08 + b.p) * 5;
     if (b.gold) { const gl = ctx.createRadialGradient(b.x, y, 2, b.x, y, 44); gl.addColorStop(0, 'rgba(255,240,170,.9)'); gl.addColorStop(1, 'rgba(255,240,170,0)'); ctx.fillStyle = gl; ctx.fillRect(b.x - 44, y - 44, 88, 88); }
@@ -507,8 +553,12 @@ body.br-lock{overflow:hidden}
 
   function draw() {
     ctx.save();
-    if (shake > 0) ctx.translate(rand(-shake, shake), rand(-shake, shake));
-    drawSky(); drawHills(); drawTrees(); drawGround();
+    if (shake > 0 && !reduceMotion) ctx.translate(rand(-shake, shake), rand(-shake, shake));
+    drawSky();
+    // Sunset slowly turns to night as the score climbs.
+    const night = Math.max(0, Math.min(0.42, (score - 1200) / 3800 * 0.42));
+    if (night > 0) { ctx.fillStyle = `rgba(8,18,52,${night})`; ctx.fillRect(0, 0, W, GROUND); }
+    drawHills(); drawTrees(); drawGround(); drawGoalArch();
     bones.forEach(drawBone); toys.forEach(drawToy); obs.forEach(drawObstacle);
     if (!(invuln > 0 && Math.floor(t / 4) % 2)) drawDog();
     if (shield) { ctx.strokeStyle = `rgba(150,210,255,${.55 + .25 * Math.sin(t * .2)})`; ctx.lineWidth = 3; ell(dog.x + 46, dog.y - 34, 58, 42); ctx.stroke(); ctx.fillStyle = 'rgba(150,210,255,.10)'; ctx.fill(); }
@@ -629,10 +679,34 @@ body.br-lock{overflow:hidden}
       fetch('/api/bone-run/event', { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ player_id: id, event, ...(extra || {}) }) }).catch(() => {});
     } catch (_) {}
   }
+  let countTimer = 0;
   function start() {
-    reset(); state = 'run'; paintMiles(); runStart = performance.now(); track('start');
+    if (state === 'count') return;
+    reset(); state = 'count'; paintMiles(); $('railFill').style.width = '0%'; $('score').textContent = '0';
     try { localStorage.setItem('gob-bonerun-played', '1'); } catch (_) {}
-    $('startOv').hidden = true; $('overOv').hidden = true; $('unlock').classList.remove('br-show');
+    $('startOv').hidden = true; $('overOv').hidden = true; $('pauseOv').hidden = true; $('unlock').classList.remove('br-show');
+    document.querySelector('.br-modal .br-card').classList.add('br-running');
+    draw();
+    const c = $('count'); c.hidden = false;
+    const steps = ['3', '2', '1', 'Go!']; let i = 0;
+    const tick = () => {
+      if (state !== 'count') { c.hidden = true; return; }
+      if (i < steps.length) { c.innerHTML = '<span>' + steps[i] + '</span>'; beep(i < 3 ? 520 : 880, 0.12, 'triangle', 0.05); i++; countTimer = setTimeout(tick, i === 4 ? 450 : 600); return; }
+      c.hidden = true; state = 'run'; $('pauseBtn').hidden = false; runStart = performance.now(); last = performance.now(); track('start');
+      raf = requestAnimationFrame(step);
+    };
+    tick();
+  }
+  function pause() {
+    if (state !== 'run') return;
+    state = 'paused'; cancelAnimationFrame(raf); holding = false;
+    pausedAt = performance.now(); $('pauseOv').hidden = false; $('pauseBtn').hidden = true;
+  }
+  let pausedAt = 0;
+  function resume() {
+    if (state !== 'paused') return;
+    runStart += performance.now() - pausedAt; // paused time does not count as play time
+    state = 'run'; $('pauseOv').hidden = true; $('pauseBtn').hidden = false; last = performance.now();
     raf = requestAnimationFrame(step);
   }
   function countUp(el, to) {
@@ -642,7 +716,12 @@ body.br-lock{overflow:hidden}
   }
   function endRun(maxed) {
     state = 'over'; cancelAnimationFrame(raf); track('end', { score });
+    $('pauseBtn').hidden = true; document.querySelector('.br-modal .br-card').classList.remove('br-running');
+    const newBest = score > best && best > 0; $('newBest').hidden = !newBest;
     best = Math.max(best, score); $('best').textContent = best.toLocaleString('en-IN');
+    { const nx = tiers.find(x => score < x.at), prev = [...tiers].reverse().find(x => score >= x.at);
+      $('next').hidden = !nx;
+      if (nx) { const from = prev ? prev.at : 0; $('nextText').textContent = nx.icon + ' ' + (nx.at - score).toLocaleString('en-IN') + ' points to ' + nx.short; $('nextFill').style.width = '0%'; setTimeout(() => { $('nextFill').style.width = Math.max(4, Math.min(100, (score - from) / (nx.at - from) * 100)) + '%'; }, 60); } }
     try { localStorage.setItem('gob-bonerun-best', String(best)); } catch (_) {}
     const improved = runTier > bestTier;
     if (improved) {
@@ -664,6 +743,7 @@ body.br-lock{overflow:hidden}
     $('overText').textContent = (maxed ? 'You beat Bone Run. The top prize is yours.' : next ? (next.at - score).toLocaleString('en-IN') + ' more points for ' + next.name + '.' : '') + saved;
     $('claimBtn').hidden = !unclaimed();
     $('orderBtn').hidden = !(heldAward() && !unclaimed());
+    $('skipOver').hidden = !unclaimed();
     $('overOv').hidden = false;
   }
   // A prize already claimed with the form on this device.
@@ -676,6 +756,7 @@ body.br-lock{overflow:hidden}
   function showClaim() {
     const tier = tiers[bestTier];
     $('claimNote').textContent = 'Added at ₹0 to ' + minText(tier) + ' · valid 7 days · works with coupons & reward points';
+    setPrizeImg('claimImg', tier); setPrizeImg('doneImg', tier);
     ['claimIcon', 'doneIcon'].forEach(id => $(id).textContent = tier.icon);
     ['claimName', 'doneName'].forEach(id => $(id).textContent = tier.name);
     $('claimSub').textContent = 'Your run: ' + (bestRun ? bestRun.score : best).toLocaleString('en-IN') + ' points';
@@ -684,7 +765,8 @@ body.br-lock{overflow:hidden}
   }
   function backToGame() {
     ['claimPanel', 'donePanel'].forEach(id => $(id).classList.remove('br-show'));
-    $('playArea').style.display = ''; $('overOv').hidden = true; $('startOv').hidden = false;
+    $('playArea').style.display = ''; $('overOv').hidden = true; $('pauseOv').hidden = true; $('count').hidden = true; $('startOv').hidden = false; clearTimeout(countTimer);
+    $('pauseBtn').hidden = true; document.querySelector('.br-modal .br-card').classList.remove('br-running');
     reset(); paintMiles(); $('railFill').style.width = '0%'; draw(); refreshClaimUi();
   }
   // Keep a visible way back to the claim form while a prize is unclaimed.
@@ -698,7 +780,7 @@ body.br-lock{overflow:hidden}
     if (launch) {
       launch.classList.toggle('br-has-prize', Boolean(u));
       const txt = launch.querySelector('.br-txt');
-      if (txt) txt.innerHTML = u ? 'Claim your free treat<small>' + tiers[u.tier].name.replace(/\bfree\s+/, '') + ' is waiting</small>'
+      if (txt) txt.innerHTML = u ? (u.skip ? 'Order now · free treat' : 'Claim your free treat') + '<small>' + tiers[u.tier].name.replace(/\bfree\s+/, '') + (u.skip ? ' added at checkout' : ' is waiting') + '</small>'
         : held ? 'Order now · free treat<small>' + held.label.replace(/\bfree\s+/, '') + ' is waiting</small>'
         : 'Play &amp; win a treat<small>Bone Run · free treats up to Mackerel</small>';
     }
@@ -712,7 +794,7 @@ body.br-lock{overflow:hidden}
     if (!$('modal').classList.contains('br-open') || e.repeat) return;
     if (e.code === 'Space' || e.code === 'ArrowUp') {
       e.preventDefault();
-      if (state === 'run') press(); else if ($('playArea').style.display !== 'none') start();
+      if (state === 'run') press(); else if (state === 'paused') resume(); else if (state !== 'count' && $('playArea').style.display !== 'none') start();
     }
   });
   document.addEventListener('keyup', e => { if (e.code === 'Space' || e.code === 'ArrowUp') release(); });
@@ -720,11 +802,20 @@ body.br-lock{overflow:hidden}
   $('againBtn').onclick = start;
   $('claimBtn').onclick = showClaim;
   $('claimStart').onclick = showClaim;
+  $('pauseBtn').onclick = e => { e.stopPropagation(); pause(); };
+  $('pauseBtn').addEventListener('pointerdown', e => e.stopPropagation());
+  $('resumeBtn').onclick = resume;
+  document.addEventListener('visibilitychange', () => { if (document.hidden) pause(); });
+  // Skip the form: the prize stays on this device and is claimed automatically
+  // at checkout with the name, mobile and email entered there.
+  const skipToCheckout = () => { const u = unclaimed(); if (u) setUnclaimed({ ...u, skip: true }); goOrder(); };
+  $('claimSkip').onclick = skipToCheckout;
+  $('skipOver').onclick = skipToCheckout;
   function open() {
     $('modal').classList.add('br-open'); document.body.classList.add('br-lock');
     if (state !== 'run') { backToGame(); if (unclaimed()) showClaim(); }
   }
-  function close() { cancelAnimationFrame(raf); if (state === 'run') state = 'idle'; $('modal').classList.remove('br-open'); document.body.classList.remove('br-lock'); }
+  function close() { cancelAnimationFrame(raf); clearTimeout(countTimer); if (state === 'run' || state === 'count' || state === 'paused') state = 'idle'; document.querySelector('.br-modal .br-card').classList.remove('br-running'); $('modal').classList.remove('br-open'); document.body.classList.remove('br-lock'); }
   $('closeGame').onclick = close;
   $('modal').addEventListener('click', e => { if (e.target === $('modal')) close(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('modal').classList.contains('br-open')) close(); });
@@ -755,7 +846,7 @@ body.br-lock{overflow:hidden}
       const label = result.prize || tiers[bestTier].name;
       setUnclaimed(null);
       const tier = tiers.find(x => x.name === label);
-      $('doneIcon').textContent = tier ? tier.icon : '🎁'; $('doneName').textContent = label;
+      $('doneIcon').textContent = tier ? tier.icon : '🎁'; $('doneName').textContent = label; setPrizeImg('doneImg', tier);
       if (result.status === 'already_used') {
         try { localStorage.removeItem('gob-bonerun-award'); } catch (_) {}
         $('doneTitle').textContent = 'Thanks for playing! 🐾';

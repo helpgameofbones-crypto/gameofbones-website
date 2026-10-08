@@ -69,11 +69,67 @@
     } catch (_) { return null; }
   }
 
+  // ---- Prize won in Bone Run but the form was skipped: claim it here with
+  // the checkout's name, mobile and email, so it is added to this order.
+  function unclaimedPrize() {
+    try { const u = JSON.parse(localStorage.getItem('gob-bonerun-unclaimed') || 'null'); return u && u.tier >= 0 && Date.now() - Number(u.at || 0) < 7 * 864e5 ? u : null; } catch (_) { return null; }
+  }
+  const TIER_LABELS = ['2 free Goat Trachea', '1 free pack of Chicken Feet (70 g)', '1 free pack of Mackerel Fillet (60 g)'];
+  let claimPromise = null, claimedKey = '', claimError = '';
+  async function claimAtCheckout() {
+    const u = unclaimedPrize(); if (!form || !u) return null;
+    const name = [value('[autocomplete="given-name"]'), value('[autocomplete="family-name"]')].filter(Boolean).join(' ') || value('[autocomplete="name"]');
+    const email = value('[autocomplete="email"]').toLowerCase();
+    const phone = value('[autocomplete="tel"]').replace(/\D/g, '').slice(-10);
+    if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !/^[6-9]\d{9}$/.test(phone)) return null;
+    const key = email + '|' + phone;
+    if (claimPromise && claimedKey === key) return claimPromise;
+    claimedKey = key; claimError = '';
+    claimPromise = (async () => {
+      const response = await fetch('/api/bone-run', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, email, phone, score: u.score, run_ms: u.ms, via_checkout: true }) });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) { claimError = result.error || 'Your Bone Run prize could not be added.'; claimPromise = null; queue(); return null; }
+      const label = result.prize || TIER_LABELS[u.tier];
+      try {
+        localStorage.removeItem('gob-bonerun-unclaimed');
+        if (result.status !== 'already_used') {
+          localStorage.setItem('gob-bonerun-award', JSON.stringify({ label, claimed: true, valid_until: result.valid_until || new Date(Date.now() + 7 * 864e5).toISOString().slice(0, 10) }));
+          const bytes = new TextEncoder().encode(`gob-spin-v1:${email}|${phone}`);
+          const hash = [...new Uint8Array(await crypto.subtle.digest('SHA-256', bytes))].map(b => b.toString(16).padStart(2, '0')).join('');
+          localStorage.setItem(`gob-spin:${hash}`, JSON.stringify({ label, detail: result.coupon_code || '' }));
+        } else claimError = 'Your Bone Run prize was already used on an earlier order.';
+      } catch (_) {}
+      document.dispatchEvent(new Event('gob:prize-updated'));
+      queue();
+      return result;
+    })();
+    return claimPromise;
+  }
+  // Checkout waits for this before starting payment, so the prize is linked first.
+  window.GOB_PRIZE_CLAIM = () => claimAtCheckout().catch(() => null);
+
   let renderId = 0;
   async function render() {
     const id = ++renderId;
     const total = subtotal();
     const award = (form ? await customerAward() : null) || deviceAward();
+    const pending = !award && unclaimedPrize();
+    if (pending) {
+      const label = escapeHtml(TIER_LABELS[pending.tier] || 'your free treat');
+      const min = minFor(TIER_LABELS[pending.tier]);
+      const shortBy = Math.max(0, min - total);
+      placeRow();
+      prizeRow.hidden = !(total > 0 && shortBy === 0);
+      prizeRow.innerHTML = `<span>🎁 FREE: ${label} (Bone Run prize)</span><span>₹0</span>`;
+      note.hidden = false; note.classList.toggle('is-unlocked', shortBy === 0);
+      note.innerHTML = claimError
+        ? `<strong>Bone Run prize</strong>${escapeHtml(claimError)}`
+        : shortBy > 0
+          ? `<strong>You're ${rupees(shortBy)} away from your free treat</strong>Add ${rupees(shortBy)} more and ${label} from Bone Run is added free.`
+          : `<strong>🎁 Your Bone Run prize is ready</strong>${label} will be added at ₹0 when you place this order. ${form ? 'Just fill in your details below, no extra form.' : 'Continue to checkout to get it.'}`;
+      if (form) claimAtCheckout();
+      return;
+    }
     if (id !== renderId) return;
     const short = Math.max(0, (award ? minFor(award.label) : MIN_ORDER) - total);
     const label = award ? escapeHtml(award.label) : '';
