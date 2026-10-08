@@ -55,7 +55,7 @@
         const pack = packs[selectedPack];
         const catalogId = window.GOB_META?.productId?.(product, requestedProductId) || String(requestedProductId || '');
         const cartId = selectedPack === 0 ? catalogId : `${catalogId}-pack-${selectedPack + 1}`;
-        GOB_PRODUCTS[cartId] = { name: `${product.n} — ${pack.label}`, price: Number(pack.price) || 0, comparePrice: Number(pack.compare_price) || Number(product.cp) || 0, image: product.i, tag: `${product.c} · ${pack.weight || 'Pack'}`, catalog_slug: catalogId };
+        GOB_PRODUCTS[cartId] = { name: `${product.n} — ${pack.label}`, price: Number(pack.price) || 0, comparePrice: Number(pack.compare_price) || Number(product.cp) || 0, image: product.i, tag: `${product.c} · ${pack.weight || pack.label || 'Pack'}`, packLabel: pack.label || '', catalog_slug: catalogId };
         addToCart(cartId, quantity);
       };
     }

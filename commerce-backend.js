@@ -25,7 +25,9 @@
     const taggedPackLabel = typeof product.tag === 'string' && product.tag.includes(' · ')
       ? product.tag.split(' · ').pop().trim()
       : '';
-    const packLabel = explicitPackLabel || taggedPackLabel;
+    // Pack chosen on the product page is also kept in the name ("Whole Quail — 4 pieces").
+    const namedPackLabel = (String(product.name || '').match(/\s+—\s+(.+)$/) || [])[1] || '';
+    const packLabel = explicitPackLabel || namedPackLabel.trim() || (taggedPackLabel === 'Pack' ? '' : taggedPackLabel);
     const catalog_id = window.GOB_META?.productId?.(product, line.id) || String(product.catalog_slug || line.id || '');
     const unitPrice = Number(product.price);
     const quantity = Number(line.quantity);
@@ -101,5 +103,31 @@
     if(method()==='online'&&!result.prepaid) throw new Error('Online payment is not available for this PIN code. Please choose Cash on Delivery.')
     return result
   }
-  form.addEventListener('submit', async event => { event.preventDefault(); if (!valid()) return result('<strong>Checkout needs attention.</strong> Please complete your name, 10-digit mobile number, email, and delivery address.', true); if (!policyAcknowledged()) return result('<strong>Please review the policies.</strong> Confirm the checkout policies before continuing.', true); const button = form.querySelector('[type="submit"]'), ref = reference(), pricing = total(), orderItems = items(); if (button) { button.disabled = true; button.textContent = 'Checking delivery…'; } try { await delivery(); window.GOB_META?.track('InitiateCheckout',{currency:'INR',value:pricing.grand,content_type:'product',content_ids:metaContentIds(orderItems),contents:metaContents(orderItems)}); if (button) button.textContent = 'Preparing secure checkout…'; await capture(); await window.GOB_API.orderAttempt({ ref, customer_name: fullName(), customer_phone: phone(), customer_email: get('[autocomplete="email"]'), payment_method: method() === 'cod' ? 'cod' : 'razorpay', subtotal: pricing.value, grand_total: pricing.grand, items: orderItems, shipping_address: address(), coupon_code: pricing.coupon, coupon_label: pricing.coupon || 'automatic saving' }); if (method() === 'cod') { await save(ref); saveCart([]); updateCart(); completeOrder(ref, 'cod'); } else { await prepaid(ref, pricing); saveCart([]); updateCart(); completeOrder(ref, 'paid'); } } catch (error) { result(`<strong>Checkout could not start.</strong> ${error?.message || 'Please try again or select Cash on Delivery.'}`, true); } finally { if (button) { button.disabled = false; button.textContent = 'Continue to secure payment'; } } });
+  // Explain what went wrong and offer one-tap fixes instead of a dead end.
+  function checkoutFailed(error) {
+    const message = String(error?.message || '');
+    const cancelled = /cancelled/i.test(message);
+    const codeProblem = /code|WELCOME15|MEGA20|offer/i.test(message);
+    const esc = text => String(text).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const actions = [];
+    if (codeProblem) actions.push('<button type="button" class="button" data-fix="remove-code">Remove code &amp; pay now</button>');
+    if (cancelled || !codeProblem) actions.push('<button type="button" class="button secondary" data-fix="cod">Switch to Cash on Delivery</button>');
+    const inApp = /Instagram|FBAN|FBAV|FB_IAB/i.test(navigator.userAgent);
+    const help = cancelled
+      ? (inApp ? 'Payment window closed. If Google Pay or PhonePe did not open inside Instagram, choose <b>UPI ID</b> or <b>QR code</b> in the payment window, or tap ⋯ and <b>Open in browser</b>. You can also pay on delivery.' : 'Payment window closed before paying. Try again, choose another method, or pay on delivery.')
+      : esc(message || 'Please try again or select Cash on Delivery.');
+    result(`<strong>${cancelled ? 'Payment not completed.' : 'Checkout could not start.'}</strong> ${help}<div class="checkout-fix-row" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">${actions.join('')}</div>`, true);
+    document.querySelectorAll('[data-fix]').forEach(btn => btn.addEventListener('click', () => {
+      if (btn.dataset.fix === 'remove-code') {
+        const priv = form.querySelector('[name="private_coupon"]'); if (priv) priv.value = '';
+        const none = form.querySelector('[name="coupon"][value="none"], [name="coupon"][value=""]'); if (none) none.checked = true; else form.querySelectorAll('[name="coupon"]').forEach(r => { r.checked = false; });
+        try { sessionStorage.removeItem('gob-checkout-coupon'); } catch (_) {}
+      } else {
+        const cod = form.querySelector('[name="payment"][value="cod"]'); if (cod) cod.checked = true;
+      }
+      form.dispatchEvent(new Event('input', { bubbles: true })); form.dispatchEvent(new Event('change', { bubbles: true }));
+      if (form.requestSubmit) form.requestSubmit(); else form.dispatchEvent(new Event('submit', { cancelable: true }));
+    }, { once: true }));
+  }
+  form.addEventListener('submit', async event => { event.preventDefault(); if (!valid()) return result('<strong>Checkout needs attention.</strong> Please complete your name, 10-digit mobile number, email, and delivery address.', true); if (!policyAcknowledged()) return result('<strong>Please review the policies.</strong> Confirm the checkout policies before continuing.', true); const button = form.querySelector('[type="submit"]'), ref = reference(), pricing = total(), orderItems = items(); if (button) { button.disabled = true; button.textContent = 'Checking delivery…'; } try { await delivery(); window.GOB_META?.track('InitiateCheckout',{currency:'INR',value:pricing.grand,content_type:'product',content_ids:metaContentIds(orderItems),contents:metaContents(orderItems)}); if (button) button.textContent = 'Preparing secure checkout…'; await capture(); await window.GOB_API.orderAttempt({ ref, customer_name: fullName(), customer_phone: phone(), customer_email: get('[autocomplete="email"]'), payment_method: method() === 'cod' ? 'cod' : 'razorpay', subtotal: pricing.value, grand_total: pricing.grand, items: orderItems, shipping_address: address(), coupon_code: pricing.coupon, coupon_label: pricing.coupon || 'automatic saving' }); if (method() === 'cod') { await save(ref); saveCart([]); updateCart(); completeOrder(ref, 'cod'); } else { await prepaid(ref, pricing); saveCart([]); updateCart(); completeOrder(ref, 'paid'); } } catch (error) { checkoutFailed(error); } finally { if (button) { button.disabled = false; button.textContent = 'Continue to secure payment'; } } });
 })();

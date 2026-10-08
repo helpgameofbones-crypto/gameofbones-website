@@ -3,7 +3,8 @@
    session 20 seconds after landing, and lazy-loads /bone-run.js. */
 (() => {
   if (window.__gobBRLoaderRan) return; window.__gobBRLoaderRan = true;
-  if (/^\/(checkout|login|thank-you)(\.html)?\/?$/i.test(location.pathname)) return;
+  // Never on cart/checkout pages: the floating button must not cover the checkout button.
+  if (/^\/(cart|checkout|login|thank-you)(\.html)?\/?$/i.test(location.pathname)) return;
   const init = () => {
     if (document.querySelector('#wheelLaunch')) return;
     const style = document.createElement('style');
@@ -22,7 +23,7 @@
   .br-launch .br-medal{width:42px;height:42px;flex-basis:42px;font-size:19px}
   .br-launch small{display:none}
   .reward-shortcut{bottom:max(16px,env(safe-area-inset-bottom))!important}
-  body:has(.mobile-purchase-bar) .br-launch,body:has(.mobile-purchase-bar) .reward-shortcut{bottom:calc(max(16px,env(safe-area-inset-bottom)) + 66px)!important}
+  body.br-buybar .br-launch,body.br-buybar .reward-shortcut,body:has(.mobile-purchase-bar) .br-launch,body:has(.mobile-purchase-bar) .reward-shortcut{bottom:calc(max(16px,env(safe-area-inset-bottom)) + 66px)!important}
   body:has(.cart-sticky-checkout:not([hidden])) .br-launch,body:has(.cart-sticky-checkout:not([hidden])) .reward-shortcut{bottom:calc(max(16px,env(safe-area-inset-bottom)) + 70px)!important}
 }
 .br-launch.br-has-prize .br-medal{position:relative}
@@ -30,6 +31,11 @@
 @media(prefers-reduced-motion:reduce){.br-launch{animation:none}}`;
     document.head.append(style);
     document.body.insertAdjacentHTML('beforeend', `<button class="br-launch" id="wheelLaunch" type="button" aria-label="Play Bone Run and win a free treat"><span class="br-medal" aria-hidden="true">🦴</span><span class="br-txt">Play &amp; win a treat<small>Bone Run · free treats up to Mackerel</small></span></button>`);
+
+    // Older in-app browsers do not support :has(); lift the buttons above the
+    // product page's buy bar with a class instead.
+    const markBuyBar = () => document.body.classList.toggle('br-buybar', Boolean(document.querySelector('.mobile-purchase-bar')));
+    markBuyBar(); [600, 1500, 3000, 6000].forEach(ms => setTimeout(markBuyBar, ms));
 
     // Open the game for everyone 20 seconds after landing, once per session.
     const autoOpenKey = 'gob-wheel-auto-opened-v2';
