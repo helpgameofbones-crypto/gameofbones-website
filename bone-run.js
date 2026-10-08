@@ -123,6 +123,25 @@
   .br-ms .br-t{font-size:10px}.br-ms .br-t b{font-size:11px}
 }
 
+.br-goal{position:absolute;left:50%;top:12px;transform:translateX(-50%);padding:6px 12px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap;
+  background:rgba(10,31,23,.55);backdrop-filter:blur(8px);box-shadow:inset 0 0 0 1px rgba(231,194,122,.45);color:var(--cream);pointer-events:none;transition:transform .2s}
+.br-goal.br-near{background:linear-gradient(135deg,#c9963a,#e7c27a);color:#0a1f17;animation:brpulse .7s ease-in-out infinite alternate}
+@keyframes brpulse{to{transform:translateX(-50%) scale(1.07)}}
+.br-combo{position:absolute;left:12px;top:56px;padding:4px 10px;border-radius:10px;font:800 13px var(--sans);color:#0a1f17;background:linear-gradient(180deg,#f6dfa6,#c9963a);
+  box-shadow:0 6px 14px rgba(0,0,0,.3);opacity:0;transform:scale(.8);transition:all .2s;pointer-events:none}
+.br-combo.br-show{opacity:1;transform:scale(1)}
+.br-shield{position:absolute;right:12px;top:56px;padding:4px 10px;border-radius:10px;font:800 12px var(--sans);background:rgba(120,190,255,.25);color:#e8f4ff;box-shadow:inset 0 0 0 1px rgba(160,210,255,.6);opacity:0;transition:opacity .2s;pointer-events:none}
+.br-shield.br-show{opacity:1}
+.br-mute{position:absolute;right:12px;bottom:10px;z-index:3;width:32px;height:32px;border-radius:50%;border:0;cursor:pointer;background:rgba(10,31,23,.5);color:var(--cream);font-size:15px;box-shadow:inset 0 0 0 1px rgba(231,194,122,.35)}
+.br-cta{display:flex;align-items:center;gap:10px;justify-content:center;margin:12px 14px 0;padding:11px 14px;border-radius:14px;font-size:13px;font-weight:700;
+  background:linear-gradient(135deg,rgba(231,194,122,.22),rgba(231,194,122,.08));box-shadow:inset 0 0 0 1px rgba(231,194,122,.55);color:var(--cream);cursor:pointer;border:0;width:calc(100% - 28px)}
+.br-cta b{color:var(--gold2)}
+.br-cta[hidden]{display:none}
+.br-tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0 0;width:100%;max-width:440px}
+.br-tiers div{padding:7px 6px;border-radius:12px;background:rgba(255,255,255,.07);box-shadow:inset 0 0 0 1px rgba(231,194,122,.25);font-size:11px;line-height:1.3}
+.br-tiers b{display:block;font-size:15px}
+.br-tiers em{display:block;font-style:normal;color:var(--gold2);font-weight:700;font-size:10px;margin-top:2px}
+@media (max-width:560px){.br-tiers{display:none}.br-goal{top:48px;font-size:11px}.br-combo{top:84px}.br-shield{top:84px}.br-tiers div{font-size:10px}.br-tiers b{font-size:13px}.br-cta{font-size:12px}}
 .br-err{margin:0 0 10px;padding:9px 11px;border-radius:10px;background:rgba(178,58,46,.18);color:#ffd9d2;font-size:12.5px}
 body.br-lock{overflow:hidden}
 .br-modal .br-card{max-height:calc(100dvh - 28px);overflow-y:auto}
@@ -142,12 +161,17 @@ body.br-lock{overflow:hidden}
           <div class="br-chip"><b id="br-score">0</b><span>pts</span></div>
           <div class="br-chip br-best"><span>best</span><b id="br-best">0</b></div>
         </div>
+        <div class="br-goal" id="br-goal">Next: 🦴 2 Goat Trachea at 800</div>
+        <div class="br-combo" id="br-combo">x2 combo</div>
+        <div class="br-shield" id="br-shieldTag">🧸 Shield on</div>
+        <button class="br-mute" id="br-mute" aria-label="Sound on or off">🔊</button>
         <div class="br-unlock" id="br-unlock"><small>Prize unlocked</small><b id="br-unlockName">2 Goat Trachea</b><span>Keep running for a bigger one</span></div>
 
         <div class="br-ov" id="br-startOv">
           <h3>Help Bambi outrun<br>bath time.</h3>
-          <p>Dodge the vacuum, the tub and the vet's cone. Every milestone unlocks a free treat.</p>
-          <div class="br-hint"><span>👆 Tap = jump</span><span>✋ Hold = higher</span><span>🦴 Bone = +25</span></div>
+          <p>Dodge the vacuum, the tub and the vet's cone. Grab bones in a row for combos. Every milestone unlocks a free treat.</p>
+          <div class="br-hint"><span>👆 Tap = jump</span><span>👆👆 Tap again = double jump</span><span>🦴 Bone +25 · combos x3</span><span>✨ Gold bone +100</span><span>🧸 Toy = shield</span></div>
+          <div class="br-tiers"><div><b>🦴 800</b>2 Goat Trachea<em>free with any order</em></div><div><b>🐾 2,500</b>Chicken Feet 70 g<em>orders ₹499+</em></div><div><b>🐟 5,000</b>Mackerel 60 g<em>orders ₹499+</em></div></div>
           <button class="br-btn" id="br-claimStart" hidden>🎁 Claim my free treat</button><button class="br-btn" id="br-startBtn">Start running</button>
         </div>
 
@@ -157,6 +181,7 @@ body.br-lock{overflow:hidden}
           <div class="br-wonprize" id="br-wonBox" hidden><span class="br-m" id="br-wonIcon">🦴</span><div><b id="br-wonName">2 free Goat Trachea</b><span id="br-wonNote">Unlocked this run</span></div></div>
           <p id="br-overText"></p>
           <div class="br-row"><button class="br-btn" id="br-claimBtn" hidden>Claim my treat</button><button class="br-btn br-ghost" id="br-againBtn">Run again</button></div>
+          <button class="br-btn br-ghost" id="br-orderBtn" hidden style="margin-top:2px">🛒 Place your order &amp; get your free treat</button>
         </div>
       </div>
 
@@ -165,13 +190,14 @@ body.br-lock{overflow:hidden}
         <div class="br-ms" id="br-m2" style="left:50%"><div class="br-m">🐾</div><div class="br-t"><b>2,500</b>Chicken Feet 70 g</div></div>
         <div class="br-ms" id="br-m3" style="left:100%"><div class="br-m">🐟</div><div class="br-t"><b>5,000</b>Mackerel Fillet 60 g</div></div>
       </div>
-      <div class="br-foot">Free on your next order of ₹499+ · valid 7 days · one prize per customer · <b>works with coupon codes &amp; reward points</b></div>
+      <button class="br-cta" id="br-heldCta" hidden></button>
+      <div class="br-foot">🦴 Goat Trachea is free with <b>any order</b> · 🐾 🐟 bigger prizes free on orders ₹499+ · valid 7 days · one prize per customer · <b>works with coupons &amp; reward points</b></div>
     </div>
 
     <div class="br-panel" id="br-claimPanel">
       <h3>It's yours! 🎉</h3>
       <div class="br-sub" id="br-claimSub">Best run: 2,612 points</div>
-      <div class="br-prizecard"><span class="br-m" id="br-claimIcon">🐾</span><div><b id="br-claimName">1 free pack of Chicken Feet (70 g)</b><span>Added at ₹0 to your next order of ₹499+ · valid 7 days · works with coupons &amp; reward points</span></div></div>
+      <div class="br-prizecard"><span class="br-m" id="br-claimIcon">🐾</span><div><b id="br-claimName">1 free pack of Chicken Feet (70 g)</b><span id="br-claimNote">Added at ₹0 to your next order · valid 7 days · works with coupons &amp; reward points</span></div></div>
       <form id="br-claimForm">
         <div class="br-field"><label>Name</label><input name="name" required maxlength="100" autocomplete="name"></div>
         <div class="br-field"><label>Email</label><input name="email" type="email" required autocomplete="email"></div>
@@ -186,7 +212,8 @@ body.br-lock{overflow:hidden}
       <h3 id="br-doneTitle">Saved. Treat time! 🐾</h3>
       <div class="br-sub" id="br-doneSub">We have emailed your free treat details.</div>
       <div class="br-prizecard"><span class="br-m" id="br-doneIcon">🐾</span><div><b id="br-doneName">1 free pack of Chicken Feet (70 g)</b><span id="br-doneNote">It will be added at ₹0 to your next order of ₹499+ in the next 7 days. Use any coupon code and your reward points too.</span></div></div>
-      <div class="br-row"><button class="br-btn" id="br-shopBtn">Shop treats</button><button class="br-btn br-ghost" id="br-playMore">Run again to upgrade</button></div>
+      <div class="br-row"><button class="br-btn" id="br-shopBtn">🛒 Place my order now</button><button class="br-btn br-ghost" id="br-playMore">Run again to upgrade</button></div>
+      <div class="br-small" id="br-doneHint">Your free treat is waiting. Order today so it ships with your treats.</div>
     </div>
   </div>
 </div>`);
@@ -198,11 +225,13 @@ body.br-lock{overflow:hidden}
   const W = MOBILE ? 560 : 900, H = 380, GROUND = 312, MAX = 5000;
   const SPEED_K = MOBILE ? 0.8 : 1, PTS_DIV = MOBILE ? 8 : 10;
   const tiers = [
-    { at: 800,  name: '2 free Goat Trachea', short: '2 Goat Trachea', icon: '🦴' },
-    { at: 2500, name: '1 free pack of Chicken Feet (70 g)', short: 'Chicken Feet (70 g)', icon: '🐾' },
-    { at: 5000, name: '1 free pack of Mackerel Fillet (60 g)', short: 'Mackerel Fillet (60 g)', icon: '🐟' },
+    { at: 800,  name: '2 free Goat Trachea', short: '2 Goat Trachea', icon: '🦴', min: 0 },
+    { at: 2500, name: '1 free pack of Chicken Feet (70 g)', short: 'Chicken Feet (70 g)', icon: '🐾', min: 499 },
+    { at: 5000, name: '1 free pack of Mackerel Fillet (60 g)', short: 'Mackerel Fillet (60 g)', icon: '🐟', min: 499 },
   ];
   const $ = id => document.getElementById('br-' + id);
+  const minText = tier => tier && tier.min > 0 ? 'your next order of ₹' + tier.min + '+' : 'any order, no minimum';
+  const tierByName = name => tiers.find(x => x.name === name);
   const cv = $('cv'), ctx = cv.getContext('2d');
   const DPR = Math.min(2, window.devicePixelRatio || 1);
   cv.style.aspectRatio = W + ' / ' + H;
@@ -219,6 +248,29 @@ body.br-lock{overflow:hidden}
   function setUnclaimed(u) { try { u ? localStorage.setItem(UNCLAIMED, JSON.stringify(u)) : localStorage.removeItem(UNCLAIMED); } catch (_) {} refreshClaimUi(); }
   { const u = unclaimed(); if (u) { bestTier = u.tier; bestRun = { score: u.score, ms: u.ms }; } }
   let dog, obs, bones, parts, speed, dist, score, bonus, spawnIn, boneIn, last, t, holding, shake, flash;
+  let combo = 0, comboTimer = 0, shield = false, toyIn = 0, toys = [], invuln = 0, speedLevel = 0, airJumps = 0;
+  // ---- tiny synth sounds (no files). Off until the first tap; mute button in the corner.
+  let muted = false; try { muted = localStorage.getItem('gob-bonerun-muted') === '1'; } catch (_) {}
+  let actx = null;
+  function beep(f, d = 0.09, type = 'sine', vol = 0.06, slide = 0) {
+    if (muted) return;
+    try {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      const o = actx.createOscillator(), g = actx.createGain(), n = actx.currentTime;
+      o.type = type; o.frequency.setValueAtTime(f, n); if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(40, f + slide), n + d);
+      g.gain.setValueAtTime(vol, n); g.gain.exponentialRampToValueAtTime(0.0001, n + d);
+      o.connect(g); g.connect(actx.destination); o.start(n); o.stop(n + d + 0.02);
+    } catch (_) {}
+  }
+  const sfx = {
+    jump: () => beep(420, 0.1, 'square', 0.035, 260),
+    bone: k => beep(660 + k * 120, 0.08, 'triangle', 0.06),
+    gold: () => { beep(880, 0.08, 'triangle', 0.07); setTimeout(() => beep(1320, 0.12, 'triangle', 0.07), 70); },
+    toy: () => beep(520, 0.18, 'sine', 0.07, 400),
+    block: () => beep(300, 0.2, 'sawtooth', 0.05, -150),
+    crash: () => beep(180, 0.35, 'sawtooth', 0.06, -120),
+    win: () => [523, 659, 784, 1047].forEach((f, i) => setTimeout(() => beep(f, 0.14, 'triangle', 0.07), i * 90)),
+  };
 
   // ================= world layers (pre-generated) =================
   const rand = (a, b) => a + Math.random() * (b - a);
@@ -230,6 +282,8 @@ body.br-lock{overflow:hidden}
     dog = { x: 120, y: GROUND, vy: 0, onGround: true, run: 0, squash: 0 };
     obs = []; bones = []; parts = [];
     speed = 6 * SPEED_K; dist = 0; score = 0; bonus = 0; spawnIn = 420; boneIn = 90; t = 0; holding = false; shake = 0; flash = 0; runTier = -1;
+    combo = 0; comboTimer = 0; shield = false; toyIn = 900; toys = []; invuln = 0; speedLevel = 0; airJumps = 0;
+    if ($('combo')) { $('combo').classList.remove('br-show'); $('shieldTag').classList.remove('br-show'); }
     last = performance.now();
   }
 
@@ -238,8 +292,12 @@ body.br-lock{overflow:hidden}
     if (state !== 'run') return;
     holding = true;
     if (dog.onGround) {
-      dog.vy = -12.4; dog.onGround = false; dog.squash = -0.18;
-      puff(dog.x + 10, GROUND, 6, '#e9dcc0');
+      dog.vy = -12.4; dog.onGround = false; dog.squash = -0.18; airJumps = 1;
+      puff(dog.x + 10, GROUND, 6, '#e9dcc0'); sfx.jump();
+    } else if (airJumps > 0) {
+      // second jump in mid-air
+      airJumps = 0; dog.vy = -10.2; dog.squash = -0.14;
+      puff(dog.x + 30, dog.y - 10, 8, '#f6dfa6'); sfx.jump();
     }
   }
   function release() { holding = false; if (dog.vy < -5) dog.vy = -5; }
@@ -248,9 +306,10 @@ body.br-lock{overflow:hidden}
   function puff(x, y, n, color) {
     for (let i = 0; i < n; i++) parts.push({ x, y, vx: rand(-2.2, -0.4), vy: rand(-1.6, -0.2), r: rand(2, 5), life: rand(18, 30), max: 30, color, g: 0.02 });
   }
-  function sparkle(x, y) {
+  function floatText(x, y, text, big) { parts.push({ x, y, vx: 0, vy: big ? -0.7 : -0.9, life: big ? 70 : 46, max: big ? 70 : 46, text, big, g: 0 }); }
+  function sparkle(x, y, label) {
     for (let i = 0; i < 16; i++) { const a = Math.PI * 2 * i / 16; parts.push({ x, y, vx: Math.cos(a) * rand(1.5, 3.5), vy: Math.sin(a) * rand(1.5, 3.5), r: rand(1.5, 3), life: 32, max: 32, color: i % 2 ? '#f6dfa6' : '#c9963a', g: 0.05, star: true }); }
-    parts.push({ x, y: y - 6, vx: 0, vy: -0.9, life: 46, max: 46, text: '+25', g: 0 });
+    parts.push({ x, y: y - 6, vx: 0, vy: -0.9, life: 46, max: 46, text: label || '+25', g: 0 });
   }
   function confetti() {
     const cols = ['#f6dfa6', '#c9963a', '#e7c27a', '#f6efe2', '#ffffff'];
@@ -400,13 +459,27 @@ body.br-lock{overflow:hidden}
     }
   }
 
+  function drawToy(o) {
+    const y = o.y + Math.sin(t * 0.1 + o.p) * 6;
+    const halo = ctx.createRadialGradient(o.x, y, 2, o.x, y, 34);
+    halo.addColorStop(0, 'rgba(150,210,255,.7)'); halo.addColorStop(1, 'rgba(150,210,255,0)');
+    ctx.fillStyle = halo; ctx.fillRect(o.x - 34, y - 34, 68, 68);
+    ctx.save(); ctx.translate(o.x, y); ctx.rotate(Math.sin(t * 0.08) * 0.3);
+    ctx.fillStyle = '#e45d7a'; ell(0, 0, 13, 13); ctx.fill();
+    ctx.fillStyle = '#ffd1dc'; ell(-4, -4, 4, 4); ctx.fill();
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(0, 0, 9, 0.4, 2.4); ctx.stroke();
+    ctx.restore();
+  }
   function drawBone(b) {
     const y = b.y + Math.sin(t * 0.08 + b.p) * 5;
+    if (b.gold) { const gl = ctx.createRadialGradient(b.x, y, 2, b.x, y, 44); gl.addColorStop(0, 'rgba(255,240,170,.9)'); gl.addColorStop(1, 'rgba(255,240,170,0)'); ctx.fillStyle = gl; ctx.fillRect(b.x - 44, y - 44, 88, 88); }
     const halo = ctx.createRadialGradient(b.x, y, 2, b.x, y, 30);
     halo.addColorStop(0, 'rgba(255,226,150,.55)'); halo.addColorStop(1, 'rgba(255,226,150,0)');
     ctx.fillStyle = halo; ctx.fillRect(b.x - 30, y - 30, 60, 60);
     ctx.save(); ctx.translate(b.x, y); ctx.rotate(Math.sin(t * 0.06 + b.p) * 0.3);
-    const g = ctx.createLinearGradient(0, -8, 0, 8); g.addColorStop(0, '#fbe7b4'); g.addColorStop(.5, '#e2b765'); g.addColorStop(1, '#a97a2c');
+    if (b.gold) ctx.scale(1.25, 1.25);
+    const g = ctx.createLinearGradient(0, -8, 0, 8);
+    if (b.gold) { g.addColorStop(0, '#fffbe0'); g.addColorStop(.5, '#ffd34d'); g.addColorStop(1, '#d99a00'); } else { g.addColorStop(0, '#fbe7b4'); g.addColorStop(.5, '#e2b765'); g.addColorStop(1, '#a97a2c'); }
     ctx.fillStyle = g;
     rr(-12, -4, 24, 8, 4); ctx.fill();
     [[-12, -4], [-12, 4], [12, -4], [12, 4]].forEach(([cx, cy]) => { ell(cx, cy, 5.2, 5.2); ctx.fill(); });
@@ -418,7 +491,7 @@ body.br-lock{overflow:hidden}
     parts.forEach(p => {
       const a = Math.max(0, p.life / p.max);
       ctx.globalAlpha = a;
-      if (p.text) { ctx.fillStyle = '#fff3d4'; ctx.font = '700 18px Georgia, serif'; ctx.textAlign = 'center'; ctx.fillText(p.text, p.x, p.y); ctx.textAlign = 'start'; }
+      if (p.text) { ctx.fillStyle = p.big ? '#ffe7a8' : '#fff3d4'; ctx.font = p.big ? '700 26px Georgia, serif' : '700 18px Georgia, serif'; ctx.textAlign = 'center'; ctx.fillText(p.text, p.x, p.y); ctx.textAlign = 'start'; }
       else if (p.conf) { ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.fillStyle = p.color; ctx.fillRect(-p.r / 2, -p.r, p.r, p.r * 2); ctx.restore(); }
       else { ctx.fillStyle = p.color; ell(p.x, p.y, p.r, p.r); ctx.fill(); }
     });
@@ -436,7 +509,10 @@ body.br-lock{overflow:hidden}
     ctx.save();
     if (shake > 0) ctx.translate(rand(-shake, shake), rand(-shake, shake));
     drawSky(); drawHills(); drawTrees(); drawGround();
-    bones.forEach(drawBone); obs.forEach(drawObstacle); drawDog(); drawParts();
+    bones.forEach(drawBone); toys.forEach(drawToy); obs.forEach(drawObstacle);
+    if (!(invuln > 0 && Math.floor(t / 4) % 2)) drawDog();
+    if (shield) { ctx.strokeStyle = `rgba(150,210,255,${.55 + .25 * Math.sin(t * .2)})`; ctx.lineWidth = 3; ell(dog.x + 46, dog.y - 34, 58, 42); ctx.stroke(); ctx.fillStyle = 'rgba(150,210,255,.10)'; ctx.fill(); }
+    drawParts();
     ctx.restore();
     vignette();
   }
@@ -469,7 +545,15 @@ body.br-lock{overflow:hidden}
       spawnIn = rand(360, 680) + speed * 30;
     }
     boneIn -= dt;
-    if (boneIn <= 0) { bones.push({ x: W + 30, y: GROUND - rand(70, 150), p: rand(0, 6) }); boneIn = rand(70, 140); }
+    if (boneIn <= 0) { bones.push({ x: W + 30, y: GROUND - rand(70, 150), p: rand(0, 6), gold: Math.random() < 0.12 }); boneIn = rand(70, 140); }
+    toyIn -= dt;
+    if (toyIn <= 0 && !shield) { toys.push({ x: W + 30, y: GROUND - rand(90, 150), p: rand(0, 6) }); toyIn = rand(1500, 2200); }
+    toys.forEach(o => o.x -= speed * dt);
+    if (invuln > 0) invuln -= dt;
+    if (comboTimer > 0) { comboTimer -= dt; if (comboTimer <= 0) { combo = 0; $('combo').classList.remove('br-show'); } }
+    // speed-up callouts
+    const lvl = Math.floor((speed / SPEED_K - 6) / 2);
+    if (lvl > speedLevel) { speedLevel = lvl; floatText(W / 2, 120, ['', 'Faster! 🔥', 'Zoomies! ⚡', 'Turbo pup! 🚀', 'Unstoppable! 🌟'][Math.min(4, lvl)] || 'Unstoppable! 🌟', true); }
 
     obs.forEach(o => o.x -= speed * dt);
     bones.forEach(b => b.x -= speed * dt);
@@ -481,22 +565,47 @@ body.br-lock{overflow:hidden}
     // collisions (forgiving)
     const body = { x: dog.x + 14, y: dog.y - 52, w: 66, h: 44 };
     for (const o of obs) {
-      if (hit(body, { x: o.x + 6, y: GROUND - o.h + 8, w: o.w - 12, h: o.h - 8 })) { shake = 9; draw(); return endRun(false); }
+      if (invuln > 0 || o.hitDone) continue;
+      if (hit(body, { x: o.x + 6, y: GROUND - o.h + 8, w: o.w - 12, h: o.h - 8 })) {
+        if (shield) { shield = false; o.hitDone = true; invuln = 50; shake = 6; flash = 0.25; sfx.block(); puff(o.x + o.w / 2, GROUND - o.h / 2, 14, '#bfe3ff'); floatText(dog.x + 50, dog.y - 80, 'Saved by the toy! 🧸', true); $('shieldTag').classList.remove('br-show'); continue; }
+        shake = 9; sfx.crash(); draw(); return endRun(false);
+      }
+      // close call: cleared an obstacle with very little room
+      if (!o.closeDone && o.x + o.w < dog.x + 14 && o.x + o.w > dog.x - 4 && GROUND - dog.y < o.h + 26) { o.closeDone = true; bonus += 10; floatText(dog.x + 40, dog.y - 70, 'Close call! +10'); }
     }
     bones = bones.filter(b => {
-      if (hit({ x: dog.x + 6, y: dog.y - 70, w: 96, h: 74 }, { x: b.x - 16, y: b.y - 12, w: 32, h: 24 })) { bonus += 25; sparkle(b.x, b.y); return false; }
+      if (hit({ x: dog.x + 6, y: dog.y - 70, w: 96, h: 74 }, { x: b.x - 16, y: b.y - 12, w: 32, h: 24 })) {
+        if (b.gold) { bonus += 100; sparkle(b.x, b.y, '+100 ✨'); sfx.gold(); flash = 0.2; }
+        else {
+          combo = comboTimer > 0 ? combo + 1 : 1; comboTimer = 150;
+          const mult = combo >= 6 ? 3 : combo >= 3 ? 2 : 1;
+          bonus += 25 * mult; sparkle(b.x, b.y, mult > 1 ? '+' + 25 * mult + ' x' + mult : '+25'); sfx.bone(mult);
+          const tag = $('combo'); tag.textContent = mult > 1 ? '🔥 x' + mult + ' combo · ' + combo + ' in a row' : combo + ' in a row'; tag.classList.toggle('br-show', combo >= 2);
+        }
+        return false;
+      }
+      if (b.x < dog.x - 30 && !b.missed && !b.gold) { b.missed = true; if (combo >= 2) { combo = 0; comboTimer = 0; $('combo').classList.remove('br-show'); } }
       return b.x > -40;
     });
 
+    toys = toys.filter(o => {
+      if (hit({ x: dog.x + 6, y: dog.y - 70, w: 96, h: 74 }, { x: o.x - 16, y: o.y - 16, w: 32, h: 32 })) { shield = true; sfx.toy(); floatText(o.x, o.y - 10, 'Shield! 🧸', true); $('shieldTag').classList.add('br-show'); return false; }
+      return o.x > -40;
+    });
     score = Math.min(MAX, Math.floor(dist / PTS_DIV) + bonus);
+    const nxt = tiers.find(x => score < x.at);
+    const goal = $('goal');
+    if (nxt) { const left = nxt.at - score; goal.textContent = (left <= 150 ? 'So close! ' : 'Next: ') + nxt.icon + ' ' + nxt.short + ' · ' + left.toLocaleString('en-IN') + ' to go'; goal.classList.toggle('br-near', left <= 150); }
+    else { goal.textContent = '🏆 Top prize unlocked!'; goal.classList.add('br-near'); }
     $('score').textContent = score.toLocaleString('en-IN');
     $('railFill').style.width = (score / MAX * 100) + '%';
     tiers.forEach((tier, i) => {
       if (score >= tier.at && runTier < i) {
         runTier = i; $('m' + (i + 1)).classList.add('br-got');
-        confetti(); flash = 0.35;
+        confetti(); flash = 0.35; sfx.win();
         if (navigator.vibrate) navigator.vibrate(60);
         if (i < tiers.length - 1) showUnlock(tier);
+        floatText(W / 2, 90, tier.icon + ' ' + tier.short + ' unlocked!', true);
       }
     });
     draw();
@@ -550,13 +659,23 @@ body.br-lock{overflow:hidden}
       $('wonBox').hidden = false; $('wonIcon').textContent = tiers[runTier].icon; $('wonName').textContent = tiers[runTier].name;
       $('wonNote').textContent = improved ? 'Unlocked this run' : 'You already hold this prize or a better one';
     } else $('wonBox').hidden = true;
-    const saved = unclaimed() ? ' Fill in your details to claim it. It is added free to your next order of ₹499+.' : '';
+    const u = unclaimed();
+    const saved = u ? ' Claim it now: it is added free to ' + minText(tiers[u.tier]) + '.' : '';
     $('overText').textContent = (maxed ? 'You beat Bone Run. The top prize is yours.' : next ? (next.at - score).toLocaleString('en-IN') + ' more points for ' + next.name + '.' : '') + saved;
     $('claimBtn').hidden = !unclaimed();
+    $('orderBtn').hidden = !(heldAward() && !unclaimed());
     $('overOv').hidden = false;
+  }
+  // A prize already claimed with the form on this device.
+  function heldAward() { try { const a = JSON.parse(localStorage.getItem('gob-bonerun-award') || 'null'); return a && a.claimed && (!a.valid_until || String(a.valid_until) >= new Date().toISOString().slice(0, 10)) ? a : null; } catch (_) { return null; } }
+  function goOrder() {
+    close();
+    let items = 0; try { items = JSON.parse(localStorage.getItem('gob-preview-cart') || '[]').length; } catch (_) {}
+    location.href = items ? '/cart' : '/products';
   }
   function showClaim() {
     const tier = tiers[bestTier];
+    $('claimNote').textContent = 'Added at ₹0 to ' + minText(tier) + ' · valid 7 days · works with coupons & reward points';
     ['claimIcon', 'doneIcon'].forEach(id => $(id).textContent = tier.icon);
     ['claimName', 'doneName'].forEach(id => $(id).textContent = tier.name);
     $('claimSub').textContent = 'Your run: ' + (bestRun ? bestRun.score : best).toLocaleString('en-IN') + ' points';
@@ -572,11 +691,16 @@ body.br-lock{overflow:hidden}
   function refreshClaimUi() {
     const u = unclaimed();
     const btn = $('claimStart'); if (btn) { btn.hidden = !u; if (u) btn.textContent = '🎁 Claim ' + tiers[u.tier].name; }
+    const held = !u && heldAward();
+    const cta = $('heldCta');
+    if (cta) { cta.hidden = !held; if (held) { const ht = tierByName(held.label); cta.innerHTML = '🛒 Place your order &amp; get your <b>' + held.label.replace(/^(\d+ )?free /i, '$1') + '</b> free' + (ht && ht.min > 0 ? ' (orders ₹' + ht.min + '+)' : ' · any order'); } }
     const launch = document.querySelector('#wheelLaunch');
     if (launch) {
       launch.classList.toggle('br-has-prize', Boolean(u));
       const txt = launch.querySelector('.br-txt');
-      if (txt) txt.innerHTML = u ? 'Claim your free treat<small>' + tiers[u.tier].name.replace(/\bfree\s+/, '') + ' is waiting</small>' : 'Play &amp; win a treat<small>Bone Run · free treats up to Mackerel</small>';
+      if (txt) txt.innerHTML = u ? 'Claim your free treat<small>' + tiers[u.tier].name.replace(/\bfree\s+/, '') + ' is waiting</small>'
+        : held ? 'Order now · free treat<small>' + held.label.replace(/\bfree\s+/, '') + ' is waiting</small>'
+        : 'Play &amp; win a treat<small>Bone Run · free treats up to Mackerel</small>';
     }
   }
 
@@ -641,11 +765,11 @@ body.br-lock{overflow:hidden}
         saveDeviceAward(label, result.valid_until);
         $('doneTitle').textContent = 'You already have this one 🐾';
         $('doneSub').textContent = 'Your saved prize is the same or better, so we kept it.';
-        $('doneNote').textContent = 'Added at ₹0 to your next order of ₹499+. Works with coupon codes and reward points.';
+        $('doneNote').textContent = 'Added at ₹0 to ' + minText(tierByName(label)) + '. Works with coupon codes and reward points.';
       } else {
         $('doneTitle').textContent = result.status === 'upgraded' ? 'Prize upgraded! 🎉' : 'Saved. Treat time! 🐾';
         $('doneSub').textContent = 'We have emailed your free treat details.';
-        $('doneNote').textContent = 'It will be added at ₹0 to your next order of ₹499+ in the next 7 days. Use any coupon code and your reward points too.';
+        $('doneNote').textContent = 'Place your order in the next 7 days and it is added at ₹0 to ' + minText(tierByName(label)) + '. Use any coupon code and your reward points too.';
         try { localStorage.setItem(`gob-spin:${await customerKey(String(data.email), String(data.phone))}`, JSON.stringify({ label, detail: result.coupon_code || '' })); } catch (_) {}
         saveDeviceAward(label, result.valid_until);
       }
@@ -656,7 +780,14 @@ body.br-lock{overflow:hidden}
       err.hidden = false;
     } finally { button.disabled = false; button.textContent = 'Claim my free treat'; }
   };
-  $('shopBtn').onclick = () => { close(); location.href = '/products'; };
+  $('shopBtn').onclick = goOrder;
+  $('orderBtn').onclick = goOrder;
+  $('heldCta').onclick = goOrder;
+  const muteBtn = $('mute');
+  const paintMute = () => { muteBtn.textContent = muted ? '🔇' : '🔊'; };
+  muteBtn.onclick = e => { e.stopPropagation(); muted = !muted; try { localStorage.setItem('gob-bonerun-muted', muted ? '1' : '0'); } catch (_) {} paintMute(); };
+  muteBtn.addEventListener('pointerdown', e => e.stopPropagation());
+  paintMute();
   $('playMore').onclick = backToGame;
   $('claimLater').onclick = backToGame;
   $('best').textContent = best.toLocaleString('en-IN');

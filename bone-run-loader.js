@@ -49,7 +49,7 @@
       if (document.querySelector('script[data-gob-wheel-game]')) return;
       const script = document.createElement('script');
       script.dataset.gobWheelGame = 'true';
-      script.src = '/bone-run.js?v=8';
+      script.src = '/bone-run.js?v=9';
       document.body.append(script);
     };
     if (document.readyState === 'complete') ('requestIdleCallback' in window ? requestIdleCallback(load, { timeout: 2500 }) : setTimeout(load, 1200));

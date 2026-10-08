@@ -5,6 +5,8 @@
    claim it). This file only previews it; the server decides. */
 (() => {
   const MIN_ORDER = 499;
+  // Goat Trachea (Bone Run tier 1) is free with any order; bigger prizes need ₹499+.
+  const minFor = label => /goat trachea/i.test(String(label || '')) ? 0 : MIN_ORDER;
   const form = document.querySelector('#checkoutForm');
   const cartPage = !form && document.querySelector('#checkoutLink');
   if (!form && !cartPage) return;
@@ -73,7 +75,7 @@
     const total = subtotal();
     const award = (form ? await customerAward() : null) || deviceAward();
     if (id !== renderId) return;
-    const short = Math.max(0, MIN_ORDER - total);
+    const short = Math.max(0, (award ? minFor(award.label) : MIN_ORDER) - total);
     const label = award ? escapeHtml(award.label) : '';
     const item = award ? escapeHtml(award.label.replace(/\bfree\s+/i, '')) : '';
     placeRow();
@@ -81,15 +83,15 @@
       prizeRow.innerHTML = `<span>🎁 FREE: ${item} (Bone Run prize)</span><span>₹0</span>`;
       prizeRow.hidden = false;
       note.hidden = false; note.classList.add('is-unlocked');
-      note.innerHTML = `<strong>Free treat added</strong>${label} is included in this order at ₹0. Check out with the same mobile number or email you used to claim it. Works together with your coupon code and reward points.`;
+      note.innerHTML = `<strong>🎁 Your free treat is in!</strong>${label} is included in this order at ₹0. Check out with the same mobile number or email you used to claim it. Works together with your coupon code and reward points.`;
     } else if (award && total > 0) {
       prizeRow.hidden = true;
       note.hidden = false; note.classList.remove('is-unlocked');
-      note.innerHTML = `<strong>Unlock your free treat</strong>Add ${rupees(short)} more and ${label} is added to this order automatically.`;
+      note.innerHTML = `<strong>You're ${rupees(short)} away from your free treat</strong>Add ${rupees(short)} more and ${label} is added to this order automatically.`;
     } else if (form && !award) {
       prizeRow.hidden = true;
       note.hidden = false; note.classList.remove('is-unlocked');
-      note.innerHTML = `<strong>Won a free treat in Bone Run?</strong>It is added automatically on orders of ${rupees(MIN_ORDER)} or more placed with the same mobile number or email. No code needed, and it works together with coupon codes and reward points.`;
+      note.innerHTML = `<strong>Won a free treat in Bone Run?</strong>It is added automatically when you order with the same mobile number or email: Goat Trachea on any order, bigger prizes on orders of ${rupees(MIN_ORDER)}+. No code needed, and it works with coupon codes and reward points.`;
     } else {
       prizeRow.hidden = true; note.hidden = true;
     }
