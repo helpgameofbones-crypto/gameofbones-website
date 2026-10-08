@@ -30,7 +30,7 @@
 .br-launch.br-has-prize .br-medal::after{content:"";position:absolute;top:0;right:0;width:11px;height:11px;border-radius:50%;background:#e2483d;box-shadow:0 0 0 2px #102c22}
 @media(prefers-reduced-motion:reduce){.br-launch{animation:none}}`;
     document.head.append(style);
-    document.body.insertAdjacentHTML('beforeend', `<button class="br-launch" id="wheelLaunch" type="button" aria-label="Play Bone Run and win a free treat"><span class="br-medal" aria-hidden="true">🦴</span><span class="br-txt">Play &amp; win a treat<small>Bone Run · free treats up to Mackerel</small></span></button>`);
+    document.body.insertAdjacentHTML('beforeend', `<button class="br-launch" id="wheelLaunch" type="button" aria-label="Play Bone Run and win a free treat"><span class="br-medal" aria-hidden="true">🦴</span><span class="br-txt">Play &amp; win a treat<small>Bone Run · win up to all 3 treats free</small></span></button>`);
 
     // Older in-app browsers do not support :has(); lift the buttons above the
     // product page's buy bar with a class instead.
@@ -55,7 +55,7 @@
       if (document.querySelector('script[data-gob-wheel-game]')) return;
       const script = document.createElement('script');
       script.dataset.gobWheelGame = 'true';
-      script.src = '/bone-run.js?v=10';
+      script.src = '/bone-run.js?v=11';
       document.body.append(script);
     };
     if (document.readyState === 'complete') ('requestIdleCallback' in window ? requestIdleCallback(load, { timeout: 2500 }) : setTimeout(load, 1200));

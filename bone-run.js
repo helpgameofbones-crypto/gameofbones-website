@@ -1,6 +1,7 @@
 /* Bone Run: the Game of Bones endless-runner prize game (replaces the spin wheel).
    Tap/Space to jump, hold to jump higher. Milestones: 800 = 2 Goat Trachea,
-   2,500 = Chicken Feet 70 g, 5,000 (max) = Mackerel Fillet 60 g. The prize is
+   2,500 = Chicken Feet 70 g, 5,000 = Mackerel Fillet 60 g, 20,000 (max) = all
+   three treats free on orders of ₹2,500+. The prize is
    verified and saved by the admin API (/api/bone-run); gifts stack with coupons
    and reward points. Loaded lazily by conversion-extras.js. */
 (() => {
@@ -137,7 +138,8 @@
   background:linear-gradient(135deg,rgba(231,194,122,.22),rgba(231,194,122,.08));box-shadow:inset 0 0 0 1px rgba(231,194,122,.55);color:var(--cream);cursor:pointer;border:0;width:calc(100% - 28px)}
 .br-cta b{color:var(--gold2)}
 .br-cta[hidden]{display:none}
-.br-tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0 0;width:100%;max-width:440px}
+.br-tiers{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0 0;width:100%;max-width:560px}
+.br-tiers .br-grand{background:linear-gradient(160deg,rgba(231,194,122,.28),rgba(231,194,122,.08));box-shadow:inset 0 0 0 1.5px var(--gold)}
 .br-tiers div{padding:7px 6px;border-radius:12px;background:rgba(255,255,255,.07);box-shadow:inset 0 0 0 1px rgba(231,194,122,.25);font-size:11px;line-height:1.3}
 .br-tiers b{display:block;font-size:15px}
 .br-tiers em{display:block;font-style:normal;color:var(--gold2);font-weight:700;font-size:10px;margin-top:2px}
@@ -195,7 +197,7 @@ body.br-lock{overflow:hidden}
           <h3>Help Bambi outrun<br>bath time.</h3>
           <p>Dodge the vacuum, the tub and the vet's cone. Grab bones in a row for combos. Every milestone unlocks a free treat.</p>
           <div class="br-hint"><span>👆 Tap = jump</span><span>👆👆 Tap again = double jump</span><span>🦴 Bone +25 · combos x3</span><span>✨ Gold bone +100</span><span>🧸 Toy = shield</span></div>
-          <div class="br-tiers"><div><img src="/assets/catalogue-plates/goat-trachea.webp" alt="" loading="lazy"><b>🦴 800</b>2 Goat Trachea<em>free with any order</em></div><div><img src="https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/cac553a3-463f-4cf6-92dd-48c054f82bfe/image-0-1782712513139.png" alt="" loading="lazy"><b>🐾 2,500</b>Chicken Feet 70 g<em>orders ₹499+</em></div><div><img src="/assets/catalogue-plates/mackerel-fillet.webp" alt="" loading="lazy"><b>🐟 5,000</b>Mackerel 60 g<em>orders ₹499+</em></div></div>
+          <div class="br-tiers"><div><img src="/assets/catalogue-plates/goat-trachea.webp" alt="" loading="lazy"><b>🦴 800</b>2 Goat Trachea<em>free with any order</em></div><div><img src="https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/cac553a3-463f-4cf6-92dd-48c054f82bfe/image-0-1782712513139.png" alt="" loading="lazy"><b>🐾 2,500</b>Chicken Feet 70 g<em>orders ₹499+</em></div><div><img src="/assets/catalogue-plates/mackerel-fillet.webp" alt="" loading="lazy"><b>🐟 5,000</b>Mackerel 60 g<em>orders ₹499+</em></div><div class="br-grand"><img src="/assets/gob-logo.png" alt="" loading="lazy" style="object-fit:contain;background:#102c22"><b>🏆 20,000</b>All 3 treats free<em>orders ₹2,500+</em></div></div>
           <button class="br-btn" id="br-claimStart" hidden>🎁 Claim my free treat</button><button class="br-btn" id="br-startBtn">Start running</button>
         </div>
 
@@ -213,12 +215,13 @@ body.br-lock{overflow:hidden}
       </div>
 
       <div class="br-rail" id="br-rail"><i id="br-railFill"></i>
-        <div class="br-ms" id="br-m1" style="left:16%"><div class="br-m">🦴</div><div class="br-t"><b>800</b>2 Goat Trachea</div></div>
-        <div class="br-ms" id="br-m2" style="left:50%"><div class="br-m">🐾</div><div class="br-t"><b>2,500</b>Chicken Feet 70 g</div></div>
-        <div class="br-ms" id="br-m3" style="left:100%"><div class="br-m">🐟</div><div class="br-t"><b>5,000</b>Mackerel Fillet 60 g</div></div>
+        <div class="br-ms" id="br-m1" style="left:14%"><div class="br-m">🦴</div><div class="br-t"><b>800</b>2 Trachea</div></div>
+        <div class="br-ms" id="br-m2" style="left:36%"><div class="br-m">🐾</div><div class="br-t"><b>2,500</b>Chicken Feet</div></div>
+        <div class="br-ms" id="br-m3" style="left:60%"><div class="br-m">🐟</div><div class="br-t"><b>5,000</b>Mackerel</div></div>
+        <div class="br-ms" id="br-m4" style="left:100%"><div class="br-m">🏆</div><div class="br-t"><b>20,000</b>All 3 treats</div></div>
       </div>
       <button class="br-cta" id="br-heldCta" hidden></button>
-      <div class="br-foot">🦴 Goat Trachea is free with <b>any order</b> · 🐾 🐟 bigger prizes free on orders ₹499+ · valid 7 days · one prize per customer · <b>works with coupons &amp; reward points</b></div>
+      <div class="br-foot">🦴 Goat Trachea free with <b>any order</b> · 🐾 🐟 free on orders ₹499+ · 🏆 20,000 = <b>all 3 treats free</b> on orders ₹2,500+ · valid 7 days · one prize per customer · <b>works with coupons &amp; reward points</b></div>
     </div>
 
     <div class="br-panel" id="br-claimPanel">
@@ -251,15 +254,18 @@ body.br-lock{overflow:hidden}
   // Phones get a narrower world so everything is drawn bigger; speed and
   // scoring are scaled so points per second stay the same.
   const MOBILE = Math.min(window.innerWidth || 900, (window.screen && screen.width) || 900) < 640;
-  const W = MOBILE ? 560 : 900, H = 380, GROUND = 312, MAX = 5000;
+  const W = MOBILE ? 560 : 900, H = 380, GROUND = 312, MAX = 20000;
   const SPEED_K = MOBILE ? 0.8 : 1, PTS_DIV = MOBILE ? 8 : 10;
   const tiers = [
     { at: 800,  name: '2 free Goat Trachea', short: '2 Goat Trachea', icon: '🦴', min: 0, img: '/assets/catalogue-plates/goat-trachea.webp' },
     { at: 2500, name: '1 free pack of Chicken Feet (70 g)', short: 'Chicken Feet (70 g)', icon: '🐾', min: 499, img: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/cac553a3-463f-4cf6-92dd-48c054f82bfe/image-0-1782712513139.png' },
     { at: 5000, name: '1 free pack of Mackerel Fillet (60 g)', short: 'Mackerel Fillet (60 g)', icon: '🐟', min: 499, img: '/assets/catalogue-plates/mackerel-fillet.webp' },
+    { at: 20000, name: 'All 3 treats free: 2 Goat Trachea, Chicken Feet 70 g & Mackerel Fillet 60 g', short: 'All 3 treats free', icon: '🏆', min: 2500, img: '/assets/gob-logo.png' },
   ];
   const $ = id => document.getElementById('br-' + id);
-  const minText = tier => tier && tier.min > 0 ? 'your next order of ₹' + tier.min + '+' : 'any order, no minimum';
+  const minText = tier => tier && tier.min > 0 ? 'your next order of ₹' + tier.min.toLocaleString('en-IN') + '+' + (tier.min >= 2500 ? ' (after coupon discounts)' : '') : 'any order, no minimum';
+  // Rail is not linear: early prizes get more room than the 20,000 grand prize.
+  const railPct = sc => { const pts = [[0, 0], [800, 14], [2500, 36], [5000, 60], [20000, 100]]; for (let i = 1; i < pts.length; i++) { const [a, pa] = pts[i - 1], [b, pb] = pts[i]; if (sc <= b) return pa + (pb - pa) * (sc - a) / (b - a); } return 100; };
   const tierByName = name => tiers.find(x => x.name === name);
   const setPrizeImg = (id, tier) => { const im = $(id); if (!im) return; if (tier && tier.img) { im.src = tier.img; im.hidden = false; } else im.hidden = true; };
   const reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -648,7 +654,7 @@ body.br-lock{overflow:hidden}
     if (nxt) { const left = nxt.at - score; goal.textContent = (left <= 150 ? 'So close! ' : 'Next: ') + nxt.icon + ' ' + nxt.short + ' · ' + left.toLocaleString('en-IN') + ' to go'; goal.classList.toggle('br-near', left <= 150); }
     else { goal.textContent = '🏆 Top prize unlocked!'; goal.classList.add('br-near'); }
     $('score').textContent = score.toLocaleString('en-IN');
-    $('railFill').style.width = (score / MAX * 100) + '%';
+    $('railFill').style.width = railPct(score) + '%';
     tiers.forEach((tier, i) => {
       if (score >= tier.at && runTier < i) {
         runTier = i; $('m' + (i + 1)).classList.add('br-got');
@@ -782,7 +788,7 @@ body.br-lock{overflow:hidden}
       const txt = launch.querySelector('.br-txt');
       if (txt) txt.innerHTML = u ? (u.skip ? 'Order now · free treat' : 'Claim your free treat') + '<small>' + tiers[u.tier].name.replace(/\bfree\s+/, '') + (u.skip ? ' added at checkout' : ' is waiting') + '</small>'
         : held ? 'Order now · free treat<small>' + held.label.replace(/\bfree\s+/, '') + ' is waiting</small>'
-        : 'Play &amp; win a treat<small>Bone Run · free treats up to Mackerel</small>';
+        : 'Play &amp; win a treat<small>Bone Run · win up to all 3 treats free</small>';
     }
   }
 
