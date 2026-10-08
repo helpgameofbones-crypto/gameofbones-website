@@ -105,7 +105,7 @@
     const intro = save.querySelector('p:not(.eyebrow):not(.cart-save-status)');
     if (eyebrow) eyebrow.textContent = 'Unlock 10% off';
     if (title) title.textContent = 'Get 10% off this order.';
-    if (intro) intro.textContent = 'Add your WhatsApp number and code BOWL10 unlocks instantly. We’ll also keep your bowl saved and may send one reminder. One use per customer.';
+    if (intro) intro.textContent = 'Add your WhatsApp number and code BOWL10 unlocks instantly. By sharing it you agree to a reminder or two about this bag on WhatsApp (reply STOP anytime). One use per customer.';
   }
   if (email) email.hidden = true;
   if (phone) phone.placeholder = 'WhatsApp number (10 digits)';
@@ -147,7 +147,8 @@
     if (!window.GOB_API?.abandonedCart) return message('We could not unlock this right now. Please try again.', 'error');
     button.disabled = true; button.textContent = 'Unlocking…';
     try {
-      await window.GOB_API.abandonedCart({ cart_token: window.GOB_CART_TRACKING?.token?.(), email: validEmail ? normalizedEmail : '', phone: normalizedPhone, items, total: totalValue });
+      const rawLines = cartLines().map(line => { const product = productFor(line); return { id: line.id, quantity: Number(line.quantity) || 1, product: product ? { name: product.name, price: Number(product.price) || 0, packLabel: product.packLabel || '', tag: product.tag || '', catalog_slug: product.catalog_slug || '', image: product.image || '' } : null }; });
+      await window.GOB_API.abandonedCart({ cart_token: window.GOB_CART_TRACKING?.token?.(), whatsapp_opt_in: true, cart_lines: rawLines, email: validEmail ? normalizedEmail : '', phone: normalizedPhone, items, total: totalValue });
       form.reset();
       showCode();
     } catch (_) { message('We could not unlock this right now. Please try again.', 'error'); }

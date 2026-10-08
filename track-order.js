@@ -3,6 +3,8 @@
   document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('#trackingForm'), input = document.querySelector('#trackingReference'), result = document.querySelector('#trackingResult');
     if (!form || !input || !result) return;
+    const preset = new URLSearchParams(location.search).get('ref');
+    if (preset && /^[A-Za-z0-9-]{3,40}$/.test(preset)) { input.value = preset.toUpperCase(); setTimeout(() => form.requestSubmit ? form.requestSubmit() : form.dispatchEvent(new Event('submit', { cancelable: true })), 0); }
     form.addEventListener('submit', async event => {
       event.preventDefault(); const ref = input.value.trim().toUpperCase(); const submit = form.querySelector('button[type=submit]');
       if (!/^[A-Z0-9-]{3,40}$/.test(ref)) { result.className = 'account-form-status error'; result.textContent = 'Enter a valid order number or tracking reference.'; return; }
