@@ -3,26 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Create your own trial pack — Game of Bones</title>
-<meta name="description" content="Pick small 30 g trial packs of single-ingredient fish, organ and chew treats and build your own Game of Bones tasting box.">
+<title>Create your own trial box — Game of Bones</title>
+<meta name="description" content="Build your own tasting box of 30 g single-ingredient trial packs: fish, chicken and goat treats for dogs and cats. Find their favourite before you buy the big pack.">
 <link rel="canonical" href="https://gameofbones.in/trial-packs">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="site.css">
+<link rel="stylesheet" href="trial-packs.css?v=2">
 <link rel="icon" href="/favicon.ico" sizes="any">
-<meta property="og:type" content="website"><meta property="og:title" content="Create your own trial pack — Game of Bones"><meta property="og:description" content="Pick small trial packs and build your own tasting box."><meta property="og:url" content="https://gameofbones.in/trial-packs">
+<meta property="og:type" content="website"><meta property="og:title" content="Create your own trial box — Game of Bones"><meta property="og:description" content="Pick 30 g trial packs and find your pet's favourite treat."><meta property="og:url" content="https://gameofbones.in/trial-packs">
 <script defer src="site.js?v=meta-signals-1"></script>
 <script defer src="header-navigation.js?v=live-ticker-5"></script>
 <script defer src="api-client.js?v=catalogue-sync-2"></script>
-<style>
-.trial-steps{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
-.trial-steps span{background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:999px;padding:8px 14px;font-weight:700;font-size:14px}
-.trial-bar{position:sticky;bottom:12px;z-index:30;margin:24px auto 0;max-width:720px;display:flex;align-items:center;justify-content:space-between;gap:12px;background:#1f3a2c;color:#fff;border-radius:16px;padding:12px 16px;box-shadow:0 10px 30px rgba(0,0,0,.18)}
-.trial-bar[hidden]{display:none}
-.trial-bar strong{font-size:16px}
-.trial-bar .button{background:#c8973a;color:#fff;white-space:nowrap}
-</style>
 </head>
 <body>
 <div class="notice">
@@ -49,22 +42,65 @@
 <button class="menu-toggle">Menu</button>
 </div>
 </nav>
-<main>
-<header class="page-hero">
-<p class="eyebrow">Try before you stock up</p>
-<h1 class="display">Create your own <span class="accent">trial pack.</span></h1>
-<p class="lead">Not sure what your pet will love? Pick small 30 g trial packs (2 pieces for Chicken Wings, 3 for Goat Ear) of as many treats as you like. Every one is a single ingredient, slow-dehydrated in small batches.</p>
-<div class="trial-steps"><span>1. Add the trials you want</span><span>2. Mix fish, organs &amp; chews</span><span>3. Check out once</span></div>
-</header>
-<section class="section">
-<div class="products" id="trialGrid"><p class="empty">Loading trial packs…</p></div>
-<div class="trial-bar" id="trialBar" hidden>
-<div><strong data-trial-count>0 trial packs</strong> in your bag · <strong data-trial-total>₹0</strong></div>
-<a class="button" href="/cart">View bag</a>
-</div>
+
+<main class="tb">
+<section class="tb-hero">
+  <div class="tb-hero-copy">
+    <p class="eyebrow">Trial packs · new</p>
+    <h1>Build your own <em>trial box.</em></h1>
+    <p class="tb-lead">Not sure what your pet will love? Pick small 30&nbsp;g packs of as many treats as you like, try them over a week, then buy the full pack of the one they go crazy for.</p>
+    <ul class="tb-chips" aria-label="Why trial packs">
+      <li><span aria-hidden="true">🥩</span> Single ingredient</li>
+      <li><span aria-hidden="true">🚚</span> Free shipping</li>
+      <li><span aria-hidden="true">💵</span> Cash on delivery</li>
+      <li><span aria-hidden="true">⚡</span> ₹30 off when you pay online</li>
+    </ul>
+  </div>
+  <ol class="tb-steps" aria-label="How it works">
+    <li><b>1</b><div><strong>Pick your treats</strong><span>Add any mix of fish, chicken and goat. Use + and − to set how many of each.</span></div></li>
+    <li><b>2</b><div><strong>Try one at a time</strong><span>Offer one new treat a day and watch which one gets the happy dance.</span></div></li>
+    <li><b>3</b><div><strong>Stock up on the winner</strong><span>Come back for the 60&nbsp;g and bigger packs of their favourite.</span></div></li>
+  </ol>
+</section>
+
+<section class="tb-shop" aria-labelledby="tbShopTitle">
+  <div class="tb-main">
+    <div class="tb-toolbar">
+      <h2 id="tbShopTitle">Choose your trial packs</h2>
+      <div class="tb-filters" id="tbFilters" role="tablist" aria-label="Filter trial packs"></div>
+    </div>
+    <div class="tb-grid" id="trialGrid" aria-live="polite"><p class="tb-empty">Loading trial packs…</p></div>
+  </div>
+
+  <aside class="tb-box" id="trialBox" aria-label="Your trial box">
+    <div class="tb-box-head">
+      <p class="eyebrow">Your trial box</p>
+      <button class="tb-box-toggle" type="button" aria-expanded="false" aria-controls="trialBoxBody"><span data-box-count>0 packs</span> · <strong data-box-total>₹0</strong><i aria-hidden="true">▴</i></button>
+    </div>
+    <div class="tb-box-body" id="trialBoxBody">
+      <ul class="tb-box-list" data-box-list><li class="tb-box-empty">Your box is empty. Add a few treats to start.</li></ul>
+      <dl class="tb-box-sum">
+        <div><dt>Packs</dt><dd data-box-count>0</dd></div>
+        <div class="tb-save" data-box-save-row hidden><dt>You save</dt><dd data-box-save>₹0</dd></div>
+        <div class="tb-total"><dt>Box total</dt><dd data-box-total>₹0</dd></div>
+      </dl>
+      <p class="tb-box-note">Free shipping. Pay online for a further ₹30 off at checkout.</p>
+      <a class="button tb-checkout" href="/checkout" data-box-checkout aria-disabled="true">Checkout</a>
+      <a class="tb-bag-link" href="/cart">View full bag</a>
+    </div>
+  </aside>
+</section>
+
+<section class="tb-info">
+  <div class="tb-info-grid">
+    <article><h3>Why 30 g?</h3><p>It's enough for 6–10 small rewards, the right amount to know if your pet loves a treat before you buy the bigger pack.</p></article>
+    <article><h3>Introducing a new treat</h3><p>Offer one new protein at a time in small pieces and wait 24 hours before adding the next. Always keep fresh water nearby.</p></article>
+    <article><h3>Chews need supervision</h3><p>Feet, necks, wings, ears and bones are natural chews. Pick a size that suits your pet and stay with them while they chew.</p></article>
+    <article><h3>Made in small batches</h3><p>Every pack is one ingredient, slow-dehydrated in Kalyan, Maharashtra, with no preservatives, grains or fillers.</p></article>
+  </div>
 </section>
 </main>
 <script src="catalog.js?v=standalone-3"></script>
-<script defer src="trial-packs.js?v=1"></script>
+<script defer src="trial-packs.js?v=2"></script>
 </body>
 </html>
