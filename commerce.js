@@ -2,6 +2,11 @@
 // syncs must not rewrite an existing cart line's presentation.
 function commerceProduct(item){return item.product||GOB_PRODUCTS[item.id]||null}
 function cartValue(){return cart().reduce((total,item)=>total+(commerceProduct(item)?.price||0)*item.quantity,0)}
+// Trial boxes: ₹50 delivery when the bag holds trial packs and the treat
+// subtotal is under ₹300. The checkout server applies the same rule.
+const TRIAL_FREE_DELIVERY_MIN=300,TRIAL_DELIVERY_CHARGE=50
+function cartHasTrialPacks(){return cart().some(item=>{const p=commerceProduct(item);return /^trial\b/i.test(String(p?.packLabel||'').trim())||/—\s*trial\b/i.test(String(p?.name||''))})}
+function trialDeliveryCharge(){return cartHasTrialPacks()&&cartValue()<TRIAL_FREE_DELIVERY_MIN?TRIAL_DELIVERY_CHARGE:0}
 function cartHasSaleItems(){return cart().some(item=>{const product=commerceProduct(item);return Number(product?.comparePrice)>Number(product?.price)})}
 const POINT_VALUE_RUPEES=.3,MAX_POINTS_DISCOUNT_RUPEES=100,MAX_REDEMPTION_POINTS=Math.floor(MAX_POINTS_DISCOUNT_RUPEES/POINT_VALUE_RUPEES)
 
@@ -83,9 +88,13 @@ function updateCommerceTotals(){
   const requestedPoints=Number(document.querySelector('[name="loyalty_points_redeemed"]')?.value||0)
   const pointsRedeemed=eligibility.signedIn?Math.min(Math.max(Math.floor(requestedPoints)||0,0),MAX_REDEMPTION_POINTS,Number(eligibility.points||0)):0
   const pointsDiscount=Math.min(MAX_POINTS_DISCOUNT_RUPEES,Math.round(pointsRedeemed*POINT_VALUE_RUPEES))
-  const paymentChange=payment==='cod'?40:-30,total=Math.max(0,subtotal-saving-pointsDiscount+paymentChange)
+  const delivery=trialDeliveryCharge(),paymentChange=payment==='cod'?40:-30,total=Math.max(0,subtotal-saving-pointsDiscount+paymentChange+delivery)
   const pointsEarned=Math.floor(total/10),pointsValue=pointsEarned*.3
   document.querySelectorAll('[data-commerce-subtotal]').forEach(el=>el.textContent=money(subtotal))
+  document.querySelectorAll('[data-shipping-label]').forEach(el=>el.textContent=delivery?money(delivery):'Free')
+  document.querySelectorAll('[data-delivery-row]').forEach(el=>el.hidden=!delivery)
+  document.querySelectorAll('[data-delivery-charge]').forEach(el=>el.textContent=`+${money(delivery)}`)
+  document.querySelectorAll('[data-delivery-note]').forEach(el=>{el.hidden=!cartHasTrialPacks();el.textContent=delivery?`Trial box under ${money(TRIAL_FREE_DELIVERY_MIN)}: ${money(delivery)} delivery. Add ${money(TRIAL_FREE_DELIVERY_MIN-subtotal)} more for free delivery.`:'Free delivery on this trial box.'})
   document.querySelectorAll('[data-commerce-total]').forEach(el=>el.textContent=money(total))
   document.querySelectorAll('[data-coupon-discount]').forEach(el=>el.textContent=saving?`−${money(saving)}`:'—')
   document.querySelectorAll('[data-coupon-row]').forEach(el=>el.hidden=!saving)

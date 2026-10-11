@@ -114,3 +114,10 @@
   .tb-steps li{padding:12px 14px}
 }
 @media (min-width:561px) and (max-width:1024px){.tb-steps{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+.tb-ship{margin:4px 0 10px}
+.tb-ship-bar{height:6px;border-radius:999px;background:var(--cream);overflow:hidden}
+.tb-ship-bar span{display:block;height:100%;width:0;border-radius:999px;background:var(--gold);transition:width .3s}
+.tb-ship p{margin:6px 0 0;font-size:12.5px;color:var(--ink-soft)}
+.tb-ship-sum{margin:0}
+@media (max-width:1024px){.tb-box:not(.is-open) .tb-ship-sum{display:none}}
