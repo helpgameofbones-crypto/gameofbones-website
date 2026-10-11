@@ -11,7 +11,7 @@
     if (!price) return { ...pack, price, compare_price: compare };
     // Trial packs carry their own rounded price and MRP from admin; never
     // recalculate them from the sitewide sale percentage.
-    if (/^trial/i.test(String(pack?.label || '').trim())) return { ...pack, price, compare_price: compare };
+    if (/^trial\b/i.test(String(pack?.label || '').trim())) return { ...pack, price, compare_price: compare };
     // Some boxes had an older bundle saving in `price` plus a higher MRP in
     // `compare_price`. During a sitewide sale the MRP is the only consistent
     // base: otherwise a card could claim 10% while showing 12% (or another
