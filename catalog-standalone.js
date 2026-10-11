@@ -24,10 +24,20 @@
   // Top sellers from real orders (last 60 days). Shown first with a badge so
   // visitors arriving from ads see the treats other dog parents buy most.
   const BESTSELLERS = ['chicken-heart-and-liver', 'goat-trotter', 'goat-trachea', 'chicken-wings', 'chicken-jerky', 'sardines'];
+  // "Cat" is a cross-category filter: every fish treat except Whole Mackerel,
+  // plus the two small chicken treats cats take well to.
+  const CAT_FILTER = 'Cat';
+  const CAT_EXTRA = new Set(['chicken-bites', 'chicken-heart-and-liver']);
+  const CAT_EXCLUDE = new Set(['whole-mackerel']);
+  const isCatFriendly = product => {
+    const key = slug(productName(product));
+    if (CAT_EXCLUDE.has(key)) return false;
+    return CAT_EXTRA.has(key) || productCategory(product) === 'Fish treats';
+  };
   const bestsellerRank = product => { const rank = BESTSELLERS.indexOf(slug(productName(product))); return rank === -1 ? 99 : rank; };
 
   function render() {
-    const items = catalogue.filter(product => activeCategory === 'All' || productCategory(product) === activeCategory)
+    const items = catalogue.filter(product => activeCategory === 'All' || (activeCategory === CAT_FILTER ? isCatFriendly(product) : productCategory(product) === activeCategory))
       .map((product, order) => ({ product, order })).sort((a, b) => (bestsellerRank(a.product) - bestsellerRank(b.product)) || (a.order - b.order)).map(entry => entry.product);
     root.innerHTML = items.map((product, index) => {
       const id = productId(product), name = productName(product), image = productImage(product);
@@ -52,7 +62,7 @@
   }
 
   function renderFilters() {
-    const categories = ['All', ...new Set(catalogue.map(productCategory))];
+    const categories = ['All', ...(catalogue.some(isCatFriendly) ? [CAT_FILTER] : []), ...new Set(catalogue.map(productCategory))];
     if (!categories.includes(activeCategory)) activeCategory = 'All';
     filters.innerHTML = categories.map(category => `<button class="filter ${category === activeCategory ? 'selected' : ''}" type="button" data-category="${escapeHtml(category)}">${escapeHtml(category)}</button>`).join('');
     filters.querySelectorAll('[data-category]').forEach(button => button.addEventListener('click', () => { activeCategory = button.dataset.category; renderFilters(); render(); }));
