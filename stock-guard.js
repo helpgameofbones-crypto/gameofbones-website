@@ -23,7 +23,8 @@
     const product = snapshot || window.GOB_PRODUCTS?.[id] || window.GOB_PRODUCTS?.[base];
     const name = String(product?.name || '').replace(/\s+—\s+.+$/, '');
     const key = slug(product?.catalog_slug || name || base);
-    return { key, units: match ? Math.max(1, Number(match[1]) || 1) : 1, name: name || 'This treat' };
+    const trial = /^trial/i.test(String(product?.packLabel || '').trim()) || /—\s*trial/i.test(String(product?.name || ''));
+    return { key, units: trial ? 1 : match ? Math.max(1, Number(match[1]) || 1) : 1, name: name || 'This treat' };
   }
   const infoFor = key => stock ? stock[key] : undefined;
   const unitsInCart = (key, lines = readCart(), skipId) => lines.reduce((total, line) => {

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Create your own trial pack — Game of Bones</title>
+<meta name="description" content="Pick small 30 g trial packs of single-ingredient fish, organ and chew treats and build your own Game of Bones tasting box.">
+<link rel="canonical" href="https://gameofbones.in/trial-packs">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<meta property="og:type" content="website"><meta property="og:title" content="Create your own trial pack — Game of Bones"><meta property="og:description" content="Pick small trial packs and build your own tasting box."><meta property="og:url" content="https://gameofbones.in/trial-packs">
+<script defer src="site.js?v=meta-signals-1"></script>
+<script defer src="header-navigation.js?v=live-ticker-5"></script>
+<script defer src="api-client.js?v=catalogue-sync-2"></script>
+<style>
+.trial-steps{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.trial-steps span{background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:999px;padding:8px 14px;font-weight:700;font-size:14px}
+.trial-bar{position:sticky;bottom:12px;z-index:30;margin:24px auto 0;max-width:720px;display:flex;align-items:center;justify-content:space-between;gap:12px;background:#1f3a2c;color:#fff;border-radius:16px;padding:12px 16px;box-shadow:0 10px 30px rgba(0,0,0,.18)}
+.trial-bar[hidden]{display:none}
+.trial-bar strong{font-size:16px}
+.trial-bar .button{background:#c8973a;color:#fff;white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="notice">
+<span>Free shipping on every order • Pay online & get ₹30 off • MEGA20: 20% off ₹2,199+</span>
+</div>
+<nav class="nav">
+<a class="brand" href="index.html">
+<img src="assets/gob-logo.png" alt="Game of Bones" width="512" height="512">
+</a>
+<div class="nav-links">
+<a href="index.html">Home</a>
+<a class="active" href="products.html">Products</a>
+<a href="our-story.html">Our story</a>
+<a href="bundles.html">Bundles</a>
+<a href="blog.html">Blog</a>
+<a href="contact.html">Contact us</a>
+<a href="rewards.html">Rewards</a>
+<a href="track.html">Track</a>
+<a href="learn.html">Learn</a>
+</div>
+<div class="nav-actions">
+<button class="cart-trigger" data-open-cart>Bag <span data-cart-count>0</span>
+</button>
+<button class="menu-toggle">Menu</button>
+</div>
+</nav>
+<main>
+<header class="page-hero">
+<p class="eyebrow">Try before you stock up</p>
+<h1 class="display">Create your own <span class="accent">trial pack.</span></h1>
+<p class="lead">Not sure what your pet will love? Pick small 30 g trial packs (2 pieces for Chicken Wings, 3 for Goat Ear) of as many treats as you like. Every one is a single ingredient, slow-dehydrated in small batches.</p>
+<div class="trial-steps"><span>1. Add the trials you want</span><span>2. Mix fish, organs &amp; chews</span><span>3. Check out once</span></div>
+</header>
+<section class="section">
+<div class="products" id="trialGrid"><p class="empty">Loading trial packs…</p></div>
+<div class="trial-bar" id="trialBar" hidden>
+<div><strong data-trial-count>0 trial packs</strong> in your bag · <strong data-trial-total>₹0</strong></div>
+<a class="button" href="/cart">View bag</a>
+</div>
+</section>
+</main>
+<script src="catalog.js?v=standalone-3"></script>
+<script defer src="trial-packs.js?v=1"></script>
+</body>
+</html>

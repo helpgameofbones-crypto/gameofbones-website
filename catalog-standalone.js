@@ -50,6 +50,11 @@
         : formatPrice(currentPrice);
       return `<article class="product-card"><a href="${path}" aria-label="View ${escapeHtml(name)}">${isSale ? '<span class="sale-badge">Sale</span>' : ''}<div class="product-image ${shade}"><img src="${escapeHtml(image)}" alt="${escapeHtml(name)} natural dog treat" width="600" height="600" loading="lazy" decoding="async"></div></a><div class="card-copy"><p class="tag">${bestsellerRank(product) < 99 ? '<span class="bestseller-tag">★ Bestseller</span> ' : ''}${escapeHtml(productCategory(product))}</p><h3><a href="${path}">${escapeHtml(name)}</a></h3><p class="catalog-desc">${escapeHtml(product.d || product.description || 'Single-ingredient dog treat.')}</p><div class="card-bottom"><span>${escapeHtml(productWeight(product))} · ${displayedPrice}</span><button class="quick-add" type="button" data-product="${escapeHtml(id)}" aria-label="Add ${escapeHtml(name)} to bag">Add +</button></div></div></article>`;
     }).join('');
+    // "Create your own trial pack" listing, shown in All and Cat views.
+    if (activeCategory === 'All' || activeCategory === CAT_FILTER) {
+      const trialCard = '<article class="product-card trial-builder-card"><a href="/trial-packs" aria-label="Create your own trial pack"><span class="sale-badge">New</span><div class="product-image sage"><img src="assets/catalogue-v3/small-treat-box.webp" alt="Create your own trial pack" width="600" height="600" loading="lazy" decoding="async"></div></a><div class="card-copy"><p class="tag">Trial packs</p><h3><a href="/trial-packs">Create your own trial pack</a></h3><p class="catalog-desc">Pick 30 g trial packs of the treats you want to try, then check out once.</p><div class="card-bottom"><span>30 g packs · from ₹60</span><a class="quick-add" href="/trial-packs" aria-label="Build your trial pack">Build +</a></div></div></article>';
+      root.insertAdjacentHTML('afterbegin', trialCard);
+    }
     root.querySelectorAll('img').forEach(image => image.addEventListener('error', () => { image.src = 'assets/gob-logo.png'; image.alt = 'Game of Bones'; }, { once: true }));
     root.querySelectorAll('[data-product]').forEach(button => button.addEventListener('click', () => {
       const product = catalogue.find(item => productId(item) === button.dataset.product);
