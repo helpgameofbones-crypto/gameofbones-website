@@ -23,7 +23,7 @@
     // Many catalogue packs store the same text as label and weight ("60 g" / "60 g").
     // Show the weight only when it adds information.
     const squash = value => String(value || '').toLowerCase().replace(/\s+/g, '');
-    const extraWeight = pack => pack?.weight && squash(pack.weight) !== squash(pack.label) ? pack.weight : '';
+    const extraWeight = pack => pack?.weight && !squash(pack.label).includes(squash(pack.weight)) ? pack.weight : '';
     const onSale = (pack, product) => Number(pack?.price || 0) > 0 && comparePriceFor(pack, product) > Number(pack?.price || 0);
 
     function render(product) {
