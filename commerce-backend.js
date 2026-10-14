@@ -43,7 +43,8 @@
     const missing = [];
     if (!get('[autocomplete="given-name"]') || !get('[autocomplete="family-name"]')) missing.push('name');
     if (!/^\d{10}$/.test(phone())) missing.push('10-digit mobile number');
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(get('[autocomplete="email"]'))) missing.push('email');
+    // Email is optional (receipts only); if given it must look valid.
+    if (get('[autocomplete="email"]') && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(get('[autocomplete="email"]'))) missing.push('a valid email (or leave it blank)');
     if (!get('[autocomplete="street-address"]') || !get('[autocomplete="address-level2"]') || !get('[autocomplete="address-level1"]')) missing.push('delivery address');
     if (!/^\d{6}$/.test(get('[autocomplete="postal-code"]'))) missing.push('6-digit PIN code');
     if (!items().length) missing.push('at least one treat');
@@ -58,7 +59,7 @@
     // points; no separate buy-more discount is active during this sale.
     // WELCOME15 needs no login: the server checks this mobile/email has not ordered before.
     const couponRate = coupon === 'WELCOME15' && !(eligibility.signedIn && !eligibility.checking && !eligibility.firstOrder) ? .15 : coupon === 'MEGA20' && value >= 2199 ? .2 : privateOfferRate(coupon);
-    const discount = Math.round(value * couponRate);
+    const discount = typeof offerDiscountFor === 'function' ? offerDiscountFor(coupon, value, couponRate) : Math.round(value * couponRate);
     const requestedPoints = Math.floor(Number(form.querySelector('[name="loyalty_points_redeemed"]')?.value || 0));
     const points = eligibility.signedIn ? Math.min(Math.max(requestedPoints, 0), MAX_REDEMPTION_POINTS, Number(eligibility.points || 0)) : 0;
     const pointsDiscount = Math.min(MAX_POINTS_DISCOUNT_RUPEES, Math.round(points * POINT_VALUE_RUPEES)), cod = method() === 'cod' ? 40 : -30;
@@ -66,7 +67,7 @@
     // Preserve the entered code even when the browser cannot know its rate;
     // this lets off-site customer codes work without advertising them here.
     const delivery = typeof trialDeliveryCharge === 'function' ? trialDeliveryCharge() : 0;
-    return { value, discount, points, delivery, coupon: privateCoupon || (couponRate ? coupon : ''), grand: Math.max(1, value - discount - pointsDiscount + cod + delivery) };
+    return { value, discount, points, delivery, coupon: privateCoupon || (couponRate || coupon === 'CART50' ? coupon : ''), grand: Math.max(1, value - discount - pointsDiscount + cod + delivery) };
   };
   const result = (html, failed = false) => { const el = document.querySelector('#checkoutSuccess'); if (!el) return; el.classList.add('show'); el.style.background = failed ? '#f9e1da' : '#e4ebdf'; el.innerHTML = html; el.focus(); };
   const completeOrder = (ref, payment) => {
@@ -112,7 +113,7 @@
   function checkoutFailed(error) {
     const message = String(error?.message || '');
     const cancelled = /cancelled/i.test(message);
-    const codeProblem = /code|WELCOME15|MEGA20|offer/i.test(message);
+    const codeProblem = /code|WELCOME15|MEGA20|CART50|offer/i.test(message);
     const esc = text => String(text).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     const actions = [];
     if (codeProblem) actions.push('<button type="button" class="button" data-fix="remove-code">Remove code &amp; pay now</button>');
@@ -124,6 +125,7 @@
     result(`<strong>${cancelled ? 'Payment not completed.' : 'Checkout could not start.'}</strong> ${help}<div class="checkout-fix-row" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">${actions.join('')}</div>`, true);
     document.querySelectorAll('[data-fix]').forEach(btn => btn.addEventListener('click', () => {
       if (btn.dataset.fix === 'remove-code') {
+        if (form.querySelector('[name="coupon"][value="CART50"]:checked') && typeof setCartOfferClaim === 'function') { setCartOfferClaim(false); const offer = form.querySelector('[data-cart-offer]'); if (offer) offer.hidden = true; }
         const priv = form.querySelector('[name="private_coupon"]'); if (priv) priv.value = '';
         const none = form.querySelector('[name="coupon"][value="none"], [name="coupon"][value=""]'); if (none) none.checked = true; else form.querySelectorAll('[name="coupon"]').forEach(r => { r.checked = false; });
         try { sessionStorage.removeItem('gob-checkout-coupon'); } catch (_) {}
@@ -134,5 +136,5 @@
       if (form.requestSubmit) form.requestSubmit(); else form.dispatchEvent(new Event('submit', { cancelable: true }));
     }, { once: true }));
   }
-  form.addEventListener('submit', async event => { event.preventDefault(); if (!valid()) return result('<strong>Checkout needs attention.</strong> Please complete your name, 10-digit mobile number, email, and delivery address.', true); if (!policyAcknowledged()) return result('<strong>Please review the policies.</strong> Confirm the checkout policies before continuing.', true); const button = form.querySelector('[type="submit"]'), ref = reference(), pricing = total(), orderItems = items(); if (button) { button.disabled = true; button.textContent = 'Checking delivery…'; } try { await delivery(); await (window.GOB_PRIZE_CLAIM ? window.GOB_PRIZE_CLAIM() : null); window.GOB_META?.track('InitiateCheckout',{currency:'INR',value:pricing.grand,content_type:'product',content_ids:metaContentIds(orderItems),contents:metaContents(orderItems)}); if (button) button.textContent = 'Preparing secure checkout…'; await capture(); await window.GOB_API.orderAttempt({ ref, customer_name: fullName(), customer_phone: phone(), customer_email: get('[autocomplete="email"]'), payment_method: method() === 'cod' ? 'cod' : 'razorpay', subtotal: pricing.value, grand_total: pricing.grand, items: orderItems, shipping_address: address(), coupon_code: pricing.coupon, coupon_label: pricing.coupon || 'automatic saving' }); if (method() === 'cod') { await save(ref); saveCart([]); updateCart(); completeOrder(ref, 'cod'); } else { await prepaid(ref, pricing); saveCart([]); updateCart(); completeOrder(ref, 'paid'); } } catch (error) { checkoutFailed(error); } finally { if (button) { button.disabled = false; button.textContent = 'Continue to secure payment'; } } });
+  form.addEventListener('submit', async event => { event.preventDefault(); if (!valid()) return result('<strong>Checkout needs attention.</strong> Please complete your name, 10-digit mobile number and delivery address.', true); if (!policyAcknowledged()) return result('<strong>Please review the policies.</strong> Confirm the checkout policies before continuing.', true); const button = form.querySelector('[type="submit"]'), ref = reference(), pricing = total(), orderItems = items(); if (button) { button.disabled = true; button.textContent = 'Checking delivery…'; } try { await delivery(); await (window.GOB_PRIZE_CLAIM ? window.GOB_PRIZE_CLAIM() : null); window.GOB_META?.track('InitiateCheckout',{currency:'INR',value:pricing.grand,content_type:'product',content_ids:metaContentIds(orderItems),contents:metaContents(orderItems)}); if (button) button.textContent = 'Preparing secure checkout…'; await capture(); await window.GOB_API.orderAttempt({ ref, customer_name: fullName(), customer_phone: phone(), customer_email: get('[autocomplete="email"]'), payment_method: method() === 'cod' ? 'cod' : 'razorpay', subtotal: pricing.value, grand_total: pricing.grand, items: orderItems, shipping_address: address(), coupon_code: pricing.coupon, coupon_label: pricing.coupon || 'automatic saving' }); if (method() === 'cod') { await save(ref); saveCart([]); updateCart(); completeOrder(ref, 'cod'); } else { await prepaid(ref, pricing); saveCart([]); updateCart(); completeOrder(ref, 'paid'); } } catch (error) { checkoutFailed(error); } finally { if (button) { button.disabled = false; button.textContent = 'Continue to secure payment'; } } });
 })();

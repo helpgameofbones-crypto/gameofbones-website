@@ -20,6 +20,14 @@ function privateOfferRate(code){
 }
 function isPreviewablePrivateOffer(code){return privateOfferRate(code)>0}
 
+// Bag-page offer: sharing a WhatsApp number unlocks ₹50 off a first order
+// (CART50). The browser only remembers that it was unlocked; the server
+// re-checks that the mobile number/email has never ordered at payment.
+const CART_OFFER_CODE='CART50',CART_OFFER_AMOUNT=50,CART_OFFER_KEY='gob-cart-offer'
+function cartOfferClaimed(){try{const claim=JSON.parse(window.localStorage.getItem(CART_OFFER_KEY)||'null');return Boolean(claim&&claim.code===CART_OFFER_CODE&&Date.now()-Number(claim.at||0)<30*24*60*60*1000)}catch(_){return false}}
+function setCartOfferClaim(on){try{if(on)window.localStorage.setItem(CART_OFFER_KEY,JSON.stringify({code:CART_OFFER_CODE,at:Date.now()}));else window.localStorage.removeItem(CART_OFFER_KEY)}catch(_){}}
+function offerDiscountFor(code,subtotal,rate){return code===CART_OFFER_CODE?Math.min(CART_OFFER_AMOUNT,Math.max(0,subtotal)):Math.round(subtotal*rate)}
+
 const commerceSlug=value=>String(value||'').toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'')
 async function recoverUnknownCartLines(){
   const lines=cart(),missing=lines.filter(line=>!commerceProduct(line))
@@ -79,11 +87,11 @@ function updateCommerceTotals(){
   // A recognised private code can be entered from the bag before the secure
   // checkout form exists. Keep it in session storage and show the same quote.
   const storedCoupon=window.sessionStorage.getItem('gob-checkout-coupon')||''
-  const coupon=privateCoupon||storedCoupon||document.querySelector('[name="coupon"]:checked')?.value||'none'
+  const coupon=privateCoupon||storedCoupon||document.querySelector('[name="coupon"]:checked')?.value||(!document.querySelector('[name="coupon"]')&&cartOfferClaimed()?CART_OFFER_CODE:'none')
   const eligibility=window.GOB_CHECKOUT_ELIGIBILITY||{signedIn:false,firstOrder:false,checking:false,points:0}
   // Listed sale prices, one valid code and loyalty points can be used together.
   const couponRate=(coupon==='WELCOME15'&&!(eligibility.signedIn&&!eligibility.checking&&!eligibility.firstOrder) ? .15 : coupon==='MEGA20'&&subtotal>=2199 ? .2 : privateOfferRate(coupon))
-  const couponDiscount=Math.round(subtotal*couponRate),saving=couponDiscount
+  const couponDiscount=offerDiscountFor(coupon,subtotal,couponRate),saving=couponDiscount
   const payment=document.querySelector('[name="payment"]:checked')?.value||'online'
   const requestedPoints=Number(document.querySelector('[name="loyalty_points_redeemed"]')?.value||0)
   const pointsRedeemed=eligibility.signedIn?Math.min(Math.max(Math.floor(requestedPoints)||0,0),MAX_REDEMPTION_POINTS,Number(eligibility.points||0)):0
@@ -109,6 +117,8 @@ function updateCommerceTotals(){
       return coupon==='none'&&!privateCoupon?'Sale price is already applied. Add one eligible code and/or reward points at checkout for extra savings.':'Your sale price, eligible code and reward points are being applied.'
     }else if(coupon==='WELCOME15'){
       return !eligibility.signedIn?'WELCOME15 is applied: 15% off your first order. No login needed — we check your mobile number and email at payment.':eligibility.checking?'Checking whether this account is eligible for WELCOME15…':eligibility.firstOrder?'WELCOME15 is available for this first order.':'WELCOME15 is not applied: this account already has a completed order, or its first-order status could not be verified.'
+    } else if(coupon===CART_OFFER_CODE){
+      return `₹${CART_OFFER_AMOUNT} off is applied — your first-order bag offer. We confirm it with your mobile number at payment.`
     } else if(coupon==='MEGA20'){
       const remaining=Math.max(0,2199-subtotal)
       return remaining?`MEGA20 is not applied: add ${money(remaining)} of eligible treats to reach the ₹2,199 minimum.`:'MEGA20 is available on this basket.'
@@ -147,6 +157,7 @@ function ensureCheckoutOptions(){
     <h3>Offers & rewards</h3>
     <label data-automatic-offer><input type="radio" name="coupon" value="none" checked><span><b data-automatic-offer-title>Continue with the listed price</b> <small data-automatic-offer-copy>Your sale price is already included where applicable. You may choose one eligible code below.</small></span></label>
     <label data-welcome-offer><input type="radio" name="coupon" value="WELCOME15"><span>WELCOME15 — 15% off your first order <small>No login needed · one use per mobile number and email · checked at payment.</small></span></label>
+    <label data-cart-offer hidden><input type="radio" name="coupon" value="CART50"><span>CART50 — ₹50 off your first order <small>Unlocked with your WhatsApp number on the bag page · first order only · checked at payment.</small></span></label>
     <label data-mega-offer><input type="radio" name="coupon" value="MEGA20"><span>MEGA20 — 20% off orders ₹2,199+ <small>Eligible treat subtotal must reach ₹2,199.</small></span></label>
     <details class="private-code"><summary>Have a private code from us?</summary><label>Private birthday code <input name="private_coupon" type="text" inputmode="text" autocomplete="off" maxlength="32" placeholder="Enter your private code"></label><small>Private rewards are sent directly to the pet parent and are not public offers.</small></details>
     <label data-loyalty-redeem hidden><input type="number" name="loyalty_points_redeemed" min="0" max="333" step="1" value="0" inputmode="numeric"><span>Use reward points <small>Use up to ₹100 off per order (maximum 333 points). Every point is worth ₹0.30 and can be combined with one eligible coupon.</small></span></label>
@@ -175,6 +186,12 @@ function ensureCheckoutOptions(){
   const requestedCoupon=['WELCOME15','MEGA20'].includes(storedCoupon)?storedCoupon:''
   const requestedInput=requestedCoupon&&form.querySelector(`[name="coupon"][value="${requestedCoupon}"]`)
   if(requestedInput) requestedInput.checked=true
+  // The ₹50 bag offer is applied automatically unless another code was chosen.
+  const cartOfferInput=form.querySelector('[name="coupon"][value="CART50"]')
+  if(cartOfferInput&&cartOfferClaimed()){
+    cartOfferInput.closest('label').hidden=false
+    if(!requestedInput&&!isPreviewablePrivateOffer(storedCoupon))cartOfferInput.checked=true
+  }
   if(isPreviewablePrivateOffer(storedCoupon)){
     if(privateCode){privateCode.value=storedCoupon;privateCode.closest('details')?.setAttribute('open','')}
   }
@@ -197,6 +214,12 @@ function updateWelcomeOfferVisibility(){
   offer.hidden=hasOrdered
   if(hasOrdered&&offer.querySelector('input:checked')){
     document.querySelector('[name="coupon"][value="none"]')?.click()
+  }
+  // A signed-in customer with an earlier order cannot use the first-order ₹50 offer.
+  const cartOffer=document.querySelector('[data-cart-offer]')
+  if(cartOffer&&hasOrdered){
+    cartOffer.hidden=true
+    if(cartOffer.querySelector('input:checked'))document.querySelector('[name="coupon"][value="none"]')?.click()
   }
 }
 

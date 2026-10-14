@@ -1,13 +1,13 @@
 /* Cart page conversion helpers.
    1. The "save your bowl" box becomes a WhatsApp offer: sharing a number
-      unlocks BOWL10 (10% off) instantly and saves the bowl for one reminder.
+      takes ₹50 off automatically (CART50, first order only, once per
+      customer) and saves the bowl for a reminder.
    2. The total and checkout button sit above that box, so shoppers see the
       way forward before an invitation to leave.
    3. Phones get a sticky checkout bar while the checkout button is off screen.
    4. Reassurance (shipping, payment, quality, returns) sits next to the button.
    Contact details are still only sent when the shopper submits the form. */
 (() => {
-  const OFFER_CODE = 'BOWL10';
   // `cart` and `commerceProduct` are top-level declarations in the storefront
   // scripts, so they are global names but NOT properties of window.
   // (Reading window.cart made the old save form always say the bag was empty.)
@@ -99,40 +99,35 @@
   const phone = form.querySelector('[name="phone"]');
   const status = document.querySelector('#cartSaveStatus');
   const button = form.querySelector('button[type="submit"]');
-  if (save) {
+  const setCopy = (eyebrowText, titleText, introText) => {
+    if (!save) return;
     const eyebrow = save.querySelector('.eyebrow');
     const title = save.querySelector('h3');
     const intro = save.querySelector('p:not(.eyebrow):not(.cart-save-status)');
-    if (eyebrow) eyebrow.textContent = 'Unlock 10% off';
-    if (title) title.textContent = 'Get 10% off this order.';
-    if (intro) intro.textContent = 'Add your WhatsApp number and code BOWL10 unlocks instantly. By sharing it you agree to a reminder or two about this bag on WhatsApp (reply STOP anytime). One use per customer.';
-  }
+    if (eyebrow) eyebrow.textContent = eyebrowText;
+    if (title) title.textContent = titleText;
+    if (intro) intro.textContent = introText;
+  };
+  setCopy('First order? ₹50 off', 'Get ₹50 off this order.', 'Add your WhatsApp number and ₹50 comes off your bag automatically. For first orders, once per customer. You agree to a reminder or two about this bag on WhatsApp (reply STOP anytime).');
   if (email) email.hidden = true;
   if (phone) phone.placeholder = 'WhatsApp number (10 digits)';
-  if (button) button.textContent = 'Unlock 10% off';
+  if (button) button.textContent = 'Get ₹50 off';
 
   const message = (text, kind = '') => { if (!status) return; status.textContent = text; status.className = `cart-save-status ${kind}`; };
+  const refreshTotals = () => { if (typeof updateCommerceTotals === 'function') updateCommerceTotals(); };
   const lines = () => cartLines().map(line => {
     const product = productFor(line);
     return product ? { name: product.name, pack_label: product.packLabel || '', quantity: Number(line.quantity) || 1, price: Number(product.price) || 0 } : null;
   }).filter(Boolean);
 
-  const showCode = () => {
-    if (!status) return;
-    status.className = 'cart-save-status success';
-    status.innerHTML = `Unlocked! Your code: <span class="cart-offer-code"><b>${OFFER_CODE}</b><button type="button" class="button" data-apply-offer>Apply to this order</button></span>`;
-    status.querySelector('[data-apply-offer]')?.addEventListener('click', () => {
-      const input = document.querySelector('#promoCode');
-      const promo = document.querySelector('#promoForm');
-      if (input && promo) {
-        input.value = OFFER_CODE;
-        if (promo.requestSubmit) promo.requestSubmit(); else promo.dispatchEvent(new Event('submit', { cancelable: true }));
-      } else {
-        try { window.sessionStorage.setItem('gob-checkout-coupon', OFFER_CODE); } catch (_) {}
-      }
-      status.querySelector('[data-apply-offer]').textContent = 'Applied ✓';
-    });
+  const showApplied = () => {
+    form.hidden = false;
+    form.querySelectorAll('input,button').forEach(el => { el.hidden = true; });
+    setCopy('Offer unlocked', '₹50 off is applied to your bag.', 'It will show at checkout. We confirm it with your mobile number at payment, as it is for first orders.');
+    message('₹50 off applied ✓', 'success');
   };
+  const claimed = () => (typeof cartOfferClaimed === 'function' ? cartOfferClaimed() : false);
+  if (claimed()) showApplied();
 
   form.addEventListener('submit', async event => {
     event.preventDefault();
@@ -140,18 +135,29 @@
     const normalizedPhone = String(phone?.value || '').replace(/\D/g, '').replace(/^91(?=\d{10}$)/, '');
     const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail);
     const validPhone = /^[6-9]\d{9}$/.test(normalizedPhone);
-    if (!validPhone) return message('Enter a valid 10-digit WhatsApp number to unlock 10% off.', 'error');
+    if (!validPhone) return message('Enter a valid 10-digit WhatsApp number to get ₹50 off.', 'error');
     const items = lines();
-    if (!items.length) return message('Add a treat first, then unlock your 10% off.', 'error');
+    if (!items.length) return message('Add a treat first, then unlock your ₹50 off.', 'error');
     const totalValue = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
     if (!window.GOB_API?.abandonedCart) return message('We could not unlock this right now. Please try again.', 'error');
-    button.disabled = true; button.textContent = 'Unlocking…';
+    button.disabled = true; button.textContent = 'Checking…';
     try {
       const rawLines = cartLines().map(line => { const product = productFor(line); return { id: line.id, quantity: Number(line.quantity) || 1, product: product ? { name: product.name, price: Number(product.price) || 0, packLabel: product.packLabel || '', tag: product.tag || '', catalog_slug: product.catalog_slug || '', image: product.image || '' } : null }; });
-      await window.GOB_API.abandonedCart({ cart_token: window.GOB_CART_TRACKING?.token?.(), whatsapp_opt_in: true, cart_lines: rawLines, email: validEmail ? normalizedEmail : '', phone: normalizedPhone, items, total: totalValue });
+      const response = await window.GOB_API.abandonedCart({ offer: 'CART50', cart_token: window.GOB_CART_TRACKING?.token?.(), whatsapp_opt_in: true, cart_lines: rawLines, email: validEmail ? normalizedEmail : '', phone: normalizedPhone, items, total: totalValue });
+      const offer = response && response.cart_offer;
+      if (!offer) { message('We saved your bag but could not check the offer. Please try again.', 'error'); return; }
+      if (!offer.eligible) {
+        if (typeof setCartOfferClaim === 'function') setCartOfferClaim(false);
+        form.reset();
+        message('Thanks, your bag is saved. This number has ordered with us before, so the first-order ₹50 offer does not apply — but you still save ₹30 when you pay online.', '');
+        refreshTotals();
+        return;
+      }
+      if (typeof setCartOfferClaim === 'function') setCartOfferClaim(true);
       form.reset();
-      showCode();
+      refreshTotals();
+      showApplied();
     } catch (_) { message('We could not unlock this right now. Please try again.', 'error'); }
-    finally { button.disabled = false; button.textContent = 'Unlock 10% off'; }
+    finally { button.disabled = false; if (!claimed()) button.textContent = 'Get ₹50 off'; }
   });
 })();
