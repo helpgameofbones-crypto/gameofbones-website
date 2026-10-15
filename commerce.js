@@ -1,6 +1,8 @@
 // Preserve the product snapshot selected by the customer. Live catalogue
-// syncs must not rewrite an existing cart line's presentation.
-function commerceProduct(item){return item.product||GOB_PRODUCTS[item.id]||null}
+// syncs must not rewrite an existing cart line's presentation. The one
+// exception is an expired sitewide-sale snapshot: restore its current live
+// price so an old browser cart cannot retain a finished promotion.
+function commerceProduct(item){const snapshot=item.product,current=GOB_PRODUCTS[item.id]||null;if(snapshot&&current&&Number(snapshot.comparePrice)>Number(snapshot.price)&&!(Number(current.comparePrice)>Number(current.price)))return {...snapshot,price:Number(current.price)||0,comparePrice:Number(current.comparePrice)||0};return snapshot||current}
 function cartValue(){return cart().reduce((total,item)=>total+(commerceProduct(item)?.price||0)*item.quantity,0)}
 // Trial boxes: ₹50 delivery when the bag holds trial packs and the treat
 // subtotal is under ₹300. The checkout server applies the same rule.
@@ -89,7 +91,7 @@ function updateCommerceTotals(){
   const storedCoupon=window.sessionStorage.getItem('gob-checkout-coupon')||''
   const coupon=privateCoupon||storedCoupon||document.querySelector('[name="coupon"]:checked')?.value||(!document.querySelector('[name="coupon"]')&&cartOfferClaimed()?CART_OFFER_CODE:'none')
   const eligibility=window.GOB_CHECKOUT_ELIGIBILITY||{signedIn:false,firstOrder:false,checking:false,points:0}
-  // Listed sale prices, one valid code and loyalty points can be used together.
+  // The displayed price, one valid code and loyalty points can be used together.
   const couponRate=(coupon==='WELCOME15'&&!(eligibility.signedIn&&!eligibility.checking&&!eligibility.firstOrder) ? .15 : coupon==='MEGA20'&&subtotal>=2199 ? .2 : privateOfferRate(coupon))
   const couponDiscount=offerDiscountFor(coupon,subtotal,couponRate),saving=couponDiscount
   const payment=document.querySelector('[name="payment"]:checked')?.value||'online'
@@ -114,7 +116,7 @@ function updateCommerceTotals(){
   document.querySelectorAll('[data-commerce-count]').forEach(el=>el.textContent=count)
   const statusMessage=()=>{
     if(saleBasket){
-      return coupon==='none'&&!privateCoupon?'Sale price is already applied. Add one eligible code and/or reward points at checkout for extra savings.':'Your sale price, eligible code and reward points are being applied.'
+      return coupon==='none'&&!privateCoupon?'Your current listed price is applied. Add one eligible code and/or reward points at checkout for extra savings.':'Your current listed price, eligible code and reward points are being applied.'
     }else if(coupon==='WELCOME15'){
       return !eligibility.signedIn?'WELCOME15 is applied: 15% off your first order. No login needed — we check your mobile number and email at payment.':eligibility.checking?'Checking whether this account is eligible for WELCOME15…':eligibility.firstOrder?'WELCOME15 is available for this first order.':'WELCOME15 is not applied: this account already has a completed order, or its first-order status could not be verified.'
     } else if(coupon===CART_OFFER_CODE){
@@ -155,7 +157,7 @@ function ensureCheckoutOptions(){
   const payment=form.querySelector('.form-section:last-of-type')
   payment.insertAdjacentHTML('beforebegin',`<section class="form-section checkout-perks">
     <h3>Offers & rewards</h3>
-    <label data-automatic-offer><input type="radio" name="coupon" value="none" checked><span><b data-automatic-offer-title>Continue with the listed price</b> <small data-automatic-offer-copy>Your sale price is already included where applicable. You may choose one eligible code below.</small></span></label>
+    <label data-automatic-offer><input type="radio" name="coupon" value="none" checked><span><b data-automatic-offer-title>Continue with the listed price</b> <small data-automatic-offer-copy>Your current listed price is shown above. You may choose one eligible code below.</small></span></label>
     <label data-welcome-offer><input type="radio" name="coupon" value="WELCOME15"><span>WELCOME15 — 15% off your first order <small>No login needed · one use per mobile number and email · checked at payment.</small></span></label>
     <label data-cart-offer hidden><input type="radio" name="coupon" value="CART50"><span>CART50 — ₹50 off your first order <small>Unlocked with your WhatsApp number on the bag page · first order only · checked at payment.</small></span></label>
     <label data-mega-offer><input type="radio" name="coupon" value="MEGA20"><span>MEGA20 — 20% off orders ₹2,199+ <small>Eligible treat subtotal must reach ₹2,199.</small></span></label>
@@ -203,7 +205,7 @@ function ensureCheckoutOptions(){
 function updateSaleOfferControls(){
   const title=document.querySelector('[data-automatic-offer-title]'),copy=document.querySelector('[data-automatic-offer-copy]')
   if(title)title.textContent='Continue with the listed price'
-  if(copy)copy.textContent='Your sale price is already included where applicable. You may choose one eligible code and use reward points.'
+  if(copy)copy.textContent='Your current listed price is shown above. You may choose one eligible code and use reward points.'
 }
 
 function updateWelcomeOfferVisibility(){

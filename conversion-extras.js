@@ -24,9 +24,9 @@
 
   function addHomeExtras() {
     document.querySelector('.hero .proof')?.insertAdjacentHTML('afterend', `
-      <aside class="home-sale-note" aria-label="Current sale details">
-        <strong>Sale prices are already included.</strong>
-        <span>10% off treats · 15% off Whole Mackerel · plus ₹30 off when you pay online.</span>
+      <aside class="home-sale-note" aria-label="Shopping details">
+        <strong>Simple prices, straight to your jar.</strong>
+        <span>Free shipping across India · plus ₹30 off when you pay online.</span>
       </aside>`);
     const target = document.querySelector('.subscribe');
     target?.insertAdjacentHTML('beforebegin', `
@@ -43,7 +43,7 @@
     const buyRow = document.querySelector('.buy-row');
     buyRow?.insertAdjacentHTML('afterend', `
       <section class="paid-traffic-promise" aria-label="Order reassurance">
-        <span><b>Sale price applied</b><small>No code needed</small></span>
+        <span><b>Price shown is current</b><small>No code needed</small></span>
         <span><b>Free shipping</b><small>Across India</small></span>
         <span><b>₹30 off prepaid</b><small>UPI, cards & wallets</small></span>
       </section>

@@ -11,26 +11,7 @@
     ['/track', 'Track'],
     ['/learn', 'Learn'],
   ];
-  const saleDeadline = () => {
-    // Treat the following Monday 00:00 in India as "Sunday midnight".
-    // Using a fixed IST offset keeps the offer correct for visitors abroad.
-    const IST_OFFSET = 5.5 * 60 * 60 * 1000;
-    const now = new Date(Date.now() + IST_OFFSET);
-    const day = now.getUTCDay();
-    const daysUntilMonday = day === 1 ? 7 : (8 - day) % 7;
-    return Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + daysUntilMonday, 0, 0, 0) - IST_OFFSET;
-  };
-
-  const saleCopy = () => {
-    const remaining = Math.max(0, saleDeadline() - Date.now());
-    const hours = Math.floor(remaining / 3600000);
-    const minutes = Math.floor((remaining % 3600000) / 60000);
-    const seconds = Math.floor((remaining % 60000) / 1000);
-    const timer = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-    return remaining > 0
-      ? `SALE ENDS SUNDAY MIDNIGHT IST · ${timer} LEFT · 10% OFF SITEWIDE · 15% OFF WHOLE MACKEREL · ₹30 OFF PREPAID`
-      : 'SALE HAS ENDED · SHOP THE CURRENT LIVE PRICES · FREE SHIPPING ACROSS INDIA';
-  };
+  const saleCopy = () => 'SHOP THE CURRENT LIVE PRICES · FREE SHIPPING ACROSS INDIA';
 
   const installLiveTicker = () => {
     const notice = document.querySelector('.notice');

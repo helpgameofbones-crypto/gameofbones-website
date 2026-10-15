@@ -13,7 +13,7 @@
   const items = () => cart().map(line => {
     // Keep the product snapshot that was added to the cart. Catalogue edits
     // must not silently change a customer's item, title or price at checkout.
-    const product = line.product || GOB_PRODUCTS[line.id];
+    const product = typeof commerceProduct === 'function' ? commerceProduct(line) : (line.product || GOB_PRODUCTS[line.id]);
     if (!product) return null;
     // Cart snapshots can outlive catalogue edits. Only send a pack label when
     // the current catalogue entry explicitly provides one; never resurrect a
@@ -51,7 +51,7 @@
     return missing;
   };
   const valid = () => missingFields().length === 0;
-  const saleBasket = () => cart().some(line => { const product = line.product || GOB_PRODUCTS[line.id]; return Number(product?.comparePrice) > Number(product?.price); });
+  const saleBasket = () => cart().some(line => { const product = typeof commerceProduct === 'function' ? commerceProduct(line) : (line.product || GOB_PRODUCTS[line.id]); return Number(product?.comparePrice) > Number(product?.price); });
   const total = () => {
     const value = subtotal();
     const privateCoupon = form.querySelector('[name="private_coupon"]')?.value.trim().toUpperCase() || '', coupon = privateCoupon || form.querySelector('[name="coupon"]:checked')?.value || '', eligibility = window.GOB_CHECKOUT_ELIGIBILITY || {};

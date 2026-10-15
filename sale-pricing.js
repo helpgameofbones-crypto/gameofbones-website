@@ -1,23 +1,13 @@
-/* Sale presentation is driven by the admin MRP (compare price). The actual
-   checkout rule is also enforced by the server; this file keeps the product
-   page and its cart snapshot clear and consistent. */
+/* Product offers are driven by the admin price and MRP (compare price).
+   This file keeps the product page and its cart snapshot consistent. */
 (() => {
   const money = value => `₹${Number(value || 0).toLocaleString('en-IN')}`;
   const product = () => window.GOB_CURRENT_PRODUCT || null;
-  const productSlug = item => String(item?.id || item?.n || item?.name || '').toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-  const saleRate = item => productSlug(item) === 'whole-mackerel' ? .15 : .10;
   const withSalePrice = (pack, item) => {
     const price = Number(pack?.price || 0), compare = Number(pack?.compare_price || pack?.comparePrice || 0);
-    if (!price) return { ...pack, price, compare_price: compare };
-    // Trial packs carry their own rounded price and MRP from admin; never
-    // recalculate them from the sitewide sale percentage.
-    if (/^trial\b/i.test(String(pack?.label || '').trim())) return { ...pack, price, compare_price: compare };
-    // Some boxes had an older bundle saving in `price` plus a higher MRP in
-    // `compare_price`. During a sitewide sale the MRP is the only consistent
-    // base: otherwise a card could claim 10% while showing 12% (or another
-    // percentage). Recalculate every visible sale from that original price.
-    const originalPrice = compare > price ? compare : price;
-    return { ...pack, price: Math.round(originalPrice * (1 - saleRate(item))), compare_price: originalPrice };
+    // The sitewide sale has ended. Keep the catalogue's live price intact,
+    // including any future product-specific offer set by the admin.
+    return { ...pack, price, compare_price: compare };
   };
   const packsFor = item => {
     const original = Array.isArray(item?.packs) && item.packs.length
@@ -54,7 +44,7 @@
     const presentation = document.createElement('div');
     presentation.id = 'salePricePresentation';
     presentation.className = 'sale-price-presentation';
-    presentation.innerHTML = `<span class="sale-badge">Sale</span><s>${money(pack.compare_price)}</s><strong>${money(pack.price)}</strong><small>${productSlug(item) === 'whole-mackerel' ? '15% off' : '10% off'}</small>`;
+    presentation.innerHTML = `<span class="sale-badge">Offer</span><s>${money(pack.compare_price)}</s><strong>${money(pack.price)}</strong>`;
     price.insertAdjacentElement('afterend', presentation);
   }
 
