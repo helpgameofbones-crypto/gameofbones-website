@@ -10,6 +10,10 @@ const TRIAL_FREE_DELIVERY_MIN=300,TRIAL_DELIVERY_CHARGE=50
 function cartHasTrialPacks(){return cart().some(item=>{const p=commerceProduct(item);return /^trial\b/i.test(String(p?.packLabel||'').trim())||/—\s*trial\b/i.test(String(p?.name||''))})}
 function trialDeliveryCharge(){return cartHasTrialPacks()&&cartValue()<TRIAL_FREE_DELIVERY_MIN?TRIAL_DELIVERY_CHARGE:0}
 function cartHasSaleItems(){return cart().some(item=>{const product=commerceProduct(item);return Number(product?.comparePrice)>Number(product?.price)})}
+const BOGO_TREATS=new Set(['chicken feet','chicken neck'])
+function bogoTreat(product){return BOGO_TREATS.has(String(product?.name||'').replace(/\s+—\s+.+$/,'').trim().toLowerCase())}
+function cartHasBogoItems(){return cart().some(item=>bogoTreat(commerceProduct(item)))}
+function bogoDiscount(){return cart().reduce((total,item)=>{const product=commerceProduct(item);return total+(bogoTreat(product)?Math.floor((Number(item.quantity)||0)/2)*(Number(product?.price)||0):0)},0)}
 const POINT_VALUE_RUPEES=.3,MAX_POINTS_DISCOUNT_RUPEES=100,MAX_REDEMPTION_POINTS=Math.floor(MAX_POINTS_DISCOUNT_RUPEES/POINT_VALUE_RUPEES)
 
 // Private offers are still checked by the server before payment. These
@@ -62,13 +66,15 @@ function renderCommerceCart(){
     updateSaleOfferControls()
     return
   }
-  const saleBasket=cartHasSaleItems()
+  const saleBasket=cartHasSaleItems(),bogoBasket=cartHasBogoItems()
   const saleNote=saleBasket?'<aside class="cart-sale-note" role="status"><strong>Your listed sale price is locked in.</strong><span>Add one eligible code and/or reward points at secure checkout for extra savings.</span></aside>':''
-  root.innerHTML=saleNote+items.map(item=>{
+  const bogoNote=bogoBasket?'<aside class="cart-sale-note" role="status"><strong>Buy 1 Get 1 is on for Chicken Feet & Chicken Neck.</strong><span>Add two of the same eligible pack and one is free. This offer cannot be combined with coupon codes or reward points.</span></aside>':''
+  root.innerHTML=bogoNote+saleNote+items.map(item=>{
     const product=commerceProduct(item)
     if(!product)return ''
     const sale=Number(product.comparePrice)>Number(product.price)
-    return `<article class="cart-line"><img src="${product.image}" alt="${product.name}"><div><h2>${product.name}</h2><p>${product.tag||'Game of Bones treat'}${sale?' · <b>Sale</b>':''}</p><div class="line-actions"><div class="mini-qty"><button data-change="${item.id}" data-amount="-1" aria-label="Decrease ${product.name}">−</button><span>${item.quantity}</span><button data-change="${item.id}" data-amount="1" aria-label="Increase ${product.name}">+</button></div><button class="remove-link" data-delete="${item.id}">Remove</button></div></div><div class="line-price">${sale?`<s>${money(product.comparePrice*item.quantity)}</s> `:''}${money(product.price*item.quantity)}</div></article>`
+    const bogo=bogoTreat(product),bogoSaving=bogo?Math.floor((Number(item.quantity)||0)/2)*(Number(product.price)||0):0,lineTotal=(Number(product.price)||0)*(Number(item.quantity)||0)-bogoSaving
+    return `<article class="cart-line"><img src="${product.image}" alt="${product.name}"><div><h2>${product.name}</h2><p>${product.tag||'Game of Bones treat'}${sale?' · <b>Sale</b>':''}${bogo?' · <b>BUY 1 GET 1</b>':''}</p><div class="line-actions"><div class="mini-qty"><button data-change="${item.id}" data-amount="-1" aria-label="Decrease ${product.name}">−</button><span>${item.quantity}</span><button data-change="${item.id}" data-amount="1" aria-label="Increase ${product.name}">+</button></div><button class="remove-link" data-delete="${item.id}">Remove</button></div></div><div class="line-price">${sale?`<s>${money(product.comparePrice*item.quantity)}</s> `:''}${bogoSaving?`<s>${money(product.price*item.quantity)}</s> `:''}${money(lineTotal)}${bogoSaving?'<small>Buy 1 Get 1</small>':''}</div></article>`
   }).join('')
   root.querySelectorAll('[data-change]').forEach(button=>button.addEventListener('click',()=>{
     const items=cart(),entry=items.find(item=>item.id===button.dataset.change)
@@ -84,7 +90,7 @@ function renderCommerceCart(){
 }
 
 function updateCommerceTotals(){
-  const subtotal=cartValue(),count=cartCount(),saleBasket=cartHasSaleItems()
+  const subtotal=cartValue(),count=cartCount(),saleBasket=cartHasSaleItems(),bogoBasket=cartHasBogoItems(),bogoSaving=bogoDiscount()
   const privateCoupon=document.querySelector('[name="private_coupon"]')?.value.trim().toUpperCase()||''
   // A recognised private code can be entered from the bag before the secure
   // checkout form exists. Keep it in session storage and show the same quote.
@@ -92,11 +98,11 @@ function updateCommerceTotals(){
   const coupon=privateCoupon||storedCoupon||document.querySelector('[name="coupon"]:checked')?.value||(!document.querySelector('[name="coupon"]')&&cartOfferClaimed()?CART_OFFER_CODE:'none')
   const eligibility=window.GOB_CHECKOUT_ELIGIBILITY||{signedIn:false,firstOrder:false,checking:false,points:0}
   // The displayed price, one valid code and loyalty points can be used together.
-  const couponRate=(coupon==='WELCOME15'&&!(eligibility.signedIn&&!eligibility.checking&&!eligibility.firstOrder) ? .15 : coupon==='MEGA20'&&subtotal>=2199 ? .2 : privateOfferRate(coupon))
-  const couponDiscount=offerDiscountFor(coupon,subtotal,couponRate),saving=couponDiscount
+  const couponRate=bogoBasket?0:(coupon==='WELCOME15'&&!(eligibility.signedIn&&!eligibility.checking&&!eligibility.firstOrder) ? .15 : coupon==='MEGA20'&&subtotal>=2199 ? .2 : privateOfferRate(coupon))
+  const couponDiscount=bogoBasket?0:offerDiscountFor(coupon,subtotal,couponRate),saving=bogoSaving+couponDiscount
   const payment=document.querySelector('[name="payment"]:checked')?.value||'online'
   const requestedPoints=Number(document.querySelector('[name="loyalty_points_redeemed"]')?.value||0)
-  const pointsRedeemed=eligibility.signedIn?Math.min(Math.max(Math.floor(requestedPoints)||0,0),MAX_REDEMPTION_POINTS,Number(eligibility.points||0)):0
+  const pointsRedeemed=bogoBasket?0:(eligibility.signedIn?Math.min(Math.max(Math.floor(requestedPoints)||0,0),MAX_REDEMPTION_POINTS,Number(eligibility.points||0)):0)
   const pointsDiscount=Math.min(MAX_POINTS_DISCOUNT_RUPEES,Math.round(pointsRedeemed*POINT_VALUE_RUPEES))
   const delivery=trialDeliveryCharge(),paymentChange=payment==='cod'?40:-30,total=Math.max(0,subtotal-saving-pointsDiscount+paymentChange+delivery)
   const pointsEarned=Math.floor(total/10),pointsValue=pointsEarned*.3
@@ -108,14 +114,16 @@ function updateCommerceTotals(){
   document.querySelectorAll('[data-commerce-total]').forEach(el=>el.textContent=money(total))
   document.querySelectorAll('[data-coupon-discount]').forEach(el=>el.textContent=saving?`−${money(saving)}`:'—')
   document.querySelectorAll('[data-coupon-row]').forEach(el=>el.hidden=!saving)
-  document.querySelectorAll('[data-coupon-label]').forEach(el=>el.textContent=saving?`Coupon — ${coupon}`:'Coupon')
+  document.querySelectorAll('[data-coupon-label]').forEach(el=>el.textContent=bogoSaving?'Buy 1 Get 1':(saving?`Coupon — ${coupon}`:'Coupon'))
   document.querySelectorAll('[data-payment-change]').forEach(el=>el.textContent=payment==='cod'?`+${money(40)}`:`−${money(30)}`)
   document.querySelectorAll('[data-points-discount]').forEach(el=>el.textContent=pointsDiscount?`−${money(pointsDiscount)}`:'—')
   document.querySelectorAll('[data-loyalty-points]').forEach(el=>el.textContent=pointsEarned.toLocaleString('en-IN'))
   document.querySelectorAll('[data-loyalty-value]').forEach(el=>el.textContent=pointsValue.toFixed(pointsValue%1?2:0))
   document.querySelectorAll('[data-commerce-count]').forEach(el=>el.textContent=count)
   const statusMessage=()=>{
-    if(saleBasket){
+    if(bogoBasket){
+      return bogoSaving?`Buy 1 Get 1 is applied: ${money(bogoSaving)} saved. Coupon codes and reward points cannot be used with this offer.`:'Buy 1 Get 1 is active for Chicken Feet and Chicken Neck. Add one more of the same eligible pack to receive one free. Coupon codes and reward points cannot be used with this offer.'
+    }else if(saleBasket){
       return coupon==='none'&&!privateCoupon?'Your current listed price is applied. Add one eligible code and/or reward points at checkout for extra savings.':'Your current listed price, eligible code and reward points are being applied.'
     }else if(coupon==='WELCOME15'){
       return !eligibility.signedIn?'WELCOME15 is applied: 15% off your first order. No login needed — we check your mobile number and email at payment.':eligibility.checking?'Checking whether this account is eligible for WELCOME15…':eligibility.firstOrder?'WELCOME15 is available for this first order.':'WELCOME15 is not applied: this account already has a completed order, or its first-order status could not be verified.'
@@ -204,8 +212,26 @@ function ensureCheckoutOptions(){
 
 function updateSaleOfferControls(){
   const title=document.querySelector('[data-automatic-offer-title]'),copy=document.querySelector('[data-automatic-offer-copy]')
+  const bogoBasket=cartHasBogoItems()
+  const form=document.querySelector('#checkoutForm')
+  const privateCode=form?.querySelector('[name="private_coupon"]')
+  const points=form?.querySelector('[name="loyalty_points_redeemed"]')
+  if(bogoBasket){
+    if(title)title.textContent='Buy 1 Get 1 is applied automatically'
+    if(copy)copy.textContent='Chicken Feet and Chicken Neck Buy 1 Get 1 cannot be combined with coupon codes or reward points.'
+    document.querySelectorAll('[data-welcome-offer],[data-cart-offer],[data-mega-offer],.private-code,[data-loyalty-redeem],[data-loyalty-mirror]').forEach(el=>el.hidden=true)
+    document.querySelector('[name="coupon"][value="none"]')?.click()
+    if(privateCode)privateCode.value=''
+    if(points)points.value='0'
+    const summary=document.querySelector('#checkoutCoupon');if(summary){summary.value='';summary.disabled=true;summary.placeholder='Not available with Buy 1 Get 1'}
+    return
+  }
+  document.querySelectorAll('[data-welcome-offer],[data-mega-offer],.private-code').forEach(el=>el.hidden=false)
+  const summary=document.querySelector('#checkoutCoupon');if(summary){summary.disabled=false;summary.placeholder='Enter coupon code'}
   if(title)title.textContent='Continue with the listed price'
   if(copy)copy.textContent='Your current listed price is shown above. You may choose one eligible code and use reward points.'
+  updateWelcomeOfferVisibility()
+  updateLoyaltyRedemptionVisibility()
 }
 
 function updateWelcomeOfferVisibility(){
@@ -228,6 +254,14 @@ function updateWelcomeOfferVisibility(){
 function updateLoyaltyRedemptionVisibility(){
   const eligibility=window.GOB_CHECKOUT_ELIGIBILITY||{},control=document.querySelector('[data-loyalty-redeem]'),row=document.querySelector('[data-loyalty-discount-row]')
   if(!control||!row)return
+  if(cartHasBogoItems()){
+    control.hidden=true;row.hidden=true
+    const input=control.querySelector('[name="loyalty_points_redeemed"]');if(input)input.value='0'
+    const toggle=control.querySelector('[data-loyalty-toggle]');if(toggle)toggle.checked=false
+    const mirror=document.querySelector('[data-loyalty-mirror]');if(mirror)mirror.style.display='none'
+    const prompt=document.querySelector('[data-loyalty-login]');if(prompt)prompt.hidden=true
+    return
+  }
   const available=Math.min(MAX_REDEMPTION_POINTS,Math.max(0,Math.floor(Number(eligibility.points||0))))
   control.hidden=!eligibility.signedIn||available<=0
   // Signed-out shoppers never see the points box, so tell them how to use their points.
@@ -313,6 +347,11 @@ function setupCommerce(){
   document.querySelector('#promoForm')?.addEventListener('submit',event=>{
     event.preventDefault()
     const code=document.querySelector('#promoCode').value.trim().toUpperCase(),message=document.querySelector('#promoMessage')
+    if(cartHasBogoItems()){
+      window.sessionStorage.removeItem('gob-checkout-coupon')
+      message.textContent='Buy 1 Get 1 on Chicken Feet and Chicken Neck cannot be combined with coupon codes or reward points.'
+      return
+    }
     if(code==='WELCOME15'){
       window.sessionStorage.setItem('gob-checkout-coupon',code)
       message.innerHTML='WELCOME15 is applied: 15% off your first order. <a href="/checkout">Continue to checkout</a>, no login needed.'

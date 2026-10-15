@@ -34,6 +34,11 @@
     return { name, catalog_id, pack_label: packLabel, size: packLabel, price: unitPrice, pack_price: unitPrice, unit_price: unitPrice, line_total: unitPrice * quantity, quantity, qty: quantity };
   }).filter(Boolean);
   const subtotal = () => items().reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const isBogoTreat = item => ['chicken feet', 'chicken neck'].includes(String(item?.name || '').trim().toLowerCase());
+  const bogo = () => {
+    const offerItems = items().filter(isBogoTreat);
+    return { active: offerItems.length > 0, discount: offerItems.reduce((sum, item) => sum + Math.floor(item.quantity / 2) * item.price, 0) };
+  };
   const method = () => form.querySelector('[name="payment"]:checked')?.value === 'cod' ? 'cod' : 'online';
   const address = () => ['street-address', 'address-line2', 'address-level2', 'address-level1', 'postal-code'].map(name => get(`[autocomplete="${name}"]`)).filter(Boolean).join(', ');
   const addressDetails = () => ({ line1: get('[autocomplete="street-address"]'), line2: get('[autocomplete="address-line2"]'), city: get('[autocomplete="address-level2"]'), state: get('[autocomplete="address-level1"]'), pincode: get('[autocomplete="postal-code"]') });
@@ -55,19 +60,20 @@
   const total = () => {
     const value = subtotal();
     const privateCoupon = form.querySelector('[name="private_coupon"]')?.value.trim().toUpperCase() || '', coupon = privateCoupon || form.querySelector('[name="coupon"]:checked')?.value || '', eligibility = window.GOB_CHECKOUT_ELIGIBILITY || {};
+    const buyOneGetOne = bogo();
     // Catalogue sale pricing may be combined with one valid code and loyalty
     // points; no separate buy-more discount is active during this sale.
     // WELCOME15 needs no login: the server checks this mobile/email has not ordered before.
-    const couponRate = coupon === 'WELCOME15' && !(eligibility.signedIn && !eligibility.checking && !eligibility.firstOrder) ? .15 : coupon === 'MEGA20' && value >= 2199 ? .2 : privateOfferRate(coupon);
-    const discount = typeof offerDiscountFor === 'function' ? offerDiscountFor(coupon, value, couponRate) : Math.round(value * couponRate);
+    const couponRate = buyOneGetOne.active ? 0 : coupon === 'WELCOME15' && !(eligibility.signedIn && !eligibility.checking && !eligibility.firstOrder) ? .15 : coupon === 'MEGA20' && value >= 2199 ? .2 : privateOfferRate(coupon);
+    const discount = buyOneGetOne.discount + (buyOneGetOne.active ? 0 : (typeof offerDiscountFor === 'function' ? offerDiscountFor(coupon, value, couponRate) : Math.round(value * couponRate)));
     const requestedPoints = Math.floor(Number(form.querySelector('[name="loyalty_points_redeemed"]')?.value || 0));
-    const points = eligibility.signedIn ? Math.min(Math.max(requestedPoints, 0), MAX_REDEMPTION_POINTS, Number(eligibility.points || 0)) : 0;
+    const points = buyOneGetOne.active ? 0 : (eligibility.signedIn ? Math.min(Math.max(requestedPoints, 0), MAX_REDEMPTION_POINTS, Number(eligibility.points || 0)) : 0);
     const pointsDiscount = Math.min(MAX_POINTS_DISCOUNT_RUPEES, Math.round(points * POINT_VALUE_RUPEES)), cod = method() === 'cod' ? 40 : -30;
     // Private codes are validated authoritatively by the checkout server.
     // Preserve the entered code even when the browser cannot know its rate;
     // this lets off-site customer codes work without advertising them here.
     const delivery = typeof trialDeliveryCharge === 'function' ? trialDeliveryCharge() : 0;
-    return { value, discount, points, delivery, coupon: privateCoupon || (couponRate || coupon === 'CART50' ? coupon : ''), grand: Math.max(1, value - discount - pointsDiscount + cod + delivery) };
+    return { value, discount, points, delivery, coupon: buyOneGetOne.active ? '' : (privateCoupon || (couponRate || coupon === 'CART50' ? coupon : '')), bogo: buyOneGetOne, grand: Math.max(1, value - discount - pointsDiscount + cod + delivery) };
   };
   const result = (html, failed = false) => { const el = document.querySelector('#checkoutSuccess'); if (!el) return; el.classList.add('show'); el.style.background = failed ? '#f9e1da' : '#e4ebdf'; el.innerHTML = html; el.focus(); };
   const completeOrder = (ref, payment) => {
