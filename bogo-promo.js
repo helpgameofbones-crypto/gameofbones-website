@@ -17,7 +17,13 @@
     document.querySelector('#addProduct')?.insertAdjacentElement('afterend', note);
   };
   const decorate = () => document.querySelectorAll('.product-card').forEach(cardOffer);
-  document.addEventListener('DOMContentLoaded', () => { decorate(); productOffer(window.GOB_CURRENT_PRODUCT); });
+  const observeCards = () => {
+    const catalogue = document.querySelector('#liveCatalog');
+    if (!catalogue || catalogue.dataset.bogoObserved) return;
+    catalogue.dataset.bogoObserved = 'true';
+    new MutationObserver(() => decorate()).observe(catalogue, { childList: true, subtree: true });
+  };
+  document.addEventListener('DOMContentLoaded', () => { decorate(); observeCards(); productOffer(window.GOB_CURRENT_PRODUCT); });
   document.addEventListener('gob:catalog-sync', () => setTimeout(decorate, 0));
   document.addEventListener('gob:product-ready', event => productOffer(event.detail?.product));
 })();
