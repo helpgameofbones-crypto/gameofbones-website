@@ -51,18 +51,24 @@
 
       packOptions.querySelectorAll('.option').forEach((button, index) => button.addEventListener('click', () => choose(index)));
       choose(selectedPack);
+      document.querySelector('#restockGuidanceProduct')?.remove();
       document.querySelector('#restockNotifyProduct')?.remove();
+      const guidance = document.createElement('aside');
+      guidance.id = 'restockGuidanceProduct'; guidance.className = 'restock-notify-area';
+      guidance.setAttribute('aria-label', 'Fresh stock notifications');
+      guidance.innerHTML = '<strong>Fresh batches, every day</strong><span>We make fresh batches of treats every day. If a treat is out of stock or you would like more, tap <b>Notify me</b> on that treat and enter your email address or mobile number. We’ll let you know as soon as it is freshly stocked.</span>';
+      addButton.insertAdjacentElement('afterend', guidance);
       if (product.low_stock) {
         const restockArea = document.createElement('aside');
         restockArea.id = 'restockNotifyProduct'; restockArea.className = 'restock-notify-area';
-        restockArea.innerHTML = '<strong>Fresh batches, every day</strong><span>This treat is running low. Tap Notify me and leave your email or phone number to hear when it is freshly stocked again.</span>';
+        restockArea.innerHTML = '<strong>This treat is running low</strong><span>Get a quick heads-up when the next fresh batch is ready.</span>';
         const restock = document.createElement('button');
         restock.type = 'button'; restock.className = 'restock-notify-button';
         restock.dataset.restockProduct = encodeURIComponent(String(product.inventory_id || product.id || requestedProductId));
         restock.dataset.restockName = encodeURIComponent(String(product.n || 'this treat'));
         restock.textContent = 'Notify me when fresh stock is ready';
         restockArea.append(restock);
-        addButton.insertAdjacentElement('afterend', restockArea);
+        guidance.insertAdjacentElement('afterend', restockArea);
       }
       addButton.onclick = () => {
         const pack = packs[selectedPack];
