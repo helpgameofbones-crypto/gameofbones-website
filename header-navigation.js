@@ -11,7 +11,7 @@
     ['/track', 'Track'],
     ['/learn', 'Learn'],
   ];
-  const saleCopy = () => 'SHOP THE CURRENT LIVE PRICES · FREE SHIPPING ACROSS INDIA';
+  const saleCopy = () => 'Free shipping on every order • Pay online & get ₹30 off • MEGA20: 20% off ₹2,199+';
 
   const installLiveTicker = () => {
     const notice = document.querySelector('.notice');

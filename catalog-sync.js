@@ -56,6 +56,8 @@
           packs: productPacks,
           media: productMedia,
           bestseller: Boolean(source.is_bestseller),
+          low_stock: Boolean(source.low_stock),
+          inventory_id: source.id,
         });
         return items;
       }, []);
@@ -77,6 +79,8 @@
           packs: productPacks,
           media: productMedia,
           bestseller: Boolean(source.is_bestseller),
+          low_stock: Boolean(source.low_stock),
+          inventory_id: source.id,
         });
       });
 
@@ -86,11 +90,11 @@
         const id = item.id || slug(item.n);
         const source = byName.get(slug(item.n));
         const packs = Array.isArray(item.packs) ? item.packs : [];
-        const base = { name: item.n, price: safeMoney(item.p), comparePrice: safeMoney(item.cp), image: item.i, tag: item.c, packLabel: packs[0]?.label || '' };
+        const base = { name: item.n, price: safeMoney(item.p), comparePrice: safeMoney(item.cp), image: item.i, tag: item.c, packLabel: packs[0]?.label || '', lowStock: Boolean(item.low_stock) };
         store[id] = base;
         if (source?.id) store[source.id] = base;
         packs.forEach((pack, index) => {
-          const selected = { name: item.n, price: safeMoney(pack.price), comparePrice: safeMoney(pack.compare_price), image: item.i, tag: item.c, packLabel: pack.label || '' };
+          const selected = { name: item.n, price: safeMoney(pack.price), comparePrice: safeMoney(pack.compare_price), image: item.i, tag: item.c, packLabel: pack.label || '', lowStock: Boolean(item.low_stock) };
           const packId = `${id}-pack-${index + 1}`;
           store[packId] = selected;
           if (source?.id) store[`${source.id}-pack-${index + 1}`] = selected;

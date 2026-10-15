@@ -48,7 +48,8 @@
       const displayedPrice = isSale
         ? `<span class="catalog-price"><s>${formatPrice(comparePrice)}</s><strong>${formatPrice(currentPrice)}</strong></span>`
         : formatPrice(currentPrice);
-      return `<article class="product-card"><a href="${path}" aria-label="View ${escapeHtml(name)}">${isSale ? '<span class="sale-badge">Sale</span>' : ''}<div class="product-image ${shade}"><img src="${escapeHtml(image)}" alt="${escapeHtml(name)} natural dog treat" width="600" height="600" loading="lazy" decoding="async"></div></a><div class="card-copy"><p class="tag">${bestsellerRank(product) < 99 ? '<span class="bestseller-tag">★ Bestseller</span> ' : ''}${escapeHtml(productCategory(product))}</p><h3><a href="${path}">${escapeHtml(name)}</a></h3><p class="catalog-desc">${escapeHtml(product.d || product.description || 'Single-ingredient dog treat.')}</p><div class="card-bottom"><span>${escapeHtml(productWeight(product))} · ${displayedPrice}</span><button class="quick-add" type="button" data-product="${escapeHtml(id)}" aria-label="Add ${escapeHtml(name)} to bag">Add +</button></div></div></article>`;
+      const notify = product.low_stock ? `<button class="restock-notify-button" type="button" data-restock-product="${encodeURIComponent(String(product.inventory_id || product.id || id))}" data-restock-name="${encodeURIComponent(name)}">Notify me</button>` : '';
+      return `<article class="product-card"><a href="${path}" aria-label="View ${escapeHtml(name)}">${isSale ? '<span class="sale-badge">Sale</span>' : ''}<div class="product-image ${shade}"><img src="${escapeHtml(image)}" alt="${escapeHtml(name)} natural dog treat" width="600" height="600" loading="lazy" decoding="async"></div></a><div class="card-copy"><p class="tag">${bestsellerRank(product) < 99 ? '<span class="bestseller-tag">★ Bestseller</span> ' : ''}${escapeHtml(productCategory(product))}</p><h3><a href="${path}">${escapeHtml(name)}</a></h3><p class="catalog-desc">${escapeHtml(product.d || product.description || 'Single-ingredient dog treat.')}</p><div class="card-bottom"><span>${escapeHtml(productWeight(product))} · ${displayedPrice}</span><button class="quick-add" type="button" data-product="${escapeHtml(id)}" aria-label="Add ${escapeHtml(name)} to bag">Add +</button>${notify}</div></div></article>`;
     }).join('');
     // "Create your own trial pack" listing, shown in All and Cat views.
     if (activeCategory === 'All' || activeCategory === CAT_FILTER) {
@@ -105,6 +106,8 @@
           sizes: sellablePacks,
           images: source.images,
           videos: source.videos,
+          low_stock: Boolean(source.low_stock),
+          inventory_id: source.id,
         };
       }).filter(Boolean);
       remote.forEach(product => {
@@ -113,7 +116,7 @@
         const liveSalePacks = Array.isArray(product.sizes) && product.sizes.some(pack => Number(pack?.compare_price) > Number(pack?.price) && Number(pack?.price) > 0);
         const sellablePacks = liveSalePacks ? product.sizes : (Array.isArray(referencePacks) && referencePacks.length ? referencePacks : product.sizes);
         const firstPack = sellablePacks?.[0];
-        merged.push({ n: product.name, c: 'Treats', p: firstPack?.price ?? productPrice(product), cp: firstPack?.compare_price ?? product.compare_price ?? 0, w: firstPack?.weight || (Number(firstPack?.weight_grams) ? `${firstPack.weight_grams} g` : '') || productWeight(product), i: productImage(product), d: 'Single-ingredient dog treat.', id: slug(product.name), sizes: sellablePacks, images: product.images, videos: product.videos });
+        merged.push({ n: product.name, c: 'Treats', p: firstPack?.price ?? productPrice(product), cp: firstPack?.compare_price ?? product.compare_price ?? 0, w: firstPack?.weight || (Number(firstPack?.weight_grams) ? `${firstPack.weight_grams} g` : '') || productWeight(product), i: productImage(product), d: 'Single-ingredient dog treat.', id: slug(product.name), sizes: sellablePacks, images: product.images, videos: product.videos, low_stock: Boolean(product.low_stock), inventory_id: product.id });
       });
       catalogue = merged;
       window.GOB_LIVE_CATALOG = merged;

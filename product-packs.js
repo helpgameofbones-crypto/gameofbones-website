@@ -51,6 +51,19 @@
 
       packOptions.querySelectorAll('.option').forEach((button, index) => button.addEventListener('click', () => choose(index)));
       choose(selectedPack);
+      document.querySelector('#restockNotifyProduct')?.remove();
+      if (product.low_stock) {
+        const restockArea = document.createElement('aside');
+        restockArea.id = 'restockNotifyProduct'; restockArea.className = 'restock-notify-area';
+        restockArea.innerHTML = '<strong>Fresh batches, every day</strong><span>This treat is running low. Tap Notify me and leave your email or phone number to hear when it is freshly stocked again.</span>';
+        const restock = document.createElement('button');
+        restock.type = 'button'; restock.className = 'restock-notify-button';
+        restock.dataset.restockProduct = encodeURIComponent(String(product.inventory_id || product.id || requestedProductId));
+        restock.dataset.restockName = encodeURIComponent(String(product.n || 'this treat'));
+        restock.textContent = 'Notify me when fresh stock is ready';
+        restockArea.append(restock);
+        addButton.insertAdjacentElement('afterend', restockArea);
+      }
       addButton.onclick = () => {
         const pack = packs[selectedPack];
         const catalogId = window.GOB_META?.productId?.(product, requestedProductId) || String(requestedProductId || '');

@@ -61,6 +61,7 @@
     capture: body => request('/public-email-capture', { method: 'POST', body: JSON.stringify(body) }),
     contactInquiry: body => request('/contact-inquiries', { method: 'POST', body: JSON.stringify(body) }),
     spinWheel: body => request('/spin-wheel', { method: 'POST', body: JSON.stringify(body) }),
+    restockAlert: body => request('/public-restock-alert', { method: 'POST', body: JSON.stringify(body) }),
     abandonedCart: body => request('/abandoned-cart', { method: 'POST', body: JSON.stringify(body) }),
     orderAttempt: body => request('/order-attempt-alert', { method: 'POST', body: JSON.stringify(body) }),
     saveOrder: body => request('/save-order', { method: 'POST', headers: customerHeaders(), body: JSON.stringify(body) }),
