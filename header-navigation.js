@@ -11,13 +11,7 @@
     ['/track', 'Track'],
     ['/learn', 'Learn'],
   ];
-  const tickerMessages = [
-    'WELCOME15: 15% off your first order',
-    'Earn reward points with every treat order',
-    'Naturally dehydrated treats • no preservatives, grains or fillers',
-    'Free shipping on every order • Pay online & get ₹30 off',
-    'MEGA20: 20% off orders ₹2,199+',
-  ];
+  const tickerCopy = 'WELCOME15: 15% off your first order • Earn reward points with every treat order • Naturally dehydrated, preservative-free treats • Free shipping • ₹30 off when you pay online • MEGA20: 20% off ₹2,199+';
 
   const installLiveTicker = () => {
     const notice = document.querySelector('.notice');
@@ -25,13 +19,11 @@
     notice.dataset.gobLiveTickerReady = 'true';
     notice.innerHTML = '<div class="gob-live-ticker"><span></span></div>';
     const label = notice.querySelector('.gob-live-ticker span');
-    let tickerIndex = 0;
     const paint = () => {
-      label.textContent = tickerMessages[tickerIndex];
+      label.textContent = tickerCopy;
       requestAnimationFrame(() => document.documentElement.style.setProperty('--gob-notice-height', `${notice.offsetHeight}px`));
     };
     paint();
-    window.setInterval(() => { tickerIndex = (tickerIndex + 1) % tickerMessages.length; paint(); }, 5000);
   };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', installLiveTicker, { once: true });
   else installLiveTicker();
@@ -39,7 +31,7 @@
   if (!document.querySelector('link[data-gob-header-navigation]')) {
     const stylesheet = document.createElement('link');
     stylesheet.rel = 'stylesheet';
-    stylesheet.href = 'header-navigation.css?v=live-ticker-6';
+    stylesheet.href = 'header-navigation.css?v=live-ticker-7';
     stylesheet.dataset.gobHeaderNavigation = 'true';
     document.head.append(stylesheet);
   }
