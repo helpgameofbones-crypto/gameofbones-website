@@ -1,0 +1,164 @@
+/* Mobile-first polish layer (loaded on every page from site.js).
+   Phones are most of our traffic, so this file only changes screens up to
+   760px wide; desktop is untouched. Kept in one place so it is easy to tune. */
+
+/* Rotating offer bar is phone-only; desktop keeps the full one-line banner. */
+.notice .mp-ticker, .notice .gob-live-ticker .mp-ticker { display: none !important; }
+/* The menu copy of Log in is only for phones (the header shows it on desktop) */
+@media (min-width: 761px) { .nav .compact-nav a.mp-login-link, .nav .nav-links a.mp-login-link { display: none !important; } }
+/* Card price split (all widths): bold price, muted pack size */
+.mp-price { color: var(--ink, #102c22); font-weight: 800; }
+.mp-weight { margin-left: 6px; color: var(--muted, #557064); font-size: .88em; font-weight: 600; }
+
+@media (max-width: 760px) {
+  :root { --mp-notice: 34px; --mp-nav: 58px; }
+  html { scroll-padding-top: calc(var(--mp-notice) + var(--mp-nav) + 8px); }
+  body { -webkit-text-size-adjust: 100%; }
+
+  /* ---- 1. Offer bar: one line that rotates through every offer ---- */
+  .notice { position: sticky !important; top: 0 !important; min-height: var(--mp-notice) !important; height: var(--mp-notice) !important; overflow: hidden !important; }
+  .notice .gob-live-ticker, .notice .mp-ticker { height: var(--mp-notice); }
+  /* Original text stays readable to screen readers but is visually replaced */
+  .notice .gob-live-ticker > span:not(.mp-ticker) { position: absolute !important; width: 1px !important; height: 1px !important; min-height: 0 !important; padding: 0 !important; overflow: hidden !important; clip: rect(0 0 0 0) !important; white-space: nowrap !important; }
+  .notice .gob-live-ticker .mp-ticker { position: relative; display: block !important; width: 100%; padding: 0 !important; }
+  .notice .mp-ticker b {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    padding: 0 14px; color: #fff8e9; font-size: 11px; font-weight: 800; letter-spacing: .06em;
+    line-height: 1.2; text-align: center; text-transform: uppercase; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis;
+    opacity: 0; visibility: hidden; transform: translateY(8px); transition: opacity .2s ease, transform .3s ease, visibility 0s linear .2s;
+  }
+  .notice .mp-ticker b.is-on { opacity: 1; visibility: visible; transform: none; transition: opacity .3s ease .15s, transform .35s ease .15s, visibility 0s; }
+
+  /* ---- 2. Compact header that sits flush under the offer bar ---- */
+  .nav {
+    position: sticky !important; top: var(--mp-notice) !important; z-index: 44 !important;
+    min-height: var(--mp-nav) !important; height: var(--mp-nav); padding: 0 12px !important; gap: 8px !important;
+    box-shadow: 0 1px 0 var(--line, rgba(16,44,34,.15));
+  }
+  .nav .brand img { width: auto !important; height: 38px !important; max-height: 38px !important; }
+  .nav .brand small { display: none !important; }
+  .nav .nav-actions { gap: 6px !important; }
+  .nav .login-trigger, .nav .nav-actions > a[href*="login"] { display: none !important; }
+  .nav .search-trigger { width: 40px !important; height: 40px !important; min-width: 40px; padding: 0 !important; display: grid !important; place-items: center; }
+  .nav .search-trigger span:not(.sr-only) { display: none !important; }
+  .nav .cart-trigger {
+    position: relative; width: 44px !important; height: 44px !important; min-width: 44px !important;
+    min-height: 44px !important; padding: 0 !important; display: grid !important; place-items: center;
+  }
+  .nav .cart-trigger svg { width: 20px; height: 20px; }
+  .nav .cart-trigger .jar-count { top: -3px !important; right: -3px !important; min-width: 19px; height: 19px; font-size: 10px !important; line-height: 19px !important; }
+  .nav .menu-toggle { min-height: 40px !important; padding: 0 12px !important; font-size: 14px !important; }
+  .nav .compact-nav.open, .nav .nav-links.open { max-height: calc(100vh - var(--mp-notice) - var(--mp-nav)); overflow-y: auto; }
+  .nav .compact-nav .mp-login-link { font-weight: 800; }
+
+  /* ---- 3. Shop page header: less scrolling before the first treat ---- */
+  .shop-hero { padding-top: 22px !important; padding-bottom: 14px !important; }
+  .shop-hero .display { font-size: clamp(30px, 9vw, 40px) !important; line-height: 1.04 !important; margin-bottom: 8px !important; }
+  .shop-hero .lead { font-size: 15px !important; line-height: 1.45 !important; margin-bottom: 10px !important; }
+  .shop-trust {
+    display: flex !important; flex-wrap: nowrap !important; gap: 8px !important; overflow-x: auto;
+    margin: 0 -16px !important; padding: 2px 16px 6px !important; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+  }
+  .shop-trust::-webkit-scrollbar, .catalog-filters::-webkit-scrollbar { display: none; }
+  .shop-trust li { flex: none; white-space: nowrap; }
+  .catalogue-section { padding-top: 10px !important; }
+  .catalogue-section .section-head { margin-bottom: 10px !important; }
+  .catalogue-section .section-title { font-size: 24px !important; line-height: 1.12 !important; }
+  .catalogue-section .section-head .eyebrow { display: none; }
+
+  /* Restock note: one tidy line instead of a paragraph */
+  .catalogue-section .restock-notify-area {
+    display: flex !important; align-items: center; gap: 8px; margin: 0 0 10px !important; padding: 9px 12px !important;
+    border-radius: 10px; font-size: 12.5px !important; line-height: 1.35 !important;
+  }
+  .catalogue-section .restock-notify-area > span { display: none !important; }
+  .catalogue-section .restock-notify-area::after { content: "Sold out? Tap Notify me on the treat."; color: inherit; opacity: .85; }
+
+  /* Category filters: one swipeable row that stays in reach */
+  .catalog-filters {
+    position: sticky; top: calc(var(--mp-notice) + var(--mp-nav)); z-index: 30;
+    display: flex !important; flex-wrap: nowrap !important; gap: 8px !important; overflow-x: auto;
+    margin: 0 -16px 12px !important; padding: 10px 16px !important;
+    background: var(--paper, #fffdf8); box-shadow: 0 6px 12px -10px rgba(16,44,34,.35);
+    scrollbar-width: none; -webkit-overflow-scrolling: touch; scroll-snap-type: x proximity;
+  }
+  .catalog-filters .filter {
+    flex: none; min-height: 38px !important; padding: 0 14px !important; border-radius: 999px !important;
+    font-size: 12px !important; letter-spacing: .04em !important; white-space: nowrap; scroll-snap-align: start;
+  }
+
+  /* ---- 4. Product cards: image, name, bold price, one clear button ---- */
+  .products { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 10px !important; }
+  .products .product-card { display: flex !important; flex-direction: column; border-radius: 14px !important; overflow: hidden; }
+  .products .product-card > a:first-child { display: block; }
+  .products .product-card .product-image { aspect-ratio: 1 / 1 !important; height: auto !important; min-height: 0 !important; }
+  .products .product-card .product-image img { width: 100%; height: 100%; object-fit: cover; }
+  .products .product-card .card-copy { display: flex !important; flex: 1; flex-direction: column; gap: 4px !important; padding: 10px 10px 12px !important; }
+  .products .product-card .tag {
+    display: flex !important; align-items: center; gap: 6px; margin: 0 !important; min-width: 0;
+    font-size: 10px !important; letter-spacing: .06em !important; line-height: 1.2 !important;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .products .product-card .bestseller-tag { flex: none; padding: 2px 6px !important; font-size: 9.5px !important; }
+  .products .product-card h3 {
+    margin: 2px 0 0 !important; font-size: 17px !important; line-height: 1.15 !important;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 0 !important;
+  }
+  .products .product-card .catalog-desc { display: none !important; }
+  .products .product-card .card-bottom {
+    display: flex !important; flex-direction: column !important; align-items: stretch !important;
+    gap: 8px !important; margin-top: auto !important; padding-top: 6px !important;
+  }
+  .products .product-card .card-bottom > span:first-child { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; font-size: 12px !important; color: var(--muted, #557064); }
+  .mp-price { color: var(--ink, #102c22); font-size: 17px; font-weight: 800; letter-spacing: -.01em; }
+  .mp-weight { color: var(--muted, #557064); font-size: 12px; font-weight: 600; }
+  .products .product-card .quick-add, .products .product-card .card-bottom > a {
+    width: 100% !important; min-height: 42px !important; height: auto !important; margin: 0 !important;
+    border-radius: 999px !important; font-size: 14px !important; justify-content: center;
+  }
+  /* "Notify me" is secondary while a treat is in stock, primary once it sells out */
+  .products .product-card .restock-notify-button {
+    align-self: center; min-height: 32px; margin: -2px 0 0 !important; padding: 4px 8px !important;
+    border: 0 !important; background: none !important; box-shadow: none !important;
+    color: var(--ink-soft, #24473a) !important; font-size: 12.5px !important; font-weight: 700 !important;
+    text-decoration: underline; text-underline-offset: 3px;
+  }
+  .products .product-card.mp-sold-out .restock-notify-button {
+    align-self: stretch; min-height: 42px; border: 1.5px solid var(--ink, #102c22) !important; border-radius: 999px !important;
+    text-decoration: none; font-size: 14px !important;
+  }
+  .products .product-card.mp-sold-out .quick-add { display: none !important; }
+  .products .product-card.mp-sold-out .product-image img { filter: grayscale(.35); opacity: .8; }
+  .products .product-card .stock-note { margin: 2px 0 0 !important; font-size: 12px !important; text-align: center; }
+  .products .product-card .stock-note::before { content: "● "; font-size: 9px; vertical-align: 1px; }
+
+  /* ---- 5. Floating buttons: small, out of the way, never over checkout ---- */
+  .br-launch {
+    left: 12px !important; bottom: calc(12px + env(safe-area-inset-bottom)) !important;
+    width: 52px !important; height: 52px !important; min-height: 52px !important; padding: 0 !important;
+    border-radius: 50% !important; justify-content: center !important; gap: 0 !important;
+  }
+  .br-launch .br-txt { display: none !important; }
+  .br-launch .br-medal { margin: 0 !important; }
+  .reward-shortcut {
+    right: 12px !important; bottom: calc(12px + env(safe-area-inset-bottom)) !important;
+    min-width: 46px !important; min-height: 46px !important; width: 46px; height: 46px; padding: 0 !important;
+    border-radius: 50% !important; justify-content: center !important;
+  }
+  .reward-shortcut span:not(.sr-only):not([aria-hidden="true"]) { display: none !important; }
+  body.mp-hide-floaters .br-launch, body.mp-hide-floaters .reward-shortcut { display: none !important; }
+  body.has-cart-sticky .br-launch, body.has-cart-sticky .reward-shortcut { bottom: calc(84px + env(safe-area-inset-bottom)) !important; }
+  body.mp-scrolling-down .br-launch, body.mp-scrolling-down .reward-shortcut { transform: translateY(calc(100% + 24px)); transition: transform .25s ease; }
+  .br-launch, .reward-shortcut { transition: transform .25s ease; }
+
+  /* ---- 6. Comfortable tap targets and readable forms ---- */
+  input, select, textarea { font-size: 16px !important; } /* stops iOS zooming into fields */
+  .button, button.button, a.button { min-height: 46px; }
+}
+
+@media (max-width: 380px) {
+  .products .product-card h3 { font-size: 15.5px !important; }
+  .mp-price { font-size: 16px; }
+  .nav .menu-toggle { padding: 0 8px !important; }
+}

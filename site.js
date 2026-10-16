@@ -242,3 +242,5 @@ document.addEventListener('DOMContentLoaded',installFormFeedback);
 // Stock limits and "Only N left" badges live in their own file so every page
 // that loads site.js gets them without editing each HTML page.
 (function loadStockGuard(){if(document.querySelector('script[data-gob-stock-guard]'))return;const s=document.createElement('script');s.src='/stock-guard.js?v=1';s.defer=true;s.dataset.gobStockGuard='true';document.head.append(s)})();
+
+(function loadMobilePolish(){if(document.querySelector('script[data-gob-mobile-polish]'))return;const s=document.createElement('script');s.src='/mobile-polish.js?v=1';s.defer=true;s.dataset.gobMobilePolish='true';document.head.append(s)})();
