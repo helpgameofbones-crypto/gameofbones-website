@@ -12,7 +12,7 @@
   if (!document.querySelector('link[data-gob-mobile-polish]')) {
     const css = document.createElement('link');
     css.rel = 'stylesheet';
-    css.href = '/mobile-polish.css?v=1';
+    css.href = '/mobile-polish.css?v=2';
     css.dataset.gobMobilePolish = 'true';
     document.head.append(css);
   }
@@ -72,14 +72,14 @@
 
   // 3. Product cards: split "60 g · ₹400" into a muted size and a bold price.
   function polishCards(root = document) {
-    root.querySelectorAll('.products .product-card').forEach(card => {
+    root.querySelectorAll('.products .product-card:not([data-home-product])').forEach(card => {
       const add = card.querySelector('.quick-add');
       card.classList.toggle('mp-sold-out', Boolean(add && add.disabled));
       const label = card.querySelector('.card-bottom > span:first-child');
       if (!label || label.querySelector('.mp-price')) return;
       const text = label.textContent.trim();
       const match = text.match(/^(.*?)\s*·\s*((?:from\s+)?₹[\d,]+(?:\.\d+)?)$/i);
-      if (!match) return;
+      if (!match || /₹/.test(match[1])) return;
       label.innerHTML = '';
       const price = document.createElement('b'); price.className = 'mp-price'; price.textContent = match[2];
       const weight = document.createElement('small'); weight.className = 'mp-weight'; weight.textContent = match[1];
@@ -89,7 +89,8 @@
 
   // 5. Floating buttons: hide on bag/checkout/thank-you and while scrolling down.
   function floaters() {
-    const quiet = /^\/(cart|checkout|thank-you|trial-packs)(\.html)?\/?$/i.test(location.pathname);
+    // Product pages have their own sticky Add-to-bag bar, which must stay clear.
+    const quiet = /^\/(cart|checkout|thank-you|trial-packs)(\.html)?\/?$/i.test(location.pathname) || /^\/products\/[^/]+\/?$/i.test(location.pathname) || /^\/product(\.html)?$/i.test(location.pathname);
     document.body.classList.toggle('mp-hide-floaters', quiet);
   }
   let lastY = window.scrollY, ticking = false;
