@@ -55,7 +55,7 @@
   .gob-facts div{background:#fffdf8;border:1px solid rgba(16,44,34,.14);border-radius:10px;padding:7px 8px;min-width:0}
   .gob-facts small{display:block;font-size:9.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#bd812a;margin-bottom:2px}
   .gob-facts strong{display:block;font-size:12.5px;line-height:1.25;color:#102c22;font-weight:700}
-  .gob-quotes{display:grid;gap:6px;margin:10px 0 0}.gallery .gob-quotes{margin:8px 0 4px}
+  .gob-quotes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px;margin:12px 0 4px}.gallery .gob-quotes{margin:8px 0 4px}
   .gob-quotes blockquote{margin:0;padding:8px 10px;background:#f7f0e4;border-left:3px solid #bd812a;border-radius:6px;font-size:13px;line-height:1.4;color:#102c22}
   .gob-quotes cite{display:block;margin-top:3px;font-style:normal;font-size:11px;font-weight:700;color:#557064}
   .gob-quotes .gob-stars{color:#bd812a;letter-spacing:1px;margin-right:4px}
@@ -116,7 +116,11 @@
       const short = text.length > 110 ? text.slice(0, 107).replace(/\s+\S*$/, '') + '…' : text;
       return `<blockquote><span class="gob-stars" aria-label="${Number(r.rating) || 5} out of 5">${'★'.repeat(Math.max(1, Math.min(5, Number(r.rating) || 5)))}</span>“${esc(short)}”<cite>${esc(r.name || 'Verified dog parent')}</cite></blockquote>`;
     }).join('');
-    (document.querySelector('#productMediaCount') || document.querySelector('#productMediaStage') || document.getElementById('gobQuickFacts'))?.after(box);
+    const desktop = window.matchMedia('(min-width: 761px)').matches;
+    const anchor = desktop
+      ? (document.getElementById('gobQuickFacts') || document.querySelector('#productPrice'))
+      : (document.querySelector('#productMediaCount') || document.querySelector('#productMediaStage') || document.getElementById('gobQuickFacts'));
+    anchor?.after(box);
   }
 
   const NEW_PRODUCTS = new Set(['white-sardines', 'chicken-wing-tips']);
