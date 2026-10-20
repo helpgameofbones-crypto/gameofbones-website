@@ -77,8 +77,23 @@ const productHtml = (template, [slug, name, price, description, image, category]
     { '@type': 'Product', '@id': `${url}#product`, name, description, image: image ? [`${origin}/${image}`] : undefined, sku: slug, category, brand: { '@type': 'Brand', name: 'Game of Bones' }, offers: Number.isFinite(price) ? { '@type': 'Offer', url, priceCurrency: 'INR', price: price.toFixed(2), availability: 'https://schema.org/InStock', itemCondition: 'https://schema.org/NewCondition', seller: { '@id': `${origin}/#organization` } } : undefined },
     { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: `${origin}/` }, { '@type': 'ListItem', position: 2, name: 'Products', item: `${origin}/products` }, { '@type': 'ListItem', position: 3, name, item: url }] },
   ] };
+  const money = Number.isFinite(price) ? `₹${price.toLocaleString('en-IN')}` : 'Contact us';
+  const safeName = escape(name);
   return template
+    // The template carries its own (Chicken Jerky) social tags; drop them so each page has one correct set.
+    .replace(/<meta property="og:[^"]*" content="[^"]*">/g, '')
+    .replace(/<meta name="twitter:[^"]*" content="[^"]*">/g, '')
     .replace('<head>', '<head><base href="/">')
+    .replace(/<p id="inside">[\s\S]*?<\/p>/, `<p id="inside">${safeName}. That’s the only ingredient — nothing else is added. A treat, not a complete meal.</p>`)
+    .replace(/<p class="label-ingredient" id="labelIngredient">[\s\S]*?<\/p>/, `<p class="label-ingredient" id="labelIngredient">${safeName}.</p>`)
+    .replace('For Chicken Jerky, the named ingredient is the complete label.', `For ${safeName}, the named ingredient is the complete label.`)
+    .replace('Offer Chicken Jerky as a treat', `Offer ${safeName} as a treat`)
+    .replace(/<p>Jerky lasts 4–6 weeks[\s\S]*?<\/p>/, '<p>Keep the pouch sealed, cool and dry, and use it within the best-before date printed on the pack.</p>')
+    .replace('<strong>60 g · vacuum-sealed</strong>', '<strong>Resealable, humidity-resistant pouch</strong>')
+    .replace(/<div class="option-row" id="packOptions">[\s\S]*?<\/div>/, `<div class="option-row" id="packOptions"><button class="option selected" data-pack="1">1 pack <small>${money}</small></button></div>`)
+    .replace(/<small id="stickyPackLabel">[\s\S]*?<\/small>/, '<small id="stickyPackLabel">1 pack</small>')
+    .replace(/<strong id="stickyPrice">[\s\S]*?<\/strong>/, `<strong id="stickyPrice">${money}</strong>`)
+    .replace(/(<button class="button" id="addProduct"[^>]*>)[\s\S]*?<\/button>/, `$1Add to treat jar · ${money}</button>`)
     .replace(/<title>[\s\S]*?<\/title>/, `<title>${escape(name)} — Game of Bones</title>`)
     .replace(/<meta name="description" content="[^"]*">/, `<meta name="description" content="${escape(description)}">`)
     .replace(/<link rel="canonical" href="[^"]*">/, `<link rel="canonical" href="${url}"><link rel="icon" href="/favicon.ico" sizes="any"><meta property="og:type" content="product"><meta property="og:title" content="${escape(name)} — Game of Bones"><meta property="og:description" content="${escape(description)}"><meta property="og:url" content="${url}"><meta property="og:image" content="${socialImage}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${escape(name)} — Game of Bones"><meta name="twitter:description" content="${escape(description)}"><meta name="twitter:image" content="${socialImage}">`)
