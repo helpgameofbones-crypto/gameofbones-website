@@ -87,7 +87,9 @@
       quantity += 1;
       document.querySelector('#quantity').textContent = String(quantity);
     });
-    document.querySelector('#stickyAdd')?.addEventListener('click', () => addButton.click());
+    // Single handler: other scripts also assign onclick, so assign (not add) to avoid adding twice.
+    const stickyAdd = document.querySelector('#stickyAdd');
+    if (stickyAdd) stickyAdd.onclick = () => addButton.click();
 
     render(window.GOB_CURRENT_PRODUCT || fallback);
     document.addEventListener('gob:product-ready', event => render(event.detail.product));

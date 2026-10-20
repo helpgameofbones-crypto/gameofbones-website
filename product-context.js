@@ -29,7 +29,7 @@
     if (journeySource) journeySource.textContent = sourceFor(product);
     if (journeyPack) journeyPack.textContent = `${packText} · vacuum-sealed`;
     if (journeyUse) journeyUse.textContent = /chew|bone|feet|neck|wing|trotter|trachea|ear/i.test(`${product.n} ${product.c}`) ? 'Supervised chew time' : 'Training rewards & everyday treats';
-    if (labelCopy) labelCopy.textContent = `There is no long ingredient list to interpret. For ${product.n}, the named ingredient is the complete label. That is the visual and informational standard every product page follows.`;
+    if (labelCopy) labelCopy.textContent = `There is no long ingredient list to interpret. For ${product.n}, the named ingredient is the complete label. Nothing else is added.`;
     if (serveCopy) serveCopy.textContent = `Offer ${product.n} as a treat alongside a complete and balanced diet. Start with a small amount when introducing anything new, make fresh water available, and supervise every dog while treating.`;
   };
 

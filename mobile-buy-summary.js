@@ -38,6 +38,7 @@
       info.querySelector(':scope > .rating'),
       document.querySelector('#productPrice'),
       document.querySelector('#salePricePresentation'),
+      document.querySelector('#gobQuickFacts'),
     ].filter(node => node && !moved.has(node));
   }
 

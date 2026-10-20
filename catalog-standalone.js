@@ -35,6 +35,9 @@
     if (CAT_EXCLUDE.has(key)) return false;
     return CAT_EXTRA.has(key) || productCategory(product) === 'Fish treats';
   };
+  // Newly launched treats get a "New" badge on their card.
+  const NEW_PRODUCTS = new Set(['white-sardines', 'chicken-wing-tips']);
+  const isNewProduct = product => NEW_PRODUCTS.has(slug(productName(product)));
   const bestsellerRank = product => { const rank = BESTSELLERS.indexOf(slug(productName(product))); return rank === -1 ? 99 : rank; };
 
   function render() {
@@ -51,7 +54,7 @@
         : formatPrice(currentPrice);
       const notify = product.low_stock ? `<button class="restock-notify-button" type="button" data-restock-product="${encodeURIComponent(String(product.inventory_id || product.id || id))}" data-restock-name="${encodeURIComponent(name)}">Notify me</button>` : '';
       const bogoBadge = isBogoProduct(product) ? '<span data-bogo-card style="display:inline-block;margin:0 0 8px;padding:5px 8px;border-radius:4px;background:#a84312;color:#fff;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase">Buy 1 Get 1</span>' : '';
-      return `<article class="product-card"><a href="${path}" aria-label="View ${escapeHtml(name)}">${isSale ? '<span class="sale-badge">Sale</span>' : ''}<div class="product-image ${shade}"><img src="${escapeHtml(image)}" alt="${escapeHtml(name)} natural dog treat" width="600" height="600" loading="lazy" decoding="async"></div></a><div class="card-copy">${bogoBadge}<p class="tag">${bestsellerRank(product) < 99 ? '<span class="bestseller-tag">★ Bestseller</span> ' : ''}${escapeHtml(productCategory(product))}</p><h3><a href="${path}">${escapeHtml(name)}</a></h3><p class="catalog-desc">${escapeHtml(product.d || product.description || 'Single-ingredient dog treat.')}</p><div class="card-bottom"><span>${escapeHtml(productWeight(product))} · ${displayedPrice}</span><button class="quick-add" type="button" data-product="${escapeHtml(id)}" aria-label="Add ${escapeHtml(name)} to bag">Add +</button>${notify}</div></div></article>`;
+      return `<article class="product-card"><a href="${path}" aria-label="View ${escapeHtml(name)}">${isSale ? '<span class="sale-badge">Sale</span>' : ''}${isNewProduct(product) ? `<span class="sale-badge" style="background:#bd812a;${isSale ? 'left:auto;right:12px;' : ''}">New</span>` : ''}<div class="product-image ${shade}"><img src="${escapeHtml(image)}" alt="${escapeHtml(name)} natural dog treat" width="600" height="600" loading="lazy" decoding="async"></div></a><div class="card-copy">${bogoBadge}<p class="tag">${bestsellerRank(product) < 99 ? '<span class="bestseller-tag">★ Bestseller</span> ' : ''}${escapeHtml(productCategory(product))}</p><h3><a href="${path}">${escapeHtml(name)}</a></h3><p class="catalog-desc">${escapeHtml(product.d || product.description || 'Single-ingredient dog treat.')}</p><div class="card-bottom"><span>${escapeHtml(productWeight(product))} · ${displayedPrice}</span><button class="quick-add" type="button" data-product="${escapeHtml(id)}" aria-label="Add ${escapeHtml(name)} to bag">Add +</button>${notify}</div></div></article>`;
     }).join('');
     // "Create your own trial pack" listing, shown in All and Cat views.
     if (activeCategory === 'All' || activeCategory === CAT_FILTER) {

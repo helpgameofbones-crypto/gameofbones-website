@@ -59,7 +59,7 @@ function hydrateProduct() {
       return line;
     }));
   }
-  setText('#inside', `${product.n}. Single ingredient; see the product pouch for the current label.`);
+  setText('#inside', `${product.n}. That’s the only ingredient — nothing else is added. A treat, not a complete meal.`);
   setText('#labelIngredient', `${product.n}.`);
   setText('#specMethod', method);
   setText('#specPack', `${product.w} · packed fresh`);
