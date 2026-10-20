@@ -125,13 +125,11 @@
     if (!tag || !NEW_PRODUCTS.has(slug()) || tag.querySelector('.gob-new')) return;
     tag.insertAdjacentHTML('afterbegin', '<span class="gob-new" style="display:inline-block;margin-right:8px;padding:3px 8px;border-radius:4px;background:#bd812a;color:#fff;font-size:10px;font-weight:800;letter-spacing:.08em;vertical-align:1px">NEW</span>');
   }
-  function run() { ensureStyle(); renderNewTag(); renderFacts(); renderClip(); renderQuotes(); }
+  function run() { ensureStyle(); renderNewTag(); renderFacts(); renderQuotes(); document.querySelectorAll('.gob-clip').forEach(n => n.remove()); }
   const start = () => {
     run();
     setTimeout(run, 600); setTimeout(run, 1800);
     document.addEventListener('gob:product-ready', () => { quotesFor = ''; run(); });
-    const stage = document.querySelector('#productMediaStage');
-    if (stage) new MutationObserver(() => { if (!stage.querySelector('.gob-clip')) renderClip(); }).observe(stage, { childList: true });
   };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true }); else start();
 })();
