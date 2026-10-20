@@ -44,7 +44,7 @@
 
   const slug = () => {
     const m = location.pathname.match(/\/products\/([a-z0-9-]+)/);
-    if (m) return m[1];
+    if (m) return m[1].replace('chicken-heart-and-liver', 'chicken-heart-liver').replace('goat-heart-and-kidney-mix', 'goat-heart-kidney-mix');
     const name = document.querySelector('#productName')?.textContent || '';
     return name.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
       .replace('chicken-heart-and-liver', 'chicken-heart-liver').replace('goat-heart-and-kidney-mix', 'goat-heart-kidney-mix');

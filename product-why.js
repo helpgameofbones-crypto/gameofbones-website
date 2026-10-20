@@ -179,7 +179,7 @@
 
   const slug = () => {
     const m = location.pathname.match(/\/products\/([a-z0-9-]+)/);
-    if (m) return m[1];
+    if (m) return m[1].replace('chicken-heart-and-liver', 'chicken-heart-liver').replace('goat-heart-and-kidney-mix', 'goat-heart-kidney-mix');
     const n = (document.querySelector('#productName')?.textContent || '').toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
     return n.replace('chicken-heart-and-liver', 'chicken-heart-liver').replace('goat-heart-and-kidney-mix', 'goat-heart-kidney-mix');
   };
