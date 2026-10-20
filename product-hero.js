@@ -5,6 +5,7 @@
 (() => {
   if (window.__gobProductHero) return;
   window.__gobProductHero = true;
+  if (!document.querySelector('script[src*="product-why.js"]')) { const w = document.createElement('script'); w.src = '/product-why.js?v=1'; w.defer = true; document.head.append(w); }
 
   // pack = first pack the page sells · best = what it is for · dogs = who it suits · clip = treat-time video
   const FACTS = {
