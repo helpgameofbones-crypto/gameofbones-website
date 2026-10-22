@@ -33,17 +33,21 @@ function hydrateProduct() {
   window.GOB_CURRENT_PRODUCT = product;
   const catalogId = window.GOB_META?.productId?.(product, id) || gobSlug(product.n);
   gobProducts()[id] = { name: product.n, price: Number(product.p) || 0, comparePrice: Number(product.cp) || 0, image: product.i, tag: product.c, catalog_slug: catalogId };
-  document.title = `${product.n} — Game of Bones`;
+  // Crawlable /products/<slug> pages ship hand-written titles, descriptions, canonicals and schema; keep them.
+  const staticSeo = /^\/products\/[a-z0-9-]+\/?$/.test(location.pathname) && document.getElementById('gob-static-product-schema');
+  if (!staticSeo) document.title = `${product.n} — Game of Bones`;
   const cleanUrl = `https://gameofbones.in/products/${encodeURIComponent(gobSlug(product.n))}`;
-  let canonical = document.querySelector('link[rel="canonical"]');
-  if (!canonical) { canonical = document.createElement('link'); canonical.rel = 'canonical'; document.head.append(canonical); }
-  canonical.href = cleanUrl;
-  window.GOB_SEO?.setProductSchema(product, cleanUrl);
-  const description = `${product.n}: ${product.d || 'single-ingredient dog treat from Game of Bones.'}`;
-  let descriptionMeta = document.querySelector('meta[name="description"]');
-  if (!descriptionMeta) { descriptionMeta = document.createElement('meta'); descriptionMeta.name = 'description'; document.head.append(descriptionMeta); }
-  descriptionMeta.content = description;
-  document.querySelector('meta[property="og:url"]')?.setAttribute('content', cleanUrl);
+  if (!staticSeo) {
+    let canonical = document.querySelector('link[rel="canonical"]');
+    if (!canonical) { canonical = document.createElement('link'); canonical.rel = 'canonical'; document.head.append(canonical); }
+    canonical.href = cleanUrl;
+    window.GOB_SEO?.setProductSchema(product, cleanUrl);
+    const description = `${product.n}: ${product.d || 'single-ingredient dog treat from Game of Bones.'}`;
+    let descriptionMeta = document.querySelector('meta[name="description"]');
+    if (!descriptionMeta) { descriptionMeta = document.createElement('meta'); descriptionMeta.name = 'description'; document.head.append(descriptionMeta); }
+    descriptionMeta.content = description;
+    document.querySelector('meta[property="og:url"]')?.setAttribute('content', cleanUrl);
+  }
   setText('#productName', product.n);
   setText('#productPrice', product.p ? `₹${Number(product.p).toLocaleString('en-IN')}` : 'Contact us');
   setText('#productTag', `${product.c} · Made in Kalyan`);

@@ -21,6 +21,8 @@
     { "source": "/account.html", "destination": "/account", "permanent": true },
     { "source": "/policies.html", "destination": "/policies", "permanent": true },
     { "source": "/thank-you.html", "destination": "/thank-you", "permanent": true },
+    { "source": "/products/chicken-heart-liver", "destination": "/products/chicken-heart-and-liver", "permanent": true },
+    { "source": "/products/goat-heart-kidney-mix", "destination": "/products/goat-heart-and-kidney-mix", "permanent": true },
     { "source": "/products/:slug/", "destination": "/products/:slug", "permanent": true },
     { "source": "/blog/:slug/", "destination": "/blog/:slug", "permanent": true }
   ],
