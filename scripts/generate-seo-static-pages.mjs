@@ -35,6 +35,136 @@ const products = [
   ['large-treat-box', 'Large Treat Box', 2850, 'A generous full-range discovery box across jerky, fish, organs and natural chews.', 'assets/catalogue-v3/large-treat-box.webp', 'Bundles'],
 ];
 
+// Search titles and descriptions: what people actually type, plus the plain facts.
+const seo = {
+"chicken-jerky": [
+"Chicken Jerky for Dogs – Single-Ingredient Training Treat",
+"Slow-dried chicken breast jerky for dogs. One ingredient, no preservatives, easy to break into small training rewards. Made in Kalyan, ships across India."
+],
+"buff-jerky": [
+"Buffalo (Buff) Jerky for Dogs – Natural Single-Protein Treat",
+"Single-ingredient buffalo jerky for dogs, a different protein for picky eaters and chicken-sensitive dogs. No preservatives. Made in India, ships India-wide."
+],
+"chicken-feet": [
+"Dehydrated Chicken Feet for Dogs – Natural Crunchy Chew",
+"Whole dehydrated chicken feet: a natural crunchy chew with cartilage and collagen. Single ingredient, no additives. Made in Kalyan, ships across India."
+],
+"chicken-neck": [
+"Dehydrated Chicken Neck for Dogs – Natural Bone-In Chew",
+"Slow-dried chicken necks for medium and large dogs. A meaty, crunchy single-ingredient chew. Made in Kalyan, ships across India."
+],
+"chicken-bites": [
+"Chicken Bites for Dogs – Natural Bite-Size Training Treats",
+"Ready-cut dehydrated chicken pieces for training rewards. Single ingredient, lean, no preservatives. Made in Kalyan, ships across India."
+],
+"chicken-wings": [
+"Dehydrated Chicken Wings for Dogs – Crunchy Natural Chew",
+"Crunchy slow-dried chicken wings for medium and large dogs. Single ingredient. Made in Kalyan, ships across India."
+],
+"chicken-wing-tips": [
+"Chicken Wing Tips for Dogs – Light Crunchy Natural Chew",
+"Small dehydrated chicken wing tips: a light, crunchy single-ingredient chew for small and medium dogs. Made in Kalyan, ships across India."
+],
+"chicken-bones": [
+"Dehydrated Chicken Bones for Dogs – Natural Crunchy Chew",
+"Slow-dried chicken bone pieces for dogs who love to crunch. Single ingredient, nothing added. Made in Kalyan, ships across India."
+],
+"goat-trachea": [
+"Goat Trachea Dog Chew – Natural Cartilage Chew, India",
+"Dehydrated goat trachea: a crunchy cartilage chew for dogs, naturally containing glucosamine and chondroitin. Single ingredient. Made in Kalyan."
+],
+"goat-trotter": [
+"Goat Trotter Dog Chew – Long-Lasting Natural Chew, India",
+"Dense, long-lasting dehydrated goat trotter for strong chewers. Single ingredient, rich in natural collagen. Made in Kalyan, ships across India."
+],
+"goat-ear": [
+"Goat Ears for Dogs – Low-Fat Natural Crunchy Chew, India",
+"Thin, crunchy dehydrated goat ears: a low-fat single-ingredient chew suited to small and senior dogs. Made in Kalyan, ships across India."
+],
+"chicken-gizzards": [
+"Chicken Gizzards for Dogs – Natural High-Protein Treat",
+"Dehydrated chicken gizzards: lean, chewy, high-protein rewards with natural iron and zinc. Single ingredient. Made in Kalyan, ships across India."
+],
+"chicken-heart-liver": [
+"Chicken Heart & Liver Dog Treats – Natural Organ Treat",
+"Dehydrated chicken heart and liver: nutrient-dense, high-value rewards with natural taurine, vitamin A and B12. Made in Kalyan, ships across India."
+],
+"goat-liver": [
+"Goat Liver Treats for Dogs – Natural High-Value Reward",
+"Dehydrated goat liver, the high-value training reward. Naturally rich in vitamin A, B12 and iron; give in small pieces. Made in Kalyan, India."
+],
+"goat-lungs": [
+"Goat Lung Treats for Dogs – Light, Low-Fat Training Treat",
+"Light, airy dehydrated goat lungs: a low-fat, crumbly reward that's easy to break for small dogs and puppies. Made in Kalyan, ships across India."
+],
+"goat-heart-kidney-mix": [
+"Goat Heart & Kidney Dog Treats – Natural Organ Mix",
+"Dehydrated goat heart and kidney: a meaty organ mix with natural taurine, B vitamins and iron. Single-ingredient treats made in Kalyan, India."
+],
+"goat-spleen": [
+"Goat Spleen Treats for Dogs – Natural Iron-Rich Reward",
+"Dehydrated goat spleen, an iron-rich organ treat with a deep meaty taste dogs love. Single ingredient, no additives. Made in Kalyan, India."
+],
+"anchovies": [
+"Dried Anchovies for Dogs & Cats – Natural Omega-3 Fish Treat",
+"Whole dried anchovies for dogs and cats: crunchy, low-mercury small fish with natural omega-3. Single ingredient. Made in Kalyan, ships across India."
+],
+"bombay-duck": [
+"Dried Bombay Duck (Bombil) for Dogs & Cats – Fish Treat",
+"Dried Bombil, the Mumbai favourite: a light, low-fat, high-protein fish treat for dogs and cats. Single ingredient. Made in Kalyan, ships India-wide."
+],
+"whole-mackerel": [
+"Whole Dried Mackerel for Dogs – Natural Omega-3 Fish Chew",
+"Whole dehydrated mackerel for medium and large dogs: oily fish with natural omega-3, meat and bone together. Made in Kalyan, ships across India."
+],
+"mackerel-fillet": [
+"Mackerel Fillet for Dogs & Cats – Boneless Fish Treat",
+"Boneless dehydrated mackerel fillet for dogs and cats: an oily fish reward with natural omega-3. Single ingredient. Made in Kalyan, ships India-wide."
+],
+"sardines": [
+"Dried Sardines for Dogs & Cats – Natural Omega-3 Treat",
+"Whole dried sardines for dogs and cats: low-mercury small fish with natural omega-3 and calcium. Single ingredient. Made in Kalyan, ships across India."
+],
+"white-sardines": [
+"Dried White Sardines for Dogs & Cats – Natural Fish Treat",
+"Small whole white sardines, dried: a light fish treat for dogs and cats with natural omega-3. Single ingredient. Made in Kalyan, ships across India."
+],
+"tuna": [
+"Dried Tuna Treats for Dogs & Cats – Lean Fish Reward",
+"Dehydrated tuna pieces for dogs and cats: lean, high-protein and irresistible. An occasional single-ingredient treat. Made in Kalyan, India."
+],
+"prawns": [
+"Dried Prawns for Dogs & Cats – Crunchy Natural Treat",
+"Dehydrated prawns: a crunchy, low-fat special treat for dogs and cats, with natural B12. Single ingredient. Made in Kalyan, ships across India."
+],
+"whole-quail": [
+"Whole Dried Quail for Dogs – Natural Whole-Prey Treat",
+"A whole dehydrated quail with meat, bone and organs: a novel-protein, whole-prey chew for medium and large dogs. Made in Kalyan, ships across India."
+],
+"cat-trial-box": [
+"Cat Treat Trial Box – 5 Natural Fish Treats for Cats",
+"Five single-ingredient fish treats in one box to find what your cat loves. Natural, no additives. Made in Kalyan, ships across India."
+],
+"surprise-me-box": [
+"Surprise Me Box – Assorted Natural Dog Treats Gift Box",
+"A surprise mix of single-ingredient dog treats and chews across chicken, goat and fish. A fun gift for dogs. Made in Kalyan, ships across India."
+],
+"small-treat-box": [
+"Small Treat Box – Dog Treat Sampler, 9 Mini Packs",
+"Nine labelled mini packs of single-ingredient dog treats to find your dog's favourite before buying full packs. Made in Kalyan, ships across India."
+],
+"medium-treat-box": [
+"Medium Treat Box – 7 Natural Dog Treat Packs (Variety)",
+"Seven full packs of single-ingredient dog treats across chicken, goat, fish and chews: about a month of variety. Made in Kalyan, ships India-wide."
+],
+"large-treat-box": [
+"Large Treat Box – 10 Natural Dog Treat Packs, Best Value",
+"Ten full packs of single-ingredient dog treats for multi-dog homes, big appetites or gifting. Our best value box. Made in Kalyan, ships India-wide."
+]
+};
+// Public URL slug when it differs from the file name.
+const publicSlug = { 'chicken-heart-liver': 'chicken-heart-and-liver', 'goat-heart-kidney-mix': 'goat-heart-and-kidney-mix' };
+
 const articles = [
   ['dog-food-sensitivity-signs', 'Dog Food Sensitivity Signs: What to Watch For', 'Practical signs that may suggest a food sensitivity and when to speak to your veterinarian.'],
   ['hidden-truth-dog-treats', 'How to Read What Is Really in Your Dog’s Treat', 'A practical guide to reading an ingredient label beyond the claims on the front of the pack.'],
@@ -70,11 +200,12 @@ const defaultSocialImage = `${origin}/assets/hero-real-dogs.png`;
 const articleBody = (title, description) => `<main class="journal-static-main"><article class="journal-static-article" aria-labelledby="article-title"><a class="text-link" href="/blog">← Back to the journal</a><header><p class="eyebrow">Game of Bones field guide</p><h1 class="display" id="article-title">${escape(title)}</h1><p class="lead">${escape(description)}</p><p class="journal-reader-meta">Reviewed and updated September 2026 · Game of Bones editorial team</p></header><section><h2>Start with a simple baseline</h2><p>Every dog is an individual. Before changing a treat routine, note what your dog is already eating, how they respond to everyday foods, and what a normal stool, appetite and energy level look like for them. That baseline makes it easier to spot whether a new choice is actually working.</p><p>Make one change at a time and keep portions small. A treat is an addition to a complete diet, not a replacement for a balanced meal. Fresh water, suitable portion sizes and calm, supervised feeding are useful constants whatever the topic.</p></section><section><h2>Use the label and the routine together</h2><p>Look beyond the front-of-pack claim. The current ingredient list, pack guidance, storage instructions and the physical size or texture of a treat all matter. Choose a format your dog can manage comfortably and supervise chewing, especially with bone-in or long-lasting products.</p><p>A short written note can be more useful than memory. Record the product, amount, timing and anything you notice over the following days. This helps you avoid changing several variables at once and gives your veterinarian a clearer picture if you need individual advice.</p></section><section><h2>What to watch for</h2><p>Stop offering a new food or treat if your dog seems uncomfortable, refuses it repeatedly, vomits, develops diarrhoea, or has a change in behaviour that concerns you. Young puppies, senior dogs, dogs with known medical conditions, and dogs on prescribed diets may need more specific guidance before a routine changes.</p><p>This guide is intended to help you ask better everyday questions, not to diagnose illness. When a symptom is persistent, severe or sudden, contact a qualified veterinarian promptly. If you are unsure whether a food, plant or chew is appropriate, it is safest to check with a professional before offering it.</p></section><section><h2>A practical next step</h2><p>Choose the smallest sensible step, observe your dog, and adjust slowly. Clear ingredients and straightforward routines make it easier to understand what your dog is responding to. For product-specific information, check the current pouch label and return to the <a href="/products">Game of Bones collection</a> when you are ready to compare options.</p></section><aside class="journal-next"><p>Helpful reminder</p><h2>Supervise chews and keep fresh water available.</h2><a class="button secondary" href="/learn">Read the treat guide</a></aside></article></main>`;
 
 const productHtml = (template, [slug, name, price, description, image, category]) => {
-  const url = `${origin}/products/${slug}`;
+  const url = `${origin}/products/${publicSlug[slug] || slug}`;
+  const [seoTitle, seoDescription] = seo[slug] || [name, description];
   const socialImage = image ? `${origin}/${image}` : defaultSocialImage;
   const schema = { '@context': 'https://schema.org', '@graph': [
     { '@type': 'Organization', '@id': `${origin}/#organization`, name: 'Game of Bones', url: `${origin}/`, logo: `${origin}/assets/gob-logo.png` },
-    { '@type': 'Product', '@id': `${url}#product`, name, description, image: image ? [`${origin}/${image}`] : undefined, sku: slug, category, brand: { '@type': 'Brand', name: 'Game of Bones' }, offers: Number.isFinite(price) ? { '@type': 'Offer', url, priceCurrency: 'INR', price: price.toFixed(2), availability: 'https://schema.org/InStock', itemCondition: 'https://schema.org/NewCondition', seller: { '@id': `${origin}/#organization` } } : undefined },
+    { '@type': 'Product', '@id': `${url}#product`, name, description: seoDescription, image: image ? [`${origin}/${image}`] : undefined, sku: slug, category, brand: { '@type': 'Brand', name: 'Game of Bones' }, offers: Number.isFinite(price) ? { '@type': 'Offer', url, priceCurrency: 'INR', price: price.toFixed(2), availability: 'https://schema.org/InStock', itemCondition: 'https://schema.org/NewCondition', seller: { '@id': `${origin}/#organization` } } : undefined },
     { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: `${origin}/` }, { '@type': 'ListItem', position: 2, name: 'Products', item: `${origin}/products` }, { '@type': 'ListItem', position: 3, name, item: url }] },
   ] };
   const money = Number.isFinite(price) ? `₹${price.toLocaleString('en-IN')}` : 'Contact us';
@@ -94,9 +225,9 @@ const productHtml = (template, [slug, name, price, description, image, category]
     .replace(/<small id="stickyPackLabel">[\s\S]*?<\/small>/, '<small id="stickyPackLabel">1 pack</small>')
     .replace(/<strong id="stickyPrice">[\s\S]*?<\/strong>/, `<strong id="stickyPrice">${money}</strong>`)
     .replace(/(<button class="button" id="addProduct"[^>]*>)[\s\S]*?<\/button>/, `$1Add to treat jar · ${money}</button>`)
-    .replace(/<title>[\s\S]*?<\/title>/, `<title>${escape(name)} — Game of Bones</title>`)
-    .replace(/<meta name="description" content="[^"]*">/, `<meta name="description" content="${escape(description)}">`)
-    .replace(/<link rel="canonical" href="[^"]*">/, `<link rel="canonical" href="${url}"><link rel="icon" href="/favicon.ico" sizes="any"><meta property="og:type" content="product"><meta property="og:title" content="${escape(name)} — Game of Bones"><meta property="og:description" content="${escape(description)}"><meta property="og:url" content="${url}"><meta property="og:image" content="${socialImage}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${escape(name)} — Game of Bones"><meta name="twitter:description" content="${escape(description)}"><meta name="twitter:image" content="${socialImage}">`)
+    .replace(/<title>[\s\S]*?<\/title>/, `<title>${escape(seoTitle)} | Game of Bones</title>`)
+    .replace(/<meta name="description" content="[^"]*">/, `<meta name="description" content="${escape(seoDescription)}">`)
+    .replace(/<link rel="canonical" href="[^"]*">/, `<link rel="canonical" href="${url}"><link rel="icon" href="/favicon.ico" sizes="any"><meta property="og:type" content="product"><meta property="og:title" content="${escape(seoTitle)} | Game of Bones"><meta property="og:description" content="${escape(seoDescription)}"><meta property="og:url" content="${url}"><meta property="og:image" content="${socialImage}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${escape(seoTitle)} | Game of Bones"><meta name="twitter:description" content="${escape(seoDescription)}"><meta name="twitter:image" content="${socialImage}">`)
     .replace(/<script id="gob-static-product-schema" type="application\/ld\+json">[\s\S]*?<\/script>/, schemaTag('gob-static-product-schema', schema))
     .replace(/<h1 id="productName">[\s\S]*?<\/h1>/, `<h1 id="productName">${escape(name)}</h1>`)
     .replace(/<p class="eyebrow" id="productTag">[\s\S]*?<\/p>/, `<p class="eyebrow" id="productTag">${escape(category)} · Made in Kalyan</p>`)
