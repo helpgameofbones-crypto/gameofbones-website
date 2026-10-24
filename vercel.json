@@ -1,78 +1,466 @@
 {
   "redirects": [
-    { "source": "/legacy-storefront.html", "destination": "/", "permanent": true },
-    { "source": "/(.*)", "has": [{ "type": "host", "value": "www.gameofbones.in" }], "destination": "https://gameofbones.in/$1", "permanent": true },
-    { "source": "/collections", "destination": "/products", "permanent": true },
-    { "source": "/collections/:path*", "destination": "/products", "permanent": true },
-    { "source": "/pages/:path*", "destination": "/", "permanent": true },
-    { "source": "/index.html", "destination": "/", "permanent": true },
-    { "source": "/products.html", "destination": "/products", "permanent": true },
-    { "source": "/product.html", "destination": "/product", "permanent": true },
-    { "source": "/our-story.html", "destination": "/our-story", "permanent": true },
-    { "source": "/bundles.html", "destination": "/bundles", "permanent": true },
-    { "source": "/blog.html", "destination": "/blog", "permanent": true },
-    { "source": "/contact.html", "destination": "/contact", "permanent": true },
-    { "source": "/rewards.html", "destination": "/rewards", "permanent": true },
-    { "source": "/track.html", "destination": "/track", "permanent": true },
-    { "source": "/learn.html", "destination": "/learn", "permanent": true },
-    { "source": "/cart.html", "destination": "/cart", "permanent": true },
-    { "source": "/checkout.html", "destination": "/checkout", "permanent": true },
-    { "source": "/login.html", "destination": "/login", "permanent": true },
-    { "source": "/account.html", "destination": "/account", "permanent": true },
-    { "source": "/policies.html", "destination": "/policies", "permanent": true },
-    { "source": "/thank-you.html", "destination": "/thank-you", "permanent": true },
-    { "source": "/products/chicken-heart-liver", "destination": "/products/chicken-heart-and-liver", "permanent": true },
-    { "source": "/products/goat-heart-kidney-mix", "destination": "/products/goat-heart-and-kidney-mix", "permanent": true },
-    { "source": "/products/:slug/", "destination": "/products/:slug", "permanent": true },
-    { "source": "/blog/:slug/", "destination": "/blog/:slug", "permanent": true }
+    {
+      "source": "/legacy-storefront.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.gameofbones.in"
+        }
+      ],
+      "destination": "https://gameofbones.in/$1",
+      "permanent": true
+    },
+    {
+      "source": "/:name(.*Bones-and-Gizzards.*)/catalogue/:rest*",
+      "destination": "/products/chicken-bones",
+      "permanent": true
+    },
+    {
+      "source": "/:name(.*Chicken-Wings.*)/catalogue/:rest*",
+      "destination": "/products/chicken-wings",
+      "permanent": true
+    },
+    {
+      "source": "/:name(.*Jerky---Neck.*)/catalogue/:rest*",
+      "destination": "/products/chicken-jerky",
+      "permanent": true
+    },
+    {
+      "source": "/:name(.*Chicken-Jerky.*)/catalogue/:rest*",
+      "destination": "/products/chicken-jerky",
+      "permanent": true
+    },
+    {
+      "source": "/:name(.*Sardines.*)/catalogue/:rest*",
+      "destination": "/products/sardines",
+      "permanent": true
+    },
+    {
+      "source": "/:name(.*Whole-Mackerel.*)/catalogue/:rest*",
+      "destination": "/products/whole-mackerel",
+      "permanent": true
+    },
+    {
+      "source": "/:name(.*Mackerel-Fillet.*)/catalogue/:rest*",
+      "destination": "/products/mackerel-fillet",
+      "permanent": true
+    },
+    {
+      "source": "/:name(.*Heart---Kidney.*)/catalogue/:rest*",
+      "destination": "/products/goat-heart-and-kidney-mix",
+      "permanent": true
+    },
+    {
+      "source": "/:name(.*Chicken-Bones.*)/catalogue/:rest*",
+      "destination": "/products/chicken-bones",
+      "permanent": true
+    },
+    {
+      "source": "/:name(.*Chicken-Gizzards.*)/catalogue/:rest*",
+      "destination": "/products/chicken-gizzards",
+      "permanent": true
+    },
+    {
+      "source": "/:name(.*Goat-Ear.*)/catalogue/:rest*",
+      "destination": "/products/goat-ear",
+      "permanent": true
+    },
+    {
+      "source": "/:name(.*Goat-Trotter.*)/catalogue/:rest*",
+      "destination": "/products/goat-trotter",
+      "permanent": true
+    },
+    {
+      "source": "/:name(.*Chicken-Necks.*)/catalogue/:rest*",
+      "destination": "/products/chicken-neck",
+      "permanent": true
+    },
+    {
+      "source": "/:name(.*Tuna.*)/catalogue/:rest*",
+      "destination": "/products/tuna",
+      "permanent": true
+    },
+    {
+      "source": "/:name(.*Anchov.*)/catalogue/:rest*",
+      "destination": "/products/anchovies",
+      "permanent": true
+    },
+    {
+      "source": "/:name(.*Quail.*)/catalogue/:rest*",
+      "destination": "/products/whole-quail",
+      "permanent": true
+    },
+    {
+      "source": "/:name(.*Trachea.*)/catalogue/:rest*",
+      "destination": "/products/goat-trachea",
+      "permanent": true
+    },
+    {
+      "source": "/:name(.*Chicken-Feet.*)/catalogue/:rest*",
+      "destination": "/products/chicken-feet",
+      "permanent": true
+    },
+    {
+      "source": "/:name(.*Buff.*)/catalogue/:rest*",
+      "destination": "/products/buff-jerky",
+      "permanent": true
+    },
+    {
+      "source": "/:name(.*Liver.*)/catalogue/:rest*",
+      "destination": "/products/goat-liver",
+      "permanent": true
+    },
+    {
+      "source": "/:name/catalogue/:rest*",
+      "destination": "/products",
+      "permanent": true
+    },
+    {
+      "source": "/:name/collection/:rest*",
+      "destination": "/products",
+      "permanent": true
+    },
+    {
+      "source": "/featured/:rest*",
+      "destination": "/products",
+      "permanent": true
+    },
+    {
+      "source": "/terms-and-conditions",
+      "destination": "/terms",
+      "permanent": true
+    },
+    {
+      "source": "/return-policy",
+      "destination": "/policies",
+      "permanent": true
+    },
+    {
+      "source": "/privacy-policy",
+      "destination": "/policies",
+      "permanent": true
+    },
+    {
+      "source": "/refund-policy",
+      "destination": "/policies",
+      "permanent": true
+    },
+    {
+      "source": "/shipping-policy",
+      "destination": "/policies",
+      "permanent": true
+    },
+    {
+      "source": "/about-us",
+      "destination": "/our-story",
+      "permanent": true
+    },
+    {
+      "source": "/orders",
+      "destination": "/account",
+      "permanent": true
+    },
+    {
+      "source": "/lander",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/products/product.html",
+      "destination": "/products",
+      "permanent": true
+    },
+    {
+      "source": "/products/learn.html",
+      "destination": "/learn",
+      "permanent": true
+    },
+    {
+      "source": "/products/contact.html",
+      "destination": "/contact",
+      "permanent": true
+    },
+    {
+      "source": "/collections",
+      "destination": "/products",
+      "permanent": true
+    },
+    {
+      "source": "/collections/:path*",
+      "destination": "/products",
+      "permanent": true
+    },
+    {
+      "source": "/pages/:path*",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/index.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/products.html",
+      "destination": "/products",
+      "permanent": true
+    },
+    {
+      "source": "/product.html",
+      "destination": "/product",
+      "permanent": true
+    },
+    {
+      "source": "/our-story.html",
+      "destination": "/our-story",
+      "permanent": true
+    },
+    {
+      "source": "/bundles.html",
+      "destination": "/bundles",
+      "permanent": true
+    },
+    {
+      "source": "/blog.html",
+      "destination": "/blog",
+      "permanent": true
+    },
+    {
+      "source": "/contact.html",
+      "destination": "/contact",
+      "permanent": true
+    },
+    {
+      "source": "/rewards.html",
+      "destination": "/rewards",
+      "permanent": true
+    },
+    {
+      "source": "/track.html",
+      "destination": "/track",
+      "permanent": true
+    },
+    {
+      "source": "/learn.html",
+      "destination": "/learn",
+      "permanent": true
+    },
+    {
+      "source": "/cart.html",
+      "destination": "/cart",
+      "permanent": true
+    },
+    {
+      "source": "/checkout.html",
+      "destination": "/checkout",
+      "permanent": true
+    },
+    {
+      "source": "/login.html",
+      "destination": "/login",
+      "permanent": true
+    },
+    {
+      "source": "/account.html",
+      "destination": "/account",
+      "permanent": true
+    },
+    {
+      "source": "/policies.html",
+      "destination": "/policies",
+      "permanent": true
+    },
+    {
+      "source": "/thank-you.html",
+      "destination": "/thank-you",
+      "permanent": true
+    },
+    {
+      "source": "/products/chicken-heart-liver",
+      "destination": "/products/chicken-heart-and-liver",
+      "permanent": true
+    },
+    {
+      "source": "/products/goat-heart-kidney-mix",
+      "destination": "/products/goat-heart-and-kidney-mix",
+      "permanent": true
+    },
+    {
+      "source": "/products/:slug/",
+      "destination": "/products/:slug",
+      "permanent": true
+    },
+    {
+      "source": "/blog/:slug/",
+      "destination": "/blog/:slug",
+      "permanent": true
+    }
   ],
   "rewrites": [
-    { "source": "/api/:path*", "destination": "https://gameofbones-admin.vercel.app/api/:path*" },
-    { "source": "/products", "destination": "/products.html" }, { "source": "/trial-packs", "destination": "/trial-packs.html" },
-    { "source": "/product", "destination": "/product.html" },
-    { "source": "/our-story", "destination": "/our-story.html" },
-    { "source": "/bundles", "destination": "/bundles.html" },
-    { "source": "/blog", "destination": "/blog.html" },
-    { "source": "/contact", "destination": "/contact.html" },
-    { "source": "/rewards", "destination": "/rewards.html" },
-    { "source": "/track", "destination": "/track.html" },
-    { "source": "/learn", "destination": "/learn.html" },
-    { "source": "/cart", "destination": "/cart.html" },
-    { "source": "/checkout", "destination": "/checkout.html" },
-    { "source": "/login", "destination": "/login.html" },
-    { "source": "/account", "destination": "/account.html" },
-    { "source": "/policies", "destination": "/policies.html" },
-    { "source": "/terms", "destination": "/terms.html" },
-    { "source": "/thank-you", "destination": "/thank-you.html" },
-    { "source": "/shop", "destination": "/products.html" },
-    { "source": "/about", "destination": "/our-story.html" },
-    { "source": "/refer", "destination": "/rewards.html" },
-    { "source": "/reviews", "destination": "/blog.html" },
-    { "source": "/faq", "destination": "/learn.html" },
-    { "source": "/privacy", "destination": "/policies.html" },
-    { "source": "/shipping", "destination": "/policies.html" },
-    { "source": "/returns", "destination": "/policies.html" },
-    { "source": "/products/chicken-heart-and-liver", "destination": "/seo-static/products/chicken-heart-liver.html" },
-    { "source": "/products/goat-heart-and-kidney-mix", "destination": "/seo-static/products/goat-heart-kidney-mix.html" },
-    { "source": "/products/:slug", "destination": "/seo-static/products/:slug.html" },
-    { "source": "/blog/:slug", "destination": "https://gameofbones-admin.vercel.app/api/blog-page?slug=:slug" }
+    {
+      "source": "/api/:path*",
+      "destination": "https://gameofbones-admin.vercel.app/api/:path*"
+    },
+    {
+      "source": "/products",
+      "destination": "/products.html"
+    },
+    {
+      "source": "/trial-packs",
+      "destination": "/trial-packs.html"
+    },
+    {
+      "source": "/product",
+      "destination": "/product.html"
+    },
+    {
+      "source": "/our-story",
+      "destination": "/our-story.html"
+    },
+    {
+      "source": "/bundles",
+      "destination": "/bundles.html"
+    },
+    {
+      "source": "/blog",
+      "destination": "/blog.html"
+    },
+    {
+      "source": "/contact",
+      "destination": "/contact.html"
+    },
+    {
+      "source": "/rewards",
+      "destination": "/rewards.html"
+    },
+    {
+      "source": "/track",
+      "destination": "/track.html"
+    },
+    {
+      "source": "/learn",
+      "destination": "/learn.html"
+    },
+    {
+      "source": "/cart",
+      "destination": "/cart.html"
+    },
+    {
+      "source": "/checkout",
+      "destination": "/checkout.html"
+    },
+    {
+      "source": "/login",
+      "destination": "/login.html"
+    },
+    {
+      "source": "/account",
+      "destination": "/account.html"
+    },
+    {
+      "source": "/policies",
+      "destination": "/policies.html"
+    },
+    {
+      "source": "/terms",
+      "destination": "/terms.html"
+    },
+    {
+      "source": "/thank-you",
+      "destination": "/thank-you.html"
+    },
+    {
+      "source": "/shop",
+      "destination": "/products.html"
+    },
+    {
+      "source": "/about",
+      "destination": "/our-story.html"
+    },
+    {
+      "source": "/refer",
+      "destination": "/rewards.html"
+    },
+    {
+      "source": "/reviews",
+      "destination": "/blog.html"
+    },
+    {
+      "source": "/faq",
+      "destination": "/learn.html"
+    },
+    {
+      "source": "/privacy",
+      "destination": "/policies.html"
+    },
+    {
+      "source": "/shipping",
+      "destination": "/policies.html"
+    },
+    {
+      "source": "/returns",
+      "destination": "/policies.html"
+    },
+    {
+      "source": "/products/chicken-heart-and-liver",
+      "destination": "/seo-static/products/chicken-heart-liver.html"
+    },
+    {
+      "source": "/products/goat-heart-and-kidney-mix",
+      "destination": "/seo-static/products/goat-heart-kidney-mix.html"
+    },
+    {
+      "source": "/products/:slug",
+      "destination": "/seo-static/products/:slug.html"
+    },
+    {
+      "source": "/blog/:slug",
+      "destination": "https://gameofbones-admin.vercel.app/api/blog-page?slug=:slug"
+    }
   ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" },
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" },
-        { "key": "Content-Security-Policy", "value": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; form-action 'self' https://www.facebook.com; img-src 'self' data: https://*.supabase.co https://images.pexels.com https://www.facebook.com https://*.clarity.ms https://c.bing.com https://www.googletagmanager.com https://*.google-analytics.com; media-src 'self' https://*.supabase.co; script-src 'self' 'unsafe-inline' https://checkout.razorpay.com https://api.razorpay.com https://cdn.razorpay.com https://*.razorpay.com https://connect.facebook.net https://www.googletagmanager.com https://*.clarity.ms https://c.bing.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://gameofbones-admin.vercel.app https://*.supabase.co https://checkout.razorpay.com https://api.razorpay.com https://cdn.razorpay.com https://*.razorpay.com https://www.facebook.com https://connect.facebook.net https://www.google-analytics.com https://region1.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://stats.g.doubleclick.net https://*.clarity.ms https://c.bing.com; frame-src https://checkout.razorpay.com https://api.razorpay.com https://cdn.razorpay.com https://*.razorpay.com https://www.facebook.com" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; form-action 'self' https://www.facebook.com; img-src 'self' data: https://*.supabase.co https://images.pexels.com https://www.facebook.com https://*.clarity.ms https://c.bing.com https://www.googletagmanager.com https://*.google-analytics.com; media-src 'self' https://*.supabase.co; script-src 'self' 'unsafe-inline' https://checkout.razorpay.com https://api.razorpay.com https://cdn.razorpay.com https://*.razorpay.com https://connect.facebook.net https://www.googletagmanager.com https://*.clarity.ms https://c.bing.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://gameofbones-admin.vercel.app https://*.supabase.co https://checkout.razorpay.com https://api.razorpay.com https://cdn.razorpay.com https://*.razorpay.com https://www.facebook.com https://connect.facebook.net https://www.google-analytics.com https://region1.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://stats.g.doubleclick.net https://*.clarity.ms https://c.bing.com; frame-src https://checkout.razorpay.com https://api.razorpay.com https://cdn.razorpay.com https://*.razorpay.com https://www.facebook.com"
+        }
       ]
     },
     {
       "source": "/checkout",
       "headers": [
-        { "key": "Cache-Control", "value": "no-store, max-age=0" }
+        {
+          "key": "Cache-Control",
+          "value": "no-store, max-age=0"
+        }
       ]
     }
   ]
