@@ -12,19 +12,19 @@
   // Use a real, editorial image that matches the subject—not a generic dog
   // portrait—on every public card and the corresponding article page.
   const editorialCovers = {
-    chews: 'assets/goat-trotter-plate.png',
-    dental: 'assets/goat-trachea-pouch.png',
-    ingredients: 'assets/source-ingredients.png',
-    process: 'assets/source-preparation.png',
-    storage: 'assets/chicken-jerky-pouch.png',
+    chews: 'assets/goat-trotter-plate.webp',
+    dental: 'assets/goat-trachea-pouch.webp',
+    ingredients: 'assets/source-ingredients.webp',
+    process: 'assets/source-preparation.webp',
+    storage: 'assets/chicken-jerky-pouch.webp',
     training: 'https://images.pexels.com/photos/10013053/pexels-photo-10013053.jpeg?auto=compress&cs=tinysrgb&w=1600',
     feeding: 'https://images.pexels.com/photos/8434633/pexels-photo-8434633.jpeg?auto=compress&cs=tinysrgb&w=1600',
     fish: 'https://images.pexels.com/photos/725990/pexels-photo-725990.jpeg?auto=compress&cs=tinysrgb&w=1600',
-    cats: 'assets/cat-fish-treat.png',
-    community: 'assets/dog-outdoor-treat.png',
-    senior: 'assets/dog-with-chew.png',
-    puppy: 'assets/dog-training-reward.png',
-    general: 'assets/good-food-collage.png',
+    cats: 'assets/cat-fish-treat.webp',
+    community: 'assets/dog-outdoor-treat.webp',
+    senior: 'assets/dog-with-chew.webp',
+    puppy: 'assets/dog-training-reward.webp',
+    general: 'assets/good-food-collage.webp',
   };
   const coverFor = article => {
     const topic = `${article.slug || ''} ${article.category || ''} ${article.title || ''}`.toLowerCase();
@@ -154,7 +154,7 @@
     setMeta('meta[property="og:title"]', title);
     setMeta('meta[property="og:description"]', description);
     setMeta('meta[property="og:url"]', url);
-    const socialImage = article?.cover_image || 'https://gameofbones.in/assets/hero-real-dogs.png';
+    const socialImage = article?.cover_image || 'https://gameofbones.in/assets/hero-real-dogs.webp';
     setMeta('meta[property="og:image"]', socialImage);
     setMeta('meta[name="twitter:title"]', title);
     setMeta('meta[name="twitter:description"]', description);

@@ -1,5 +1,5 @@
 window.GOB_LIVE_CATALOG=[
-{n:'Chicken Jerky',c:'Jerky',w:'60 g',p:329,d:'Single-ingredient slow-dehydrated chicken breast. High-protein, low-fat and made for training rewards.',i:'assets/chicken-jerky-pouch.png',id:'chicken-jerky'},
+{n:'Chicken Jerky',c:'Jerky',w:'60 g',p:329,d:'Single-ingredient slow-dehydrated chicken breast. High-protein, low-fat and made for training rewards.',i:'assets/chicken-jerky-pouch.webp',id:'chicken-jerky'},
 {n:'Buff Jerky',c:'Jerky',w:'60 g',p:449,d:'Single-ingredient buffalo jerky with a richer flavour profile.',i:'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/5805f088-bda7-4070-9534-96fe4cfe77ef/image-0-1782140747762.png'},
 {n:'Chicken Feet',c:'Chews & bones',w:'70 g',p:300,d:'Whole dehydrated chicken feet for supervised chewing.',i:'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/cac553a3-463f-4cf6-92dd-48c054f82bfe/image-0-1782712513139.png'},
 {n:'Chicken Neck',c:'Chews & bones',w:'70 g',p:300,d:'Whole chicken neck, slowly dehydrated and bone-in.',i:'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/373c6199-f75b-4294-8626-4f173fda9f5d/image-0-1782712577445.png'},
