@@ -1,17 +1,17 @@
 /* Preserve each supplied photograph exactly as shot, including on hover. */
 .source-step,
 .source-step:hover {
-  background-image: url('assets/source-ingredients.png');
+  background-image: url('assets/source-ingredients.webp');
 }
 
 .prepare-step,
 .prepare-step:hover {
-  background-image: url('assets/source-preparation.png');
+  background-image: url('assets/source-preparation.webp');
 }
 
 .slow-dry-step,
 .slow-dry-step:hover {
-  background-image: url('assets/slow-dry.png');
+  background-image: url('assets/slow-dry.webp');
 }
 
 .check-step,

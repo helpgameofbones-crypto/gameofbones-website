@@ -7,9 +7,9 @@
     const requestedProductId = params.get('catalog') || params.get('product') || (routeSlug ? decodeURIComponent(routeSlug) : '') || 'chicken-jerky';
     const legacyProductId = { 'chicken-jerky': 'jerky', 'goat-trachea': 'trachea', 'goat-trotter': 'trotter' }[requestedProductId] || requestedProductId;
     const fallback = {
-      jerky: { n: 'Chicken Jerky', c: 'Jerky', w: '70 g', p: 329, i: 'assets/chicken-jerky-pouch.png', id: 'jerky', packs: [{ label: '1 pouch', weight: '70 g', price: 329 }, { label: '2 pouches', weight: '140 g', price: 658 }, { label: '3 pouches', weight: '210 g', price: 987 }, { label: '4 pouches', weight: '280 g', price: 1316 }] },
-      trachea: { n: 'Goat Trachea', c: 'Chews & bones', w: '60 g', p: 100, i: 'assets/goat-trachea-pouch.png', id: 'trachea' },
-      trotter: { n: 'Goat Trotter', c: 'Chews & bones', w: '60 g', p: 250, i: 'assets/goat-trotter-plate.png', id: 'trotter' },
+      jerky: { n: 'Chicken Jerky', c: 'Jerky', w: '70 g', p: 329, i: 'assets/chicken-jerky-pouch.webp', id: 'jerky', packs: [{ label: '1 pouch', weight: '70 g', price: 329 }, { label: '2 pouches', weight: '140 g', price: 658 }, { label: '3 pouches', weight: '210 g', price: 987 }, { label: '4 pouches', weight: '280 g', price: 1316 }] },
+      trachea: { n: 'Goat Trachea', c: 'Chews & bones', w: '60 g', p: 100, i: 'assets/goat-trachea-pouch.webp', id: 'trachea' },
+      trotter: { n: 'Goat Trotter', c: 'Chews & bones', w: '60 g', p: 250, i: 'assets/goat-trotter-plate.webp', id: 'trotter' },
     }[legacyProductId];
     const packOptions = document.querySelector('#packOptions');
     const addButton = document.querySelector('#addProduct');
