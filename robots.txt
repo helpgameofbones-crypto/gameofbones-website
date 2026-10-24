@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /rest/
+Disallow: /functions/
+Disallow: /storage/
 
 Sitemap: https://gameofbones.in/sitemap.xml
