@@ -177,6 +177,8 @@
       give: BOX_GIVE, care: 'Introduce one new treat at a time.' },
   };
 
+  // Long-form guides in the journal, linked from the matching product page.
+  const GUIDES = {"goat-lungs": "goat-lungs-for-dogs", "goat-spleen": "goat-spleen-for-dogs", "anchovies": "anchovies-for-dogs", "chicken-neck": "chicken-necks-for-dogs", "sardines": "anchovies-for-dogs", "white-sardines": "anchovies-for-dogs", "goat-liver": "goat-spleen-for-dogs"};
   const slug = () => {
     const m = location.pathname.match(/\/products\/([a-z0-9-]+)/);
     if (m) return m[1].replace('chicken-heart-and-liver', 'chicken-heart-liver').replace('goat-heart-and-kidney-mix', 'goat-heart-kidney-mix');
@@ -202,6 +204,7 @@
   .gob-why details>summary:after{content:'+';font-size:20px;line-height:1;color:#bd812a}
   .gob-why details[open]>summary:after{content:'–'}
   .gob-why details p{margin:0;padding:0 14px 14px;font-size:13.5px;line-height:1.5;color:#3f5249}
+  .gob-why .guide{margin:14px 0 0;font-weight:800;font-size:14px}.gob-why .guide a{color:#bd812a;text-decoration:underline;text-underline-offset:3px}
   .gob-why .note{margin:12px 0 0;font-size:11.5px;line-height:1.45;color:#6b7a72}
   @media(min-width:900px){.gob-why{padding:48px 24px 16px}.gob-why ol{grid-template-columns:repeat(3,1fr);gap:12px}.gob-why li{grid-template-columns:1fr;padding:18px}.gob-why .more{display:grid;grid-template-columns:1fr 1fr;gap:12px}.gob-why details{margin-top:12px}}
   `;
@@ -223,6 +226,7 @@
         <details><summary>How much to give</summary><p>${esc(d.give)} ${d.who === 'cat' ? '' : esc(TEN)}</p></details>
         <details><summary>Good to know</summary><p>${esc(d.care)} If ${pet} has a health condition or a special diet, check with your vet first.</p></details>
       </div>
+      ${GUIDES[slug()] ? `<p class="guide"><a href="/blog/${GUIDES[slug()]}">Read the full guide →</a></p>` : ''}
       <p class="note">A treat, not a complete meal or a medicine. Nutrients named here occur naturally in the ingredient; amounts vary by batch.</p>`;
     anchor.insertAdjacentElement('afterend', sec);
     document.body.classList.add('gob-why-on');

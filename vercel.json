@@ -55,7 +55,7 @@
     { "source": "/products/chicken-heart-and-liver", "destination": "/seo-static/products/chicken-heart-liver.html" },
     { "source": "/products/goat-heart-and-kidney-mix", "destination": "/seo-static/products/goat-heart-kidney-mix.html" },
     { "source": "/products/:slug", "destination": "/seo-static/products/:slug.html" },
-    { "source": "/blog/:slug", "destination": "/seo-static/blog/:slug.html" }
+    { "source": "/blog/:slug", "destination": "https://gameofbones-admin.vercel.app/api/blog-page?slug=:slug" }
   ],
   "headers": [
     {
