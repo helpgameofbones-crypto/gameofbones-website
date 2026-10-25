@@ -178,7 +178,7 @@
   };
 
   // Long-form guides in the journal, linked from the matching product page.
-  const GUIDES = {"goat-lungs": "goat-lungs-for-dogs", "goat-spleen": "goat-spleen-for-dogs", "anchovies": "anchovies-for-dogs", "chicken-neck": "chicken-necks-for-dogs", "sardines": "anchovies-for-dogs", "white-sardines": "anchovies-for-dogs", "goat-liver": "goat-spleen-for-dogs"};
+  const GUIDES = {"goat-lungs": "goat-lungs-for-dogs", "goat-spleen": "goat-spleen-for-dogs", "anchovies": "anchovies-for-dogs", "chicken-neck": "chicken-necks-for-dogs", "sardines": "sardines-for-dogs-and-cats", "white-sardines": "sardines-for-dogs-and-cats", "goat-liver": "goat-spleen-for-dogs", "goat-trotter": "goat-trotter-for-dogs", "goat-trachea": "goat-trachea-for-dogs", "chicken-feet": "chicken-feet-for-dogs"};
   const slug = () => {
     const m = location.pathname.match(/\/products\/([a-z0-9-]+)/);
     if (m) return m[1].replace('chicken-heart-and-liver', 'chicken-heart-liver').replace('goat-heart-and-kidney-mix', 'goat-heart-kidney-mix');
