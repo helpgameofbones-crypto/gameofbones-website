@@ -80,8 +80,8 @@ section.s{padding:44px 0}
 .card h3{font-size:18px}
 .card p{margin:0;font-size:13px;color:var(--ink2);line-height:1.35}
 .card .pr{margin-top:auto;padding-top:8px;display:flex;justify-content:space-between;align-items:center;font-weight:800}
-.card .pr span{font-size:12px;color:var(--muted);font-weight:600}
-.card .go{background:var(--ink);color:#fff;border-radius:99px;padding:6px 12px;font-size:12.5px}
+.card .pr .amt{display:flex;flex-direction:column;line-height:1.1;font-size:18px}.card .pr .amt small{font-size:12px;color:var(--muted);font-weight:600;margin-top:2px}
+.card .go{flex:none;white-space:nowrap;background:var(--ink);color:#fff;border-radius:99px;padding:6px 12px;font-size:12.5px}
 @media(min-width:880px){.cards{grid-template-columns:repeat(4,1fr);gap:16px}.cards.five{grid-template-columns:repeat(5,1fr)}}
 
 .trial{background:var(--green);color:#fff;border-radius:22px;overflow:hidden;display:grid}
@@ -179,11 +179,11 @@ section.s{padding:44px 0}
 <section class="s" id="bestsellers" style="padding-top:0"><div class="wrap">
   <div class="row-head"><div><p class="eyebrow">Most ordered</p><h2>Our bestsellers</h2></div><a href="/products">See all 31 →</a></div>
   <div class="cards five">
-    <a class="card" href="/products/goat-trotter"><div class="im"><img src="/assets/catalogue-plates/goat-trotter-green-plate.webp" alt="Goat Trotter" loading="lazy" width="600" height="600"><span class="tag">Bestseller</span></div><div class="tx"><h3>Goat Trotter</h3><p>Long-lasting chew</p><div class="pr">₹250 <span>1 piece</span><span class="go">View</span></div></div></a>
-    <a class="card" href="/products/goat-trachea"><div class="im"><img src="/assets/catalogue-plates/goat-trachea.webp" alt="Goat Trachea" loading="lazy" width="600" height="600"><span class="tag">Bestseller</span></div><div class="tx"><h3>Goat Trachea</h3><p>Crunchy cartilage chew</p><div class="pr">₹100 <span>1 piece</span><span class="go">View</span></div></div></a>
-    <a class="card" href="/products/sardines"><div class="im"><img src="/assets/catalogue-plates/sardines.webp" alt="Sardines" loading="lazy" width="600" height="600"><span class="tag">Bestseller</span></div><div class="tx"><h3>Sardines</h3><p>Whole fish, dogs & cats</p><div class="pr">₹400 <span>60 g</span><span class="go">View</span></div></div></a>
-    <a class="card" href="/products/chicken-wings"><div class="im"><img src="/assets/catalogue-plates/chicken-wings.webp" alt="Chicken Wings" loading="lazy" width="600" height="600"><span class="tag">Bestseller</span></div><div class="tx"><h3>Chicken Wings</h3><p>Crunchy chew with bone</p><div class="pr">₹350 <span>pack</span><span class="go">View</span></div></div></a>
-    <a class="card" href="/products/chicken-jerky"><div class="im"><img src="/assets/catalogue-plates/chicken-jerky.webp" alt="Chicken Jerky" loading="lazy" width="600" height="600"><span class="tag">Bestseller</span></div><div class="tx"><h3>Chicken Jerky</h3><p>Snappable training treat</p><div class="pr">₹329 <span>60 g</span><span class="go">View</span></div></div></a>
+    <a class="card" href="/products/goat-trotter"><div class="im"><img src="/assets/catalogue-plates/goat-trotter-green-plate.webp" alt="Goat Trotter" loading="lazy" width="600" height="600"><span class="tag">Bestseller</span></div><div class="tx"><h3>Goat Trotter</h3><p>Long-lasting chew</p><div class="pr"><span class="amt">₹250<small>1 piece</small></span><span class="go">View</span></div></div></a>
+    <a class="card" href="/products/goat-trachea"><div class="im"><img src="/assets/catalogue-plates/goat-trachea.webp" alt="Goat Trachea" loading="lazy" width="600" height="600"><span class="tag">Bestseller</span></div><div class="tx"><h3>Goat Trachea</h3><p>Crunchy cartilage chew</p><div class="pr"><span class="amt">₹100<small>1 piece</small></span><span class="go">View</span></div></div></a>
+    <a class="card" href="/products/sardines"><div class="im"><img src="/assets/catalogue-plates/sardines.webp" alt="Sardines" loading="lazy" width="600" height="600"><span class="tag">Bestseller</span></div><div class="tx"><h3>Sardines</h3><p>Whole fish, dogs & cats</p><div class="pr"><span class="amt">₹400<small>60 g</small></span><span class="go">View</span></div></div></a>
+    <a class="card" href="/products/chicken-wings"><div class="im"><img src="/assets/catalogue-plates/chicken-wings.webp" alt="Chicken Wings" loading="lazy" width="600" height="600"><span class="tag">Bestseller</span></div><div class="tx"><h3>Chicken Wings</h3><p>Crunchy chew with bone</p><div class="pr"><span class="amt">₹350<small>pack</small></span><span class="go">View</span></div></div></a>
+    <a class="card" href="/products/chicken-jerky"><div class="im"><img src="/assets/catalogue-plates/chicken-jerky.webp" alt="Chicken Jerky" loading="lazy" width="600" height="600"><span class="tag">Bestseller</span></div><div class="tx"><h3>Chicken Jerky</h3><p>Snappable training treat</p><div class="pr"><span class="amt">₹329<small>60 g</small></span><span class="go">View</span></div></div></a>
   </div>
 </div></section>
 

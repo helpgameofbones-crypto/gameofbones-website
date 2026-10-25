@@ -135,6 +135,10 @@
   .products .product-card:not([data-home-product]).mp-sold-out .product-image img { filter: grayscale(.35); opacity: .8; }
   .products .product-card:not([data-home-product]) .stock-note { margin: 2px 0 0 !important; font-size: 12px !important; text-align: center; }
   .products .product-card:not([data-home-product]) .stock-note::before { content: "● "; font-size: 9px; vertical-align: 1px; }
+  /* Keep Add buttons level across a row: stock note sits above the price, never below the button */
+  .products .product-card:not([data-home-product]) .card-copy > .stock-note { order: 1; margin-top: auto !important; text-align: left; }
+  .products .product-card:not([data-home-product]) .card-copy > .card-bottom { order: 2; }
+  .products .product-card:not([data-home-product]) .card-copy:has(> .stock-note) > .card-bottom { margin-top: 0 !important; }
 
   /* Product page restock note: short and tidy */
   .buy-row > .restock-notify-area { display: flex !important; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; padding: 10px 12px !important; font-size: 13px !important; line-height: 1.4 !important; }
@@ -170,3 +174,6 @@
   .mp-price { font-size: 16px; }
   .nav .menu-toggle { padding: 0 8px !important; }
 }
+
+/* Notify me only once a treat has sold out */
+.products .product-card:not(.mp-sold-out) .restock-notify-button { display: none !important; }
