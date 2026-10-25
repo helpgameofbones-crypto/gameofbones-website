@@ -244,3 +244,5 @@ document.addEventListener('DOMContentLoaded',installFormFeedback);
 (function loadStockGuard(){if(document.querySelector('script[data-gob-stock-guard]'))return;const s=document.createElement('script');s.src='/stock-guard.js?v=1';s.defer=true;s.dataset.gobStockGuard='true';document.head.append(s)})();
 
 (function loadMobilePolish(){if(document.querySelector('script[data-gob-mobile-polish]'))return;const s=document.createElement('script');s.src='/mobile-polish.js?v=2';s.defer=true;s.dataset.gobMobilePolish='true';document.head.append(s)})();
+
+(function loadPreferredSource(){if(document.querySelector('script[data-gob-pref]'))return;const s=document.createElement('script');s.src='/preferred-source.js?v=1';s.defer=true;s.dataset.gobPref='true';document.head.append(s)})();

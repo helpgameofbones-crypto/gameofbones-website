@@ -122,3 +122,11 @@
 .hv2 .step h3{font-size:19px;margin:0 0 4px}
 .hv2 .need h3,.hv2 .card h3{margin:0}
 @media(min-width:880px){.hv2 .h-hero{min-height:600px;max-height:760px}.hv2 .h-hero-img{position:relative}.hv2 .h-hero-img img{position:absolute;inset:0}}
+.hv2 .dogs-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.hv2 .dog-tile{margin:0;background:var(--paper);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.hv2 .dog-tile img{width:100%;aspect-ratio:1/1;object-fit:cover;height:auto}
+.hv2 .dog-tile figcaption{padding:8px 10px 10px;font-size:12.5px;line-height:1.35;color:var(--ink2)}
+.hv2 .dog-tile figcaption b{color:var(--gold);font-size:12px;margin-right:4px}
+.hv2 .dog-tile figcaption span{display:block;margin-top:3px;color:var(--ink)}
+.hv2 .dog-tile figcaption small{display:block;margin-top:3px;color:var(--muted)}
+@media(min-width:880px){.hv2 .dogs-grid{grid-template-columns:repeat(4,1fr);gap:14px}}
