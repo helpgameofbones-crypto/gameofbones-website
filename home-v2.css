@@ -115,3 +115,10 @@
 .hv2 .guide b{display:block;font-family:var(--display);font-size:20px;margin-bottom:4px}
 .hv2 .guide span{font-size:14px;color:var(--ink2)}
 @media(min-width:880px){.hv2 .types{grid-template-columns:repeat(6,1fr)}.hv2 .guides{grid-template-columns:repeat(3,1fr)}}
+/* guard against site.css rules with the same class names */
+.hv2 .steps{border:0}
+.hv2 .step{min-height:0;border:1px solid var(--line);transition:none}
+.hv2 .step:hover{background:var(--paper)}
+.hv2 .step h3{font-size:19px;margin:0 0 4px}
+.hv2 .need h3,.hv2 .card h3{margin:0}
+@media(min-width:880px){.hv2 .h-hero{min-height:600px;max-height:760px}.hv2 .h-hero-img{position:relative}.hv2 .h-hero-img img{position:absolute;inset:0}}
