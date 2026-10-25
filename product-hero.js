@@ -41,6 +41,7 @@
     'large-treat-box':      { pack: '10 full packs · 700 g+', best: 'Multi-dog homes & gifting', dogs: 'All sizes', clip: 'bowl' },
     'surprise-me-box':      { pack: '200 g assorted', best: 'A surprise mix to try', dogs: 'All sizes', clip: 'bowl' },
   };
+  window.GOB_HERO_FACTS = FACTS;
 
   const slug = () => {
     const m = location.pathname.match(/\/products\/([a-z0-9-]+)/);

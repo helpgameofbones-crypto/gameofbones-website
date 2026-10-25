@@ -1,0 +1,90 @@
+/* Product page v2: mobile-first cleanup. Loaded by product-v2.js, active only on body.gob-v2. */
+body.gob-v2 .gallery-notes,
+body.gob-v2 .product-info .chip-row,
+body.gob-v2 #packValue,
+body.gob-v2 .buy-assurance,
+body.gob-v2 .product-info .delivery,
+body.gob-v2 .paid-traffic-promise,
+body.gob-v2 #wishBtn,
+body.gob-v2 #gobQuickFacts,
+body.gob-v2 .product-journey,
+body.gob-v2 .label-test,
+body.gob-v2 .quote-section,
+body.gob-v2 .v2-hidden { display: none !important; }
+
+body.gob-v2 .v2-ident { margin: 2px 0 8px; font-size: 14px; font-weight: 700; color: var(--ink-soft, #24473a); line-height: 1.35; }
+body.gob-v2 #productDesc { margin: 10px 0 12px; font-size: 15px; line-height: 1.5; }
+
+/* quick facts */
+.v2-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0 0 16px; }
+.v2-fact { background: var(--paper, #fffdf8); border: 1px solid var(--line, rgba(16,44,34,.15)); border-radius: 12px; padding: 9px 11px; min-width: 0; }
+.v2-fact small { display: block; font-size: 10.5px; letter-spacing: .07em; text-transform: uppercase; color: var(--muted, #557064); }
+.v2-fact strong { display: block; font-size: 13.5px; line-height: 1.3; margin-top: 2px; color: var(--ink, #102c22); }
+.v2-meter { display: flex; gap: 3px; margin-top: 6px; }
+.v2-meter i { flex: 1; height: 5px; border-radius: 3px; background: #e4ddd0; }
+.v2-meter i.on { background: var(--ink, #102c22); }
+
+/* pack buttons: grid of 2 on phones, price per unit */
+body.gob-v2 #packOptions { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+body.gob-v2 #packOptions .option { text-align: left; border-radius: 12px; padding: 10px 12px; min-height: 64px; line-height: 1.25; }
+body.gob-v2 #packOptions .option small { display: block; margin-top: 2px; }
+.v2-unit { display: block; font-style: normal; font-size: 11.5px; color: var(--muted, #557064); margin-top: 2px; font-weight: 500; }
+body.gob-v2 #packOptions .option.selected .v2-unit { color: inherit; opacity: .8; }
+
+/* before you buy */
+.v2-before { border-radius: 12px; padding: 11px 13px; margin: 14px 0 12px; font-size: 13.5px; line-height: 1.45; background: var(--paper, #fffdf8); border: 1px solid var(--line, rgba(16,44,34,.15)); color: var(--ink, #102c22); }
+.v2-before.hard { background: #fff4dc; border-color: #e2b252; }
+.v2-before h3 { margin: 0 0 4px; font-size: 14px; font-family: inherit; }
+.v2-before p { margin: 0; }
+.v2-before ul { margin: 6px 0 0; padding-left: 18px; }
+.v2-before li { margin: 2px 0; }
+
+/* delivery line */
+.v2-ship { list-style: none; margin: 4px 0 10px; padding: 0; display: grid; gap: 4px; font-size: 13px; color: var(--ink-soft, #24473a); }
+.v2-ship li { display: flex; gap: 7px; }
+.v2-ship li::before { content: "✓"; color: #2c6a3a; font-weight: 800; }
+
+/* compact PIN check */
+body.gob-v2 .pincode-checker { padding: 12px 0 !important; margin: 6px 0 !important; border: 0 !important; background: none !important; box-shadow: none !important; }
+body.gob-v2 .pincode-checker h2, body.gob-v2 .pincode-checker > div > p:not(.eyebrow) { display: none !important; }
+body.gob-v2 .pincode-checker .eyebrow { margin: 0 0 6px !important; }
+
+/* details accordion */
+.v2-acc { max-width: 1180px; margin: 0 auto; padding: 18px 18px 8px; color: var(--ink, #102c22); }
+.v2-acc details { border-bottom: 1px solid var(--line, rgba(16,44,34,.15)); padding: 0 !important; background: none !important; }
+.v2-acc details:first-of-type { border-top: 1px solid var(--line, rgba(16,44,34,.15)); }
+.v2-acc summary { list-style: none; cursor: pointer; padding: 15px 2px !important; font-weight: 800; font-size: 15.5px; display: flex; justify-content: space-between; align-items: center; min-height: 0 !important; height: auto !important; margin: 0 !important; }
+.v2-acc summary::-webkit-details-marker { display: none; }
+.v2-acc summary::after { content: "+"; font-size: 20px; font-weight: 400; color: var(--gold, #bd812a); }
+.v2-acc details[open] summary::after { content: "–"; }
+.v2-body { padding: 0 2px 14px; font-size: 14.5px; line-height: 1.55; }
+.v2-body p { margin: 0 0 10px; }
+.v2-body ul { margin: 0 0 6px; padding-left: 18px; }
+.v2-tbl { width: 100%; max-width: 520px; border-collapse: collapse; font-size: 14px; margin: 2px 0 8px; }
+.v2-tbl th, .v2-tbl td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--line, rgba(16,44,34,.15)); }
+.v2-tbl th { font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted, #557064); }
+.v2-tbl td:last-child, .v2-tbl th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+.v2-note { font-size: 12.5px; color: var(--muted, #557064); }
+.v2-help { font-size: 13.5px; margin: 12px 0 0; }
+.v2-help a { color: var(--ink, #102c22); font-weight: 800; }
+
+/* pairs */
+.v2-pairs { max-width: 1180px; margin: 0 auto; padding: 22px 18px 34px; color: var(--ink, #102c22); }
+.v2-pairs .eyebrow { margin: 0 0 4px; }
+.v2-pairs h2 { margin: 0 0 12px; font-size: clamp(22px, 6vw, 32px); }
+.v2-pair-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.v2-pair { display: block; background: var(--paper, #fffdf8); border: 1px solid var(--line, rgba(16,44,34,.15)); border-radius: 12px; overflow: hidden; color: inherit; text-decoration: none; }
+.v2-pair img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block; background: #133c21; }
+.v2-pair span { display: block; padding: 7px 9px 9px; font-size: 12.5px; line-height: 1.3; }
+.v2-pair b { display: block; font-size: 13px; }
+.v2-pair small { color: var(--muted, #557064); }
+
+@media (min-width: 900px) {
+  .v2-facts { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  body.gob-v2 #packOptions { grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); }
+  .v2-acc { padding: 34px 24px 10px; display: grid; grid-template-columns: 1fr 1fr; column-gap: 40px; align-items: start; }
+  .v2-acc details:nth-of-type(2) { border-top: 1px solid var(--line, rgba(16,44,34,.15)); }
+  .v2-help { grid-column: 1 / -1; }
+  .v2-pairs { padding: 30px 24px 50px; }
+  .v2-pair-row { gap: 16px; }
+}

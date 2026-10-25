@@ -24,7 +24,7 @@
   const isBogoProduct = product => ['chicken feet', 'chicken neck'].includes(String(productName(product)).trim().toLowerCase());
   // Top sellers from real orders (last 60 days). Shown first with a badge so
   // visitors arriving from ads see the treats other dog parents buy most.
-  const BESTSELLERS = ['chicken-heart-and-liver', 'goat-trotter', 'goat-trachea', 'chicken-wings', 'chicken-jerky', 'sardines'];
+  const BESTSELLERS = ['goat-trotter', 'goat-trachea', 'sardines', 'chicken-wings', 'chicken-jerky'];
   // "Cat" is a cross-category filter: every fish treat except Whole Mackerel,
   // plus the two small chicken treats cats take well to.
   const CAT_FILTER = 'Cat';
