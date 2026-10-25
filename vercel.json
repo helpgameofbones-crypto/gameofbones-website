@@ -308,6 +308,10 @@
       "destination": "https://gameofbones-admin.vercel.app/api/:path*"
     },
     {
+      "source": "/start",
+      "destination": "/start.html"
+    },
+    {
       "source": "/products",
       "destination": "/products.html"
     },

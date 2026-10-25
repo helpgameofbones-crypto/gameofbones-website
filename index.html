@@ -19,14 +19,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="site.css">
-<link rel="stylesheet" href="source-step.css?v=4">
-<link rel="stylesheet" href="hero-image.css?v=1">
-<link rel="stylesheet" href="homepage-rich.css?v=home-journal-2">
-<link rel="stylesheet" href="homepage-videos.css?v=2">
+<link rel="stylesheet" href="home-v2.css?v=1">
 <script defer src="site.js?v=meta-signals-1">
 </script>
 <script defer src="header-navigation.js?v=live-ticker-7"></script>
-<script defer src="homepage-rich.js?v=home-journal-2"></script>
 <script defer src="conversion-extras.js?v=bone-run-6"></script>
 <script defer src="api-client.js"></script>
 <script defer src="catalog.js?v=commerce-6"></script>
@@ -35,8 +31,6 @@
 <script defer src="restock-notify.js?v=1"></script>
 <script defer src="catalog-restock.js?v=1"></script>
 <script defer src="bogo-promo.js?v=1"></script>
-<script defer src="home-conversion.js?v=1"></script>
-<script defer src="homepage-videos.js?v=2"></script>
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Game of Bones — Naturally better treats"><meta name="twitter:description" content="Game of Bones makes single-ingredient, naturally dehydrated dog treats in Kalyan, Maharashtra—without fillers, preservatives or confusing labels."><meta name="twitter:image" content="https://gameofbones.in/assets/hero-real-dogs.webp"></head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -65,246 +59,118 @@
 <button class="menu-toggle" aria-label="Open menu" aria-expanded="false">Menu</button>
 </div>
 </nav>
-<main id="main">
-<section class="hero">
-<div class="hero-copy">
-<p class="eyebrow">Made in Maharashtra, India</p>
-<h1>Real food.<br>
-<span class="accent">Real dogs.</span>
-</h1>
-<p class="lead">Single-ingredient dehydrated treats with zero preservatives and zero fillers. Your dog deserves the truth on the label.</p>
-<a class="button" href="products.html">Shop treats</a>
-<div class="proof">
-<span>Slow-dehydrated at 55–70°C</span>
-<span>Human-grade ingredients</span>
-<span>COD available</span>
-</div>
-</div>
-<div class="hero-media">
-<img class="hero-real-dogs" src="assets/hero-real-dogs.jpg" alt="A dog enjoying a natural treat outdoors" width="900" height="1200" fetchpriority="high" decoding="async">
-<aside class="floating-note">“Nothing to decode. Everything to love.”</aside>
-</div>
+<main id="main" class="hv2">
+<section class="h-hero">
+  <div class="h-hero-img"><img src="/assets/hero-real-dogs.webp" alt="A dog taking a dried treat from a hand on a beach" width="900" height="1200" fetchpriority="high"></div>
+  <div class="h-hero-copy">
+    <p class="eyebrow">Made in Kalyan, Maharashtra</p>
+    <h1>Real food. <em>Real dogs.</em></h1>
+    <p class="sub">Single-ingredient treats for dogs and cats: chicken, goat, buff and fish, slow-dehydrated with nothing added.</p>
+    <div class="offer">New here? 15% off your first order · <code>WELCOME15</code></div>
+    <div class="ctas">
+      <a class="btn main" href="/products">Shop all treats</a>
+      <a class="btn line" href="/trial-packs">Try 30 g packs from ₹60</a>
+    </div>
+    <ul class="mini"><li>Free delivery across India</li><li>Cash on delivery</li><li>Ships in 1–2 days</li></ul>
+  </div>
 </section>
-<section class="dog-video-section" aria-labelledby="dog-video-title">
-<div class="section-head dog-video-head reveal">
-<div>
-<p class="eyebrow">Real dogs. Real reactions.</p>
-<h2 class="section-title" id="dog-video-title">Watch the good stuff happen.</h2>
-</div>
-<p class="dog-video-intro">Short, quiet clips from our treat-loving pack. Videos only play when they are on screen.</p>
-</div>
-<div class="dog-video-carousel reveal" aria-label="Game of Bones dog video carousel">
-<button class="dog-video-arrow dog-video-arrow--previous" type="button" aria-label="Show previous videos" disabled><span aria-hidden="true">←</span></button>
-<div class="dog-video-viewport" tabindex="0" aria-label="Dog videos. Use the arrow buttons or left and right arrow keys to browse.">
-<div class="dog-video-grid">
-<article class="dog-video-card reveal"><div class="dog-video-frame"><video class="dog-video" muted loop playsinline preload="none" poster="assets/dog-videos/posters/20260321_091519.webp" aria-label="A dog enjoying a Game of Bones treat"><source data-src="assets/dog-videos/20260321_091519.mp4" type="video/mp4"></video><span class="dog-video-caption">First sniff. Then full tail-wag.</span></div></article>
-<article class="dog-video-card reveal"><div class="dog-video-frame"><video class="dog-video" muted loop playsinline preload="none" poster="assets/dog-videos/posters/20260321_091608.webp" aria-label="A dog tasting a naturally dehydrated treat"><source data-src="assets/dog-videos/20260321_091608.mp4" type="video/mp4"></video><span class="dog-video-caption">The crunch says it all.</span></div></article>
-<article class="dog-video-card reveal"><div class="dog-video-frame"><video class="dog-video" muted loop playsinline preload="none" poster="assets/dog-videos/posters/20260531_084748.webp" aria-label="A happy dog with a Game of Bones treat"><source data-src="assets/dog-videos/20260531_084748.mp4" type="video/mp4"></video><span class="dog-video-caption">Good treats. Very good dogs.</span></div></article>
-<article class="dog-video-card reveal"><div class="dog-video-frame"><video class="dog-video" muted loop playsinline preload="none" poster="assets/dog-videos/posters/20260321_091537.webp" aria-label="A dog enjoying a Game of Bones treat"><source data-src="assets/dog-videos/20260321_091537.mp4" type="video/mp4"></video><span class="dog-video-caption">One more reason to wag.</span></div></article>
-<article class="dog-video-card reveal"><div class="dog-video-frame"><video class="dog-video" muted loop playsinline preload="none" poster="assets/dog-videos/posters/20260321_091704.webp" aria-label="A dog enjoying a Game of Bones treat"><source data-src="assets/dog-videos/20260321_091704.mp4" type="video/mp4"></video><span class="dog-video-caption">Treat time, done right.</span></div></article>
-<article class="dog-video-card reveal"><div class="dog-video-frame"><video class="dog-video" muted loop playsinline preload="none" poster="assets/dog-videos/posters/20260321_091727.webp" aria-label="A dog enjoying a Game of Bones treat"><source data-src="assets/dog-videos/20260321_091727.mp4" type="video/mp4"></video><span class="dog-video-caption">Approved by very good dogs.</span></div></article>
-<article class="dog-video-card reveal"><div class="dog-video-frame"><video class="dog-video" muted loop playsinline preload="none" poster="assets/dog-videos/posters/20260531_084607.webp" aria-label="A dog enjoying a Game of Bones treat"><source data-src="assets/dog-videos/20260531_084607.mp4" type="video/mp4"></video><span class="dog-video-caption">A proper tail-wag moment.</span></div></article>
-<article class="dog-video-card reveal"><div class="dog-video-frame"><video class="dog-video" muted loop playsinline preload="none" poster="assets/dog-videos/posters/20260531_091858.webp" aria-label="A dog enjoying a Game of Bones treat"><source data-src="assets/dog-videos/20260531_091858.mp4" type="video/mp4"></video><span class="dog-video-caption">Snack break, best break.</span></div></article>
-</div>
-</div>
-<button class="dog-video-arrow dog-video-arrow--next" type="button" aria-label="Show next videos"><span aria-hidden="true">→</span></button>
-</div>
-</section>
-<section class="trust" aria-label="Our commitments">
-<div>No preservatives</div>
-<div>Single ingredient</div>
-<div>Human grade</div>
-<div>Free shipping on all orders</div>
-</section>
-<section class="section" id="collection">
-<div class="section-head reveal">
-<div>
-<p class="eyebrow">Meet the collection</p>
-<h2 class="section-title">Made for the <span class="accent">goodest</span> dogs.</h2>
-</div>
-<a class="text-link" href="products.html">Shop all treats</a>
-</div>
-<div class="products">
-<article class="product-card reveal" data-home-product="chicken-jerky">
-<a href="/products/chicken-jerky">
-<div class="product-image cream">
-<span class="number">01</span>
-<img src="assets/chicken-jerky-pouch.webp" alt="Chicken Jerky pouch" width="1000" height="1000" decoding="async">
-</div>
-</a>
-<div class="card-copy">
-<p class="tag">Boneless jerky · Chicken</p>
-<h3>
-<a href="/products/chicken-jerky">Chicken Jerky</a>
-</h3>
-<div class="card-bottom">
-<span>60 g · ₹329</span>
-<button class="quick-add" data-add="jerky" aria-label="Add Chicken Jerky to bag">+</button>
-</div>
-</div>
-</article>
-<article class="product-card reveal" data-home-product="goat-trachea">
-<a href="/products/goat-trachea">
-<div class="product-image brown">
-<span class="number">02</span>
-<img src="assets/goat-trachea-pouch.jpg" alt="Goat Trachea pouch" width="720" height="720" loading="lazy" decoding="async">
-</div>
-</a>
-<div class="card-copy">
-<p class="tag">Chews & bones · Goat</p>
-<h3>
-<a href="/products/goat-trachea">Goat Trachea</a>
-</h3>
-<div class="card-bottom">
-<span>1 piece · ₹100</span>
-<button class="quick-add" data-add="trachea" aria-label="Add Goat Trachea to bag">+</button>
-</div>
-</div>
-</article>
-<article class="product-card reveal" data-home-product="goat-trotter">
-<a href="/products/goat-trotter">
-<div class="product-image sage">
-<span class="number">03</span>
-<img src="assets/goat-trotter-plate.jpg" alt="Goat Trotter treat on a plate" width="720" height="720" loading="lazy" decoding="async">
-</div>
-</a>
-<div class="card-copy">
-<p class="tag">Chews & bones · Goat</p>
-<h3>
-<a href="/products/goat-trotter">Goat Trotter</a>
-</h3>
-<div class="card-bottom">
-<span>1 piece · ₹250</span>
-<button class="quick-add" data-add="trotter" aria-label="Add Goat Trotter to bag">+</button>
-</div>
-</div>
-</article>
-</div>
-</section>
-<section class="story-band">
-<div class="story-copy reveal">
-<p class="eyebrow">Good food, simply made</p>
-<h2 class="section-title">Every pouch starts with one honest ingredient.</h2>
-<p class="body">We source, hand-prepare, slow-dehydrate and quality-check every batch in Kalyan. Each pouch is food-grade, humidity-resistant and batch-dated for freshness.</p>
-<a class="button" href="our-story.html">Why Game of Bones</a>
-</div>
-<div class="story-image">
-<img src="assets/good-food-collage.jpg" alt="Collage of dogs enjoying naturally dehydrated treats" width="900" height="675" loading="lazy" decoding="async">
-</div>
-</section>
-<section class="section">
-<div class="ingredient-grid">
-<div class="ingredient-art reveal">
-<img src="assets/goat-trotter-plate.jpg" alt="A natural goat trotter treat" width="720" height="720" loading="lazy" decoding="async">
-</div>
-<div class="reveal">
-<p class="eyebrow">The uncomplicated treat guide</p>
-<h2 class="section-title">One ingredient. One very happy dog.</h2>
-<p class="lead">Low, slow dehydration removes moisture over 12–24 hours, depending on the ingredient. No salt, sugar, spices, colours or preservatives are added.</p>
-<a href="learn.html" class="text-link">Learn about treats</a>
-<div class="stat-row">
-<div>
-<strong>1</strong>
-<span>ingredient per treat</span>
-</div>
-<div>
-<strong>0</strong>
-<span>unnecessary fillers</span>
-</div>
-<div>
-<strong>29</strong>
-<span>single-ingredient products</span>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section class="quote-section">
-<div class="section">
-<div class="section-head reveal">
-<div>
-<p class="eyebrow">From dog parents</p>
-<h2 class="section-title">The reviews we live for.</h2>
-</div>
-<a class="text-link" href="blog.html">Read their stories</a>
-</div>
-<div class="quote-grid">
-<article class="quote reveal">
-<p>“My picky eater follows me around the kitchen now. The Chicken Jerky is his absolute favourite.”</p>
-<small>— Nandini & Milo, Mumbai</small>
-</article>
-<article class="quote reveal">
-<p>“A chew that keeps him occupied—and I can actually recognise what it’s made from.”</p>
-<small>— Rishi & Koda, Pune</small>
-</article>
-</div>
-</div>
-</section>
-<section class="section">
-<div class="section-head reveal">
-<div>
-<p class="eyebrow">From source to snack</p>
-<h2 class="section-title">Simple is a process.</h2>
-</div>
-</div>
-<div class="steps">
-<article class="step source-step reveal">
-<div class="process-step-copy">
-<span class="step-num">01</span>
-<h3>Source</h3>
-<p>Human-grade ingredients from trusted suppliers, delivered fresh.</p>
-</div>
-</article>
-<article class="step prepare-step reveal">
-<div class="process-step-copy">
-<span class="step-num">02</span>
-<h3>Prepare</h3>
-<p>Cleaned and trimmed by hand. No chemical treatment or shortcuts.</p>
-</div>
-</article>
-<article class="step slow-dry-step reveal">
-<div class="process-step-copy">
-<span class="step-num">03</span>
-<h3>Slow-dry</h3>
-<p>Slow-dehydrated at 55–70°C for 12–24 hours.</p>
-</div>
-</article>
-<article class="step check-step reveal">
-<div class="process-step-copy">
-<span class="step-num">04</span>
-<h3>Check</h3>
-<p>Collected after slow-drying, then checked for texture, colour consistency and moisture removal.</p>
-</div>
-</article>
-<article class="step pack-step reveal">
-<div class="process-step-copy">
-<span class="step-num">05</span>
-<h3>Pack</h3>
-<p>Weighed and heat-sealed in humidity-resistant, resealable pouches.</p>
-</div>
-</article>
-</div>
-</section>
-<section class="subscribe">
-<div class="subscribe-copy reveal">
-<p class="eyebrow">Stock up on their favourite</p>
-<h2 class="section-title">A happier treat cupboard, on repeat.</h2>
-<p>Build a mix of your dog’s favourites and keep a simple treat cupboard ready for the everyday moments that matter.</p>
-<div class="proof" style="color:#f5ddc4">
-<span>Choose the treats they love</span>
-<span>Free shipping on every order</span>
-</div>
-</div>
-<div class="subscribe-card reveal">
-<p class="tag">The easy way to stock up</p>
-<h3>Pick your dog’s favourites.</h3>
-<p>Choose a few favourites now, or begin with one treat and build their routine from there.</p>
-<div style="display:flex;gap:10px;flex-wrap:wrap">
-<a class="button" href="bundles.html">Build a bundle</a>
-<a class="button secondary" href="products.html">Shop one treat</a>
-</div>
-</div>
-</section>
+
+<div class="strip"><ul>
+  <li><b>1</b>One ingredient per treat</li>
+  <li><b>🚚</b>Free delivery across India</li>
+  <li><b>₹</b>Pay online and save ₹30, or COD</li>
+  <li><b>📍</b>Shipped to 14 states so far</li>
+</ul></div>
+
+<section class="s"><div class="wrap">
+  <div class="row-head"><div><p class="eyebrow">Shop by type</p><h2>What are you looking for?</h2></div><a href="/products">All 31 treats →</a></div>
+  <div class="types">
+    <a class="type" href="/products?type=Jerky"><img src="/assets/catalogue-plates/chicken-jerky.webp" alt="" loading="lazy"><span><b>Jerky</b>Everyday & training rewards</span></a>
+    <a class="type" href="/products?type=Chews%20%26%20bones"><img src="/assets/catalogue-plates/goat-trachea.webp" alt="" loading="lazy"><span><b>Chews & bones</b>For supervised chew time</span></a>
+    <a class="type" href="/products?type=Organ%20treats"><img src="/assets/catalogue-plates/goat-lungs.webp" alt="" loading="lazy"><span><b>Organ treats</b>Small, high-value bites</span></a>
+    <a class="type" href="/products?type=Fish%20treats"><img src="/assets/catalogue-plates/sardines.webp" alt="" loading="lazy"><span><b>Fish treats</b>For dogs and cats</span></a>
+    <a class="type" href="/products?type=Whole%20prey"><img src="/assets/catalogue-plates/whole-quail.webp" alt="" loading="lazy"><span><b>Whole prey</b>Whole quail</span></a>
+    <a class="type" href="/products?type=Bundles"><img src="/assets/catalogue-v3/small-treat-box.webp" alt="" loading="lazy"><span><b>Boxes</b>Try a mix, or gift one</span></a>
+  </div>
+</div></section>
+
+<section class="s" style="padding-top:0"><div class="wrap">
+  <div class="row-head"><div><p class="eyebrow">Most ordered</p><h2>Our bestsellers</h2></div><a href="/products">See all →</a></div>
+  <div class="cards five">
+    <a class="card" href="/products/goat-trotter"><div class="im"><img src="/assets/catalogue-plates/goat-trotter-green-plate.webp" alt="Goat Trotter" loading="lazy" width="600" height="600"><span class="tag">Bestseller</span></div><div class="tx"><h3>Goat Trotter</h3><p>Long-lasting chew</p><div class="pr">₹250 <span>1 piece</span><span class="go">View</span></div></div></a>
+    <a class="card" href="/products/goat-trachea"><div class="im"><img src="/assets/catalogue-plates/goat-trachea.webp" alt="Goat Trachea" loading="lazy" width="600" height="600"><span class="tag">Bestseller</span></div><div class="tx"><h3>Goat Trachea</h3><p>Crunchy cartilage chew</p><div class="pr">₹100 <span>1 piece</span><span class="go">View</span></div></div></a>
+    <a class="card" href="/products/sardines"><div class="im"><img src="/assets/catalogue-plates/sardines.webp" alt="Sardines" loading="lazy" width="600" height="600"><span class="tag">Bestseller</span></div><div class="tx"><h3>Sardines</h3><p>Whole fish, dogs & cats</p><div class="pr">₹400 <span>60 g</span><span class="go">View</span></div></div></a>
+    <a class="card" href="/products/chicken-wings"><div class="im"><img src="/assets/catalogue-plates/chicken-wings.webp" alt="Chicken Wings" loading="lazy" width="600" height="600"><span class="tag">Bestseller</span></div><div class="tx"><h3>Chicken Wings</h3><p>Crunchy chew with bone</p><div class="pr">₹350 <span>pack</span><span class="go">View</span></div></div></a>
+    <a class="card" href="/products/chicken-jerky"><div class="im"><img src="/assets/catalogue-plates/chicken-jerky.webp" alt="Chicken Jerky" loading="lazy" width="600" height="600"><span class="tag">Bestseller</span></div><div class="tx"><h3>Chicken Jerky</h3><p>Snappable training treat</p><div class="pr">₹329 <span>60 g</span><span class="go">View</span></div></div></a>
+  </div>
+</div></section>
+
+<section class="s" style="padding-top:0"><div class="wrap label">
+  <div class="label-img"><img src="/assets/label-chicken-jerky.webp" alt="Back of a Chicken Jerky pouch showing the ingredient: 100% Real Chicken Breast" width="900" height="900" loading="lazy"></div>
+  <div>
+    <p class="eyebrow">The label test</p>
+    <h2>Read the whole label in one breath.</h2>
+    <p class="quote">Ingredients: <mark>100% Real Chicken Breast.</mark></p>
+    <ul class="list">
+      <li><strong>No salt, sugar, colours or preservatives added</strong><span>Just the meat or fish, dried slowly at low heat.</span></li>
+      <li><strong>Feeding guide and storage on every pouch</strong><span>So you know how much to give and how long it keeps.</span></li>
+      <li><strong>A treat, not a meal</strong><span>Made to sit alongside your pet’s complete diet.</span></li>
+    </ul>
+  </div>
+</div></section>
+
+<section class="s" style="padding-top:0"><div class="wrap"><div class="trial">
+  <div class="tx">
+    <p class="eyebrow" style="color:var(--gold2)">Not sure what they’ll like?</p>
+    <h2>Build a trial pack.</h2>
+    <p class="price">30 g packs from ₹60</p>
+    <p>Pick the treats you want to try, in small 30 g packs, and check out once. The easiest way to find your dog’s favourite.</p>
+    <a class="btn gold" href="/trial-packs">Build your trial pack →</a>
+  </div>
+  <div class="im"><img src="/assets/catalogue-v3/small-treat-box.webp" alt="Small treat box with nine sample packs" width="900" height="900" loading="lazy"></div>
+</div></div></section>
+
+<section class="s" style="padding-top:0"><div class="wrap">
+  <p class="eyebrow">Start here</p><h2>Pick by what your pet needs</h2>
+  <div class="needs">
+    <a class="need" href="/products/chicken-jerky"><img src="/assets/catalogue-plates/chicken-jerky.webp" alt="" loading="lazy"><div><h3>Training</h3><p>Small, snappable rewards. <b>Chicken Jerky</b> or <b>Goat Lungs</b>.</p></div></a>
+    <a class="need" href="/products/goat-trachea"><img src="/assets/catalogue-plates/goat-trachea.webp" alt="" loading="lazy"><div><h3>Chew time</h3><p>Something to work on, with you watching. <b>Goat Trachea</b> or <b>Chicken Feet</b>.</p></div></a>
+    <a class="need" href="/products/buff-jerky"><img src="/assets/catalogue-plates/buff-jerky.webp" alt="" loading="lazy"><div><h3>Chicken-sensitive</h3><p>A different protein. <b>Buff Jerky</b> or <b>Goat Lungs</b>.</p></div></a>
+    <a class="need" href="/products?type=Cat"><img src="/assets/cat-fish-treat.webp" alt="" loading="lazy"><div><h3>Cats</h3><p>Small fish they love. <b>Anchovies</b> or <b>Sardines</b>.</p></div></a>
+  </div>
+</div></section>
+
+<section class="s" style="padding-top:0"><div class="wrap">
+  <p class="eyebrow">How it’s made</p><h2>Simple, and slow.</h2>
+  <p class="lead">Made in small batches in Kalyan, Maharashtra.</p>
+  <div class="steps">
+    <div class="step"><h3>Clean and cut</h3><p>Fresh chicken, goat, buff or fish, trimmed and cut by hand.</p></div>
+    <div class="step"><h3>Dry slowly</h3><p>Dehydrated at low heat for hours, until crunchy. Nothing is added.</p></div>
+    <div class="step"><h3>Check and seal</h3><p>Each batch is checked and sealed in a resealable pouch with the feeding guide on the back.</p></div>
+  </div>
+  <div class="dogs"><img src="/assets/dog-with-chew.webp" alt="A dog chewing a treat" loading="lazy"><img src="/assets/dog-training-reward.webp" alt="A dog taking a jerky strip" loading="lazy"><img src="/assets/cat-fish-treat.webp" alt="A cat taking a dried fish" loading="lazy"></div>
+  <p style="margin:18px 0 0"><a class="btn line" href="/our-story">Read our story</a></p>
+</div></section>
+
+<section class="s" style="padding-top:0"><div class="wrap">
+  <div class="row-head"><div><p class="eyebrow">From the journal</p><h2>Guides for pet parents</h2></div><a href="/blog">All guides →</a></div>
+  <div class="guides">
+    <a class="guide" href="/blog/goat-lungs-for-dogs"><b>Goat lungs for dogs</b><span>What they are, how much to give, who they suit.</span></a>
+    <a class="guide" href="/blog/chicken-necks-for-dogs"><b>Chicken necks for dogs</b><span>Bone chews, sizes and safe supervision.</span></a>
+    <a class="guide" href="/blog/anchovies-for-dogs"><b>Anchovies for dogs and cats</b><span>Small fish, big flavour: how to serve them.</span></a>
+  </div>
+</div></section>
+
+<section class="s faq" style="padding-top:0"><div class="wrap faq-grid">
+  <div><p class="eyebrow">Questions</p><h2>Before you order</h2><p class="lead">Anything else? <a href="https://wa.me/919082503295" target="_blank" rel="noreferrer"><b>WhatsApp us</b></a>. A real person replies.</p></div>
+  <div>
+    <details open><summary>How fast is delivery?</summary><p>Orders are dispatched in 1–2 working days, and delivery is free across India. You get tracking by SMS or WhatsApp.</p></details>
+    <details><summary>Can I pay cash on delivery?</summary><p>Yes, on most PIN codes (₹40 handling fee). Paying online is ₹30 cheaper.</p></details>
+    <details><summary>Are these okay for puppies?</summary><p>Soft-snapping treats like Chicken Jerky, Chicken Bites and Goat Lungs, broken into small pieces, suit most puppies. Skip hard chews and bones for puppies.</p></details>
+    <details><summary>Are bone chews safe?</summary><p>No chew is risk-free. Every chew page tells you which dogs it suits and when to take it away. Always supervise, and choose a size your dog can’t swallow whole.</p></details>
+    <details><summary>How much should I give?</summary><p>Each pouch has a feeding guide. As a rule, treats should stay under about 10% of your dog’s daily food.</p></details>
+  </div>
+</div></section>
 </main>
 <footer class="footer">
 <div class="footer-grid">

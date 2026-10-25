@@ -7,7 +7,7 @@
   const slug = value => String(value || '').toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
   const escapeHtml = value => String(value ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   const formatPrice = value => Number(value) > 0 ? `₹${Number(value).toLocaleString('en-IN')}` : 'View details';
-  let activeCategory = 'All';
+  let activeCategory = new URLSearchParams(location.search).get('type') || 'All';
   let catalogue = Array.isArray(window.GOB_LIVE_CATALOG) ? [...window.GOB_LIVE_CATALOG] : [];
 
   const productId = product => product.id || slug(product.n || product.name);
