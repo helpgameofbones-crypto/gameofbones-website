@@ -197,7 +197,7 @@ body.br-lock{overflow:hidden}
           <h3>Help Bambi outrun<br>bath time.</h3>
           <p>Dodge the vacuum, the tub and the vet's cone. Grab bones in a row for combos. Every milestone unlocks a free treat.</p>
           <div class="br-hint"><span>👆 Tap = jump</span><span>👆👆 Tap again = double jump</span><span>🦴 Bone +25 · combos x3</span><span>✨ Gold bone +100</span><span>🧸 Toy = shield</span></div>
-          <div class="br-tiers"><div><img src="/assets/catalogue-plates/goat-trachea.webp" alt="" loading="lazy"><b>🦴 800</b>2 Goat Trachea<em>free with any order</em></div><div><img src="https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/cac553a3-463f-4cf6-92dd-48c054f82bfe/image-0-1782712513139.png" alt="" loading="lazy"><b>🐾 2,500</b>Chicken Feet 70 g<em>orders ₹499+</em></div><div><img src="/assets/catalogue-plates/mackerel-fillet.webp" alt="" loading="lazy"><b>🐟 5,000</b>Mackerel 60 g<em>orders ₹499+</em></div><div class="br-grand"><img src="/assets/gob-logo.png" alt="" loading="lazy" style="object-fit:contain;background:#102c22"><b>🏆 20,000</b>All 3 treats free<em>orders ₹2,500+</em></div></div>
+          <div class="br-tiers"><div><img src="/assets/catalogue-plates/goat-trachea.webp" alt="" loading="lazy"><b>🦴 800</b>2 Goat Trachea<em>free with any order</em></div><div><img src="https://gameofbones.in/assets/catalogue-plates/chicken-feet.webp" alt="" loading="lazy"><b>🐾 2,500</b>Chicken Feet 70 g<em>orders ₹499+</em></div><div><img src="/assets/catalogue-plates/mackerel-fillet.webp" alt="" loading="lazy"><b>🐟 5,000</b>Mackerel 60 g<em>orders ₹499+</em></div><div class="br-grand"><img src="/assets/gob-logo.png" alt="" loading="lazy" style="object-fit:contain;background:#102c22"><b>🏆 20,000</b>All 3 treats free<em>orders ₹2,500+</em></div></div>
           <button class="br-btn" id="br-claimStart" hidden>🎁 Claim my free treat</button><button class="br-btn" id="br-startBtn">Start running</button>
         </div>
 
@@ -258,7 +258,7 @@ body.br-lock{overflow:hidden}
   const SPEED_K = MOBILE ? 0.8 : 1, PTS_DIV = MOBILE ? 8 : 10;
   const tiers = [
     { at: 800,  name: '2 free Goat Trachea', short: '2 Goat Trachea', icon: '🦴', min: 0, img: '/assets/catalogue-plates/goat-trachea.webp' },
-    { at: 2500, name: '1 free pack of Chicken Feet (70 g)', short: 'Chicken Feet (70 g)', icon: '🐾', min: 499, img: 'https://syuostlqzzinigqwjzap.supabase.co/storage/v1/object/public/product-images/cac553a3-463f-4cf6-92dd-48c054f82bfe/image-0-1782712513139.png' },
+    { at: 2500, name: '1 free pack of Chicken Feet (70 g)', short: 'Chicken Feet (70 g)', icon: '🐾', min: 499, img: 'https://gameofbones.in/assets/catalogue-plates/chicken-feet.webp' },
     { at: 5000, name: '1 free pack of Mackerel (60 g)', short: 'Mackerel (60 g)', icon: '🐟', min: 499, img: '/assets/catalogue-plates/mackerel-fillet.webp' },
     { at: 20000, name: 'All 3 treats free: 2 Goat Trachea, Chicken Feet 70 g & Mackerel 60 g', short: 'All 3 treats free', icon: '🏆', min: 2500, img: '/assets/gob-logo.png' },
   ];

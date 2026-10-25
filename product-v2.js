@@ -109,7 +109,7 @@
       const pc = txt.match(/(\d+)\s?(piece|pieces|pcs)\b/i);
       if (g) { const grams = Number(g[1]) * (/kg/i.test(g[2]) ? 1000 : 1); if (grams >= 20) unit = money(price / grams * 100) + ' / 100 g'; }
       else if (pc && Number(pc[1]) > 1) unit = money(price / Number(pc[1])) + ' each';
-      if (unit) btn.insertAdjacentHTML('beforeend', `<em class="v2-unit">${unit}</em>`);
+      if (unit) btn.insertAdjacentHTML('beforeend', `<span class="v2-unit">${unit}</span>`);
     });
   }
 

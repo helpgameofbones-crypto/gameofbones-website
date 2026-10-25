@@ -28,7 +28,7 @@ body.gob-v2 #productDesc { margin: 10px 0 12px; font-size: 15px; line-height: 1.
 body.gob-v2 #packOptions { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 body.gob-v2 #packOptions .option { text-align: left; border-radius: 12px; padding: 10px 12px; min-height: 64px; line-height: 1.25; }
 body.gob-v2 #packOptions .option small { display: block; margin-top: 2px; }
-.v2-unit { display: block; font-style: normal; font-size: 11.5px; color: var(--muted, #557064); margin-top: 2px; font-weight: 500; }
+.v2-unit { position: static !important; display: block; background: none !important; padding: 0 !important; text-transform: none !important; letter-spacing: 0 !important; font-style: normal; font-size: 11.5px; color: var(--muted, #557064); margin-top: 2px; font-weight: 500; }
 body.gob-v2 #packOptions .option.selected .v2-unit { color: inherit; opacity: .8; }
 
 /* before you buy */
