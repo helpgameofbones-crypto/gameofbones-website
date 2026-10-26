@@ -304,6 +304,10 @@
   ],
   "rewrites": [
     {
+      "source": "/google-merchant-feed.xml",
+      "destination": "https://gameofbones-admin.vercel.app/api/merchant-feed"
+    },
+    {
       "source": "/api/:path*",
       "destination": "https://gameofbones-admin.vercel.app/api/:path*"
     },
