@@ -304,6 +304,10 @@
   ],
   "rewrites": [
     {
+      "source": "/review",
+      "destination": "/review.html"
+    },
+    {
       "source": "/dog-treats",
       "destination": "/dog-treats.html"
     },
