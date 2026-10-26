@@ -76,3 +76,10 @@ Game of Bones is an Indian pet-treat brand making single-ingredient, naturally d
 ## Editorial standards
 
 Game of Bones content is educational and is not veterinary diagnosis or treatment advice. Treats are not a complete meal; vets suggest treats stay within about 10% of a pet's daily food. For a pet with a health condition, food sensitivity or a material diet change, consult a qualified veterinarian.
+
+## Shop by need
+- [Dog treats](https://gameofbones.in/dog-treats): every single-ingredient dog treat, grouped by type
+- [Dog chews](https://gameofbones.in/dog-chews): trachea, trotters, feet, necks and more, sorted by hardness
+- [Dog training treats](https://gameofbones.in/dog-training-treats): small rewards that snap by hand
+- [Puppy treats](https://gameofbones.in/puppy-treats): soft first treats; no bones or hard chews
+- [Cat treats](https://gameofbones.in/cat-treats): single-fish treats for cats

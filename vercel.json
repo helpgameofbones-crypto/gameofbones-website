@@ -304,6 +304,26 @@
   ],
   "rewrites": [
     {
+      "source": "/dog-treats",
+      "destination": "/dog-treats.html"
+    },
+    {
+      "source": "/dog-chews",
+      "destination": "/dog-chews.html"
+    },
+    {
+      "source": "/dog-training-treats",
+      "destination": "/dog-training-treats.html"
+    },
+    {
+      "source": "/puppy-treats",
+      "destination": "/puppy-treats.html"
+    },
+    {
+      "source": "/cat-treats",
+      "destination": "/cat-treats.html"
+    },
+    {
       "source": "/google-merchant-feed.xml",
       "destination": "https://gameofbones-admin.vercel.app/api/merchant-feed"
     },
