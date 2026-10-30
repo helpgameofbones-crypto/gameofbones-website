@@ -58,16 +58,16 @@
     document.querySelector('.accordion')?.insertAdjacentHTML('afterend', `
       <section class="review-box" id="productReviewSection" aria-labelledby="reviewFlowTitle">
         <p class="eyebrow">Notes from dog parents</p>
-        <h2 id="reviewFlowTitle">Verified reviews, from real treat time.</h2>
-        <p class="review-intro">Only customers with a paid, delivered order can write a review. Reviews appear here after moderation.</p>
-        <div id="productReviewFeed" class="product-review-feed" aria-live="polite"><p>Loading verified reviews…</p></div>
+        <h2 id="reviewFlowTitle">Reviews from real treat time.</h2>
+        <p class="review-intro">New reviews can only be written by customers with a delivered order, and every review is checked before it appears.</p>
+        <div id="productReviewFeed" class="product-review-feed" aria-live="polite"><p>Loading reviews…</p></div>
         <div class="reward-review">Bought this treat? <a href="/account">Sign in to review your delivered items</a> · 100 points for an approved review, or 150 with a photo of your dog.</div>
       </section>`);
     const renderReviews = async () => {
       const name = document.querySelector('#productName')?.textContent?.trim();
       const feed = document.querySelector('#productReviewFeed'); if (!name || !feed || !window.GOB_API?.publicProductReviews) return;
       const quickProof = document.querySelector('#quickReviewProof');
-      feed.innerHTML = '<p>Loading verified reviews…</p>';
+      feed.innerHTML = '<p>Loading reviews…</p>';
       try {
         const data = await window.GOB_API.publicProductReviews(name), rows = Array.isArray(data.reviews) ? data.reviews : [];
         const stars = value => '★'.repeat(Math.max(0, Math.min(5, Number(value) || 0))) + '☆'.repeat(Math.max(0, 5 - Math.min(5, Number(value) || 0)));
@@ -75,7 +75,7 @@
         if (headerRating) {
           if (rows.length) {
             const avg = Number(data.average_rating || 0);
-            headerRating.innerHTML = `${stars(Math.round(avg))} <a href="#productReviewSection" style="color:var(--ink);font-weight:600">${avg.toFixed(1)} · ${data.review_count} verified review${Number(data.review_count) === 1 ? '' : 's'}</a>`;
+            headerRating.innerHTML = `${stars(Math.round(avg))} <a href="#productReviewSection" style="color:var(--ink);font-weight:600">${avg.toFixed(1)} · ${data.review_count} review${Number(data.review_count) === 1 ? '' : 's'}</a>`;
             headerRating.hidden = false;
           } else { headerRating.hidden = true; headerRating.innerHTML = ''; }
         }
@@ -83,12 +83,12 @@
           const firstReview = String(rows[0]?.review || '').replace(/\s+/g, ' ').trim();
           const safeExcerpt = firstReview.replace(/[&<>'"]/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' })[char]);
           quickProof.innerHTML = rows.length
-            ? `<span class="quick-review-stars" aria-hidden="true">${stars(Math.round(Number(data.average_rating || 0)))}</span><span><b>${Number(data.average_rating || 0).toFixed(1)} from verified dog parents</b><small>${safeExcerpt.slice(0, 96)}${safeExcerpt.length > 96 ? '…' : ''}</small></span><a href="#productReviewSection">Read ${data.review_count} review${Number(data.review_count) === 1 ? '' : 's'}</a>`
-            : '<span><b>New treat — reviews coming soon</b><small>Only customers with a delivered order can review.</small></span>';
+            ? `<span class="quick-review-stars" aria-hidden="true">${stars(Math.round(Number(data.average_rating || 0)))}</span><span><b>${Number(data.average_rating || 0).toFixed(1)} from dog parents</b><small>${safeExcerpt.slice(0, 96)}${safeExcerpt.length > 96 ? '…' : ''}</small></span><a href="#productReviewSection">Read ${data.review_count} review${Number(data.review_count) === 1 ? '' : 's'}</a>`
+            : '<span><b>No reviews yet</b><small>Bought it? Review it after delivery and earn 100 points.</small></span>';
         }
-        feed.innerHTML = rows.length ? `<div class="review-summary"><strong>${Number(data.average_rating || 0).toFixed(1)} / 5</strong><span aria-label="${Number(data.average_rating || 0)} out of 5 stars">${stars(Math.round(Number(data.average_rating || 0)))}</span><small>${data.review_count} verified review${Number(data.review_count) === 1 ? '' : 's'}</small></div><div class="public-review-list">${rows.map(row => `<article class="public-review"><div><strong>${String(row.name || 'Verified dog parent')}</strong><span aria-label="${Number(row.rating || 0)} out of 5 stars">${stars(row.rating)}</span></div><p>${String(row.review || '').replace(/[&<>'"]/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' })[char])}</p>${row.photo_url ? `<img src="${String(row.photo_url)}" alt="A dog enjoying ${name}" loading="lazy">` : ''}</article>`).join('')}</div>` : '<p class="review-empty">Be the first verified dog parent to share a note about this treat.</p>';
+        feed.innerHTML = rows.length ? `<div class="review-summary"><strong>${Number(data.average_rating || 0).toFixed(1)} / 5</strong><span aria-label="${Number(data.average_rating || 0)} out of 5 stars">${stars(Math.round(Number(data.average_rating || 0)))}</span><small>${data.review_count} review${Number(data.review_count) === 1 ? '' : 's'}</small></div><div class="public-review-list">${rows.map(row => `<article class="public-review"><div><strong>${String(row.name || 'Verified dog parent')}</strong><span aria-label="${Number(row.rating || 0)} out of 5 stars">${stars(row.rating)}</span></div><p>${String(row.review || '').replace(/[&<>'"]/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' })[char])}</p>${row.photo_url ? `<img src="${String(row.photo_url)}" alt="A dog enjoying ${name}" loading="lazy">` : ''}</article>`).join('')}</div>` : '<p class="review-empty">Be the first verified dog parent to share a note about this treat.</p>';
       } catch {
-        if (quickProof) quickProof.innerHTML = '<span><b>Verified purchase reviews</b><small>Reviews are shown after moderation.</small></span>';
+        if (quickProof) quickProof.innerHTML = '<span><b>Customer reviews</b><small>Reviews are shown after moderation.</small></span>';
         const headerRating = document.querySelector('#productRating'); if (headerRating) headerRating.hidden = true;
         feed.innerHTML = '<p class="review-empty">Reviews are temporarily unavailable. Please check back soon.</p>';
       }

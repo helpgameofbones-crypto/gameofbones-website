@@ -108,3 +108,5 @@ body.gob-v2 #packOptions .option.selected .v2-save { background: #fff !important
 .v2-trust svg { width: 22px; height: 22px; color: #133C21; }
 .v2-trust p { margin: 6px 0 0; font-size: 12px; color: var(--ink-soft, #24473a); text-align: center; }
 body.gob-v2:not(.gob-oos) #restockGuidanceProduct { display: none !important; }
+
+body.gob-v2 .v2-gain{margin:6px 0 12px;font-size:15px;line-height:1.45;color:#102c22;font-weight:600}

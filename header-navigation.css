@@ -111,3 +111,16 @@
 
 /* Calmer screens: no floating launcher bubbles over the products */
 .br-launch, .reward-shortcut { display: none !important; }
+
+/* Readability: small gold labels were ~2.9:1 contrast and 9–11px. Darker gold for text on
+   light backgrounds (5:1+) and a 12px minimum for labels, chips and the top bar. */
+.notice .gob-live-ticker span { font-size: 12px !important; }
+.eyebrow, .product-card .tag, .catalog-desc + .tag, .bestseller-tag, .v2-acc .eyebrow { color: #7a4f0e; }
+.eyebrow { font-size: 12px !important; }
+.product-card .tag, .bestseller-tag { font-size: 12px !important; }
+.catalog-filters button, .catalog-filters a { font-size: 12px !important; min-height: 40px; }
+.shop-trust li { font-size: 12px !important; }
+/* keep light gold where the background is dark */
+.footer .eyebrow, .hv2 .trial .eyebrow, .h-hero .eyebrow.on-dark, [class*="dark"] .eyebrow { color: #e9b949; }
+/* Benefit lines on product cards: show the whole sentence (was cut at 2 lines). */
+.products .catalog-desc { -webkit-line-clamp: unset !important; display: block !important; overflow: visible !important; }
