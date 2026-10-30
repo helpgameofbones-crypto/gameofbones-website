@@ -59,16 +59,6 @@
       const bogoBadge = isBogoProduct(product) ? '<span data-bogo-card style="display:inline-block;margin:0 0 8px;padding:5px 8px;border-radius:4px;background:#a84312;color:#fff;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase">Buy 1 Get 1</span>' : '';
       return `<article class="product-card"><a href="${path}" aria-label="View ${escapeHtml(name)}">${isSale ? '<span class="sale-badge">Sale</span>' : ''}${isNewProduct(product) ? `<span class="sale-badge" style="background:#bd812a;${isSale ? 'left:auto;right:12px;' : ''}">New</span>` : ''}<div class="product-image ${shade}"><img src="${escapeHtml(image)}" alt="${escapeHtml(name)} natural dog treat" width="600" height="600" loading="lazy" decoding="async"></div></a><div class="card-copy">${bogoBadge}<p class="tag">${bestsellerRank(product) < 99 ? '<span class="bestseller-tag">★ Bestseller</span> ' : ''}${escapeHtml(productCategory(product))}</p><h3><a href="${path}">${escapeHtml(name)}</a></h3><p class="catalog-desc">${escapeHtml(BENEFITS[slug(name)] || product.d || product.description || 'Single-ingredient dog treat.')}</p><div class="card-bottom"><span>${escapeHtml(productWeight(product))} · ${displayedPrice}</span><button class="quick-add" type="button" data-product="${escapeHtml(id)}" aria-label="Add ${escapeHtml(name)} to bag">Add +</button>${notify}</div></div></article>`;
     }).join('');
-    // In the "All" view, break the long grid into labelled groups: bestsellers first, then each type.
-    if (activeCategory === 'All') {
-      const cards = [...root.children];
-      const groupOf = product => bestsellerRank(product) < 99 ? 'Bestsellers' : productCategory(product);
-      let last = '';
-      items.forEach((product, i) => {
-        const g = groupOf(product);
-        if (g !== last) { cards[i].insertAdjacentHTML('beforebegin', `<h3 class="catalog-group-title">${escapeHtml(g === 'Bundles' ? 'Boxes & bundles' : g)}</h3>`); last = g; }
-      });
-    }
     // "Create your own trial pack" listing, shown in All and Cat views.
     if (activeCategory === 'All' || activeCategory === CAT_FILTER) {
       const trialCard = '<article class="product-card trial-builder-card"><a href="/trial-packs" aria-label="Create your own trial pack"><span class="sale-badge">New</span><div class="product-image sage"><img src="assets/catalogue-v3/small-treat-box.webp" alt="Create your own trial pack" width="600" height="600" loading="lazy" decoding="async"></div></a><div class="card-copy"><p class="tag">Trial packs</p><h3><a href="/trial-packs">Create your own trial pack</a></h3><p class="catalog-desc">Pick 30 g trial packs of the treats you want to try, then check out once.</p><div class="card-bottom"><span>30 g packs · from ₹60</span><a href="/trial-packs" aria-label="Build your trial pack" style="display:inline-flex;align-items:center;justify-content:center;gap:6px;height:42px;padding:0 18px;border-radius:999px;background:var(--ink);color:#fff;font-size:13px;font-weight:800;line-height:1;text-decoration:none;white-space:nowrap">Build yours →</a></div></div></article>';
