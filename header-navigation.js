@@ -1,17 +1,13 @@
 /* One complete navigation source for every customer-facing page. */
 (() => {
   const navigation = [
-    ['/', 'Home'],
-    ['/products', 'Products'],
+    ['/products', 'Shop'],
+    ['/dog-chews', 'Dog chews'],
+    ['/dog-training-treats', 'Training treats'],
+    ['/cat-treats', 'Cat treats'],
     ['/our-story', 'Our story'],
-    ['/bundles', 'Bundles'],
-    ['/blog', 'Blog'],
-    ['/contact', 'Contact us'],
-    ['/rewards', 'Rewards'],
-    ['/track', 'Track'],
-    ['/learn', 'Learn'],
   ];
-  const tickerCopy = 'WELCOME15: 15% off your first order • Earn reward points with every treat order • Naturally dehydrated, preservative-free treats • Free shipping • ₹30 off when you pay online • MEGA20: 20% off ₹2,199+';
+  const tickerCopy = 'Free delivery across India · ₹30 off when you pay online';
 
   const installLiveTicker = () => {
     const notice = document.querySelector('.notice');
@@ -35,6 +31,19 @@
     stylesheet.dataset.gobHeaderNavigation = 'true';
     document.head.append(stylesheet);
   }
+  // Bone Run lives in the footer now (the floating launcher is hidden). It still opens once per visit on its own.
+  const addPlayLink = () => {
+    const shop = [...document.querySelectorAll('footer h4')].find(h => /shop/i.test(h.textContent))?.parentElement;
+    if (!shop || shop.querySelector('[data-play-bonerun]')) return;
+    shop.insertAdjacentHTML('beforeend', '<a href="#" data-play-bonerun>Play &amp; win a treat</a>');
+    shop.querySelector('[data-play-bonerun]').addEventListener('click', event => {
+      event.preventDefault();
+      if (typeof window.GOB_openSpinWheel === 'function') window.GOB_openSpinWheel();
+      else document.addEventListener('gob:wheel-ready', () => window.GOB_openSpinWheel?.(), { once: true });
+    });
+  };
+  [400, 1500, 4000].forEach(ms => window.setTimeout(addPlayLink, ms));
+
   const nav = document.querySelector('.nav');
   if (!nav || nav.dataset.minimalHeader === 'true') return;
   const pathname = location.pathname.toLowerCase();

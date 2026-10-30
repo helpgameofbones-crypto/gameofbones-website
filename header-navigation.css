@@ -108,3 +108,6 @@
     mix-blend-mode: normal;
   }
 }
+
+/* Calmer screens: no floating launcher bubbles over the products */
+.br-launch, .reward-shortcut { display: none !important; }

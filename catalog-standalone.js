@@ -102,7 +102,7 @@
           ...product,
           p: firstPack?.price ?? (productPrice(source) || productPrice(product)),
           cp: firstPack?.compare_price ?? source.compare_price ?? productComparePrice(product),
-          w: firstPack?.weight || (Number(firstPack?.weight_grams) ? `${firstPack.weight_grams} g` : '') || productWeight(source) || productWeight(product),
+          w: firstPack?.weight || (Number(firstPack?.weight_grams) ? `${firstPack.weight_grams} g` : '') || (/\d+\s*(piece|pieces|pcs)/i.test(firstPack?.label || '') ? firstPack.label : '') || productWeight(source) || productWeight(product),
           // The approved storefront photo is canonical for existing products.
           // Admin sync may refresh availability and prices, but must not replace
           // it with an unrelated uploaded image after initial render.
@@ -121,7 +121,7 @@
         const liveSalePacks = Array.isArray(product.sizes) && product.sizes.some(pack => Number(pack?.compare_price) > Number(pack?.price) && Number(pack?.price) > 0);
         const sellablePacks = liveSalePacks ? product.sizes : (Array.isArray(referencePacks) && referencePacks.length ? referencePacks : product.sizes);
         const firstPack = sellablePacks?.[0];
-        merged.push({ n: product.name, c: 'Treats', p: firstPack?.price ?? productPrice(product), cp: firstPack?.compare_price ?? product.compare_price ?? 0, w: firstPack?.weight || (Number(firstPack?.weight_grams) ? `${firstPack.weight_grams} g` : '') || productWeight(product), i: productImage(product), d: 'Single-ingredient dog treat.', id: slug(product.name), sizes: sellablePacks, images: product.images, videos: product.videos, low_stock: Boolean(product.low_stock), inventory_id: product.id });
+        merged.push({ n: product.name, c: 'Treats', p: firstPack?.price ?? productPrice(product), cp: firstPack?.compare_price ?? product.compare_price ?? 0, w: firstPack?.weight || (Number(firstPack?.weight_grams) ? `${firstPack.weight_grams} g` : '') || (/\d+\s*(piece|pieces|pcs)/i.test(firstPack?.label || '') ? firstPack.label : '') || productWeight(product), i: productImage(product), d: 'Single-ingredient dog treat.', id: slug(product.name), sizes: sellablePacks, images: product.images, videos: product.videos, low_stock: Boolean(product.low_stock), inventory_id: product.id });
       });
       catalogue = merged;
       window.GOB_LIVE_CATALOG = merged;
