@@ -6,6 +6,54 @@
       "permanent": true
     },
     {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "p",
+          "value": "(?<slug>[a-z0-9-]+)"
+        }
+      ],
+      "destination": "/products/:slug",
+      "permanent": true
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "blog",
+          "value": "(?<slug>[a-z0-9-]+)"
+        }
+      ],
+      "destination": "/blog/:slug",
+      "permanent": true
+    },
+    {
+      "source": "/blog",
+      "has": [
+        {
+          "type": "query",
+          "key": "blog",
+          "value": "(?<slug>[a-z0-9-]+)"
+        }
+      ],
+      "destination": "/blog/:slug",
+      "permanent": true
+    },
+    {
+      "source": "/blog.html",
+      "has": [
+        {
+          "type": "query",
+          "key": "blog",
+          "value": "(?<slug>[a-z0-9-]+)"
+        }
+      ],
+      "destination": "/blog/:slug",
+      "permanent": true
+    },
+    {
       "source": "/(.*)",
       "has": [
         {

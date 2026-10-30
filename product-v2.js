@@ -97,22 +97,61 @@
     return `<div class="v2-before${w.hard ? ' hard' : ''}" id="v2Before" role="note"><h3>${w.hard ? '⚠ ' : ''}${esc(w.t)}</h3><p>${esc(p)}</p>${w.li ? `<ul>${w.li.map(i => `<li>${esc(i)}</li>`).join('')}</ul>` : ''}</div>`;
   }
 
+  // Reads one pack button: its price and its size (grams or pieces), ignoring anything we added.
+  function packInfo(btn) {
+    const c = btn.cloneNode(true);
+    c.querySelectorAll('.v2-unit,.v2-save').forEach(e => e.remove());
+    const txt = c.textContent.replace(/\s+/g, ' ');
+    const prices = [...txt.matchAll(/₹\s?([\d,]+)/g)].map(m => Number(m[1].replace(/,/g, '')));
+    const price = prices[prices.length - 1] || 0;
+    const g = txt.match(/(\d+(?:\.\d+)?)\s?(kg|gm|g)(?![a-z])/);
+    const pc = txt.match(/(\d+)\s?(pieces|piece|pcs)/i);
+    if (g) return { price, kind: 'g', qty: Number(g[1]) * (g[2] === 'kg' ? 1000 : 1) };
+    if (pc) return { price, kind: 'pc', qty: Number(pc[1]) };
+    return { price, kind: '', qty: 0 };
+  }
+
+  // The restock "Fresh batches / Notify me" note is only useful when the treat is out of stock.
+  function syncStockNote() {
+    const add = document.getElementById('addProduct');
+    const oos = !add || add.disabled || /notify|sold out|out of stock/i.test(add.textContent);
+    document.body.classList.toggle('gob-oos', oos);
+  }
+
   function perUnit() {
-    const opts = document.querySelectorAll('#packOptions .option');
-    opts.forEach(btn => {
-      if (btn.querySelector('.v2-unit')) return;
-      const txt = btn.textContent.replace(/\s+/g, ' ');
-      const prices = [...txt.matchAll(/₹\s?([\d,]+)/g)].map(m => Number(m[1].replace(/,/g, '')));
-      const price = prices[prices.length - 1];
-      if (!price) return;
-      let unit = '';
-      const g = txt.match(/(\d+(?:\.\d+)?)\s?(kg|gm|g)(?![a-z])/);
-      const pc = txt.match(/(\d+)\s?(pieces|piece|pcs)/i);
-      if (g) { const grams = Number(g[1]) * (g[2] === 'kg' ? 1000 : 1); if (grams >= 20) unit = money(price / grams * 100) + ' / 100 g'; }
-      else if (pc && Number(pc[1]) > 1) unit = money(price / Number(pc[1])) + ' each';
-      if (unit) btn.insertAdjacentHTML('beforeend', `<span class="v2-unit">${unit}</span>`);
+    syncStockNote();
+    const opts = [...document.querySelectorAll('#packOptions .option')];
+    const infos = opts.map(packInfo);
+    const base = infos.find(i => i.price && i.qty && i.kind);   // smallest (first) pack sets the normal rate
+    opts.forEach((btn, i) => {
+      const info = infos[i];
+      if (!info.price) return;
+      if (!btn.querySelector('.v2-unit')) {
+        let unit = '';
+        if (info.kind === 'g' && info.qty >= 20) unit = money(info.price / info.qty * 100) + ' / 100 g';
+        else if (info.kind === 'pc' && info.qty > 1) unit = money(info.price / info.qty) + ' each';
+        if (unit) btn.insertAdjacentHTML('beforeend', `<span class="v2-unit">${unit}</span>`);
+      }
+      // Real saving vs buying the smallest pack several times — shown only when it's at least ₹10
+      if (!btn.querySelector('.v2-save') && base && info.kind === base.kind && info.qty > base.qty) {
+        const save = Math.round(base.price / base.qty * info.qty - info.price);
+        if (save >= 10) btn.insertAdjacentHTML('beforeend', `<span class="v2-save">Save ${money(save)}</span>`);
+      }
     });
   }
+
+  const ICON = {
+    one: '<svg viewBox="0 0 64 64" fill="none" stroke="#133C21" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="32" cy="32" r="26"/><path d="M27 24l7-5v26M26 45h16" stroke="#D89A16" stroke-width="4.5"/></svg>',
+    nopres: '<svg viewBox="0 0 64 64" fill="none" stroke="#133C21" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M25 9h14M27 9v14L15 47a5 5 0 0 0 4.5 7h25a5 5 0 0 0 4.5-7L37 23V9"/><path d="M20 40h24"/><path d="M9 9l46 46" stroke="#D89A16" stroke-width="4.5"/></svg>',
+    slow: '<svg viewBox="0 0 64 64" fill="none" stroke="#133C21" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="32" cy="36" r="20"/><path d="M32 24v12l8 5"/><path d="M22 6c-2 3 2 4 0 7M32 4c-2 3 2 4 0 7M42 6c-2 3 2 4 0 7" stroke="#D89A16"/></svg>',
+    batch: '<svg viewBox="0 0 64 64" fill="none" stroke="#133C21" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 30h44l-4 22a4 4 0 0 1-4 3H18a4 4 0 0 1-4-3z"/><path d="M6 30h52"/><path d="M24 30c0-7 3-12 8-16M32 30c0-6 2-10 6-13" stroke="#D89A16"/><path d="M22 41h20"/></svg>',
+    truck: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 6h11v10H2zM13 9h4l3 3v4h-7"/><circle cx="6" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg>',
+    cash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6 9v.01M18 15v.01"/></svg>',
+    pin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0C18.5 15.4 12 21 12 21z"/><circle cx="12" cy="10" r="2.3"/></svg>',
+    clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>'
+  };
+  const BENEFITS = [['one', 'Single ingredient'], ['nopres', 'No preservatives'], ['slow', 'Slow-dehydrated'], ['batch', 'Small batches']];
+  const TRUST = [['truck', 'Free delivery'], ['cash', 'Cash on delivery'], ['pin', 'Made in Kalyan'], ['clock', 'Ships in 1–2 days']];
 
   function catalogItem(id) {
     const list = window.GOB_LIVE_CATALOG || [];
@@ -153,6 +192,8 @@
     // identity line under the name, and a plainer description
     const h1 = $('#productName');
     if (h1 && !$('#v2Ident')) h1.insertAdjacentHTML('afterend', `<p class="v2-ident" id="v2Ident">${esc(d[0])}</p>`);
+    const identEl = $('#v2Ident');
+    if (identEl && !$('#v2Benefits')) identEl.insertAdjacentHTML('afterend', `<ul class="v2-benefits" id="v2Benefits" aria-label="Why this treat">${BENEFITS.map(([k, t]) => `<li>${ICON[k]}<span>${t}</span></li>`).join('')}</ul>`);
     if (x.lede && $('#productDesc')) $('#productDesc').textContent = x.lede;
 
     // quick facts after the description
@@ -163,10 +204,12 @@
     buyRow.insertAdjacentHTML('beforebegin', beforeBox(d));
 
     // one short delivery line after the buy row (replaces three repeated blocks)
-    buyRow.insertAdjacentHTML('afterend', '<ul class="v2-ship" id="v2Ship"><li>Dispatched in 1–2 working days · free delivery</li><li>Pay online and save ₹30 · COD available (₹40 fee)</li></ul>');
+    buyRow.insertAdjacentHTML('afterend', `<div class="v2-trust" id="v2Ship"><ul>${TRUST.map(([k, t]) => `<li>${ICON[k]}<span>${t}</span></li>`).join('')}</ul><p>Pay online and save ₹30 · COD fee ₹40</p></div>`);
 
     // per-unit pricing on pack buttons (packs re-render when data arrives)
     perUnit();
+    const addBtn = document.getElementById('addProduct');
+    if (addBtn) new MutationObserver(syncStockNote).observe(addBtn, { attributes: true, childList: true, characterData: true, subtree: true });
     const po = $('#packOptions');
     if (po) new MutationObserver(perUnit).observe(po, { childList: true, subtree: true });
 

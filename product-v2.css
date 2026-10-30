@@ -92,3 +92,19 @@ body.gob-v2 .pincode-checker .eyebrow { margin: 0 0 6px !important; }
 /* static FAQ block (also feeds FAQPage schema) */
 .gob-faq h2 { font-family: var(--display, Fraunces, serif); font-size: clamp(22px, 5.6vw, 30px); margin: 6px 0 12px; }
 .gob-faq .v2-body p { margin: 0 0 12px; }
+
+/* benefit icons under the product name */
+.v2-benefits { list-style: none; margin: 4px 0 12px; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.v2-benefits li { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 4px; font-size: 11.5px; font-weight: 700; line-height: 1.2; color: var(--ink, #102c22); }
+.v2-benefits svg { width: 32px; height: 32px; flex: none; }
+@media (min-width: 880px) { .v2-benefits li { font-size: 12.5px; } .v2-benefits svg { width: 36px; height: 36px; } }
+/* "Save ₹X" on bigger packs */
+.v2-save { position: static !important; display: inline-block; margin-top: 4px; padding: 2px 7px !important; border-radius: 999px; background: #e6f3e8 !important; color: #1f6b35 !important; font-size: 11px; font-weight: 800; letter-spacing: 0 !important; text-transform: none !important; }
+body.gob-v2 #packOptions .option.selected .v2-save { background: #fff !important; color: #1f6b35 !important; }
+/* trust row under Add to Jar (replaces the old text list) */
+.v2-trust { margin: 6px 0 12px; }
+.v2-trust ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.v2-trust li { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 4px; padding: 8px 4px; border: 1px solid var(--line, rgba(16,44,34,.14)); border-radius: 10px; background: #fffdf8; font-size: 11px; font-weight: 700; line-height: 1.2; color: var(--ink, #102c22); }
+.v2-trust svg { width: 22px; height: 22px; color: #133C21; }
+.v2-trust p { margin: 6px 0 0; font-size: 12px; color: var(--ink-soft, #24473a); text-align: center; }
+body.gob-v2:not(.gob-oos) #restockGuidanceProduct { display: none !important; }
