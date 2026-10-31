@@ -26,7 +26,7 @@
   .notice .gob-live-ticker .mp-ticker { position: relative; display: block !important; width: 100%; padding: 0 !important; }
   .notice .mp-ticker b {
     position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-    padding: 0 14px; color: #fff8e9; font-size: 12px; font-weight: 800; letter-spacing: .06em;
+    padding: 0 14px; color: #fffdf8; font-size: 12px; font-weight: 800; letter-spacing: .06em;
     line-height: 1.2; text-align: center; text-transform: uppercase; white-space: nowrap;
     overflow: hidden; text-overflow: ellipsis;
     opacity: 0; visibility: hidden; transform: translateY(8px); transition: opacity .2s ease, transform .3s ease, visibility 0s linear .2s;
@@ -124,7 +124,7 @@
   .products .product-card:not([data-home-product]) .restock-notify-button {
     align-self: center; min-height: 32px; margin: -2px 0 0 !important; padding: 4px 8px !important;
     border: 0 !important; background: none !important; box-shadow: none !important;
-    color: var(--ink-soft, #24473a) !important; font-size: 12.5px !important; font-weight: 700 !important;
+    color: var(--ink-soft, #245b42) !important; font-size: 12.5px !important; font-weight: 700 !important;
     text-decoration: underline; text-underline-offset: 3px;
   }
   .products .product-card:not([data-home-product]).mp-sold-out .restock-notify-button {

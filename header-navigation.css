@@ -12,7 +12,7 @@
 .notice .gob-live-ticker span {
   display: block;
   padding: 10px 16px;
-  color: #fff8e9;
+  color: #fffdf8;
   font-size: 12px;
   font-weight: 800;
   letter-spacing: .07em;
@@ -121,10 +121,15 @@
 .catalog-filters button, .catalog-filters a { font-size: 12px !important; min-height: 40px; }
 .shop-trust li { font-size: 12px !important; }
 /* keep light gold where the background is dark */
-.footer .eyebrow, .hv2 .trial .eyebrow, .h-hero .eyebrow.on-dark, [class*="dark"] .eyebrow { color: #e9b949; }
+.footer .eyebrow, .hv2 .trial .eyebrow, .h-hero .eyebrow.on-dark, [class*="dark"] .eyebrow { color: #e7bd68; }
 /* Benefit lines on product cards: show the whole sentence (was cut at 2 lines). */
 .products .catalog-desc { -webkit-line-clamp: unset !important; display: block !important; overflow: visible !important; }
 .strip b svg { width: 17px; height: 17px; }
 /* Tap targets: quantity steppers at least 44 x 44 px */
 .quantity button, .mini-qty button, .tb-qty button { min-width: 44px; min-height: 44px; }
 .quantity { min-height: 44px; }
+/* Buttons: deeper gold so white button text is easy to read (5:1 contrast) */
+.button:not(.secondary):not(.whats), .tb-add, .hv2 .btn.gold, .journal-next button, .option em, .jar-count, .tb-badge.off { background: #9a6418 !important; border-color: #9a6418 !important; color: #fff !important; }
+.button:not(.secondary):not(.whats):hover, .tb-add:hover, .hv2 .btn.gold:hover { background: #85560f !important; border-color: #85560f !important; }
+/* Icons: one weight and colour everywhere */
+.v2-trust svg, .strip b svg, .ti svg { color: #102c22; }

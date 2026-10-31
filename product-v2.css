@@ -12,7 +12,7 @@ body.gob-v2 .label-test,
 body.gob-v2 .quote-section,
 body.gob-v2 .v2-hidden { display: none !important; }
 
-body.gob-v2 .v2-ident { margin: 2px 0 8px; font-size: 14px; font-weight: 700; color: var(--ink-soft, #24473a); line-height: 1.35; }
+body.gob-v2 .v2-ident { margin: 2px 0 8px; font-size: 14px; font-weight: 700; color: var(--ink-soft, #245b42); line-height: 1.35; }
 body.gob-v2 #productDesc { margin: 10px 0 12px; font-size: 15px; line-height: 1.5; }
 
 /* quick facts */
@@ -40,9 +40,9 @@ body.gob-v2 #packOptions .option.selected .v2-unit { color: inherit; opacity: .8
 .v2-before li { margin: 2px 0; }
 
 /* delivery line */
-.v2-ship { list-style: none; margin: 4px 0 10px; padding: 0; display: grid; gap: 4px; font-size: 13px; color: var(--ink-soft, #24473a); }
+.v2-ship { list-style: none; margin: 4px 0 10px; padding: 0; display: grid; gap: 4px; font-size: 13px; color: var(--ink-soft, #245b42); }
 .v2-ship li { display: flex; gap: 7px; }
-.v2-ship li::before { content: "✓"; color: #2c6a3a; font-weight: 800; }
+.v2-ship li::before { content: "✓"; color: #245b42; font-weight: 800; }
 
 /* compact PIN check */
 body.gob-v2 .pincode-checker { padding: 12px 0 !important; margin: 6px 0 !important; border: 0 !important; background: none !important; box-shadow: none !important; }
@@ -74,7 +74,7 @@ body.gob-v2 .pincode-checker .eyebrow { margin: 0 0 6px !important; }
 .v2-pairs h2 { margin: 0 0 12px; font-size: clamp(22px, 6vw, 32px); }
 .v2-pair-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
 .v2-pair { display: block; background: var(--paper, #fffdf8); border: 1px solid var(--line, rgba(16,44,34,.15)); border-radius: 12px; overflow: hidden; color: inherit; text-decoration: none; }
-.v2-pair img { width: 100% !important; height: auto !important; max-height: none !important; aspect-ratio: 1 / 1 !important; object-fit: cover !important; display: block; background: #133c21; }
+.v2-pair img { width: 100% !important; height: auto !important; max-height: none !important; aspect-ratio: 1 / 1 !important; object-fit: cover !important; display: block; background: #102c22; }
 .v2-pair span { display: block; padding: 7px 9px 9px; font-size: 12.5px; line-height: 1.3; }
 .v2-pair b { display: block; font-size: 13px; }
 .v2-pair small { color: var(--muted, #557064); }
@@ -99,14 +99,14 @@ body.gob-v2 .pincode-checker .eyebrow { margin: 0 0 6px !important; }
 .v2-benefits svg { width: 32px; height: 32px; flex: none; }
 @media (min-width: 880px) { .v2-benefits li { font-size: 12.5px; } .v2-benefits svg { width: 36px; height: 36px; } }
 /* "Save ₹X" on bigger packs */
-.v2-save { position: static !important; display: inline-block; margin-top: 4px; padding: 2px 7px !important; border-radius: 999px; background: #e6f3e8 !important; color: #1f6b35 !important; font-size: 12px; font-weight: 800; letter-spacing: 0 !important; text-transform: none !important; }
-body.gob-v2 #packOptions .option.selected .v2-save { background: #fff !important; color: #1f6b35 !important; }
+.v2-save { position: static !important; display: inline-block; margin-top: 4px; padding: 2px 7px !important; border-radius: 999px; background: #e6f3e8 !important; color: #245b42 !important; font-size: 12px; font-weight: 800; letter-spacing: 0 !important; text-transform: none !important; }
+body.gob-v2 #packOptions .option.selected .v2-save { background: #fff !important; color: #245b42 !important; }
 /* trust row under Add to Jar (replaces the old text list) */
 .v2-trust { margin: 6px 0 12px; }
 .v2-trust ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
 .v2-trust li { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 4px; padding: 8px 4px; border: 1px solid var(--line, rgba(16,44,34,.14)); border-radius: 10px; background: #fffdf8; font-size: 12px; font-weight: 700; line-height: 1.2; color: var(--ink, #102c22); }
-.v2-trust svg { width: 22px; height: 22px; color: #133C21; }
-.v2-trust p { margin: 6px 0 0; font-size: 12px; color: var(--ink-soft, #24473a); text-align: center; }
+.v2-trust svg { width: 22px; height: 22px; color: #102c22; }
+.v2-trust p { margin: 6px 0 0; font-size: 12px; color: var(--ink-soft, #245b42); text-align: center; }
 body.gob-v2:not(.gob-oos) #restockGuidanceProduct { display: none !important; }
 
 body.gob-v2 .v2-gain{margin:6px 0 12px;font-size:15px;line-height:1.45;color:#102c22;font-weight:600}
@@ -121,5 +121,5 @@ body.gob-v2 .buy-row > aside { order: 4; grid-column: 1 / -1; }
 /* "Running low – notify me" as a tidy card */
 body.gob-v2 #restockNotifyProduct { display: grid; gap: 6px; padding: 12px 14px; border: 1px solid rgba(16,44,34,.15); border-radius: 10px; background: #fffdf8; font-size: 14px; line-height: 1.45; }
 body.gob-v2 #restockNotifyProduct strong { font-size: 14px; color: #102c22; }
-body.gob-v2 #restockNotifyProduct .restock-notify-button { justify-self: start; min-height: 44px; padding: 0 16px; border: 1.5px solid #133C21; border-radius: 999px; background: transparent; color: #133C21; font-weight: 800; font-size: 13px; cursor: pointer; }
-body.gob-v2 #restockNotifyProduct .restock-notify-button:hover { background: #133C21; color: #fff; }
+body.gob-v2 #restockNotifyProduct .restock-notify-button { justify-self: start; min-height: 44px; padding: 0 16px; border: 1.5px solid #102c22; border-radius: 999px; background: transparent; color: #102c22; font-weight: 800; font-size: 13px; cursor: pointer; }
+body.gob-v2 #restockNotifyProduct .restock-notify-button:hover { background: #102c22; color: #fff; }
