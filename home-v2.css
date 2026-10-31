@@ -2,7 +2,7 @@
 .hv2{--line:rgba(16,44,34,.14);--display:Fraunces,Georgia,serif;--body:"DM Sans",system-ui,sans-serif;font-family:var(--body);color:var(--ink);background:var(--cream)}
 .hv2 img{display:block;max-width:100%;height:auto}.hv2 a{color:inherit}
 .hv2 .wrap{max-width:1120px;margin:0 auto;padding:0 18px}
-.hv2 .eyebrow{font-size:11.5px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--gold);margin:0 0 8px}
+.hv2 .eyebrow{font-size:12px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--gold);margin:0 0 8px}
 .hv2 h1,.hv2 h2,.hv2 h3{font-family:var(--display);line-height:1.05;margin:0;letter-spacing:-.01em}
 .hv2 h2{font-size:clamp(28px,7.4vw,44px);margin-bottom:10px}
 .hv2 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:0 22px;border-radius:12px;font-weight:800;font-size:15.5px;text-decoration:none;border:0;cursor:pointer}
@@ -54,7 +54,7 @@
 .hv2 .card{background:var(--paper);border:1px solid var(--line);border-radius:14px;overflow:hidden;text-decoration:none;display:flex;flex-direction:column}
 .hv2 .card .im{position:relative;aspect-ratio:1/1;background:var(--green)}
 .hv2 .card .im img{width:100%;height:100%;object-fit:cover}
-.hv2 .card .tag{position:absolute;top:8px;left:8px;background:var(--gold2);color:var(--ink);font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:99px}
+.hv2 .card .tag{position:absolute;top:8px;left:8px;background:var(--gold2);color:var(--ink);font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:99px}
 .hv2 .card .tx{padding:10px 12px 12px;display:flex;flex-direction:column;gap:2px;flex:1}
 .hv2 .card h3{font-size:18px}
 .hv2 .card p{margin:0;font-size:13px;color:var(--ink2);line-height:1.35}

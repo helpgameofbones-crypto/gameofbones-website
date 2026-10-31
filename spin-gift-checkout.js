@@ -1,5 +1,5 @@
 /* Free prize (Bone Run game, or an older spin-wheel gift) in the cart and at
-   checkout. When the bag is ₹499+ the prize is shown as a ₹0 line in the
+   checkout. When the treat jar is ₹499+ the prize is shown as a ₹0 line in the
    order summary, because the server adds it to the order automatically
    (admin lib/spin-gifts.ts, matched by the mobile number or email used to
    claim it). This file only previews it; the server decides. */

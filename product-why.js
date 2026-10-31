@@ -190,7 +190,7 @@
   const css = `
   body.gob-why-on .key-benefits,body.gob-why-on .benefit-panel,body.gob-why-on .nutrient-panel,body.gob-why-on .serve-panel{display:none!important}
   .gob-why{max-width:1180px;margin:0 auto;padding:28px 18px 8px;color:#102c22}
-  .gob-why .eyebrow{margin:0 0 6px;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#bd812a}
+  .gob-why .eyebrow{margin:0 0 6px;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#bd812a}
   .gob-why h2{margin:0 0 8px;font-size:clamp(26px,7vw,40px);line-height:1.08}
   .gob-why .lead{margin:0 0 16px;font-size:15px;line-height:1.5;color:#36473f;max-width:640px}
   .gob-why ol{list-style:none;margin:0;padding:0;display:grid;gap:8px}
@@ -205,7 +205,7 @@
   .gob-why details[open]>summary:after{content:'–'}
   .gob-why details p{margin:0;padding:0 14px 14px;font-size:13.5px;line-height:1.5;color:#3f5249}
   .gob-why .guide{margin:14px 0 0;font-weight:800;font-size:14px}.gob-why .guide a{color:#bd812a;text-decoration:underline;text-underline-offset:3px}
-  .gob-why .note{margin:12px 0 0;font-size:11.5px;line-height:1.45;color:#6b7a72}
+  .gob-why .note{margin:12px 0 0;font-size:12px;line-height:1.45;color:#6b7a72}
   @media(min-width:900px){.gob-why{padding:48px 24px 16px}.gob-why ol{grid-template-columns:repeat(3,1fr);gap:12px}.gob-why li{grid-template-columns:1fr;padding:18px}.gob-why .more{display:grid;grid-template-columns:1fr 1fr;gap:12px}.gob-why details{margin-top:12px}}
   `;
 

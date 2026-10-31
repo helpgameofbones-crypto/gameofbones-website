@@ -4,7 +4,7 @@
 // price so an old browser cart cannot retain a finished promotion.
 function commerceProduct(item){const snapshot=item.product,current=GOB_PRODUCTS[item.id]||null;if(snapshot&&current&&Number(snapshot.comparePrice)>Number(snapshot.price)&&!(Number(current.comparePrice)>Number(current.price)))return {...snapshot,price:Number(current.price)||0,comparePrice:Number(current.comparePrice)||0};return snapshot||current}
 function cartValue(){return cart().reduce((total,item)=>total+(commerceProduct(item)?.price||0)*item.quantity,0)}
-// Trial boxes: ₹50 delivery when the bag holds trial packs and the treat
+// Trial boxes: ₹50 delivery when the treat jar holds trial packs and the treat
 // subtotal is under ₹300. The checkout server applies the same rule.
 const TRIAL_FREE_DELIVERY_MIN=300,TRIAL_DELIVERY_CHARGE=50
 function cartHasTrialPacks(){return cart().some(item=>{const p=commerceProduct(item);return /^trial\b/i.test(String(p?.packLabel||'').trim())||/—\s*trial\b/i.test(String(p?.name||''))})}
@@ -18,7 +18,7 @@ const POINT_VALUE_RUPEES=.3,MAX_POINTS_DISCOUNT_RUPEES=100,MAX_REDEMPTION_POINTS
 
 // Private offers are still checked by the server before payment. These
 // families mirror the currently active campaign configuration so shoppers see
-// the same saving in the bag and at checkout.
+// the same saving in the treat jar and at checkout.
 function privateOfferRate(code){
   if(/^SAVE10-[A-Z0-9]+$/.test(code)||code==='GOBFAMILY10'||code==='BOWL10')return .1
   if(/^BDAY[A-Z0-9]+$/.test(code)||code==='PAWTY25')return .25
@@ -92,7 +92,7 @@ function renderCommerceCart(){
 function updateCommerceTotals(){
   const subtotal=cartValue(),count=cartCount(),saleBasket=cartHasSaleItems(),bogoBasket=cartHasBogoItems(),bogoSaving=bogoDiscount()
   const privateCoupon=document.querySelector('[name="private_coupon"]')?.value.trim().toUpperCase()||''
-  // A recognised private code can be entered from the bag before the secure
+  // A recognised private code can be entered from the treat jar before the secure
   // checkout form exists. Keep it in session storage and show the same quote.
   const storedCoupon=window.sessionStorage.getItem('gob-checkout-coupon')||''
   const coupon=privateCoupon||storedCoupon||document.querySelector('[name="coupon"]:checked')?.value||(!document.querySelector('[name="coupon"]')&&cartOfferClaimed()?CART_OFFER_CODE:'none')
@@ -128,7 +128,7 @@ function updateCommerceTotals(){
     }else if(coupon==='WELCOME15'){
       return !eligibility.signedIn?'WELCOME15 is applied: 15% off your first order. No login needed — we check your mobile number and email at payment.':eligibility.checking?'Checking whether this account is eligible for WELCOME15…':eligibility.firstOrder?'WELCOME15 is available for this first order.':'WELCOME15 is not applied: this account already has a completed order, or its first-order status could not be verified.'
     } else if(coupon===CART_OFFER_CODE){
-      return `₹${CART_OFFER_AMOUNT} off is applied — your first-order bag offer. We confirm it with your mobile number at payment.`
+      return `₹${CART_OFFER_AMOUNT} off is applied — your first-order treat jar offer. We confirm it with your mobile number at payment.`
     } else if(coupon==='MEGA20'){
       const remaining=Math.max(0,2199-subtotal)
       return remaining?`MEGA20 is not applied: add ${money(remaining)} of eligible treats to reach the ₹2,199 minimum.`:'MEGA20 is available on this basket.'
@@ -167,7 +167,7 @@ function ensureCheckoutOptions(){
     <h3>Offers & rewards</h3>
     <label data-automatic-offer><input type="radio" name="coupon" value="none" checked><span><b data-automatic-offer-title>Continue with the listed price</b> <small data-automatic-offer-copy>Your current listed price is shown above. You may choose one eligible code below.</small></span></label>
     <label data-welcome-offer><input type="radio" name="coupon" value="WELCOME15"><span>WELCOME15 — 15% off your first order <small>No login needed · one use per mobile number and email · checked at payment.</small></span></label>
-    <label data-cart-offer hidden><input type="radio" name="coupon" value="CART50"><span>CART50 — ₹50 off your first order <small>Unlocked with your WhatsApp number on the bag page · first order only · checked at payment.</small></span></label>
+    <label data-cart-offer hidden><input type="radio" name="coupon" value="CART50"><span>CART50 — ₹50 off your first order <small>Unlocked with your WhatsApp number on the treat jar page · first order only · checked at payment.</small></span></label>
     <label data-mega-offer><input type="radio" name="coupon" value="MEGA20"><span>MEGA20 — 20% off orders ₹2,199+ <small>Eligible treat subtotal must reach ₹2,199.</small></span></label>
     <details class="private-code"><summary>Have a private code from us?</summary><label>Private birthday code <input name="private_coupon" type="text" inputmode="text" autocomplete="off" maxlength="32" placeholder="Enter your private code"></label><small>Private rewards are sent directly to the pet parent and are not public offers.</small></details>
     <label data-loyalty-redeem hidden><input type="number" name="loyalty_points_redeemed" min="0" max="333" step="1" value="0" inputmode="numeric"><span>Use reward points <small>Use up to ₹100 off per order (maximum 333 points). Every point is worth ₹0.30 and can be combined with one eligible coupon.</small></span></label>
@@ -190,7 +190,7 @@ function ensureCheckoutOptions(){
   summaryCode?.addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();applySummaryCode()}})
   privateCode?.addEventListener('input',()=>{if(summaryCode)summaryCode.value=privateCode.value.trim().toUpperCase()})
 
-  // A code applied from the bag is only carried to this secure checkout; it
+  // A code applied from the treat jar is only carried to this secure checkout; it
   // is still checked against the signed-in customer's eligibility below.
   const storedCoupon=window.sessionStorage.getItem('gob-checkout-coupon')
   const requestedCoupon=['WELCOME15','MEGA20'].includes(storedCoupon)?storedCoupon:''

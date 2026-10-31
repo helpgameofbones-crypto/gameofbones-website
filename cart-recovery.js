@@ -10,7 +10,7 @@
 (() => {
   // `cart` and `commerceProduct` are top-level declarations in the storefront
   // scripts, so they are global names but NOT properties of window.
-  // (Reading window.cart made the old save form always say the bag was empty.)
+  // (Reading window.cart made the old save form always say the treat jar was empty.)
   const cartLines = () => { try { return typeof cart === 'function' ? cart() : []; } catch (_) { return []; } };
   const productFor = line => line.product || (typeof commerceProduct === 'function' ? commerceProduct(line) : null) || (typeof GOB_PRODUCTS !== 'undefined' ? GOB_PRODUCTS[line.id] : null);
   const form = document.querySelector('#cartSaveForm');
@@ -50,7 +50,7 @@
     list.className = 'cart-assurance cart-assurance-list';
     list.setAttribute('aria-label', 'Why order with us');
     list.innerHTML = [
-      'Free shipping on every order · dispatched within 1–2 business days',
+      'Free delivery on all full packs · dispatched within 1–2 business days',
       'Pay by UPI, card or Cash on Delivery (most PIN codes)',
       'Single-ingredient treats made in Kalyan · loved by verified dog parents',
       'Wrong or damaged pack? Tell us within 48 hours and we will make it right',
@@ -108,7 +108,7 @@
     if (title) title.textContent = titleText;
     if (intro) intro.textContent = introText;
   };
-  setCopy('First order? ₹50 off', 'Get ₹50 off this order.', 'Add your WhatsApp number and ₹50 comes off your bag automatically. For first orders, once per customer. You agree to a reminder or two about this bag on WhatsApp (reply STOP anytime).');
+  setCopy('First order? ₹50 off', 'Get ₹50 off this order.', 'Add your WhatsApp number and ₹50 comes off your treat jar automatically. For first orders, once per customer. You agree to a reminder or two about this treat jar on WhatsApp (reply STOP anytime).');
   if (email) email.hidden = true;
   if (phone) phone.placeholder = 'WhatsApp number (10 digits)';
   if (button) button.textContent = 'Get ₹50 off';
@@ -123,7 +123,7 @@
   const showApplied = () => {
     form.hidden = false;
     form.querySelectorAll('input,button').forEach(el => { el.hidden = true; });
-    setCopy('Offer unlocked', '₹50 off is applied to your bag.', 'It will show at checkout. We confirm it with your mobile number at payment, as it is for first orders.');
+    setCopy('Offer unlocked', '₹50 off is applied to your treat jar.', 'It will show at checkout. We confirm it with your mobile number at payment, as it is for first orders.');
     message('₹50 off applied ✓', 'success');
   };
   const claimed = () => (typeof cartOfferClaimed === 'function' ? cartOfferClaimed() : false);
@@ -145,11 +145,11 @@
       const rawLines = cartLines().map(line => { const product = productFor(line); return { id: line.id, quantity: Number(line.quantity) || 1, product: product ? { name: product.name, price: Number(product.price) || 0, packLabel: product.packLabel || '', tag: product.tag || '', catalog_slug: product.catalog_slug || '', image: product.image || '' } : null }; });
       const response = await window.GOB_API.abandonedCart({ offer: 'CART50', cart_token: window.GOB_CART_TRACKING?.token?.(), whatsapp_opt_in: true, cart_lines: rawLines, email: validEmail ? normalizedEmail : '', phone: normalizedPhone, items, total: totalValue });
       const offer = response && response.cart_offer;
-      if (!offer) { message('We saved your bag but could not check the offer. Please try again.', 'error'); return; }
+      if (!offer) { message('We saved your treat jar but could not check the offer. Please try again.', 'error'); return; }
       if (!offer.eligible) {
         if (typeof setCartOfferClaim === 'function') setCartOfferClaim(false);
         form.reset();
-        message('Thanks, your bag is saved. This number has ordered with us before, so the first-order ₹50 offer does not apply — but you still save ₹30 when you pay online.', '');
+        message('Thanks, your treat jar is saved. This number has ordered with us before, so the first-order ₹50 offer does not apply — but you still save ₹30 when you pay online.', '');
         refreshTotals();
         return;
       }

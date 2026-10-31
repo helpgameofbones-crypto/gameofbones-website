@@ -13,7 +13,7 @@
   display: block;
   padding: 10px 16px;
   color: #fff8e9;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 800;
   letter-spacing: .07em;
   line-height: 1.35;
@@ -56,7 +56,7 @@
     display: grid;
     place-items: center;
     padding: 8px 12px;
-    font-size: 10px;
+    font-size: 12px;
     letter-spacing: .055em;
     line-height: 1.25;
     white-space: normal;
@@ -124,3 +124,7 @@
 .footer .eyebrow, .hv2 .trial .eyebrow, .h-hero .eyebrow.on-dark, [class*="dark"] .eyebrow { color: #e9b949; }
 /* Benefit lines on product cards: show the whole sentence (was cut at 2 lines). */
 .products .catalog-desc { -webkit-line-clamp: unset !important; display: block !important; overflow: visible !important; }
+.strip b svg { width: 17px; height: 17px; }
+/* Tap targets: quantity steppers at least 44 x 44 px */
+.quantity button, .mini-qty button, .tb-qty button { min-width: 44px; min-height: 44px; }
+.quantity { min-height: 44px; }

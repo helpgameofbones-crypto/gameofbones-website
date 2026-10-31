@@ -1,6 +1,76 @@
 {
   "redirects": [
     {
+      "source": "/account-preview",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/account-preview.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/homepage-original",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/homepage-original.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/mobile-preview",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/mobile-preview.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/product-atelier",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/product-atelier.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/product-motion",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/product-motion.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/product-rich",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/product-rich.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/review-flow-preview",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/review-flow-preview.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
       "source": "/legacy-storefront.html",
       "destination": "/",
       "permanent": true

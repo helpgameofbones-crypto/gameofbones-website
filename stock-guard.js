@@ -53,7 +53,7 @@
       if (!stockInfo?.inStock) { toast(`Sorry, ${info.name} is out of stock.`); return; }
       const maxQty = Math.floor(room / info.units);
       if (maxQty < 1) {
-        toast(`Only ${stockInfo.left} left of ${info.name}, and they're already in your bag.`);
+        toast(`Only ${stockInfo.left} left of ${info.name}, and they're already in your treat jar.`);
         return;
       }
       const allowed = Math.min(wanted, maxQty);
@@ -79,7 +79,7 @@
     toast(stockInfo?.inStock ? `Only ${stockInfo.left} left of ${info.name}.` : `Sorry, ${info.name} is out of stock.`);
   }, true);
 
-  // Trim a saved bag that now holds more than is available.
+  // Trim a saved treat jar that now holds more than is available.
   function reconcileCart() {
     if (!stock) return;
     const lines = readCart();
@@ -90,12 +90,12 @@
     lines.forEach(line => {
       const info = lineInfo(line.id, line.product);
       const stockInfo = infoFor(info.key);
-      if (stockInfo && !stockInfo.inStock) { changed = true; messages.push(`${info.name} sold out and was removed from your bag.`); return; }
+      if (stockInfo && !stockInfo.inStock) { changed = true; messages.push(`${info.name} sold out and was removed from your treat jar.`); return; }
       const room = roomFor(info.key, kept);
       if (room !== Infinity) {
         const maxQty = Math.floor(room / info.units);
-        if (maxQty < 1) { changed = true; messages.push(`Only ${stockInfo.left} left of ${info.name}; your bag was updated.`); return; }
-        if (line.quantity > maxQty) { line.quantity = maxQty; changed = true; messages.push(`Only ${stockInfo.left} left of ${info.name}; your bag was updated.`); }
+        if (maxQty < 1) { changed = true; messages.push(`Only ${stockInfo.left} left of ${info.name}; your treat jar was updated.`); return; }
+        if (line.quantity > maxQty) { line.quantity = maxQty; changed = true; messages.push(`Only ${stockInfo.left} left of ${info.name}; your treat jar was updated.`); }
       }
       kept.push(line);
     });

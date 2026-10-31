@@ -43,7 +43,7 @@
             <h3><a href="product.html?catalog=${encodeURIComponent(id)}">${escapeHtml(product.n)}</a></h3>
             <p class="catalog-desc">${escapeHtml(product.d || 'Single-ingredient dog treat.')}</p>
             <div class="card-bottom"><span>${escapeHtml(product.w || 'Pack')} · ${price(product.p)}</span>
-              <button class="quick-add" type="button" data-product-id="${escapeHtml(id)}" aria-label="Add ${escapeHtml(product.n)} to bag">+</button>
+              <button class="quick-add" type="button" data-product-id="${escapeHtml(id)}" aria-label="Add ${escapeHtml(product.n)} to treat jar">+</button>
             </div>
           </div>
         </article>`;

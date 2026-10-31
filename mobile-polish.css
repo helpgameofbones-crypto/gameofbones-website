@@ -26,7 +26,7 @@
   .notice .gob-live-ticker .mp-ticker { position: relative; display: block !important; width: 100%; padding: 0 !important; }
   .notice .mp-ticker b {
     position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-    padding: 0 14px; color: #fff8e9; font-size: 11px; font-weight: 800; letter-spacing: .06em;
+    padding: 0 14px; color: #fff8e9; font-size: 12px; font-weight: 800; letter-spacing: .06em;
     line-height: 1.2; text-align: center; text-transform: uppercase; white-space: nowrap;
     overflow: hidden; text-overflow: ellipsis;
     opacity: 0; visibility: hidden; transform: translateY(8px); transition: opacity .2s ease, transform .3s ease, visibility 0s linear .2s;
@@ -50,7 +50,7 @@
     min-height: 44px !important; padding: 0 !important; display: grid !important; place-items: center;
   }
   .nav .cart-trigger svg { width: 20px; height: 20px; }
-  .nav .cart-trigger .jar-count { top: -3px !important; right: -3px !important; min-width: 19px; height: 19px; font-size: 10px !important; line-height: 19px !important; }
+  .nav .cart-trigger .jar-count { top: -3px !important; right: -3px !important; min-width: 19px; height: 19px; font-size: 12px !important; line-height: 19px !important; }
   .nav .menu-toggle { min-height: 40px !important; padding: 0 12px !important; font-size: 14px !important; }
   .nav .compact-nav.open, .nav .nav-links.open { max-height: calc(100vh - var(--mp-notice) - var(--mp-nav)); overflow-y: auto; }
   .nav .compact-nav .mp-login-link { font-weight: 800; }
@@ -100,7 +100,7 @@
   .products .product-card:not([data-home-product]) .card-copy { display: flex !important; flex: 1; flex-direction: column; gap: 4px !important; padding: 10px 10px 12px !important; }
   .products .product-card:not([data-home-product]) .tag {
     display: flex !important; align-items: center; gap: 6px; margin: 0 !important; min-width: 0;
-    font-size: 10px !important; letter-spacing: .06em !important; line-height: 1.2 !important;
+    font-size: 12px !important; letter-spacing: .06em !important; line-height: 1.2 !important;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
   .products .product-card:not([data-home-product]) .bestseller-tag { flex: none; padding: 2px 6px !important; font-size: 9.5px !important; }
@@ -134,7 +134,7 @@
   .products .product-card:not([data-home-product]).mp-sold-out .quick-add { display: none !important; }
   .products .product-card:not([data-home-product]).mp-sold-out .product-image img { filter: grayscale(.35); opacity: .8; }
   .products .product-card:not([data-home-product]) .stock-note { margin: 2px 0 0 !important; font-size: 12px !important; text-align: center; }
-  .products .product-card:not([data-home-product]) .stock-note::before { content: "● "; font-size: 9px; vertical-align: 1px; }
+  .products .product-card:not([data-home-product]) .stock-note::before { content: "● "; font-size: 12px; vertical-align: 1px; }
   /* Keep Add buttons level across a row: stock note sits above the price, never below the button */
   .products .product-card:not([data-home-product]) .card-copy > .stock-note { order: 1; margin-top: auto !important; text-align: left; }
   .products .product-card:not([data-home-product]) .card-copy > .card-bottom { order: 2; }

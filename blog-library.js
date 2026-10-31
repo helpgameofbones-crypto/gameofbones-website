@@ -249,7 +249,7 @@
           return `<article class="journal-product-card">
             <a href="${productUrl(product)}" class="journal-product-image">${image ? `<img src="${escapeHtml(image)}" alt="${escapeHtml(product.n)}" width="600" height="600" loading="lazy" decoding="async">` : '<span aria-hidden="true">🐾</span>'}</a>
             <div class="journal-product-copy"><p>${escapeHtml(product.cat || product.c || 'Natural dog treat')}</p><h3><a href="${productUrl(product)}">${escapeHtml(product.n)}</a></h3><strong>${price ? `₹${price.toLocaleString('en-IN')}` : 'View product'}</strong></div>
-            <button class="journal-product-add" type="button" data-recommend-add="${escapeHtml(id)}" aria-label="Add ${escapeHtml(product.n)} to treat jar">Add to jar <span aria-hidden="true">+</span></button>
+            <button class="journal-product-add" type="button" data-recommend-add="${escapeHtml(id)}" aria-label="Add ${escapeHtml(product.n)} to treat jar">Add to treat jar <span aria-hidden="true">+</span></button>
           </article>`;
         }).join('')}
       </div>`;

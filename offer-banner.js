@@ -1,10 +1,10 @@
 (() => {
   const offers = [
     { copy: 'New here? Use code WELCOME15 for 15% off your first order · one use per customer', href: 'products.html' },
-    { copy: 'Pay online and get ₹30 off', href: 'checkout.html' },
+    { copy: 'Pay online and save ₹70 vs cash on delivery', href: 'checkout.html' },
     { copy: 'Buy 3+ treats, save 5% automatically', href: 'products.html#buyMoreTitle' },
     { copy: 'MEGA20: 20% off orders above ₹2,199', href: 'products.html' },
-    { copy: 'Free shipping on every order', href: 'products.html' }
+    { copy: 'Free delivery on all full packs', href: 'products.html' }
   ];
   function setup() {
     const notice = document.querySelector('.notice'); if (!notice || notice.dataset.offersReady) return; notice.dataset.offersReady = 'true';

@@ -1,6 +1,6 @@
 /* Product page v2 (mobile first).
    Turns the long product page into: name + what it is + price -> photos -> quick facts ->
-   pack choice (with price per 100 g / per piece) -> "before you buy" -> add to jar -> delivery.
+   pack choice (with price per 100 g / per piece) -> "before you buy" -> add to treat jar -> delivery.
    Below: why it's good (product-why.js), then one tidy accordion with label facts, feeding,
    nutrition, storage and delivery, then complementary products.
    Facts come from the printed pouch labels where we have them. Nothing unverified is shown:
@@ -101,12 +101,15 @@
   function packInfo(btn) {
     const c = btn.cloneNode(true);
     c.querySelectorAll('.v2-unit,.v2-save').forEach(e => e.remove());
-    const txt = c.textContent.replace(/\s+/g, ' ');
+    // Join text pieces with spaces: "Pack of 1" + "60 g" must not read as "Pack of 160 g".
+    const parts = []; const walk = document.createTreeWalker(c, NodeFilter.SHOW_TEXT);
+    while (walk.nextNode()) parts.push(walk.currentNode.nodeValue);
+    const txt = parts.join(' ').replace(/\s+/g, ' ');
     const prices = [...txt.matchAll(/₹\s?([\d,]+)/g)].map(m => Number(m[1].replace(/,/g, '')));
     const price = prices[prices.length - 1] || 0;
     const g = txt.match(/(\d+(?:\.\d+)?)\s?(kg|gm|g)(?![a-z])/);
     const pc = txt.match(/(\d+)\s?(pieces|piece|pcs)/i);
-    if (g) return { price, kind: 'g', qty: Number(g[1]) * (g[2] === 'kg' ? 1000 : 1) };
+    if (g) return { price, kind: 'g', qty: Number(g[1]) * (g[2] === 'kg' ? 1000 : 1), trial: /trial/i.test(txt) };
     if (pc) return { price, kind: 'pc', qty: Number(pc[1]) };
     return { price, kind: '', qty: 0 };
   }
@@ -122,7 +125,7 @@
     syncStockNote();
     const opts = [...document.querySelectorAll('#packOptions .option')];
     const infos = opts.map(packInfo);
-    const base = infos.find(i => i.price && i.qty && i.kind);   // smallest (first) pack sets the normal rate
+    const base = infos.filter(i => i.price && i.qty && i.kind && !i.trial).sort((x, y) => x.qty - y.qty)[0];   // smallest full pack sets the normal rate (trial packs excluded)
     opts.forEach((btn, i) => {
       const info = infos[i];
       if (!info.price) return;
@@ -133,7 +136,7 @@
         if (unit) btn.insertAdjacentHTML('beforeend', `<span class="v2-unit">${unit}</span>`);
       }
       // Real saving vs buying the smallest pack several times — shown only when it's at least ₹10
-      if (!btn.querySelector('.v2-save') && base && info.kind === base.kind && info.qty > base.qty) {
+      if (!btn.querySelector('.v2-save') && base && !info.trial && info.kind === base.kind && info.qty > base.qty) {
         const save = Math.round(base.price / base.qty * info.qty - info.price);
         if (save >= 10) btn.insertAdjacentHTML('beforeend', `<span class="v2-save">Save ${money(save)}</span>`);
       }
@@ -151,7 +154,7 @@
     clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>'
   };
   const BENEFITS = [['one', 'Single ingredient'], ['nopres', 'No preservatives'], ['slow', 'Slow-dehydrated'], ['batch', 'Small batches']];
-  const TRUST = [['truck', 'Free delivery'], ['cash', 'Cash on delivery'], ['pin', 'Made in Kalyan'], ['clock', 'Ships in 1–2 days']];
+  const TRUST = [['truck', 'Free delivery on full packs'], ['cash', 'Cash on delivery'], ['pin', 'Made in Kalyan'], ['clock', 'Ships in 1–2 days']];
 
   function catalogItem(id) {
     const list = window.GOB_LIVE_CATALOG || [];
@@ -176,7 +179,7 @@
     if (x.printed) sec.push(['Feeding guide (from the pack)', `<table class="v2-tbl"><tr><th>Dog size</th><th>Per day</th></tr>${LABEL_FEED.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}</table><p class="v2-note">Don’t overfeed, keep fresh water out, and supervise. ${TEN}</p>`]);
     if (x.nutri) sec.push(['Nutrition (per 100 g)', `<table class="v2-tbl"><tr><th>Per 100 g</th><th>Amount</th></tr>${x.nutri.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}</table><p class="v2-note">Guaranteed analysis as printed on the pack.</p>`]);
     sec.push(['Storage & shelf life', `<ul>${(x.printed ? LABEL_STORE : GEN_STORE).map(s => `<li>${s}</li>`).join('')}</ul>`]);
-    sec.push(['Delivery & returns', '<ul><li>Dispatched in 1–2 working days; tracking by SMS / WhatsApp.</li><li>Free delivery across India. Pay online and save ₹30, or pay cash on delivery (₹40 fee).</li><li>If something arrives damaged or isn’t right, message us with your order number and we’ll help.</li></ul>']);
+    sec.push(['Delivery & returns', '<ul><li>Dispatched in 1–2 working days; tracking by SMS / WhatsApp.</li><li>Free delivery on full packs. Pay online and save ₹70 over cash on delivery, or pay cash on delivery (₹40 fee).</li><li>If something arrives damaged or isn’t right, message us with your order number and we’ll help.</li></ul>']);
     if (x.faq && !document.getElementById('gobFaq')) sec.push(['Questions', x.faq.map(([q, a]) => `<p><b>${esc(q)}</b><br>${esc(a)}</p>`).join('')]);
     return `<section class="v2-acc" id="v2Acc" aria-label="${esc(name)} details">${sec.map(([h, b, o]) => `<details${o ? ' open' : ''}><summary>${h}</summary><div class="v2-body">${b}</div></details>`).join('')}<p class="v2-help">Still unsure? <a href="https://wa.me/919082503295?text=${encodeURIComponent('Hi Game of Bones, I have a question about ' + name)}" target="_blank" rel="noreferrer">WhatsApp us</a>. A real person replies.</p></section>`;
   }
@@ -206,7 +209,7 @@
     buyRow.insertAdjacentHTML('beforebegin', beforeBox(d));
 
     // one short delivery line after the buy row (replaces three repeated blocks)
-    buyRow.insertAdjacentHTML('afterend', `<div class="v2-trust" id="v2Ship"><ul>${TRUST.map(([k, t]) => `<li>${ICON[k]}<span>${t}</span></li>`).join('')}</ul><p>Pay online and save ₹30 · COD fee ₹40</p></div>`);
+    buyRow.insertAdjacentHTML('afterend', `<div class="v2-trust" id="v2Ship"><ul>${TRUST.map(([k, t]) => `<li>${ICON[k]}<span>${t}</span></li>`).join('')}</ul><p>Pay online and save ₹70 compared with cash on delivery</p></div>`);
 
     // per-unit pricing on pack buttons (packs re-render when data arrives)
     perUnit();

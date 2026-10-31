@@ -112,7 +112,7 @@
     const save = lines.reduce((s, l) => { const t = byId.get(l.id); return s + Math.max(0, t.compare - t.price) * Number(l.quantity); }, 0);
     box.classList.toggle('is-empty', count === 0);
     box.querySelectorAll('[data-box-count]').forEach(el => { el.textContent = el.closest('dl') ? String(count) : `${count} ${count === 1 ? 'pack' : 'packs'}`; });
-    // Trial boxes under ₹300 pay ₹50 delivery (the whole bag counts towards ₹300).
+    // Trial boxes under ₹300 pay ₹50 delivery (the whole treat jar counts towards ₹300).
     const bagSubtotal = readCart().reduce((s, l) => s + (Number(l.product?.price) || 0) * (Number(l.quantity) || 0), 0);
     const delivery = count && bagSubtotal < FREE_MIN ? DELIVERY : 0;
     box.querySelectorAll('[data-box-total]').forEach(el => { el.textContent = rupees(total + delivery); });

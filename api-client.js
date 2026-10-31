@@ -66,7 +66,6 @@
     orderAttempt: body => request('/order-attempt-alert', { method: 'POST', body: JSON.stringify(body) }),
     saveOrder: body => request('/save-order', { method: 'POST', headers: customerHeaders(), body: JSON.stringify(body) }),
     createRazorpayOrder: body => request('/razorpay-order', { method: 'POST', headers: customerHeaders(), body: JSON.stringify(body) }),
-    loyaltySummary: phone => request('/public-loyalty-summary', { method: 'POST', body: JSON.stringify({ phone }) }),
     trackOrder: ref => request('/public-order-tracking', { method: 'POST', body: JSON.stringify({ ref }) }),
   };
   window.GOB_API = api;

@@ -59,12 +59,12 @@
   .gob-facts strong{display:block;font-size:12.5px;line-height:1.25;color:#102c22;font-weight:700}
   .gob-quotes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px;margin:12px 0 4px}.gallery .gob-quotes{margin:8px 0 4px}
   .gob-quotes blockquote{margin:0;padding:8px 10px;background:#f7f0e4;border-left:3px solid #bd812a;border-radius:6px;font-size:13px;line-height:1.4;color:#102c22}
-  .gob-quotes cite{display:block;margin-top:3px;font-style:normal;font-size:11px;font-weight:700;color:#557064}
+  .gob-quotes cite{display:block;margin-top:3px;font-style:normal;font-size:12px;font-weight:700;color:#557064}
   .gob-quotes .gob-stars{color:#bd812a;letter-spacing:1px;margin-right:4px}
   #productMediaStage{position:relative}
   .gob-clip{position:absolute;right:10px;bottom:10px;width:38%;max-width:190px;aspect-ratio:1;border-radius:14px;overflow:hidden;border:3px solid #fffdf8;box-shadow:0 8px 22px rgba(16,44,34,.28);background:#102c22;z-index:3;cursor:pointer}
   .gob-clip video{width:100%;height:100%;object-fit:cover;display:block}
-  .gob-clip span{position:absolute;left:0;right:0;bottom:0;padding:3px 6px;font-size:10px;font-weight:800;letter-spacing:.04em;color:#fff;background:linear-gradient(transparent,rgba(16,44,34,.85));text-align:center}
+  .gob-clip span{position:absolute;left:0;right:0;bottom:0;padding:3px 6px;font-size:12px;font-weight:800;letter-spacing:.04em;color:#fff;background:linear-gradient(transparent,rgba(16,44,34,.85));text-align:center}
   .gob-clip.is-big{width:92%;max-width:none;right:4%;bottom:4%}
   @media(max-width:760px){.gob-facts strong{font-size:12px}.gob-clip{width:40%}}
   `;
@@ -129,7 +129,7 @@
   function renderNewTag() {
     const tag = document.querySelector('#productTag');
     if (!tag || !NEW_PRODUCTS.has(slug()) || tag.querySelector('.gob-new')) return;
-    tag.insertAdjacentHTML('afterbegin', '<span class="gob-new" style="display:inline-block;margin-right:8px;padding:3px 8px;border-radius:4px;background:#bd812a;color:#fff;font-size:10px;font-weight:800;letter-spacing:.08em;vertical-align:1px">NEW</span>');
+    tag.insertAdjacentHTML('afterbegin', '<span class="gob-new" style="display:inline-block;margin-right:8px;padding:3px 8px;border-radius:4px;background:#bd812a;color:#fff;font-size:12px;font-weight:800;letter-spacing:.08em;vertical-align:1px">NEW</span>');
   }
   function run() { ensureStyle(); renderNewTag(); renderFacts(); renderQuotes(); document.querySelectorAll('.gob-clip').forEach(n => n.remove()); }
   const start = () => {

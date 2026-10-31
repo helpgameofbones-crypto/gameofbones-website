@@ -3,7 +3,7 @@
 .shop-hero .display{font-size:clamp(34px,4.6vw,62px)}
 .shop-hero .lead{margin:12px auto 0;font-size:15px}
 .shop-trust{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;max-width:900px;margin:16px auto 0;padding:0;list-style:none}
-.shop-trust li{padding:7px 11px;border:1px solid var(--line);border-radius:999px;background:var(--paper);font-size:11px;font-weight:800;letter-spacing:.04em}
+.shop-trust li{padding:7px 11px;border:1px solid var(--line);border-radius:999px;background:var(--paper);font-size:12px;font-weight:800;letter-spacing:.04em}
 .catalogue-section{padding-top:18px!important}
 .catalogue-section .section-head{margin-bottom:14px}
 .catalogue-section .section-title{font-size:clamp(26px,3vw,40px)}
@@ -16,10 +16,10 @@
   .shop-hero .display{font-size:32px}
   .shop-hero .lead{display:none}
   .shop-trust{justify-content:flex-start;gap:6px;margin-top:12px}
-  .shop-trust li{padding:6px 9px;font-size:10px}
+  .shop-trust li{padding:6px 9px;font-size:12px}
   .catalogue-section .section-head .eyebrow{display:none}
   .catalogue-section .section-title{font-size:24px}
   #liveCatalog .card-bottom{flex-wrap:wrap;gap:8px}
   #liveCatalog .quick-add{width:100%;height:36px;min-width:0;font-size:12px}
-  .bestseller-tag{font-size:8px}
+  .bestseller-tag{font-size:12px}
 }

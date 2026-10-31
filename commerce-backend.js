@@ -94,7 +94,7 @@
   let captureTimer, captureSent = false;
   const marketingConsent = () => form.querySelector('[name="marketing_consent"]')?.checked === true;
   const whatsappOptIn = () => form.querySelector('[name="whatsapp_opt_in"]')?.checked === true;
-  // Exact bag lines so a WhatsApp reminder link can rebuild this bag.
+  // Exact bag lines so a WhatsApp reminder link can rebuild this treat jar.
   const cartLines = () => cart().map(line => ({ id: line.id, quantity: line.quantity, product: line.product ? { name: line.product.name, price: line.product.price, packLabel: line.product.packLabel || '', tag: line.product.tag || '', catalog_slug: line.product.catalog_slug || '', image: line.product.image || '' } : null }));
   const policyAcknowledged = () => form.querySelector('[name="checkout_policy_acknowledged"]')?.checked === true;
   const noticeVersion = () => get('[name="privacy_notice_version"]') || '2026-09-14';

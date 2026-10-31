@@ -32,7 +32,7 @@
 .tb-card-media{position:relative;display:block;aspect-ratio:4/3;background:var(--cream)}
 .tb-card-media img{width:100%;height:100%;object-fit:cover}
 .tb-badges{position:absolute;top:10px;left:10px;display:flex;flex-wrap:wrap;gap:5px}
-.tb-badge{padding:4px 8px;border-radius:999px;background:rgba(255,253,248,.95);color:var(--ink);font-size:10.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+.tb-badge{padding:4px 8px;border-radius:999px;background:rgba(255,253,248,.95);color:var(--ink);font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
 .tb-badge.off{background:var(--gold);color:#fff}
 .tb-badge.cat{background:#e8eefc;color:#28407a}
 .tb-card-body{display:flex;flex:1;flex-direction:column;gap:8px;padding:14px 16px 16px}
@@ -42,7 +42,7 @@
 .tb-size{flex:none;padding:3px 8px;border-radius:6px;background:var(--sage,#cbd8c3);font-size:12px;font-weight:800}
 .tb-desc{margin:0;color:var(--muted);font-size:13.5px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .tb-traits{display:flex;flex-wrap:wrap;gap:5px;margin:0;padding:0;list-style:none}
-.tb-traits li{padding:3px 8px;border:1px solid var(--line);border-radius:999px;color:var(--ink-soft);font-size:11.5px;font-weight:700}
+.tb-traits li{padding:3px 8px;border:1px solid var(--line);border-radius:999px;color:var(--ink-soft);font-size:12px;font-weight:700}
 .tb-buy{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:8px}
 .tb-price{display:flex;align-items:baseline;gap:7px}
 .tb-price strong{font-size:20px}

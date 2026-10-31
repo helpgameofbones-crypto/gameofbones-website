@@ -7,7 +7,7 @@
     ['/cat-treats', 'Cat treats'],
     ['/our-story', 'Our story'],
   ];
-  const tickerCopy = 'Free delivery across India · ₹30 off when you pay online';
+  const tickerCopy = 'Free delivery on full packs · Save ₹70 when you pay online';
 
   const installLiveTicker = () => {
     const notice = document.querySelector('.notice');
