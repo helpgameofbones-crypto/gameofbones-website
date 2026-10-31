@@ -1,2 +1,19 @@
 .vercel
 .seo-cache/
+
+# Never commit secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*credentials*.json
+*service-account*.json
+secrets/
+
+# Local clutter
+node_modules/
+.DS_Store
+Thumbs.db
+*.log
