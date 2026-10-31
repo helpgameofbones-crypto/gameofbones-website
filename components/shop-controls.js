@@ -29,7 +29,7 @@
     if (count) count.textContent = base.length ? base.length + ' treat' + (base.length === 1 ? '' : 's') + ' found' : '';
     var grid = document.getElementById('shopProd');
     if (!base.length && grid) {
-      grid.innerHTML = '<div style="text-align:center;padding:48px 0;font-size:14px;color:var(--muted)">No treats match this combination.<br><button onclick="filterBySize(\'all\');showShopCategory(\'all\')" style="margin-top:12px;background:var(--dark);color:var(--white);border:none;padding:9px 20px;font-family:\'Jost\',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer">Clear Filters</button></div>';
+      grid.innerHTML = '<div style="text-align:center;padding:48px 0;font-size:14px;color:var(--muted)">No treats match this combination.<br><button onclick="filterBySize(\'all\');showShopCategory(\'all\')" style="margin-top:12px;background:var(--dark);color:var(--white);border:none;padding:9px 20px;font-family:\'Jost\',sans-serif;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer">Clear Filters</button></div>';
     } else if (base.length) { renderProducts(base, 'shopProd'); restoreViewCartBtns(); }
   };
 

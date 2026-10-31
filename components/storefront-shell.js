@@ -3,10 +3,10 @@
 
   var offers = [
     'WELCOME15: 15% off your first order',
-    'Pay online and get ₹30 off',
+    'Pay online and save ₹70 vs cash on delivery',
     'Buy 3+ treats, save 5% automatically',
     'MEGA20: 20% off orders above ₹2,199',
-    'Free shipping on every order'
+    'Free delivery on all full packs'
   ];
 
   function loadStyles() {

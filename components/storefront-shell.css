@@ -14,7 +14,7 @@
 #mainNav.gob-modern-shell .logo img{width:44px;height:44px;object-fit:contain}
 #mainNav.gob-modern-shell .logo-text{font:800 10px/1 'Jost',sans-serif;letter-spacing:.13em;text-transform:uppercase}
 #mainNav.gob-modern-shell .compact-nav{gap:clamp(4px,1.25vw,14px)}
-#mainNav.gob-modern-shell .compact-nav a{padding:10px 7px;color:#1a1008;font-size:11px;font-weight:800;letter-spacing:.095em}
+#mainNav.gob-modern-shell .compact-nav a{padding:10px 7px;color:#1a1008;font-size:12px;font-weight:800;letter-spacing:.095em}
 #mainNav.gob-modern-shell .compact-nav a.active{border-color:#c8973a}
 #mainNav.gob-modern-shell .compact-nav [data-shell-secondary]{display:none}
 #mainNav.gob-modern-shell .nav-actions{gap:5px;margin-left:auto}
@@ -26,5 +26,5 @@
 
 @media(min-width:901px){#mainNav.gob-modern-shell .login-trigger{display:inline-flex!important}}
 @media(max-width:900px){#mainNav.gob-modern-shell .logo-text{display:none}#mainNav.gob-modern-shell .compact-nav{gap:0}#mainNav.gob-modern-shell .compact-nav [data-shell-secondary]{display:block}}
-@media(max-width:768px){#gobOfferBar{min-height:42px;padding:0 44px 0 12px}#gobOfferBar .gob-offer-copy{font-size:9px;letter-spacing:.07em}#mainNav.gob-modern-shell .nav-inner{height:60px;padding:0 15px}#mainNav.gob-modern-shell .logo img{width:38px;height:38px}#mainNav.gob-modern-shell .jar-trigger{width:42px;height:42px}}
+@media(max-width:768px){#gobOfferBar{min-height:42px;padding:0 44px 0 12px}#gobOfferBar .gob-offer-copy{font-size:12px;letter-spacing:.07em}#mainNav.gob-modern-shell .nav-inner{height:60px;padding:0 15px}#mainNav.gob-modern-shell .logo img{width:38px;height:38px}#mainNav.gob-modern-shell .jar-trigger{width:42px;height:42px}}
 @media(prefers-reduced-motion:reduce){#gobOfferBar .gob-offer-copy{transition:none}}
