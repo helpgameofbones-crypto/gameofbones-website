@@ -17,7 +17,7 @@ and upload the new bundle files plus all product pages. Otherwise product pages 
 
 ## Copy and brand rules
 - Health wording: "naturally contains"; no medical claims.
-- Delivery: "Free delivery on full packs"; trial boxes free over ₹300, otherwise ₹50. Paying online saves ₹70 vs cash on delivery (₹30 off + no ₹40 COD fee).
+- Delivery: "Free delivery on full packs"; trial boxes free over ₹300, otherwise ₹50. Paying online gets ₹30 off (cash on delivery has a ₹40 fee).
 - Cart word: "Treat jar" (never "Bag").
 - Tuna and Mackerel Fillet are boneless.
 - Colours: ink #102c22, green #245b42, gold #bd812a, button gold #9a6418 (white text), light gold #e7bd68, cream #f7f0e4, paper #fffdf8. Fonts: Fraunces (headings) + DM Sans. Icons: 2px line, ink with one gold accent.

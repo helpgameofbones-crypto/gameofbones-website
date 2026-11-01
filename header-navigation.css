@@ -133,3 +133,28 @@
 .button:not(.secondary):not(.whats):hover, .tb-add:hover, .hv2 .btn.gold:hover { background: #85560f !important; border-color: #85560f !important; }
 /* Icons: one weight and colour everywhere */
 .v2-trust svg, .strip b svg, .ti svg { color: #102c22; }
+
+/* Accepted payment methods */
+.gob-pay{margin:18px 0 0}
+.gob-pay-t{display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.gob-pay-t svg{width:18px;height:18px;flex:0 0 18px}
+.gob-pay ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.gob-pay-logos li{width:58px;height:38px;border-radius:7px;background:#fff;border:1px solid rgba(16,44,34,.14);display:grid;place-items:center;overflow:hidden}
+.gob-pay-logos img{width:100%;height:100%;object-fit:contain;display:block}
+.gob-pay-logos .gob-pay-upi img,.gob-pay-logos .gob-pay-rupay img,.gob-pay-logos .gob-pay-paytm img{padding:8px 7px}
+.gob-pay-logos .gob-pay-visa img{padding:10px 8px}
+.gob-pay-logos .gob-pay-googlepay img{padding:8px 6px}
+.gob-pay-logos .gob-pay-mastercard,.gob-pay-logos .gob-pay-maestro{border:0}
+.gob-pay-logos .gob-pay-mastercard img,.gob-pay-logos .gob-pay-maestro img{object-fit:cover}
+.gob-pay-more{margin-top:8px !important}
+.gob-pay-more li{display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 11px;border-radius:7px;background:#fffdf8;color:#102c22;border:1px solid rgba(16,44,34,.14);font:800 12px/1 "DM Sans",Poppins,sans-serif}
+.gob-pay-more li svg{width:16px;height:16px;color:#245b42}
+.gob-pay-footer{padding:22px 0 0;margin-top:26px;border-top:1px solid rgba(255,253,248,.18)}
+.gob-pay-footer .gob-pay-t{color:#e7bd68}
+.gob-pay-product{margin-top:14px;padding-top:12px;border-top:1px dashed rgba(16,44,34,.15)}
+.gob-pay-product .gob-pay-t{justify-content:center;color:#102c22}
+.gob-pay-product ul{justify-content:center}
+.v2-trust .gob-pay ul{display:flex !important;flex-wrap:wrap;justify-content:center;gap:6px;grid-template-columns:none !important}
+.v2-trust .gob-pay li{flex:0 0 auto !important;box-shadow:none !important;padding:0 !important;min-height:0 !important}
+.v2-trust .gob-pay-logos li{display:grid !important;width:54px !important;height:36px !important}
+.v2-trust .gob-pay-more li{display:inline-flex !important;flex-direction:row !important;width:auto !important;min-height:30px !important;padding:0 10px !important;font-size:12px !important}

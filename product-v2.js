@@ -179,7 +179,7 @@
     if (x.printed) sec.push(['Feeding guide (from the pack)', `<table class="v2-tbl"><tr><th>Dog size</th><th>Per day</th></tr>${LABEL_FEED.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}</table><p class="v2-note">Don’t overfeed, keep fresh water out, and supervise. ${TEN}</p>`]);
     if (x.nutri) sec.push(['Nutrition (per 100 g)', `<table class="v2-tbl"><tr><th>Per 100 g</th><th>Amount</th></tr>${x.nutri.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}</table><p class="v2-note">Guaranteed analysis as printed on the pack.</p>`]);
     sec.push(['Storage & shelf life', `<ul>${(x.printed ? LABEL_STORE : GEN_STORE).map(s => `<li>${s}</li>`).join('')}</ul>`]);
-    sec.push(['Delivery & returns', '<ul><li>Dispatched in 1–2 working days; tracking by SMS / WhatsApp.</li><li>Free delivery on full packs. Pay online and save ₹70 over cash on delivery, or pay cash on delivery (₹40 fee).</li><li>If something arrives damaged or isn’t right, message us with your order number and we’ll help.</li></ul>']);
+    sec.push(['Delivery & returns', '<ul><li>Dispatched in 1–2 working days; tracking by SMS / WhatsApp.</li><li>Free delivery on full packs. ₹30 off when you pay online, or pay cash on delivery (₹40 fee).</li><li>If something arrives damaged or isn’t right, message us with your order number and we’ll help.</li></ul>']);
     if (x.faq && !document.getElementById('gobFaq')) sec.push(['Questions', x.faq.map(([q, a]) => `<p><b>${esc(q)}</b><br>${esc(a)}</p>`).join('')]);
     return `<section class="v2-acc" id="v2Acc" aria-label="${esc(name)} details">${sec.map(([h, b, o]) => `<details${o ? ' open' : ''}><summary>${h}</summary><div class="v2-body">${b}</div></details>`).join('')}<p class="v2-help">Still unsure? <a href="https://wa.me/919082503295?text=${encodeURIComponent('Hi Game of Bones, I have a question about ' + name)}" target="_blank" rel="noreferrer">WhatsApp us</a>. A real person replies.</p></section>`;
   }
@@ -209,7 +209,7 @@
     buyRow.insertAdjacentHTML('beforebegin', beforeBox(d));
 
     // one short delivery line after the buy row (replaces three repeated blocks)
-    buyRow.insertAdjacentHTML('afterend', `<div class="v2-trust" id="v2Ship"><ul>${TRUST.map(([k, t]) => `<li>${ICON[k]}<span>${t}</span></li>`).join('')}</ul><p>Pay online and save ₹70 compared with cash on delivery</p></div>`);
+    buyRow.insertAdjacentHTML('afterend', `<div class="v2-trust" id="v2Ship"><ul>${TRUST.map(([k, t]) => `<li>${ICON[k]}<span>${t}</span></li>`).join('')}</ul><p>₹30 off when you pay online</p></div>`);
 
     // per-unit pricing on pack buttons (packs re-render when data arrives)
     perUnit();

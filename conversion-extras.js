@@ -26,7 +26,7 @@
     document.querySelector('.hero .proof')?.insertAdjacentHTML('afterend', `
       <aside class="home-sale-note" aria-label="Shopping details">
         <strong>Simple prices, straight to your jar.</strong>
-        <span>Free delivery on full packs across India · pay online and save ₹70 compared with cash on delivery.</span>
+        <span>Free delivery on full packs across India · ₹30 off when you pay online.</span>
       </aside>`);
     const target = document.querySelector('.subscribe');
     target?.insertAdjacentHTML('beforebegin', `
@@ -45,7 +45,7 @@
       <section class="paid-traffic-promise" aria-label="Order reassurance">
         <span><b>Price shown is current</b><small>No code needed</small></span>
         <span><b>Free delivery</b><small>On all full packs</small></span>
-        <span><b>Save ₹70 paying online</b><small>vs cash on delivery</small></span>
+        <span><b>₹30 off paying online</b><small>no COD fee</small></span>
       </section>
       <section class="quick-review-proof" id="quickReviewProof" aria-live="polite">
         <span class="quick-review-stars" aria-hidden="true">★★★★★</span>
