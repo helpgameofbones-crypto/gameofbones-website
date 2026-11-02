@@ -10,7 +10,7 @@ const TRIAL_FREE_DELIVERY_MIN=300,TRIAL_DELIVERY_CHARGE=50
 function cartHasTrialPacks(){return cart().some(item=>{const p=commerceProduct(item);return /^trial\b/i.test(String(p?.packLabel||'').trim())||/—\s*trial\b/i.test(String(p?.name||''))})}
 function trialDeliveryCharge(){return cartHasTrialPacks()&&cartValue()<TRIAL_FREE_DELIVERY_MIN?TRIAL_DELIVERY_CHARGE:0}
 function cartHasSaleItems(){return cart().some(item=>{const product=commerceProduct(item);return Number(product?.comparePrice)>Number(product?.price)})}
-const BOGO_TREATS=new Set(['chicken feet','chicken neck'])
+const BOGO_TREATS=new Set([]) // Buy 1 Get 1 ended 2 Nov 2026; add names to run it again
 function bogoTreat(product){return BOGO_TREATS.has(String(product?.name||'').replace(/\s+—\s+.+$/,'').trim().toLowerCase())}
 function cartHasBogoItems(){return cart().some(item=>bogoTreat(commerceProduct(item)))}
 function bogoDiscount(){return cart().reduce((total,item)=>{const product=commerceProduct(item);return total+(bogoTreat(product)?Math.floor((Number(item.quantity)||0)/2)*(Number(product?.price)||0):0)},0)}
@@ -95,7 +95,7 @@ function updateCommerceTotals(){
   // A recognised private code can be entered from the treat jar before the secure
   // checkout form exists. Keep it in session storage and show the same quote.
   const storedCoupon=window.sessionStorage.getItem('gob-checkout-coupon')||''
-  const coupon=privateCoupon||storedCoupon||document.querySelector('[name="coupon"]:checked')?.value||(!document.querySelector('[name="coupon"]')&&cartOfferClaimed()?CART_OFFER_CODE:'none')
+  const coupon=privateCoupon||storedCoupon||document.querySelector('[name="coupon"]:checked')?.value||(!document.querySelector('[name="coupon"]')&&cartOfferClaimed()?'WELCOME15':'none')
   const eligibility=window.GOB_CHECKOUT_ELIGIBILITY||{signedIn:false,firstOrder:false,checking:false,points:0}
   // The displayed price, one valid code and loyalty points can be used together.
   const couponRate=bogoBasket?0:(coupon==='WELCOME15'&&!(eligibility.signedIn&&!eligibility.checking&&!eligibility.firstOrder) ? .15 : coupon==='MEGA20'&&subtotal>=2199 ? .2 : privateOfferRate(coupon))
@@ -167,7 +167,6 @@ function ensureCheckoutOptions(){
     <h3>Offers & rewards</h3>
     <label data-automatic-offer><input type="radio" name="coupon" value="none" checked><span><b data-automatic-offer-title>Continue with the listed price</b> <small data-automatic-offer-copy>Your current listed price is shown above. You may choose one eligible code below.</small></span></label>
     <label data-welcome-offer><input type="radio" name="coupon" value="WELCOME15"><span>WELCOME15 — 15% off your first order <small>No login needed · one use per mobile number and email · checked at payment.</small></span></label>
-    <label data-cart-offer hidden><input type="radio" name="coupon" value="CART50"><span>CART50 — ₹50 off your first order <small>Unlocked with your WhatsApp number on the treat jar page · first order only · checked at payment.</small></span></label>
     <label data-mega-offer><input type="radio" name="coupon" value="MEGA20"><span>MEGA20 — 20% off orders ₹2,199+ <small>Eligible treat subtotal must reach ₹2,199.</small></span></label>
     <details class="private-code"><summary>Have a private code from us?</summary><label>Private birthday code <input name="private_coupon" type="text" inputmode="text" autocomplete="off" maxlength="32" placeholder="Enter your private code"></label><small>Private rewards are sent directly to the pet parent and are not public offers.</small></details>
     <label data-loyalty-redeem hidden><input type="number" name="loyalty_points_redeemed" min="0" max="333" step="1" value="0" inputmode="numeric"><span>Use reward points <small>Use up to ₹100 off per order (maximum 333 points). Every point is worth ₹0.30 and can be combined with one eligible coupon.</small></span></label>
@@ -196,12 +195,9 @@ function ensureCheckoutOptions(){
   const requestedCoupon=['WELCOME15','MEGA20'].includes(storedCoupon)?storedCoupon:''
   const requestedInput=requestedCoupon&&form.querySelector(`[name="coupon"][value="${requestedCoupon}"]`)
   if(requestedInput) requestedInput.checked=true
-  // The ₹50 bag offer is applied automatically unless another code was chosen.
-  const cartOfferInput=form.querySelector('[name="coupon"][value="CART50"]')
-  if(cartOfferInput&&cartOfferClaimed()){
-    cartOfferInput.closest('label').hidden=false
-    if(!requestedInput&&!isPreviewablePrivateOffer(storedCoupon))cartOfferInput.checked=true
-  }
+  // Sharing a WhatsApp number in the treat jar pre-selects WELCOME15 (the one first-order offer).
+  const welcomeInput=form.querySelector('[name="coupon"][value="WELCOME15"]')
+  if(welcomeInput&&cartOfferClaimed()&&!requestedInput&&!isPreviewablePrivateOffer(storedCoupon))welcomeInput.checked=true
   if(isPreviewablePrivateOffer(storedCoupon)){
     if(privateCode){privateCode.value=storedCoupon;privateCode.closest('details')?.setAttribute('open','')}
   }

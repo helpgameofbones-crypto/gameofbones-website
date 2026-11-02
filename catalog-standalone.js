@@ -23,7 +23,7 @@
   const productComparePrice = product => product.sizes?.[0]?.compare_price ?? product.cp ?? product.compare_price ?? 0;
   const productWeight = product => product.w || (Number(product.sizes?.[0]?.weight_grams) ? `${product.sizes[0].weight_grams} g` : 'Pack');
   const productCategory = product => product.c || 'Treats';
-  const isBogoProduct = product => ['chicken feet', 'chicken neck'].includes(String(productName(product)).trim().toLowerCase());
+  const isBogoProduct = product => [].includes(String(productName(product)).trim().toLowerCase());
   // Top sellers from real orders (last 60 days). Shown first with a badge so
   // visitors arriving from ads see the treats other dog parents buy most.
   // What the pet actually gets from each treat (factual, no medical claims).

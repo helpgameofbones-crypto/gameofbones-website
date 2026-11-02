@@ -1,7 +1,7 @@
 /* Buy 1 Get 1 is automatic for the two selected treats. The checkout service
    remains authoritative for the discount and exclusivity rules. */
 (() => {
-  const eligible = value => ['chicken feet', 'chicken neck'].includes(String(value || '').replace(/\s+—\s+.+$/, '').trim().toLowerCase());
+  const eligible = value => [].includes(String(value || '').replace(/\s+—\s+.+$/, '').trim().toLowerCase());
   const cardOffer = card => {
     if (card.querySelector('[data-bogo-card]') || !eligible(card.querySelector('h3')?.textContent)) return;
     const badge = document.createElement('p'); badge.dataset.bogoCard = '';

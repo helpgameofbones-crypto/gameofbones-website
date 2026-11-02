@@ -34,7 +34,7 @@
     return { name, catalog_id, pack_label: packLabel, size: packLabel, price: unitPrice, pack_price: unitPrice, unit_price: unitPrice, line_total: unitPrice * quantity, quantity, qty: quantity };
   }).filter(Boolean);
   const subtotal = () => items().reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const isBogoTreat = item => ['chicken feet', 'chicken neck'].includes(String(item?.name || '').trim().toLowerCase());
+  const isBogoTreat = item => [].includes(String(item?.name || '').trim().toLowerCase());
   const bogo = () => {
     const offerItems = items().filter(isBogoTreat);
     return { active: offerItems.length > 0, discount: offerItems.reduce((sum, item) => sum + Math.floor(item.quantity / 2) * item.price, 0) };

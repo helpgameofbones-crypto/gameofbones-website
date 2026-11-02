@@ -1,6 +1,6 @@
 /* Cart page conversion helpers.
    1. The "save your bowl" box becomes a WhatsApp offer: sharing a number
-      takes ₹50 off automatically (CART50, first order only, once per
+      applies WELCOME15 automatically (15% off; first order only, once per
       customer) and saves the bowl for a reminder.
    2. The total and checkout button sit above that box, so shoppers see the
       way forward before an invitation to leave.
@@ -108,10 +108,10 @@
     if (title) title.textContent = titleText;
     if (intro) intro.textContent = introText;
   };
-  setCopy('First order? ₹50 off', 'Get ₹50 off this order.', 'Add your WhatsApp number and ₹50 comes off your treat jar automatically. For first orders, once per customer. You agree to a reminder or two about this treat jar on WhatsApp (reply STOP anytime).');
+  setCopy('First order? 15% off', 'Get 15% off this order.', 'Add your WhatsApp number and WELCOME15 (15% off) is applied to your treat jar automatically. For first orders, once per customer. You agree to a reminder or two about this treat jar on WhatsApp (reply STOP anytime).');
   if (email) email.hidden = true;
   if (phone) phone.placeholder = 'WhatsApp number (10 digits)';
-  if (button) button.textContent = 'Get ₹50 off';
+  if (button) button.textContent = 'Get 15% off';
 
   const message = (text, kind = '') => { if (!status) return; status.textContent = text; status.className = `cart-save-status ${kind}`; };
   const refreshTotals = () => { if (typeof updateCommerceTotals === 'function') updateCommerceTotals(); };
@@ -123,8 +123,8 @@
   const showApplied = () => {
     form.hidden = false;
     form.querySelectorAll('input,button').forEach(el => { el.hidden = true; });
-    setCopy('Offer unlocked', '₹50 off is applied to your treat jar.', 'It will show at checkout. We confirm it with your mobile number at payment, as it is for first orders.');
-    message('₹50 off applied ✓', 'success');
+    setCopy('Offer unlocked', 'WELCOME15 (15% off) is applied to your treat jar.', 'It will show at checkout. We confirm it with your mobile number at payment, as it is for first orders.');
+    message('15% off applied ✓', 'success');
   };
   const claimed = () => (typeof cartOfferClaimed === 'function' ? cartOfferClaimed() : false);
   if (claimed()) showApplied();
@@ -135,9 +135,9 @@
     const normalizedPhone = String(phone?.value || '').replace(/\D/g, '').replace(/^91(?=\d{10}$)/, '');
     const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail);
     const validPhone = /^[6-9]\d{9}$/.test(normalizedPhone);
-    if (!validPhone) return message('Enter a valid 10-digit WhatsApp number to get ₹50 off.', 'error');
+    if (!validPhone) return message('Enter a valid 10-digit WhatsApp number to get 15% off.', 'error');
     const items = lines();
-    if (!items.length) return message('Add a treat first, then unlock your ₹50 off.', 'error');
+    if (!items.length) return message('Add a treat first, then unlock your 15% off.', 'error');
     const totalValue = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
     if (!window.GOB_API?.abandonedCart) return message('We could not unlock this right now. Please try again.', 'error');
     button.disabled = true; button.textContent = 'Checking…';
@@ -149,7 +149,7 @@
       if (!offer.eligible) {
         if (typeof setCartOfferClaim === 'function') setCartOfferClaim(false);
         form.reset();
-        message('Thanks, your treat jar is saved. This number has ordered with us before, so the first-order ₹50 offer does not apply — but you still save ₹30 when you pay online.', '');
+        message('Thanks, your treat jar is saved. This number has ordered with us before, so the first-order offer does not apply — but you still save ₹30 when you pay online.', '');
         refreshTotals();
         return;
       }
@@ -158,6 +158,6 @@
       refreshTotals();
       showApplied();
     } catch (_) { message('We could not unlock this right now. Please try again.', 'error'); }
-    finally { button.disabled = false; if (!claimed()) button.textContent = 'Get ₹50 off'; }
+    finally { button.disabled = false; if (!claimed()) button.textContent = 'Get 15% off'; }
   });
 })();
