@@ -3,7 +3,7 @@
 
   var offers = [
     'WELCOME15: 15% off your first order',
-    'Pay online and save ₹70 vs cash on delivery',
+    '₹30 off when you pay online',
     'Buy 3+ treats, save 5% automatically',
     'MEGA20: 20% off orders above ₹2,199',
     'Free delivery on all full packs'
