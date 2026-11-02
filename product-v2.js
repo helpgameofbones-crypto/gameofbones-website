@@ -121,10 +121,26 @@
     document.body.classList.toggle('gob-oos', oos);
   }
 
+  function fillMrp(opts) {
+    const mrpCell = document.getElementById('v2Mrp');
+    if (mrpCell) {
+      const rows = opts.map(btn => {
+        const c = btn.cloneNode(true); c.querySelectorAll('.v2-unit,.v2-save').forEach(e => e.remove());
+        const parts = []; const w = document.createTreeWalker(c, NodeFilter.SHOW_TEXT); while (w.nextNode()) parts.push(w.currentNode.nodeValue);
+        const t = parts.join(' ').replace(/\s+/g, ' ');
+        const q = t.match(/(\d+(?:\.\d+)?)\s?(kg|gm|g)(?![a-z])/) || t.match(/(\d+)\s?(pieces|piece|pcs)/i);
+        const mrp = Math.max(0, ...[...t.matchAll(/₹\s?([\d,]+)/g)].map(m => Number(m[1].replace(/,/g, ''))));
+        return q && mrp ? `${q[1]} ${q[2] === 'gm' ? 'g' : q[2]}: MRP ${money(mrp)}` : '';
+      }).filter(Boolean);
+      if (rows.length) mrpCell.innerHTML = rows.map(esc).join('<br>') + '<br><small>(incl. of all taxes)</small>';
+    }
+  }
+
   function perUnit() {
     syncStockNote();
     const opts = [...document.querySelectorAll('#packOptions .option')];
     const infos = opts.map(packInfo);
+    fillMrp(opts);
     const base = infos.filter(i => i.price && i.qty && i.kind && !i.trial).sort((x, y) => x.qty - y.qty)[0];   // smallest full pack sets the normal rate (trial packs excluded)
     opts.forEach((btn, i) => {
       const info = infos[i];
@@ -179,6 +195,7 @@
     if (x.printed) sec.push(['Feeding guide (from the pack)', `<table class="v2-tbl"><tr><th>Dog size</th><th>Per day</th></tr>${LABEL_FEED.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}</table><p class="v2-note">Don’t overfeed, keep fresh water out, and supervise. ${TEN}</p>`]);
     if (x.nutri) sec.push(['Nutrition (per 100 g)', `<table class="v2-tbl"><tr><th>Per 100 g</th><th>Amount</th></tr>${x.nutri.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}</table><p class="v2-note">Guaranteed analysis as printed on the pack.</p>`]);
     sec.push(['Storage & shelf life', `<ul>${(x.printed ? LABEL_STORE : GEN_STORE).map(s => `<li>${s}</li>`).join('')}</ul>`]);
+    sec.push(['Product details', `<table class="v2-tbl v2-legal"><tr><th>Product</th><td>${esc(name)}</td></tr><tr><th>Ingredient</th><td>${esc(x.label || d[0].split(' · ')[0])}</td></tr><tr><th>Net quantity &amp; MRP</th><td id="v2Mrp">As shown on each pack above (incl. of all taxes)</td></tr><tr><th>Manufactured &amp; packed by</th><td>Game of Bones (Anjan Sahu), Kalyan West, Thane District, Maharashtra 421301</td></tr><tr><th>Country of origin</th><td>India</td></tr><tr><th>Best before</th><td>12 months from the date of manufacture (printed on the pack)</td></tr><tr><th>Customer care</th><td>Anjan Sahu · <a href="tel:+919082503295">+91 90825 03295</a> · <a href="mailto:helpgameofbones@gmail.com">helpgameofbones@gmail.com</a></td></tr></table><p class="v2-note">For animal consumption only. Not for human consumption.</p>`]);
     sec.push(['Delivery & returns', '<ul><li>Dispatched in 1–2 working days; tracking by SMS / WhatsApp.</li><li>Free delivery on full packs. ₹30 off when you pay online, or pay cash on delivery (₹40 fee).</li><li>If something arrives damaged or isn’t right, message us with your order number and we’ll help.</li></ul>']);
     if (x.faq && !document.getElementById('gobFaq')) sec.push(['Questions', x.faq.map(([q, a]) => `<p><b>${esc(q)}</b><br>${esc(a)}</p>`).join('')]);
     return `<section class="v2-acc" id="v2Acc" aria-label="${esc(name)} details">${sec.map(([h, b, o]) => `<details${o ? ' open' : ''}><summary>${h}</summary><div class="v2-body">${b}</div></details>`).join('')}<p class="v2-help">Still unsure? <a href="https://wa.me/919082503295?text=${encodeURIComponent('Hi Game of Bones, I have a question about ' + name)}" target="_blank" rel="noreferrer">WhatsApp us</a>. A real person replies.</p></section>`;
@@ -221,7 +238,7 @@
     // replace the generic accordion with the product-specific one
     const oldAcc = $('.accordion');
     const anchor = $('#gobWhy') || $('.detail');
-    if (anchor && !$('#v2Acc')) anchor.insertAdjacentHTML('afterend', accordion(id, d));
+    if (anchor && !$('#v2Acc')) { anchor.insertAdjacentHTML('afterend', accordion(id, d)); fillMrp([...document.querySelectorAll('#packOptions .option')]); }
     if (oldAcc) oldAcc.classList.add('v2-hidden');
 
     // complementary products instead of the generic "make it a bundle" block

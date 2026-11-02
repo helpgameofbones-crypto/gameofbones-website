@@ -5,7 +5,7 @@
 /* Hero */
 .tb-hero{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(24px,4vw,56px);align-items:center;padding:clamp(36px,6vw,72px) max(4vw,20px);background:var(--cream,#f7f0e4)}
 .tb-hero h1{margin:0 0 14px;font-size:clamp(34px,5.2vw,62px);line-height:1.02;letter-spacing:-.02em}
-.tb-hero h1 em{font-style:normal;color:var(--gold,#bd812a)}
+.tb-hero h1 em{font-style:normal;color:#96620f}
 .tb-lead{margin:0 0 20px;max-width:560px;color:var(--ink-soft,#245b42);font-size:clamp(15px,1.4vw,18px);line-height:1.55}
 .tb-chips{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
 .tb-chips li{display:inline-flex;align-items:center;gap:6px;padding:8px 13px;border:1px solid var(--line);border-radius:999px;background:var(--paper,#fffdf8);font-size:13px;font-weight:700}
@@ -33,7 +33,7 @@
 .tb-card-media img{width:100%;height:100%;object-fit:cover}
 .tb-badges{position:absolute;top:10px;left:10px;display:flex;flex-wrap:wrap;gap:5px}
 .tb-badge{padding:4px 8px;border-radius:999px;background:rgba(255,253,248,.95);color:var(--ink);font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
-.tb-badge.off{background:var(--gold);color:#fff}
+.tb-badge.off{background:#9a6418;color:#fff}
 .tb-badge.cat{background:#e8eefc;color:#28407a}
 .tb-card-body{display:flex;flex:1;flex-direction:column;gap:8px;padding:14px 16px 16px}
 .tb-card-top{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
@@ -47,7 +47,7 @@
 .tb-price{display:flex;align-items:baseline;gap:7px}
 .tb-price strong{font-size:20px}
 .tb-price s{color:var(--muted);font-size:13px}
-.tb-add{min-height:42px;padding:0 18px;border:0;border-radius:999px;background:var(--gold);color:#fff;font:800 12px/1 var(--body);letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+.tb-add{min-height:42px;padding:0 18px;border:0;border-radius:999px;background:#9a6418;color:#fff;font:800 12px/1 var(--body);letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
 .tb-add:disabled{opacity:.45;cursor:not-allowed}
 .tb-qty{display:inline-flex;align-items:center;border:1px solid var(--ink);border-radius:999px;overflow:hidden}
 .tb-qty button{width:38px;height:40px;border:0;background:transparent;color:var(--ink);font-size:18px;font-weight:700;cursor:pointer}

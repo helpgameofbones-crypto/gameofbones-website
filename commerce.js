@@ -311,7 +311,7 @@ function prefillCheckoutFromAccount(account,token){
   const form=document.querySelector('#checkoutForm');if(!form||!account)return
   const set=(sel,val)=>{const el=form.querySelector(sel);if(!el||val==null||!String(val).trim()||String(el.value||'').trim())return;el.value=String(val).trim();el.dispatchEvent(new Event('input',{bubbles:true}));el.dispatchEvent(new Event('change',{bubbles:true}))}
   const p=account.profile||{},parts=String(p.name||'').trim().split(/\s+/)
-  set('[autocomplete="given-name"]',parts[0]);set('[autocomplete="family-name"]',parts.slice(1).join(' '))
+  set('[autocomplete="name"]',parts.join(' '))
   set('[autocomplete="email"]',p.email)
   let phone='';try{let b=String(token).split('.')[0].replace(/-/g,'+').replace(/_/g,'/');while(b.length%4)b+='=';phone=String(JSON.parse(atob(b)).phone||'').replace(/\D/g,'').slice(-10)}catch(_){}
   set('[autocomplete="tel"]',phone)

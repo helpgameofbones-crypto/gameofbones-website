@@ -29,7 +29,7 @@
 .dog-modal[hidden]{display:none}
 .dog-card{position:relative;width:min(440px,100%);max-height:calc(100vh - 32px);overflow:auto;border-radius:18px;background:var(--paper,#fffdf8);color:var(--ink,#102c22);box-shadow:0 24px 60px rgba(0,0,0,.25);padding:26px 22px 22px}
 .dog-card h2{margin:4px 0 8px;font-family:var(--display,Fraunces,Georgia,serif);font-size:26px;line-height:1.1}
-.dog-card .eyebrow{margin:0;color:var(--gold,#bd812a)}
+.dog-card .eyebrow{margin:0;color:#96620f}
 .dog-card p.dog-lead{margin:0 0 16px;color:var(--ink-soft,#245b42);font-size:15px;line-height:1.5}
 .dog-offer{display:flex;gap:10px;align-items:center;margin:0 0 16px;padding:10px 12px;border:1px dashed var(--gold,#bd812a);border-radius:12px;background:#fff6dc;font-size:14px;font-weight:700}
 .dog-offer b{font-size:20px}

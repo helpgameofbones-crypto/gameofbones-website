@@ -44,7 +44,7 @@
 .prepare-step .step-num,
 .slow-dry-step .step-num,
 .check-step .step-num,
-.pack-step .step-num { color: var(--gold); }
+.pack-step .step-num { color: #96620f; }
 
 .source-step p,
 .prepare-step p,

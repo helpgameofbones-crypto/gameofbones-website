@@ -2,12 +2,12 @@
 .hv2{--line:rgba(16,44,34,.14);--display:Fraunces,Georgia,serif;--body:"DM Sans",system-ui,sans-serif;font-family:var(--body);color:var(--ink);background:var(--cream)}
 .hv2 img{display:block;max-width:100%;height:auto}.hv2 a{color:inherit}
 .hv2 .wrap{max-width:1120px;margin:0 auto;padding:0 18px}
-.hv2 .eyebrow{font-size:12px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--gold);margin:0 0 8px}
+.hv2 .eyebrow{font-size:12px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:#96620f;margin:0 0 8px}
 .hv2 h1,.hv2 h2,.hv2 h3{font-family:var(--display);line-height:1.05;margin:0;letter-spacing:-.01em}
 .hv2 h2{font-size:clamp(28px,7.4vw,44px);margin-bottom:10px}
 .hv2 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:0 22px;border-radius:12px;font-weight:800;font-size:15.5px;text-decoration:none;border:0;cursor:pointer}
 .hv2 .btn.main{background:var(--ink);color:#fff}
-.hv2 .btn.gold{background:var(--gold);color:#fff}
+.hv2 .btn.gold{background:#9a6418;color:#fff}
 .hv2 .btn.line{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
 .hv2 .btn.light{background:var(--paper);color:var(--ink)}
 .hv2 .h-hero{display:grid;gap:0}
@@ -15,7 +15,7 @@
 .hv2 .h-hero-img img{width:100%;height:100%;object-fit:cover;object-position:50% 72%}
 .hv2 .h-hero-copy{padding:18px 18px 24px}
 .hv2 .h-hero h1{font-size:clamp(36px,10vw,64px)}
-.hv2 .h-hero h1 em{font-style:italic;color:var(--gold)}
+.hv2 .h-hero h1 em{font-style:italic;color:#96620f}
 .hv2 .h-hero p.sub{font-size:16.5px;color:var(--ink2);margin:12px 0 16px;max-width:520px}
 .hv2 .offer{display:inline-flex;align-items:center;gap:8px;background:var(--gold2);border-radius:99px;padding:7px 14px;font-size:14px;font-weight:700;margin:0 0 16px}
 .hv2 .offer code{font:inherit;background:var(--paper);border:1px dashed var(--gold);border-radius:6px;padding:0 6px}
@@ -96,7 +96,7 @@
 .hv2 .faq details{background:var(--paper);border:1px solid var(--line);border-radius:12px;margin-bottom:8px}
 .hv2 .faq summary{list-style:none;cursor:pointer;padding:15px 16px;font-weight:800;font-size:15.5px;display:flex;justify-content:space-between;gap:12px}
 .hv2 .faq summary::-webkit-details-marker{display:none}
-.hv2 .faq summary::after{content:"+";color:var(--gold);font-size:20px;line-height:1}
+.hv2 .faq summary::after{content:"+";color:#96620f;font-size:20px;line-height:1}
 .hv2 .faq details[open] summary::after{content:"–"}
 .hv2 .faq p{margin:0;padding:0 16px 16px;font-size:14.5px;color:var(--ink2)}
 @media(min-width:880px){.hv2 .faq-grid{display:grid;grid-template-columns:1fr 1.4fr;gap:48px}
@@ -126,7 +126,7 @@
 .hv2 .dog-tile{margin:0;background:var(--paper);border:1px solid var(--line);border-radius:14px;overflow:hidden}
 .hv2 .dog-tile img{width:100%;aspect-ratio:1/1;object-fit:cover;height:auto}
 .hv2 .dog-tile figcaption{padding:8px 10px 10px;font-size:12.5px;line-height:1.35;color:var(--ink2)}
-.hv2 .dog-tile figcaption b{color:var(--gold);font-size:12px;margin-right:4px}
+.hv2 .dog-tile figcaption b{color:#96620f;font-size:12px;margin-right:4px}
 .hv2 .dog-tile figcaption span{display:block;margin-top:3px;color:var(--ink)}
 .hv2 .dog-tile figcaption small{display:block;margin-top:3px;color:var(--muted)}
 @media(min-width:880px){.hv2 .dogs-grid{grid-template-columns:repeat(4,1fr);gap:14px}}

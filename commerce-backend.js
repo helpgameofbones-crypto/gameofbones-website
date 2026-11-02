@@ -9,7 +9,7 @@
   if (!form || !window.GOB_API) return;
   const get = selector => form.querySelector(selector)?.value.trim() || '';
   const phone = () => get('[autocomplete="tel"]').replace(/\D/g, '').replace(/^91/, '');
-  const fullName = () => [get('[autocomplete="given-name"]'), get('[autocomplete="family-name"]')].filter(Boolean).join(' ');
+  const fullName = () => get('[autocomplete="name"]').replace(/\s+/g, ' ');
   const items = () => cart().map(line => {
     // Keep the product snapshot that was added to the cart. Catalogue edits
     // must not silently change a customer's item, title or price at checkout.
@@ -46,7 +46,7 @@
   const reference = () => `GOB-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
   const missingFields = () => {
     const missing = [];
-    if (!get('[autocomplete="given-name"]') || !get('[autocomplete="family-name"]')) missing.push('name');
+    if (fullName().length < 2) missing.push('name');
     if (!/^\d{10}$/.test(phone())) missing.push('10-digit mobile number');
     // Email is optional (receipts only); if given it must look valid.
     if (get('[autocomplete="email"]') && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(get('[autocomplete="email"]'))) missing.push('a valid email (or leave it blank)');

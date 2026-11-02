@@ -614,6 +614,24 @@
       ]
     },
     {
+      "source": "/(.*)\\.(webp|jpg|jpeg|png|gif|svg|ico|avif|mp4|webm|woff2|woff)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=2592000"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)\\.(js|css)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, stale-while-revalidate=604800"
+        }
+      ]
+    },
+    {
       "source": "/product-bundle.(.*)",
       "headers": [
         {

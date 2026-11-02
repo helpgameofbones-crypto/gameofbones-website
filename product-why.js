@@ -190,7 +190,7 @@
   const css = `
   body.gob-why-on .key-benefits,body.gob-why-on .benefit-panel,body.gob-why-on .nutrient-panel,body.gob-why-on .serve-panel{display:none!important}
   .gob-why{max-width:1180px;margin:0 auto;padding:28px 18px 8px;color:#102c22}
-  .gob-why .eyebrow{margin:0 0 6px;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#bd812a}
+  .gob-why .eyebrow{margin:0 0 6px;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#96620f}
   .gob-why h2{margin:0 0 8px;font-size:clamp(26px,7vw,40px);line-height:1.08}
   .gob-why .lead{margin:0 0 16px;font-size:15px;line-height:1.5;color:#36473f;max-width:640px}
   .gob-why ol{list-style:none;margin:0;padding:0;display:grid;gap:8px}
@@ -201,11 +201,11 @@
   .gob-why details{padding:0!important;margin-top:8px;border:1px solid rgba(16,44,34,.12);border-radius:12px;background:#fffdf8}
   .gob-why details>summary{cursor:pointer;list-style:none;padding:12px 14px!important;min-height:0!important;height:auto!important;margin:0!important;line-height:1.3;font-weight:800;font-size:14px;display:flex;justify-content:space-between;align-items:center}
   .gob-why details>summary::-webkit-details-marker{display:none}
-  .gob-why details>summary:after{content:'+';font-size:20px;line-height:1;color:#bd812a}
+  .gob-why details>summary:after{content:'+';font-size:20px;line-height:1;color:#96620f}
   .gob-why details[open]>summary:after{content:'–'}
   .gob-why details p{margin:0;padding:0 14px 14px;font-size:13.5px;line-height:1.5;color:#3f5249}
-  .gob-why .guide{margin:14px 0 0;font-weight:800;font-size:14px}.gob-why .guide a{color:#bd812a;text-decoration:underline;text-underline-offset:3px}
-  .gob-why .note{margin:12px 0 0;font-size:12px;line-height:1.45;color:#6b7a72}
+  .gob-why .guide{margin:14px 0 0;font-weight:800;font-size:14px}.gob-why .guide a{color:#96620f;text-decoration:underline;text-underline-offset:3px}
+  .gob-why .note{margin:12px 0 0;font-size:12px;line-height:1.45;color:#4f6158}
   @media(min-width:900px){.gob-why{padding:48px 24px 16px}.gob-why ol{grid-template-columns:repeat(3,1fr);gap:12px}.gob-why li{grid-template-columns:1fr;padding:18px}.gob-why .more{display:grid;grid-template-columns:1fr 1fr;gap:12px}.gob-why details{margin-top:12px}}
   `;
 

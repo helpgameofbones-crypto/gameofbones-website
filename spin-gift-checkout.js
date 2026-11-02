@@ -78,7 +78,7 @@
   let claimPromise = null, claimedKey = '', claimError = '';
   async function claimAtCheckout() {
     const u = unclaimedPrize(); if (!form || !u) return null;
-    const name = [value('[autocomplete="given-name"]'), value('[autocomplete="family-name"]')].filter(Boolean).join(' ') || value('[autocomplete="name"]');
+    const name = value('[autocomplete="name"]') || value('[autocomplete="name"]');
     const email = value('[autocomplete="email"]').toLowerCase();
     const phone = value('[autocomplete="tel"]').replace(/\D/g, '').slice(-10);
     if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !/^[6-9]\d{9}$/.test(phone)) return null;
