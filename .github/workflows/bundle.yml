@@ -1,0 +1,51 @@
+# Rebuilds the combined CSS/JS files ("bundles") after every change on main.
+#
+# The homepage, cart, checkout and product pages each load one bundle file that is
+# made by joining site.js, site.css, commerce.js, header-navigation.js, product-v2.js
+# and others (lists in scripts/bundle-page-assets.py and scripts/bundle-product-assets.py).
+# If one of those files changes but the bundles are not rebuilt, the live pages keep the
+# old code. This workflow runs the bundler and, if anything changed, commits the new
+# bundles and updated pages back to main. Vercel then deploys that commit.
+#
+# Commits made here use the built-in GITHUB_TOKEN, which never re-triggers workflows,
+# so this cannot loop.
+name: Rebuild bundles
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**.js'
+      - '**.css'
+      - '**.html'
+      - 'scripts/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: rebuild-bundles
+  cancel-in-progress: false
+
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Rebuild bundles
+        run: python3 scripts/bundle-page-assets.py
+
+      - name: Commit if anything changed
+        run: |
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Bundles already up to date."
+            exit 0
+          fi
+          git config user.name "gob-bundler"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Rebuild bundles (automatic)"
+          git pull --rebase origin main
+          git push origin HEAD:main
