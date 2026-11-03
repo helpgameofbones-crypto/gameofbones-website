@@ -8,14 +8,9 @@ Static site on Vercel (gameofbones.in). `/api/*` is proxied to gameofbones-admin
 - Never publish fake reviews, testimonials or claims.
 
 ## Product pages – IMPORTANT
-Product pages (`product.html` and `seo-static/products/*.html`) load ONE bundled CSS and ONE bundled JS file (`product-bundle.<hash>.css/.js`).
-After editing ANY file listed in `scripts/bundle-product-assets.py` (site.js, product-v2.js/css, conversion-extras.js, header-navigation.js, product-hero.js, site.css, …) or regenerating the static product pages, run:
+Product pages (`product.html`, `seo-static/products/*.html`), the homepage, cart and checkout each load ONE bundled CSS and ONE bundled JS file (`product-/home-/cart-/checkout-bundle.<hash>.css/.js`), built from the files listed at the top of `scripts/bundle-page-assets.py` and `scripts/bundle-product-assets.py` (site.js, site.css, header-navigation.js, commerce.js, product-v2.js, trust.js, …).
 
-    python3 scripts/bundle-page-assets.py
-
-(This also bundles the homepage, cart and checkout into `home-/cart-/checkout-bundle.<hash>.css/.js`, and then runs bundle-product-assets.py. The file lists are at the top of each script.)
-
-and upload the new bundle files plus index.html, cart.html, checkout.html, product.html and all product pages. Otherwise those pages keep the old code.
+The bundles rebuild AUTOMATICALLY: `.github/workflows/bundle.yml` runs `python3 scripts/bundle-page-assets.py` on every push to main and commits "Rebuild bundles (automatic)" if anything changed; Vercel deploys that commit about a minute later. So after editing a bundled file you only upload that file. You may still run the script yourself and upload the results (the workflow then finds nothing to do). If the workflow fails (GitHub → Actions), the live pages keep the previous bundles until it is fixed.
 
 ## Copy and brand rules
 - Health wording: "naturally contains"; no medical claims.
