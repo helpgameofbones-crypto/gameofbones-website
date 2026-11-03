@@ -11,9 +11,11 @@ Static site on Vercel (gameofbones.in). `/api/*` is proxied to gameofbones-admin
 Product pages (`product.html` and `seo-static/products/*.html`) load ONE bundled CSS and ONE bundled JS file (`product-bundle.<hash>.css/.js`).
 After editing ANY file listed in `scripts/bundle-product-assets.py` (site.js, product-v2.js/css, conversion-extras.js, header-navigation.js, product-hero.js, site.css, …) or regenerating the static product pages, run:
 
-    python3 scripts/bundle-product-assets.py
+    python3 scripts/bundle-page-assets.py
 
-and upload the new bundle files plus all product pages. Otherwise product pages keep the old code.
+(This also bundles the homepage, cart and checkout into `home-/cart-/checkout-bundle.<hash>.css/.js`, and then runs bundle-product-assets.py. The file lists are at the top of each script.)
+
+and upload the new bundle files plus index.html, cart.html, checkout.html, product.html and all product pages. Otherwise those pages keep the old code.
 
 ## Copy and brand rules
 - Health wording: "naturally contains"; no medical claims.

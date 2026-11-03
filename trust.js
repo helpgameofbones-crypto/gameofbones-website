@@ -58,6 +58,15 @@
     faq.insertAdjacentHTML('beforebegin', `<section class="s" id="gobReviews" style="padding-top:0"><div class="wrap"><div class="row-head"><div><p class="eyebrow">Reviews</p><h2>What pet parents say</h2></div>${o.count ? `<p class="gob-rv-sum">${stars(o.average)} <b>${Number(o.average).toFixed(1)}</b> from ${o.count} reviews</p>` : ''}</div><div class="gob-rv-row">${cards}</div><p class="gob-rv-note">Every review is from a real customer and is checked before it appears.</p></div></section>`);
   }
   // ---------- 6. cart + checkout reassurance
+  // Checkout doesn't load header-navigation.js, so define the same payment-logo row here if it's missing.
+  // Keep in step with header-navigation.js (PAY list).
+  if (typeof window.GOB_payRow !== 'function') {
+    const PAY = [['upi','UPI'],['googlepay','Google Pay'],['phonepe','PhonePe'],['paytm','Paytm'],['visa','Visa'],['mastercard','Mastercard'],['rupay','RuPay'],['maestro','Maestro']];
+    const EXTRA = [['Net banking','<path d="M3 10h18M5 10v8M9 10v8M15 10v8M19 10v8M3 20h18M12 3l9 5H3z"/>'],['Wallets','<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M16 12h5M3 9h14"/>'],['Cash on delivery','<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/>']];
+    const LOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3" stroke="#bd812a"/></svg>';
+    const payRow = extra => `<div class="gob-pay${extra ? ' ' + extra : ''}" aria-label="Payment methods we accept"><p class="gob-pay-t">${LOCK}<span>Secure payments by Razorpay</span></p><ul class="gob-pay-logos">${PAY.map(([k, n]) => `<li class="gob-pay-${k}"><img src="/assets/pay/${k}.svg" alt="${n}" width="54" height="34" loading="lazy" decoding="async"></li>`).join('')}</ul><ul class="gob-pay-more">${EXTRA.map(([n, d]) => `<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>${n}</li>`).join('')}</ul></div>`;
+    window.GOB_payRow = payRow;
+  }
   function cartCheckout() {
     const pay = typeof window.GOB_payRow === 'function' ? window.GOB_payRow('gob-pay-cart') : '';
     const cart = document.querySelector('.cart-assurance');

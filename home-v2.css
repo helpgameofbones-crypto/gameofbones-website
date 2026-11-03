@@ -130,3 +130,4 @@
 .hv2 .dog-tile figcaption span{display:block;margin-top:3px;color:var(--ink)}
 .hv2 .dog-tile figcaption small{display:block;margin-top:3px;color:var(--muted)}
 @media(min-width:880px){.hv2 .dogs-grid{grid-template-columns:repeat(4,1fr);gap:14px}}
+.hv2 .h-hero-img picture{display:contents}

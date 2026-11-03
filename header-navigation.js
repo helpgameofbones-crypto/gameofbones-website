@@ -59,7 +59,7 @@
   [300, 1500, 4000].forEach(ms => window.setTimeout(addPayments, ms));
   if (!document.querySelector('script[data-gob-trust]')) {
     const tl = document.createElement('link'); tl.rel = 'stylesheet'; tl.href = '/trust.css?v=2'; document.head.append(tl);
-    const ts = document.createElement('script'); ts.src = '/trust.js?v=1'; ts.defer = true; ts.dataset.gobTrust = '1'; document.head.append(ts);
+    const ts = document.createElement('script'); ts.src = '/trust.js?v=2'; ts.defer = true; ts.dataset.gobTrust = '1'; document.head.append(ts);
   }
 
   const nav = document.querySelector('.nav');
