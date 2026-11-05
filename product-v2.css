@@ -135,3 +135,16 @@ body.gob-v2 #restockNotifyProduct .restock-notify-button:hover { background: #10
 .product-info:has(.gob-pdp-rating) #productRating{display:none!important}
 /* Smallest phones: keep "Add to treat jar · price" on one line */
 @media (max-width: 380px) { body.gob-v2 .buy-row { grid-template-columns: 92px minmax(0, 1fr) !important; } body.gob-v2 .buy-row > #addProduct { white-space: nowrap; letter-spacing: .02em; padding-inline: 8px; } }
+/* Shorter details column (Nov 2026) */
+/* Reviews: full width under the photos and details, two columns on desktop */
+.review-box.review-band { box-sizing: border-box; width: calc(min(100%, 1260px) - 2 * max(24px, 4vw)); margin: 8px auto 56px; padding: clamp(22px, 3vw, 40px); }
+@media (min-width: 900px) {
+  .review-box.review-band { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); column-gap: clamp(28px, 4vw, 64px); align-items: start; }
+  .review-box.review-band > * { grid-column: 1; }
+  .review-box.review-band > .product-review-feed { grid-column: 2; grid-row: 1 / span 6; margin-top: 0; }
+}
+@media (max-width: 560px) { .review-box.review-band { width: calc(100% - 32px); } }
+/* The rating already sits under the product name: skip the repeat summary line */
+.product-info:has(.gob-pdp-rating) #quickReviewProof { display: none !important; }
+/* Payment logos already sit beside "Add to treat jar": no second copy in the footer */
+body.gob-v2 footer .gob-pay { display: none; }

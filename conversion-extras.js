@@ -55,8 +55,11 @@
       <button class="wish-btn" id="wishBtn">Sign in to save favourites</button>`);
     document.querySelector('#wishBtn')?.addEventListener('click', () => location.assign('login.html'));
 
-    document.querySelector('.accordion')?.insertAdjacentHTML('afterend', `
-      <section class="review-box" id="productReviewSection" aria-labelledby="reviewFlowTitle">
+    // Reviews sit full width under the photos and details on product pages, so the
+    // details column stays short; other layouts keep them after the accordion.
+    const reviewSpot = document.querySelector('.detail') || document.querySelector('.accordion');
+    reviewSpot?.insertAdjacentHTML('afterend', `
+      <section class="review-box${reviewSpot?.classList.contains('detail') ? ' review-band' : ''}" id="productReviewSection" aria-labelledby="reviewFlowTitle">
         <p class="eyebrow">Notes from dog parents</p>
         <h2 id="reviewFlowTitle">Reviews from real treat time.</h2>
         <p class="review-intro">New reviews can only be written by customers with a delivered order, and every review is checked before it appears.</p>
