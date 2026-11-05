@@ -83,6 +83,9 @@ body{overflow-x:clip}
 .detail{width:min(100%,1260px);max-width:1260px;margin:0 auto;padding:22px max(24px,4vw) 72px;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(28px,4vw,64px);align-items:start;overflow-x:clip}
 .detail,.gallery,.product-info,.main-product-image{min-width:0}
 .gallery{position:static;top:auto;width:100%;max-width:100%;grid-template-columns:76px minmax(0,1fr);gap:12px}
+/* Desktop: the photos stay in view while the details column scrolls, so the left side is never blank.
+   138px = offer bar + sticky header (114px) + 24px gap, so the photos never slide under the header. */
+@media(min-width:1081px) and (min-height:640px){.gallery{position:sticky;top:138px;align-self:start}}
 .gallery .thumbs{align-self:start;align-content:start;grid-auto-rows:76px;gap:12px}
 .gallery .thumb{width:76px;height:76px;min-height:76px;max-height:76px;overflow:hidden}
 .gallery .main-product-image{width:100%;max-width:100%}
