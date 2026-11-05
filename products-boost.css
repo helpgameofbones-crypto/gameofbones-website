@@ -23,3 +23,7 @@
   #liveCatalog .quick-add{width:100%;height:36px;min-width:0;font-size:12px}
   .bestseller-tag{font-size:12px}
 }
+
+/* Nov 2026: shop page lines as spaced items instead of dot-separated strings */
+.shop-trust-line{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 22px}
+.shop-needs{display:flex;flex-wrap:wrap;justify-content:center;align-items:baseline;gap:6px 18px}

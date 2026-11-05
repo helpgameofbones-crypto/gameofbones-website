@@ -42,7 +42,7 @@
         selectedPack = index;
         const pack = packs[index];
         packOptions.querySelectorAll('.option').forEach((button, buttonIndex) => button.classList.toggle('selected', buttonIndex === index));
-        addButton.textContent = `Add to treat jar · ₹${format(pack.price)}`;
+        addButton.textContent = `Add to treat jar (₹${format(pack.price)})`;
         const stickyPrice = document.querySelector('#stickyPrice');
         const stickyLabel = document.querySelector('#stickyPackLabel');
         if (stickyPrice) stickyPrice.textContent = `₹${format(pack.price)}`;

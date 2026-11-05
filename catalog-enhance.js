@@ -50,7 +50,7 @@ function hydrateProduct() {
   }
   setText('#productName', product.n);
   setText('#productPrice', product.p ? `₹${Number(product.p).toLocaleString('en-IN')}` : 'Contact us');
-  setText('#productTag', `${product.c} · Made in Kalyan`);
+  setText('#productTag', `${product.c}, made in Kalyan`);
   setText('#productDesc', product.d);
   const contentsSection = document.querySelector('#bundleContents');
   const contentsList = document.querySelector('#bundleContentsList');

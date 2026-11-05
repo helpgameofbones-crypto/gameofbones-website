@@ -5,7 +5,7 @@
   const cardOffer = card => {
     if (card.querySelector('[data-bogo-card]') || !eligible(card.querySelector('h3')?.textContent)) return;
     const badge = document.createElement('p'); badge.dataset.bogoCard = '';
-    badge.style.cssText = 'margin:10px 0 0;color:#a84312;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase';
+    badge.style.cssText = 'margin:10px 0 0;color:#a84312;font-size:12px;font-weight:800';
     badge.textContent = 'Buy 1 Get 1 · no code needed';
     card.querySelector('.card-bottom')?.insertAdjacentElement('afterend', badge);
   };
