@@ -38,7 +38,7 @@ function renderProductMedia(){
     }else stage.innerHTML=`<img id="productImage" src="${item.src}" alt="${item.alt||item.label||'Product photo'}" width="1000" height="1000" decoding="async" fetchpriority="high">`
     count.textContent=`${index+1} of ${media.length} media`
   }
-  thumbs.innerHTML=media.map((item,index)=>`<button class="thumb media-thumb${index===0?' active':''}" type="button" aria-pressed="${index===0}" aria-label="View ${item.label||`media ${index+1}`}"><img src="${item.type==='video'?(item.poster||''):item.src}" alt="" width="120" height="120" loading="lazy" decoding="async"><span>${item.type==='video'?'▶':''}</span></button>`).join('')
+  thumbs.innerHTML=media.map((item,index)=>`<button class="thumb media-thumb${index===0?' active':''}" type="button" aria-pressed="${index===0}" aria-label="View ${item.label||`media ${index+1}`}"><img src="${item.type==='video'?(item.poster||''):item.src}" alt="" width="120" height="120" loading="lazy" decoding="async" fetchpriority="low"><span>${item.type==='video'?'▶':''}</span></button>`).join('')
   thumbs.querySelectorAll('.thumb').forEach((button,index)=>button.addEventListener('click',()=>select(index)))
   select(0)
 }

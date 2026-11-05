@@ -168,9 +168,14 @@
       if (cached && Date.now() - cached.at < CACHE_MS) { stock = cached.stock; apply(); return; }
     } catch (_) { /* ignore */ }
     try {
-      const response = await fetch('/api/public-products', { cache: 'no-store' });
-      if (!response.ok) return;
-      const payload = await response.json();
+      let payload;
+      if (window.GOB_API?.catalogue) {
+        payload = await window.GOB_API.catalogue(); // shares the page's one catalogue request
+      } else {
+        const response = await fetch('/api/public-products', { cache: 'no-store' });
+        if (!response.ok) return;
+        payload = await response.json();
+      }
       const map = {};
       (payload.products || []).forEach(product => {
         if (typeof product.in_stock !== 'boolean') return; // older API: no stock data yet

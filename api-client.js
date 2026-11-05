@@ -28,19 +28,32 @@
     if (!response.ok) throw new Error(data.error || 'The service could not complete that request.');
     return data;
   }
+  // Several page scripts ask for the same catalogue and reviews while the page
+  // builds. Share one request per page (for 60 seconds); a failed request is
+  // dropped so the next caller retries.
+  const sharedCache = new Map();
+  const shared = (key, load) => {
+    const hit = sharedCache.get(key);
+    const copy = data => (typeof structuredClone === 'function' ? structuredClone(data) : JSON.parse(JSON.stringify(data)));
+    if (hit && Date.now() - hit.at < 60000) return hit.promise.then(copy);
+    const promise = Promise.resolve().then(load);
+    sharedCache.set(key, { at: Date.now(), promise });
+    promise.catch(() => { if (sharedCache.get(key)?.promise === promise) sharedCache.delete(key); });
+    return promise.then(copy);
+  };
   const customerHeaders = () => {
     const token = window.sessionStorage.getItem('gob-customer-token');
     return token ? { Authorization: `Bearer ${token}` } : {};
   };
   const api = {
     base, request,
-    catalogue: async () => {
+    catalogue: () => shared('catalogue', async () => {
       if (!catalogueBase) throw new Error('The catalogue feed is not configured for this preview.');
       const response = await fetch(`${catalogueBase}/public-products`, { cache: 'no-store' });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(data.error || 'The catalogue could not be loaded.');
       return data;
-    },
+    }),
     blogs: async () => {
       if (!catalogueBase) throw new Error('The blog feed is not configured for this preview.');
       const response = await fetch(`${catalogueBase}/public-blogs`, { cache: 'no-store' });
@@ -57,7 +70,7 @@
     updateAccount: (token, body) => request('/customer-account', { method: 'PATCH', headers: { Authorization: `Bearer ${token}` }, body: JSON.stringify(body) }),
     customerReviews: token => request('/customer-reviews', { headers: { Authorization: `Bearer ${token}` } }),
     submitCustomerReview: (token, formData) => multipartRequest('/customer-reviews', token, formData),
-    publicProductReviews: product => request(`/public-product-reviews?product=${encodeURIComponent(product)}`),
+    publicProductReviews: product => shared(`reviews:${product}`, () => request(`/public-product-reviews?product=${encodeURIComponent(product)}`)),
     capture: body => request('/public-email-capture', { method: 'POST', body: JSON.stringify(body) }),
     contactInquiry: body => request('/contact-inquiries', { method: 'POST', body: JSON.stringify(body) }),
     spinWheel: body => request('/spin-wheel', { method: 'POST', body: JSON.stringify(body) }),
