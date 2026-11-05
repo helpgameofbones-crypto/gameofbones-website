@@ -17,6 +17,89 @@
 .policy-check input[type=checkbox],.payment-option input[type=radio],.footer-consent input[type=checkbox]{width:20px;height:20px;flex:none;accent-color:var(--ink)}
 /* Footer sign-up: keep "Join" on one line and easy to tap */
 .email-row button{flex:none;white-space:nowrap;min-height:44px;padding:0 4px 0 12px}
+
+/* Nov 2026: labels in normal case. Small labels, tags, buttons and nav links were set in
+   tracked capitals; they now read in the case they are written, without letter spacing.
+   To bring the capitals back, delete this block. */
+:root .account-tab,
+:root .account-field,
+:root .review-status,
+:root .review-form legend,
+:root .review-copy-label,
+:root .review-photo-label,
+:root .analytics-consent button,
+:root .journal-product-copy p,
+:root .journal-product-add,
+:root .journal-feature-stamp,
+:root .journal-filter,
+:root .journal-save,
+:root .journal-next button,
+:root .sale-badge,
+:root .bulk-discount span,
+:root .checkout-promo>label,
+:root .notice .gob-live-ticker span,
+:root .gob-pay-t,
+:root .login-trigger,
+:root .search-trigger,
+:root .toast.jar-toast b,
+:root .notice-track span,
+:root .hv2 .eyebrow,
+:root .hv2 .card .tag,
+:root .journal-grid a,
+:root .home-sale-badge,
+:root .dog-video-caption,
+:root .hm-k,
+:root .loyalty-earn span,
+:root .buy-tier strong small,
+:root .buy-tier span,
+:root .notice .mp-ticker b,
+:root .nutrient-grid small,
+:root .analysis-note span,
+:root .notice .offer-copy,
+:root .notice .offer-link,
+:root .pincode-checker label,
+:root .policy-columns h4,
+:root .policy-identity strong,
+:root .filter,
+:root .catalog-link,
+:root .spec small,
+:root .label-card small,
+:root .serve-point strong,
+:root .product-loyalty small,
+:root .media-count,
+:root .gallery-notes>p,
+:root .product-return a,
+:root .v2-fact small,
+:root .v2-tbl th,
+:root .option em,
+:root .value-stamp,
+:root .mobile-purchase-bar small,
+:root .reward-shortcut,
+:root .sale-price-presentation small,
+:root .notice,
+:root .brand small,
+:root .nav-links,
+:root .eyebrow,
+:root .button,
+:root .trust div,
+:root .text-link,
+:root .tag,
+:root .quote small,
+:root .footer h4,
+:root .chip,
+:root .confirmation-details dt,
+:root .tb-badge,
+:root .tb-add,
+:root .gob-rv-p,
+:root .gob-foot-h,
+:root .wheel-card .wheel-form-label,
+:root .wheel-again,
+:root .wheel-card .wheel-rewards-title,
+:root .wheel-card .wheel-rewards li span,
+:root .gob-facts small,
+:root .gob-why .eyebrow,
+:root .spin-gift-note strong{text-transform:none!important;letter-spacing:normal!important}
+:root .eyebrow,:root .hv2 .eyebrow,:root .gob-why .eyebrow{font-size:14px!important}
 /* ===== product-experience.css ===== */
 .catalog-filters{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 24px}.filter{min-height:44px;padding:0 14px;border:1px solid var(--line);background:var(--paper);color:var(--ink);font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}.filter.selected,.filter:hover{background:var(--ink);color:#fff}.catalog-desc{min-height:42px;margin:0 0 14px;color:var(--muted);font-size:13px;line-height:1.5}.catalog-link{font-size:12px;font-weight:800;color:#96620f;text-transform:uppercase;letter-spacing:.06em}.product-journey{overflow:hidden;background:var(--ink);color:#fffdf8}.journey-inner{max-width:1340px;margin:auto;padding:clamp(64px,8vw,112px) max(4vw,24px)}.journey-head{display:grid;grid-template-columns:1fr .7fr;gap:40px;align-items:end;margin-bottom:35px}.journey-head h2{font-family:var(--display);font-size:clamp(40px,5vw,68px);line-height:.96;letter-spacing:-.025em;margin:0}.journey-head p{color:#c8d3cc;margin:0;max-width:40ch}.spec-grid{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid rgba(255,255,255,.22)}.spec{min-height:190px;padding:24px;border-right:1px solid rgba(255,255,255,.22)}.spec:last-child{border:0}.spec svg{width:34px;height:34px;margin-bottom:28px;stroke:#e7bd68;fill:none;stroke-width:1.6}.spec small{display:block;color:#e7bd68;font-size:12px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}.spec strong{display:block;margin-top:7px;font-family:var(--display);font-size:27px;line-height:1.05}.label-test{display:grid;grid-template-columns:1fr 1fr;max-width:1340px;margin:auto;padding:clamp(64px,8vw,112px) max(4vw,24px);gap:0}.label-copy{padding:0 clamp(20px,6vw,100px) 0 0}.label-copy h2{font-family:var(--display);font-size:clamp(40px,4.6vw,64px);letter-spacing:-.025em;line-height:.96;margin:0 0 20px}.label-copy p{max-width:48ch;color:var(--muted)}.label-card{padding:clamp(26px,4vw,48px);background:var(--paper);border:1px solid var(--line);box-shadow:var(--shadow)}.label-card small{color:#96620f;font-weight:800;letter-spacing:.12em;text-transform:uppercase}.label-ingredient{margin:18px 0 0;font-family:var(--display);font-size:clamp(37px,4vw,58px);line-height:.95}.label-rule{display:flex;gap:13px;padding:18px 0;border-top:1px solid var(--line);margin-top:28px;color:var(--muted);font-size:14px}.label-rule svg{width:23px;height:23px;stroke:var(--gold);fill:none;stroke-width:2;flex:none}.serve-panel{max-width:1340px;margin:0 auto clamp(64px,8vw,112px);padding:0 max(4vw,24px)}.serve-card{display:grid;grid-template-columns:.8fr 1.2fr;background:#dce6d7;border:1px solid var(--line)}.serve-icon{min-height:270px;display:grid;place-items:center;background:#c7d8bf}.serve-icon svg{width:min(54%,215px);stroke:var(--ink);fill:none;stroke-width:1.4}.serve-copy{padding:clamp(28px,5vw,68px)}.serve-copy h2{font-family:var(--display);font-size:clamp(37px,4vw,57px);letter-spacing:-.025em;line-height:.96;margin:0 0 18px}.serve-copy p{color:var(--ink-soft);max-width:58ch}.serve-points{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-top:28px}.serve-point{padding-top:11px;border-top:1px solid rgba(16,44,34,.28);font-size:13px}.serve-point strong{display:block;font-size:12px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}@media(max-width:800px){.journey-head,.label-test,.serve-card{grid-template-columns:1fr}.label-copy{padding:0 0 30px}.spec-grid{grid-template-columns:repeat(2,1fr)}.spec:nth-child(2){border-right:0}.spec:nth-child(-n+2){border-bottom:1px solid rgba(255,255,255,.22)}.serve-icon{min-height:200px}.serve-points{grid-template-columns:1fr}}@media(max-width:520px){.spec-grid{grid-template-columns:1fr}.spec{border-right:0;border-bottom:1px solid rgba(255,255,255,.22)}.spec:last-child{border-bottom:0}.serve-points{gap:10px}.catalog-desc{min-height:auto}}
 /* ===== purchase-conversion.css ===== */
@@ -243,3 +326,16 @@ body.gob-v2 #restockNotifyProduct .restock-notify-button:hover { background: #10
 .product-info:has(.gob-pdp-rating) #productRating{display:none!important}
 /* Smallest phones: keep "Add to treat jar · price" on one line */
 @media (max-width: 380px) { body.gob-v2 .buy-row { grid-template-columns: 92px minmax(0, 1fr) !important; } body.gob-v2 .buy-row > #addProduct { white-space: nowrap; letter-spacing: .02em; padding-inline: 8px; } }
+/* Shorter details column (Nov 2026) */
+/* Reviews: full width under the photos and details, two columns on desktop */
+.review-box.review-band { box-sizing: border-box; width: calc(min(100%, 1260px) - 2 * max(24px, 4vw)); margin: 8px auto 56px; padding: clamp(22px, 3vw, 40px); }
+@media (min-width: 900px) {
+  .review-box.review-band { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); column-gap: clamp(28px, 4vw, 64px); align-items: start; }
+  .review-box.review-band > * { grid-column: 1; }
+  .review-box.review-band > .product-review-feed { grid-column: 2; grid-row: 1 / span 6; margin-top: 0; }
+}
+@media (max-width: 560px) { .review-box.review-band { width: calc(100% - 32px); } }
+/* The rating already sits under the product name: skip the repeat summary line */
+.product-info:has(.gob-pdp-rating) #quickReviewProof { display: none !important; }
+/* Payment logos already sit beside "Add to treat jar": no second copy in the footer */
+body.gob-v2 footer .gob-pay { display: none; }

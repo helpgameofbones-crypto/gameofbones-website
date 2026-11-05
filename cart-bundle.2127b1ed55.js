@@ -135,7 +135,7 @@ function closeCart(){document.querySelector('#cartDrawer')?.classList.remove('op
 // .html names. This also covers links injected by catalogue, cart and blog UI.
 const cleanPageUrls={'index.html':'/','products.html':'/products','product.html':'/product','our-story.html':'/our-story','bundles.html':'/bundles','blog.html':'/blog','contact.html':'/contact','rewards.html':'/rewards','track.html':'/track','learn.html':'/learn','cart.html':'/cart','checkout.html':'/checkout','login.html':'/login','account.html':'/account','policies.html':'/policies'};
 function cleanStorefrontUrls(root=document){const links=[...(root.matches?.('a[href]')?[root]:[]),...(root.querySelectorAll?.('a[href]')||[])];links.forEach(link=>{const raw=link.getAttribute('href');if(!raw||/^(?:#|mailto:|tel:|https?:|\/\/)/i.test(raw))return;const match=raw.match(/^([^?#]+)(.*)$/);if(!match)return;const cleaned=cleanPageUrls[match[1]];if(cleaned)link.setAttribute('href',cleaned+match[2])})}
-function ensureCart(){if(document.querySelector('#cartDrawer'))return;document.body.insertAdjacentHTML('beforeend','<div class="scrim" id="scrim"></div><aside class="drawer" id="cartDrawer" aria-label="Shopping treat jar"><div class="drawer-top"><h2>Your treat jar</h2><button class="close" data-close-cart aria-label="Close treat jar">×</button></div><div class="cart-items" id="cartItems"></div><div class="cart-total"><div><span>Subtotal</span><span id="cartTotal">₹0</span></div><a class="button" style="width:100%" href="/checkout">Checkout securely</a><a href="/cart" style="display:block;text-align:center;margin-top:10px;font-size:13px;text-decoration:underline">View or edit treat jar</a><p style="margin:8px 0 0;font-size:12px;text-align:center;opacity:.75">Free delivery on full packs · UPI, cards or Cash on Delivery</p></div></aside><div class="toast" id="toast" role="status"></div>')}
+function ensureCart(){if(document.querySelector('#cartDrawer'))return;document.body.insertAdjacentHTML('beforeend','<div class="scrim" id="scrim"></div><aside class="drawer" id="cartDrawer" aria-label="Shopping treat jar"><div class="drawer-top"><h2>Your treat jar</h2><button class="close" data-close-cart aria-label="Close treat jar">×</button></div><div class="cart-items" id="cartItems"></div><div class="cart-total"><div><span>Subtotal</span><span id="cartTotal">₹0</span></div><a class="button" style="width:100%" href="/checkout">Checkout securely</a><a href="/cart" style="display:block;text-align:center;margin-top:10px;font-size:13px;text-decoration:underline">View or edit treat jar</a><p style="margin:8px 0 0;font-size:12px;text-align:center;opacity:.75">Free delivery on full packs. Pay by UPI, card or cash on delivery.</p></div></aside><div class="toast" id="toast" role="status"></div>')}
 function enhanceHeader(){const actions=document.querySelector('.nav-actions'),links=document.querySelector('.nav-links');if(!actions)return;links?.classList.add('compact-nav');const track=links?.querySelector('a[href="track.html"]'),bundles=links?.querySelector('a[href="bundles.html"]');if(track&&bundles)bundles.insertAdjacentElement('afterend',track);if(!document.querySelector('.search-trigger'))actions.insertAdjacentHTML('afterbegin','<button class="search-trigger" type="button" aria-label="Search products" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.4"></circle><path d="m16 16 4.3 4.3"></path></svg><span>Search</span></button>');if(!document.querySelector('.login-trigger'))actions.insertAdjacentHTML('afterbegin',(window.GOB_SIGNED_IN?'<a class="login-trigger" href="/account">Account</a>':'<a class="login-trigger" href="login.html">Log in</a>'));actions.querySelector('.icon-btn')?.remove();const jar=actions.querySelector('.cart-trigger');if(jar&&!jar.dataset.jarReady){jar.dataset.jarReady='true';jar.setAttribute('aria-label','Open treat jar');jar.innerHTML='<svg class="jar-icon" viewBox="0 0 32 36" fill="none" aria-hidden="true"><path d="M9 8V5h14v3M7 9h18l2 22H5L7 9Z" stroke="currentColor" stroke-width="2"/><path d="M10 16h12M11 21h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="sr-only">Treat jar, </span><span class="jar-count" data-cart-count>0</span>'}if(!document.querySelector('link[data-gob-header]')){const styles=document.createElement('link');styles.rel='stylesheet';styles.href='header.css?v=header-4';styles.dataset.gobHeader='true';document.head.append(styles)}}
 function setupAnnouncement(){const bar=document.querySelector('.notice'),text=bar?.querySelector('span');if(!bar||!text||bar.dataset.ready)return;bar.dataset.ready='true';const copy=()=> 'Free delivery on full packs • ₹30 off when you pay online • MEGA20: 20% off ₹2,199+';bar.innerHTML='<div class="notice-track"><span></span></div>';const label=bar.querySelector('.notice-track span'),paint=()=>label.textContent=copy();paint()}
 function setupSearch(){const trigger=document.querySelector('.search-trigger');if(!trigger||document.querySelector('#productSearch'))return;document.body.insertAdjacentHTML('beforeend','<section class="search-sheet" id="productSearch" aria-hidden="true"><div class="search-panel" role="dialog" aria-modal="true" aria-labelledby="searchTitle"><div class="search-top"><div><p class="eyebrow">Find a treat</p><h2 id="searchTitle">Search the treat cupboard.</h2></div><button class="search-close" type="button" aria-label="Close search">×</button></div><label class="search-field" for="productSearchInput"><span class="sr-only">Search products</span><input id="productSearchInput" type="search" autocomplete="off" placeholder="Try chicken, goat or chew"><span>⌕</span></label><div class="search-results" id="productSearchResults"></div></div></section>');const sheet=document.querySelector('#productSearch'),input=document.querySelector('#productSearchInput'),results=document.querySelector('#productSearchResults');const products=()=>Object.entries(window.GOB_PRODUCTS||GOB_PRODUCTS);const render=value=>{const query=value.trim().toLowerCase(),matches=products().filter(([id,p])=>!query||`${p.name} ${p.tag||''}`.toLowerCase().includes(query)).slice(0,6);results.innerHTML=matches.length?matches.map(([id,p])=>`<a href="product.html?catalog=${encodeURIComponent(id)}"><img src="${p.image}" alt="${p.name||'Game of Bones treat'}"><span><b>${p.name}</b><small>${p.tag||'Single-ingredient treat'} · ${money(p.price)}</small></span><i>→</i></a>`).join(''):'<p>No treats found. Try “chicken” or “goat”.</p>'};const close=()=>{sheet.classList.remove('open');sheet.setAttribute('aria-hidden','true');trigger.setAttribute('aria-expanded','false');document.body.classList.remove('locked')};trigger.addEventListener('click',()=>{sheet.classList.add('open');sheet.setAttribute('aria-hidden','false');trigger.setAttribute('aria-expanded','true');document.body.classList.add('locked');render('');setTimeout(()=>input.focus(),10)});input.addEventListener('input',()=>render(input.value));sheet.querySelector('.search-close').addEventListener('click',close);sheet.addEventListener('click',event=>{if(event.target===sheet)close()});document.addEventListener('keydown',event=>{if(event.key==='Escape'&&sheet.classList.contains('open'))close()})}
@@ -248,6 +248,82 @@ document.addEventListener('DOMContentLoaded',installFormFeedback);
 
 (function loadPreferredSource(){if(document.querySelector('script[data-gob-pref]'))return;const s=document.createElement('script');s.src='/preferred-source.js?v=1';s.defer=true;s.dataset.gobPref='true';document.head.append(s)})();
 ;
+/* ===== header-navigation.js ===== */
+/* One complete navigation source for every customer-facing page. */
+(() => {
+  const navigation = [
+    ['/products', 'Shop'],
+    ['/dog-chews', 'Dog chews'],
+    ['/dog-training-treats', 'Training treats'],
+    ['/cat-treats', 'Cat treats'],
+    ['/our-story', 'Our story'],
+  ];
+  const tickerCopy = 'Free delivery on full packs, and ₹30 off when you pay online';
+
+  const installLiveTicker = () => {
+    const notice = document.querySelector('.notice');
+    if (!notice || notice.querySelector('.gob-live-ticker')) return;
+    notice.dataset.gobLiveTickerReady = 'true';
+    notice.innerHTML = '<div class="gob-live-ticker"><span></span></div>';
+    const label = notice.querySelector('.gob-live-ticker span');
+    const paint = () => {
+      label.textContent = tickerCopy;
+      requestAnimationFrame(() => document.documentElement.style.setProperty('--gob-notice-height', `${notice.offsetHeight}px`));
+    };
+    paint();
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', installLiveTicker, { once: true });
+  else installLiveTicker();
+  window.setTimeout(installLiveTicker, 120);
+  if (!document.querySelector('link[data-gob-header-navigation]')) {
+    const stylesheet = document.createElement('link');
+    stylesheet.rel = 'stylesheet';
+    stylesheet.href = 'header-navigation.css?v=live-ticker-7';
+    stylesheet.dataset.gobHeaderNavigation = 'true';
+    document.head.append(stylesheet);
+  }
+  // Bone Run lives in the footer now (the floating launcher is hidden). It still opens once per visit on its own.
+  const addPlayLink = () => {
+    const shop = [...document.querySelectorAll('footer h4')].find(h => /shop/i.test(h.textContent))?.parentElement;
+    if (!shop || shop.querySelector('[data-play-bonerun]')) return;
+    shop.insertAdjacentHTML('beforeend', '<a href="#" data-play-bonerun>Play &amp; win a treat</a>');
+    shop.querySelector('[data-play-bonerun]').addEventListener('click', event => {
+      event.preventDefault();
+      if (typeof window.GOB_openSpinWheel === 'function') window.GOB_openSpinWheel();
+      else document.addEventListener('gob:wheel-ready', () => window.GOB_openSpinWheel?.(), { once: true });
+    });
+  };
+  [400, 1500, 4000].forEach(ms => window.setTimeout(addPlayLink, ms));
+
+  // Accepted payment methods (Razorpay + cash on delivery): footer on every page, and under "Add to treat jar" on product pages.
+  const PAY = [['upi','UPI'],['googlepay','Google Pay'],['phonepe','PhonePe'],['paytm','Paytm'],['visa','Visa'],['mastercard','Mastercard'],['rupay','RuPay'],['maestro','Maestro']];
+  const EXTRA = [['Net banking','<path d="M3 10h18M5 10v8M9 10v8M15 10v8M19 10v8M3 20h18M12 3l9 5H3z"/>'],['Wallets','<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M16 12h5M3 9h14"/>'],['Cash on delivery','<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/>']];
+  const LOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3" stroke="#bd812a"/></svg>';
+  const payRow = extra => `<div class="gob-pay${extra ? ' ' + extra : ''}" aria-label="Payment methods we accept"><p class="gob-pay-t">${LOCK}<span>Secure payments by Razorpay</span></p><ul class="gob-pay-logos">${PAY.map(([k, n]) => `<li class="gob-pay-${k}"><img src="/assets/pay/${k}.svg" alt="${n}" width="54" height="34" loading="lazy" decoding="async"></li>`).join('')}</ul><ul class="gob-pay-more">${EXTRA.map(([n, d]) => `<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>${n}</li>`).join('')}</ul></div>`;
+  window.GOB_payRow = payRow;
+  const addPayments = () => {
+    const bottom = document.querySelector('footer .footer-bottom');
+    if (bottom && !document.querySelector('footer .gob-pay')) bottom.insertAdjacentHTML('beforebegin', payRow('gob-pay-footer'));
+    const ship = document.getElementById('v2Ship');
+    if (ship && !ship.querySelector('.gob-pay')) ship.insertAdjacentHTML('beforeend', payRow('gob-pay-product'));
+  };
+  [300, 1500, 4000].forEach(ms => window.setTimeout(addPayments, ms));
+  if (!document.querySelector('script[data-gob-trust]')) {
+    const tl = document.createElement('link'); tl.rel = 'stylesheet'; tl.href = '/trust.css?v=2'; document.head.append(tl);
+    const ts = document.createElement('script'); ts.src = '/trust.js?v=2'; ts.defer = true; ts.dataset.gobTrust = '1'; document.head.append(ts);
+  }
+
+  const nav = document.querySelector('.nav');
+  if (!nav || nav.dataset.minimalHeader === 'true') return;
+  const pathname = location.pathname.toLowerCase();
+  const activeHref = pathname.endsWith('product.html') || pathname === '/product' ? '/products' : navigation.find(([href]) => href === '/' ? pathname === '/' || pathname.endsWith('/index.html') : pathname === href || pathname.endsWith(href + '.html'))?.[0];
+  const links = nav.querySelector('.nav-links') || document.createElement('div');
+  links.className = 'nav-links compact-nav';
+  links.setAttribute('aria-label', 'Site sections');
+  links.innerHTML = navigation.map(([href, label]) => `<a${href === activeHref ? ' class="active"' : ''} href="${href}">${label}</a>`).join('');
+  if (!links.parentElement) nav.insertBefore(links, nav.querySelector('.nav-actions'));
+})();
+;
 /* ===== api-client.js ===== */
 /* Customer storefront API bridge. Production calls stay on the protected
    server-side admin API; previews remain visually testable without it. */
@@ -279,19 +355,32 @@ document.addEventListener('DOMContentLoaded',installFormFeedback);
     if (!response.ok) throw new Error(data.error || 'The service could not complete that request.');
     return data;
   }
+  // Several page scripts ask for the same catalogue and reviews while the page
+  // builds. Share one request per page (for 60 seconds); a failed request is
+  // dropped so the next caller retries.
+  const sharedCache = new Map();
+  const shared = (key, load) => {
+    const hit = sharedCache.get(key);
+    const copy = data => (typeof structuredClone === 'function' ? structuredClone(data) : JSON.parse(JSON.stringify(data)));
+    if (hit && Date.now() - hit.at < 60000) return hit.promise.then(copy);
+    const promise = Promise.resolve().then(load);
+    sharedCache.set(key, { at: Date.now(), promise });
+    promise.catch(() => { if (sharedCache.get(key)?.promise === promise) sharedCache.delete(key); });
+    return promise.then(copy);
+  };
   const customerHeaders = () => {
     const token = window.sessionStorage.getItem('gob-customer-token');
     return token ? { Authorization: `Bearer ${token}` } : {};
   };
   const api = {
     base, request,
-    catalogue: async () => {
+    catalogue: () => shared('catalogue', async () => {
       if (!catalogueBase) throw new Error('The catalogue feed is not configured for this preview.');
       const response = await fetch(`${catalogueBase}/public-products`, { cache: 'no-store' });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(data.error || 'The catalogue could not be loaded.');
       return data;
-    },
+    }),
     blogs: async () => {
       if (!catalogueBase) throw new Error('The blog feed is not configured for this preview.');
       const response = await fetch(`${catalogueBase}/public-blogs`, { cache: 'no-store' });
@@ -308,7 +397,7 @@ document.addEventListener('DOMContentLoaded',installFormFeedback);
     updateAccount: (token, body) => request('/customer-account', { method: 'PATCH', headers: { Authorization: `Bearer ${token}` }, body: JSON.stringify(body) }),
     customerReviews: token => request('/customer-reviews', { headers: { Authorization: `Bearer ${token}` } }),
     submitCustomerReview: (token, formData) => multipartRequest('/customer-reviews', token, formData),
-    publicProductReviews: product => request(`/public-product-reviews?product=${encodeURIComponent(product)}`),
+    publicProductReviews: product => shared(`reviews:${product}`, () => request(`/public-product-reviews?product=${encodeURIComponent(product)}`)),
     capture: body => request('/public-email-capture', { method: 'POST', body: JSON.stringify(body) }),
     contactInquiry: body => request('/contact-inquiries', { method: 'POST', body: JSON.stringify(body) }),
     spinWheel: body => request('/spin-wheel', { method: 'POST', body: JSON.stringify(body) }),
@@ -910,152 +999,169 @@ function setupCommerce(){
 document.addEventListener('DOMContentLoaded',setupCommerce)
 document.addEventListener('gob:catalog-sync',()=>{renderCommerceCart();updateSaleOfferControls();recoverUnknownCartLines()})
 ;
-/* ===== commerce-backend.js ===== */
-/* The new checkout calls the existing API. It does not store PII in browser
-   storage; the server encrypts order data before writing it to Supabase. */
+/* ===== cart-recovery.js ===== */
+/* Cart page conversion helpers.
+   1. The "save your bowl" box becomes a WhatsApp offer: sharing a number
+      applies WELCOME15 automatically (15% off; first order only, once per
+      customer) and saves the bowl for a reminder.
+   2. The total and checkout button sit above that box, so shoppers see the
+      way forward before an invitation to leave.
+   3. Phones get a sticky checkout bar while the checkout button is off screen.
+   4. Reassurance (shipping, payment, quality, returns) sits next to the button.
+   Contact details are still only sent when the shopper submits the form. */
 (() => {
-  const POINT_VALUE_RUPEES = .3, MAX_POINTS_DISCOUNT_RUPEES = 100, MAX_REDEMPTION_POINTS = Math.floor(MAX_POINTS_DISCOUNT_RUPEES / POINT_VALUE_RUPEES);
-  // Match active private-offer families for the client-side preview. The
-  // server validates every code and computes the final payable amount.
-  const privateOfferRate = code => /^SAVE10-[A-Z0-9]+$/.test(code) || code === 'GOBFAMILY10' ? .1 : /^BDAY[A-Z0-9]+$/.test(code) || code === 'PAWTY25' ? .25 : 0;
-  const form = document.querySelector('#checkoutForm');
-  if (!form || !window.GOB_API) return;
-  const get = selector => form.querySelector(selector)?.value.trim() || '';
-  const phone = () => get('[autocomplete="tel"]').replace(/\D/g, '').replace(/^91/, '');
-  const fullName = () => get('[autocomplete="name"]').replace(/\s+/g, ' ');
-  const items = () => cart().map(line => {
-    // Keep the product snapshot that was added to the cart. Catalogue edits
-    // must not silently change a customer's item, title or price at checkout.
-    const product = typeof commerceProduct === 'function' ? commerceProduct(line) : (line.product || GOB_PRODUCTS[line.id]);
-    if (!product) return null;
-    // Cart snapshots can outlive catalogue edits. Only send a pack label when
-    // the current catalogue entry explicitly provides one; never resurrect a
-    // legacy label from an old localStorage snapshot.
-    const name = String(product.name || '').replace(/\s+—\s+.+$/, '').trim();
-    const explicitPackLabel = typeof product.packLabel === 'string' ? product.packLabel.trim() : '';
-    // Product pages label dynamically chosen packs in `tag` (for example,
-    // "Jerky · 120 g"). Preserve that canonical pack detail in checkout.
-    const taggedPackLabel = typeof product.tag === 'string' && product.tag.includes(' · ')
-      ? product.tag.split(' · ').pop().trim()
-      : '';
-    // Pack chosen on the product page is also kept in the name ("Whole Quail — 4 pieces").
-    const namedPackLabel = (String(product.name || '').match(/\s+—\s+(.+)$/) || [])[1] || '';
-    const packLabel = explicitPackLabel || namedPackLabel.trim() || (taggedPackLabel === 'Pack' ? '' : taggedPackLabel);
-    const catalog_id = window.GOB_META?.productId?.(product, line.id) || String(product.catalog_slug || line.id || '');
-    const unitPrice = Number(product.price);
-    const quantity = Number(line.quantity);
-    return { name, catalog_id, pack_label: packLabel, size: packLabel, price: unitPrice, pack_price: unitPrice, unit_price: unitPrice, line_total: unitPrice * quantity, quantity, qty: quantity };
+  // `cart` and `commerceProduct` are top-level declarations in the storefront
+  // scripts, so they are global names but NOT properties of window.
+  // (Reading window.cart made the old save form always say the treat jar was empty.)
+  const cartLines = () => { try { return typeof cart === 'function' ? cart() : []; } catch (_) { return []; } };
+  const productFor = line => line.product || (typeof commerceProduct === 'function' ? commerceProduct(line) : null) || (typeof GOB_PRODUCTS !== 'undefined' ? GOB_PRODUCTS[line.id] : null);
+  const form = document.querySelector('#cartSaveForm');
+  const save = document.querySelector('.cart-save');
+  const total = document.querySelector('.order-row.total');
+  const checkout = document.querySelector('#checkoutLink');
+  const assurance = document.querySelector('.cart-assurance');
+
+  const style = document.createElement('style');
+  style.textContent = `
+.cart-save .cart-offer-code{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.cart-save .cart-offer-code b{font-size:18px;letter-spacing:.08em;padding:6px 12px;border:1px dashed currentColor;background:#fff}
+.cart-save .cart-offer-code button{padding:8px 14px;font-size:13px}
+.cart-assurance.cart-assurance-list{display:block;margin:14px 0 18px;padding:0;list-style:none;font-size:13px;line-height:1.5}
+.cart-assurance-list li{display:flex;gap:8px;align-items:flex-start;padding:4px 0}
+.cart-assurance-list li::before{content:"✓";font-weight:700;color:var(--gold,#a8681c)}
+.cart-sticky-checkout{display:none}
+@media (max-width:760px){
+  .cart-sticky-checkout{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;align-items:center;gap:12px;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:var(--paper,#fffdf8);border-top:1px solid rgba(16,44,34,.15);box-shadow:0 -6px 18px rgba(0,0,0,.08);transition:transform .2s ease}
+  .cart-sticky-checkout[hidden]{display:flex;transform:translateY(110%)}
+  .cart-sticky-checkout .sticky-total{display:flex;flex-direction:column;font-size:12px;line-height:1.2}
+  .cart-sticky-checkout .sticky-total strong{font-size:18px}
+  .cart-sticky-checkout .button{flex:1;text-align:center;margin:0}
+  body.has-cart-sticky{padding-bottom:84px}
+}`;
+  document.head.append(style);
+
+  // 2. Total and checkout button before the offer box.
+  if (save && total && checkout) {
+    save.before(total);
+    save.before(checkout);
+  }
+
+  // 4. Reassurance right under the checkout button.
+  if (checkout) {
+    const list = document.createElement('ul');
+    list.className = 'cart-assurance cart-assurance-list';
+    list.setAttribute('aria-label', 'Why order with us');
+    list.innerHTML = [
+      'Free delivery on all full packs · dispatched within 1–2 business days',
+      'Pay by UPI, card or Cash on Delivery (most PIN codes)',
+      'Single-ingredient treats made in Kalyan · loved by verified dog parents',
+      'Wrong or damaged pack? Tell us within 48 hours and we will make it right',
+    ].map(text => `<li>${text}</li>`).join('');
+    checkout.after(list);
+    assurance?.remove();
+  }
+
+  // 3. Sticky checkout bar for phones.
+  if (checkout) {
+    const bar = document.createElement('div');
+    bar.className = 'cart-sticky-checkout';
+    bar.hidden = true;
+    bar.innerHTML = '<span class="sticky-total">Total<strong data-sticky-total>₹0</strong></span><a class="button" href="/checkout">Secure checkout</a>';
+    document.body.append(bar);
+    const source = document.querySelector('[data-commerce-total]');
+    const sync = () => {
+      const target = bar.querySelector('[data-sticky-total]');
+      if (source && target && target.textContent !== source.textContent) target.textContent = source.textContent;
+      const empty = !cartLines().length;
+      bar.style.visibility = empty ? 'hidden' : '';
+    };
+    sync();
+    if (source) new MutationObserver(sync).observe(source, { childList: true, characterData: true, subtree: true });
+    document.addEventListener('gob:cart-updated', sync);
+    // Show the bar whenever the real checkout button is not on screen.
+    let queued = false;
+    const update = () => {
+      queued = false;
+      const mobile = window.matchMedia('(max-width: 760px)').matches;
+      const rect = checkout.getBoundingClientRect();
+      const buttonVisible = rect.top < window.innerHeight - 8 && rect.bottom > 0;
+      bar.hidden = !mobile || buttonVisible;
+      document.body.classList.toggle('has-cart-sticky', mobile && !buttonVisible);
+    };
+    const queue = () => { if (!queued) { queued = true; requestAnimationFrame(update); } };
+    window.addEventListener('scroll', queue, { passive: true });
+    window.addEventListener('resize', queue);
+    update();
+    setTimeout(update, 600);
+  }
+
+  // 1. WhatsApp offer.
+  if (!form) return;
+  const email = form.querySelector('[name="email"]');
+  const phone = form.querySelector('[name="phone"]');
+  const status = document.querySelector('#cartSaveStatus');
+  const button = form.querySelector('button[type="submit"]');
+  const setCopy = (eyebrowText, titleText, introText) => {
+    if (!save) return;
+    const eyebrow = save.querySelector('.eyebrow');
+    const title = save.querySelector('h3');
+    const intro = save.querySelector('p:not(.eyebrow):not(.cart-save-status)');
+    if (eyebrow) eyebrow.textContent = eyebrowText;
+    if (title) title.textContent = titleText;
+    if (intro) intro.textContent = introText;
+  };
+  setCopy('First order? 15% off', 'Get 15% off this order.', 'Add your WhatsApp number and WELCOME15 (15% off) is applied to your treat jar automatically. For first orders, once per customer. You agree to a reminder or two about this treat jar on WhatsApp (reply STOP anytime).');
+  if (email) email.hidden = true;
+  if (phone) phone.placeholder = 'WhatsApp number (10 digits)';
+  if (button) button.textContent = 'Get 15% off';
+
+  const message = (text, kind = '') => { if (!status) return; status.textContent = text; status.className = `cart-save-status ${kind}`; };
+  const refreshTotals = () => { if (typeof updateCommerceTotals === 'function') updateCommerceTotals(); };
+  const lines = () => cartLines().map(line => {
+    const product = productFor(line);
+    return product ? { name: product.name, pack_label: product.packLabel || '', quantity: Number(line.quantity) || 1, price: Number(product.price) || 0 } : null;
   }).filter(Boolean);
-  const subtotal = () => items().reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const isBogoTreat = item => [].includes(String(item?.name || '').trim().toLowerCase());
-  const bogo = () => {
-    const offerItems = items().filter(isBogoTreat);
-    return { active: offerItems.length > 0, discount: offerItems.reduce((sum, item) => sum + Math.floor(item.quantity / 2) * item.price, 0) };
+
+  const showApplied = () => {
+    form.hidden = false;
+    form.querySelectorAll('input,button').forEach(el => { el.hidden = true; });
+    setCopy('Offer unlocked', 'WELCOME15 (15% off) is applied to your treat jar.', 'It will show at checkout. We confirm it with your mobile number at payment, as it is for first orders.');
+    message('15% off applied ✓', 'success');
   };
-  const method = () => form.querySelector('[name="payment"]:checked')?.value === 'cod' ? 'cod' : 'online';
-  const address = () => ['street-address', 'address-line2', 'address-level2', 'address-level1', 'postal-code'].map(name => get(`[autocomplete="${name}"]`)).filter(Boolean).join(', ');
-  const addressDetails = () => ({ line1: get('[autocomplete="street-address"]'), line2: get('[autocomplete="address-line2"]'), city: get('[autocomplete="address-level2"]'), state: get('[autocomplete="address-level1"]'), pincode: get('[autocomplete="postal-code"]') });
-  const dog = () => ({ name: get('[name="dog_name"]'), birthday: get('[name="dog_birthday"]') });
-  const reference = () => `GOB-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
-  const missingFields = () => {
-    const missing = [];
-    if (fullName().length < 2) missing.push('name');
-    if (!/^\d{10}$/.test(phone())) missing.push('10-digit mobile number');
-    // Email is optional (receipts only); if given it must look valid.
-    if (get('[autocomplete="email"]') && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(get('[autocomplete="email"]'))) missing.push('a valid email (or leave it blank)');
-    if (!get('[autocomplete="street-address"]') || !get('[autocomplete="address-level2"]') || !get('[autocomplete="address-level1"]')) missing.push('delivery address');
-    if (!/^\d{6}$/.test(get('[autocomplete="postal-code"]'))) missing.push('6-digit PIN code');
-    if (!items().length) missing.push('at least one treat');
-    return missing;
-  };
-  const valid = () => missingFields().length === 0;
-  const saleBasket = () => cart().some(line => { const product = typeof commerceProduct === 'function' ? commerceProduct(line) : (line.product || GOB_PRODUCTS[line.id]); return Number(product?.comparePrice) > Number(product?.price); });
-  const total = () => {
-    const value = subtotal();
-    const privateCoupon = form.querySelector('[name="private_coupon"]')?.value.trim().toUpperCase() || '', coupon = privateCoupon || form.querySelector('[name="coupon"]:checked')?.value || '', eligibility = window.GOB_CHECKOUT_ELIGIBILITY || {};
-    const buyOneGetOne = bogo();
-    // Catalogue sale pricing may be combined with one valid code and loyalty
-    // points; no separate buy-more discount is active during this sale.
-    // WELCOME15 needs no login: the server checks this mobile/email has not ordered before.
-    const couponRate = buyOneGetOne.active ? 0 : coupon === 'WELCOME15' && !(eligibility.signedIn && !eligibility.checking && !eligibility.firstOrder) ? .15 : coupon === 'MEGA20' && value >= 2199 ? .2 : privateOfferRate(coupon);
-    const discount = buyOneGetOne.discount + (buyOneGetOne.active ? 0 : (typeof offerDiscountFor === 'function' ? offerDiscountFor(coupon, value, couponRate) : Math.round(value * couponRate)));
-    const requestedPoints = Math.floor(Number(form.querySelector('[name="loyalty_points_redeemed"]')?.value || 0));
-    const points = buyOneGetOne.active ? 0 : (eligibility.signedIn ? Math.min(Math.max(requestedPoints, 0), MAX_REDEMPTION_POINTS, Number(eligibility.points || 0)) : 0);
-    const pointsDiscount = Math.min(MAX_POINTS_DISCOUNT_RUPEES, Math.round(points * POINT_VALUE_RUPEES)), cod = method() === 'cod' ? 40 : -30;
-    // Private codes are validated authoritatively by the checkout server.
-    // Preserve the entered code even when the browser cannot know its rate;
-    // this lets off-site customer codes work without advertising them here.
-    const delivery = typeof trialDeliveryCharge === 'function' ? trialDeliveryCharge() : 0;
-    return { value, discount, points, delivery, coupon: buyOneGetOne.active ? '' : (privateCoupon || (couponRate || coupon === 'CART50' ? coupon : '')), bogo: buyOneGetOne, grand: Math.max(1, value - discount - pointsDiscount + cod + delivery) };
-  };
-  const result = (html, failed = false) => { const el = document.querySelector('#checkoutSuccess'); if (!el) return; el.classList.add('show'); el.style.background = failed ? '#f9e1da' : '#e4ebdf'; el.innerHTML = html; el.focus(); };
-  const completeOrder = (ref, payment) => {
-    window.location.assign(`/thank-you?${new URLSearchParams({ order: ref, payment }).toString()}`);
-  };
-  // Meta signals for the server-side Purchase event. _fbp/_fbc are Meta's own
-  // first-party cookies; they let Meta attribute the order to the ad click.
-  const cookie = key => document.cookie.split('; ').find(part => part.startsWith(`${key}=`))?.slice(key.length + 1) || '';
-  const metaSignals = () => {
-    let fbc = cookie('_fbc');
-    if (!fbc) { try { const saved = JSON.parse(sessionStorage.getItem('gob-fbclid') || 'null'); if (saved?.id) fbc = `fb.1.${saved.ts}.${saved.id}`; } catch (_) {} }
-    return { fbp: cookie('_fbp'), fbc, event_source_url: `${location.origin}${location.pathname}`, client_user_agent: navigator.userAgent.slice(0, 250) };
-  };
-  const analyticsItems = () => items().map(item => ({ item_id: item.catalog_id || item.name, item_name: item.name, price: item.price, quantity: item.quantity }));
-  const metaContents = orderItems => orderItems.map(item => ({ id: item.catalog_id || item.name, quantity: item.quantity, item_price: item.price }));
-  const metaContentIds = orderItems => metaContents(orderItems).map(item => item.id).filter(Boolean);
-  if (items().length) window.GOB_ANALYTICS?.track('begin_checkout', { currency: 'INR', value: subtotal(), items: analyticsItems() });
-  let captureTimer, captureSent = false;
-  const marketingConsent = () => form.querySelector('[name="marketing_consent"]')?.checked === true;
-  const whatsappOptIn = () => form.querySelector('[name="whatsapp_opt_in"]')?.checked === true;
-  // Exact bag lines so a WhatsApp reminder link can rebuild this treat jar.
-  const cartLines = () => cart().map(line => ({ id: line.id, quantity: line.quantity, product: line.product ? { name: line.product.name, price: line.product.price, packLabel: line.product.packLabel || '', tag: line.product.tag || '', catalog_slug: line.product.catalog_slug || '', image: line.product.image || '' } : null }));
-  const policyAcknowledged = () => form.querySelector('[name="checkout_policy_acknowledged"]')?.checked === true;
-  const noticeVersion = () => get('[name="privacy_notice_version"]') || '2026-09-14';
-  async function capture() { if (captureSent || !valid()) return; captureSent = true; try { await window.GOB_API.abandonedCart({ cart_token: window.GOB_CART_TRACKING?.token?.(), whatsapp_opt_in: whatsappOptIn(), cart_lines: cartLines(), phone: phone(), email: get('[autocomplete="email"]'), name: fullName(), items: items(), total: subtotal() }); } catch (_) { /* Do not retry every keystroke after a server-side rate limit. */ } }
-  form.addEventListener('input', () => { clearTimeout(captureTimer); captureTimer = setTimeout(capture, 1800); });
-  form.querySelector('[name="whatsapp_opt_in"]')?.addEventListener('change', () => { captureSent = false; clearTimeout(captureTimer); captureTimer = setTimeout(capture, 600); });
-  async function save(ref, transactionId = '') { const pricing = total(), orderItems = items(); const response = await window.GOB_API.saveOrder({ ref, whatsapp_opt_in: whatsappOptIn(), customer_name: fullName(), customer_phone: phone(), customer_email: get('[autocomplete="email"]'), items: orderItems, subtotal: pricing.value, total_amount: pricing.value, shipping: pricing.delivery || 0, discount: pricing.discount, grand_total: pricing.grand, payment_method: method() === 'cod' ? 'cod' : 'razorpay', transaction_id: transactionId || null, shipping_address: address(), address_details: addressDetails(), dog: dog(), coupon_code: pricing.coupon || null, loyalty_points_redeemed: pricing.points, packaging: method() === 'cod' ? 40 : 0, marketing_consent: marketingConsent(), checkout_policy_acknowledged: policyAcknowledged(), privacy_notice_version: noticeVersion(), meta: metaSignals() }); await trackPurchase(ref, pricing, orderItems); return response; }
-  // Purchase signals for Meta and GA4. Also used when payment succeeded but the
-  // browser could not save the order details (the payment webhook records it).
-  async function trackPurchase(ref, pricing = total(), orderItems = items()) { window.GOB_META?.track('Purchase',{currency:'INR',value:pricing.grand,content_type:'product',content_ids:metaContentIds(orderItems),contents:metaContents(orderItems)},ref); const purchaseEvent={transaction_id:ref,currency:'INR',value:pricing.grand,coupon:pricing.coupon||undefined,items:analyticsItems()}; if(window.GOB_ANALYTICS?.trackAndWait)await window.GOB_ANALYTICS.trackAndWait('purchase',purchaseEvent);else window.GOB_ANALYTICS?.track('purchase',purchaseEvent); }
-  function razorpayScript() { if (window.Razorpay) return Promise.resolve(); return new Promise((resolve, reject) => { const tag = document.createElement('script'); tag.src = 'https://checkout.razorpay.com/v1/checkout.js'; tag.onload = resolve; tag.onerror = reject; document.head.append(tag); }); }
-  async function prepaid(ref, pricing) { const serializedItems = JSON.stringify(items()); const order = await window.GOB_API.createRazorpayOrder({ items: items(), payment_method: 'online', coupon_code: pricing.coupon, loyalty_points_redeemed: pricing.points, receipt: ref, notes: { ref, order_ref: ref, customer_name: fullName(), customer_phone: phone(), customer_email: get('[autocomplete="email"]'), items_1: serializedItems.slice(0, 1400), items_2: serializedItems.slice(1400, 2800), items_3: serializedItems.slice(2800, 4200), ...(() => { const meta = metaSignals(), geo = addressDetails(); return { meta_fbp: meta.fbp, meta_fbc: meta.fbc.slice(0, 250), meta_url: meta.event_source_url.slice(0, 250), meta_ua: meta.client_user_agent, ship_geo: [geo.city, geo.state, geo.pincode].join('|').slice(0, 250) }; })() } }); await razorpayScript(); return new Promise((resolve, reject) => new window.Razorpay({ key: order.key, amount: order.amount, currency: order.currency, name: 'Game of Bones', description: 'Natural dog treats', order_id: order.order_id, prefill: { name: fullName(), contact: phone(), email: get('[autocomplete="email"]') }, theme: { color: '#bd812a' }, handler: async response => { try { await save(ref, response.razorpay_payment_id); } catch (error) { /* The customer has already paid. Never show a failure (they might pay twice); the Razorpay webhook records the order from the payment notes. */ console.warn('Order details will be recovered from the payment record.', error); try { await trackPurchase(ref); } catch (_) {} } resolve(order.quote); }, modal: { ondismiss: () => reject(new Error('Payment was cancelled.')) } }).open()); }
-  async function delivery(){
-    const pin=get('[autocomplete="postal-code"]')
-    const result=await window.GOB_PINCODE_CHECKER?.(pin)
-    if(!result?.serviceable) throw new Error('This PIN code is not currently serviceable by Delhivery.')
-    if(method()==='cod'&&!result.cod) throw new Error('Cash on Delivery is not available for this PIN code. Please choose online payment.')
-    if(method()==='online'&&!result.prepaid) throw new Error('Online payment is not available for this PIN code. Please choose Cash on Delivery.')
-    return result
-  }
-  // Explain what went wrong and offer one-tap fixes instead of a dead end.
-  function checkoutFailed(error) {
-    const message = String(error?.message || '');
-    const cancelled = /cancelled/i.test(message);
-    const codeProblem = /code|WELCOME15|MEGA20|CART50|offer/i.test(message);
-    const esc = text => String(text).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-    const actions = [];
-    if (codeProblem) actions.push('<button type="button" class="button" data-fix="remove-code">Remove code &amp; pay now</button>');
-    if (cancelled || !codeProblem) actions.push('<button type="button" class="button secondary" data-fix="cod">Switch to Cash on Delivery</button>');
-    const inApp = /Instagram|FBAN|FBAV|FB_IAB/i.test(navigator.userAgent);
-    const help = cancelled
-      ? (inApp ? 'Payment window closed. If Google Pay or PhonePe did not open inside Instagram, choose <b>UPI ID</b> or <b>QR code</b> in the payment window, or tap ⋯ and <b>Open in browser</b>. You can also pay on delivery.' : 'Payment window closed before paying. Try again, choose another method, or pay on delivery.')
-      : esc(message || 'Please try again or select Cash on Delivery.');
-    result(`<strong>${cancelled ? 'Payment not completed.' : 'Checkout could not start.'}</strong> ${help}<div class="checkout-fix-row" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">${actions.join('')}</div>`, true);
-    document.querySelectorAll('[data-fix]').forEach(btn => btn.addEventListener('click', () => {
-      if (btn.dataset.fix === 'remove-code') {
-        if (form.querySelector('[name="coupon"][value="CART50"]:checked') && typeof setCartOfferClaim === 'function') { setCartOfferClaim(false); const offer = form.querySelector('[data-cart-offer]'); if (offer) offer.hidden = true; }
-        const priv = form.querySelector('[name="private_coupon"]'); if (priv) priv.value = '';
-        const none = form.querySelector('[name="coupon"][value="none"], [name="coupon"][value=""]'); if (none) none.checked = true; else form.querySelectorAll('[name="coupon"]').forEach(r => { r.checked = false; });
-        try { sessionStorage.removeItem('gob-checkout-coupon'); } catch (_) {}
-      } else {
-        const cod = form.querySelector('[name="payment"][value="cod"]'); if (cod) cod.checked = true;
+  const claimed = () => (typeof cartOfferClaimed === 'function' ? cartOfferClaimed() : false);
+  if (claimed()) showApplied();
+
+  form.addEventListener('submit', async event => {
+    event.preventDefault();
+    const normalizedEmail = String(email?.value || '').trim().toLowerCase();
+    const normalizedPhone = String(phone?.value || '').replace(/\D/g, '').replace(/^91(?=\d{10}$)/, '');
+    const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail);
+    const validPhone = /^[6-9]\d{9}$/.test(normalizedPhone);
+    if (!validPhone) return message('Enter a valid 10-digit WhatsApp number to get 15% off.', 'error');
+    const items = lines();
+    if (!items.length) return message('Add a treat first, then unlock your 15% off.', 'error');
+    const totalValue = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    if (!window.GOB_API?.abandonedCart) return message('We could not unlock this right now. Please try again.', 'error');
+    button.disabled = true; button.textContent = 'Checking…';
+    try {
+      const rawLines = cartLines().map(line => { const product = productFor(line); return { id: line.id, quantity: Number(line.quantity) || 1, product: product ? { name: product.name, price: Number(product.price) || 0, packLabel: product.packLabel || '', tag: product.tag || '', catalog_slug: product.catalog_slug || '', image: product.image || '' } : null }; });
+      const response = await window.GOB_API.abandonedCart({ offer: 'CART50', cart_token: window.GOB_CART_TRACKING?.token?.(), whatsapp_opt_in: true, cart_lines: rawLines, email: validEmail ? normalizedEmail : '', phone: normalizedPhone, items, total: totalValue });
+      const offer = response && response.cart_offer;
+      if (!offer) { message('We saved your treat jar but could not check the offer. Please try again.', 'error'); return; }
+      if (!offer.eligible) {
+        if (typeof setCartOfferClaim === 'function') setCartOfferClaim(false);
+        form.reset();
+        message('Thanks, your treat jar is saved. This number has ordered with us before, so the first-order offer does not apply — but you still save ₹30 when you pay online.', '');
+        refreshTotals();
+        return;
       }
-      form.dispatchEvent(new Event('input', { bubbles: true })); form.dispatchEvent(new Event('change', { bubbles: true }));
-      if (form.requestSubmit) form.requestSubmit(); else form.dispatchEvent(new Event('submit', { cancelable: true }));
-    }, { once: true }));
-  }
-  form.addEventListener('submit', async event => { event.preventDefault(); if (!valid()) return result('<strong>Checkout needs attention.</strong> Please complete your name, 10-digit mobile number and delivery address.', true); if (!policyAcknowledged()) return result('<strong>Please review the policies.</strong> Confirm the checkout policies before continuing.', true); const button = form.querySelector('[type="submit"]'), ref = reference(), pricing = total(), orderItems = items(); if (button) { button.disabled = true; button.textContent = 'Checking delivery…'; } try { await delivery(); await (window.GOB_PRIZE_CLAIM ? window.GOB_PRIZE_CLAIM() : null); window.GOB_META?.track('InitiateCheckout',{currency:'INR',value:pricing.grand,content_type:'product',content_ids:metaContentIds(orderItems),contents:metaContents(orderItems)}); if (button) button.textContent = 'Preparing secure checkout…'; await capture(); await window.GOB_API.orderAttempt({ ref, customer_name: fullName(), customer_phone: phone(), customer_email: get('[autocomplete="email"]'), payment_method: method() === 'cod' ? 'cod' : 'razorpay', subtotal: pricing.value, grand_total: pricing.grand, items: orderItems, shipping_address: address(), coupon_code: pricing.coupon, coupon_label: pricing.coupon || 'automatic saving' }); if (method() === 'cod') { await save(ref); saveCart([]); updateCart(); completeOrder(ref, 'cod'); } else { await prepaid(ref, pricing); saveCart([]); updateCart(); completeOrder(ref, 'paid'); } } catch (error) { checkoutFailed(error); } finally { if (button) { button.disabled = false; button.textContent = 'Continue to secure payment'; } } });
+      if (typeof setCartOfferClaim === 'function') setCartOfferClaim(true);
+      form.reset();
+      refreshTotals();
+      showApplied();
+    } catch (_) { message('We could not unlock this right now. Please try again.', 'error'); }
+    finally { button.disabled = false; if (!claimed()) button.textContent = 'Get 15% off'; }
+  });
 })();
 ;
 /* ===== spin-gift-checkout.js ===== */
@@ -1225,153 +1331,5 @@ document.addEventListener('gob:catalog-sync',()=>{renderCommerceCart();updateSal
   if (totalEl) new MutationObserver(queue).observe(totalEl, { childList: true, characterData: true, subtree: true });
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', render, { once: true });
   else render();
-})();
-;
-/* ===== checkout-pin.js ===== */
-// Checkout: PIN code comes first. As soon as 6 digits are typed we ask Delhivery
-// (via /api/pincode-check), fill in city and state, say whether cash on delivery
-// is available, and show real arrival dates instead of "2–4 business days".
-// Transit days mirror deliveryEstimate() in the admin's pincode-check route.
-(() => {
-  const form = document.getElementById('checkoutForm');
-  const pinEl = form?.querySelector('[autocomplete="postal-code"]');
-  const status = document.getElementById('pinStatus');
-  if (!form || !pinEl || !status) return;
-  const cityEl = form.querySelector('[autocomplete="address-level2"]');
-  const stateEl = form.querySelector('[autocomplete="address-level1"]');
-  const STATES = { AN: 'Andaman and Nicobar Islands', AP: 'Andhra Pradesh', AR: 'Arunachal Pradesh', AS: 'Assam', BR: 'Bihar', CH: 'Chandigarh', CT: 'Chhattisgarh', CG: 'Chhattisgarh', DN: 'Dadra and Nagar Haveli and Daman and Diu', DD: 'Dadra and Nagar Haveli and Daman and Diu', DL: 'Delhi', GA: 'Goa', GJ: 'Gujarat', HR: 'Haryana', HP: 'Himachal Pradesh', JK: 'Jammu and Kashmir', JH: 'Jharkhand', KA: 'Karnataka', KL: 'Kerala', LA: 'Ladakh', LD: 'Lakshadweep', MP: 'Madhya Pradesh', MH: 'Maharashtra', MN: 'Manipur', ML: 'Meghalaya', MZ: 'Mizoram', NL: 'Nagaland', OR: 'Odisha', OD: 'Odisha', PY: 'Puducherry', PB: 'Punjab', RJ: 'Rajasthan', SK: 'Sikkim', TN: 'Tamil Nadu', TG: 'Telangana', TS: 'Telangana', TR: 'Tripura', UP: 'Uttar Pradesh', UK: 'Uttarakhand', UT: 'Uttarakhand', WB: 'West Bengal' };
-  // Working days from today: dispatch (1–2) + transit for the region.
-  const span = st => st === 'MH' ? [3, 6] : ['GJ', 'GA', 'KA', 'MP', 'RJ', 'TG', 'TS'].includes(st) ? [4, 7] : [5, 9];
-  const addWorkingDays = n => { const d = new Date(); let left = n; while (left > 0) { d.setDate(d.getDate() + 1); if (d.getDay() !== 0) left--; } return d; };
-  const fmt = d => d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' });
-  const radio = v => form.querySelector(`input[name="payment"][value="${v}"]`);
-  const autoFilled = new WeakSet();
-  const fill = (el, val) => { if (!el || !val) return; if (!el.value.trim() || autoFilled.has(el)) { el.value = val; autoFilled.add(el); el.dispatchEvent(new Event('input', { bubbles: true })); } };
-  const setPay = (v, ok, note) => {
-    const r = radio(v); if (!r) return;
-    r.disabled = !ok; r.closest('label')?.classList.toggle('is-unavailable', !ok);
-    let n = r.closest('label')?.querySelector('.pay-note');
-    if (!ok && r.closest('label') && !n) { n = document.createElement('em'); n.className = 'pay-note'; r.closest('label').querySelector('span')?.append(n); }
-    if (n) n.textContent = ok ? '' : note;
-    if (!ok && r.checked) { const other = radio(v === 'cod' ? 'online' : 'cod'); if (other && !other.disabled) other.checked = true; other?.dispatchEvent(new Event('change', { bubbles: true })); }
-  };
-  let last = '', timer;
-  async function check() {
-    const pin = pinEl.value.replace(/\D/g, '').slice(0, 6);
-    if (pinEl.value !== pin) pinEl.value = pin;
-    if (pin.length < 6) { status.className = 'pin-status'; status.textContent = pin ? 'Enter all 6 digits to see delivery dates.' : ''; last = ''; setPay('cod', true); setPay('online', true); return; }
-    if (pin === last || !window.GOB_PINCODE_CHECKER) return;
-    last = pin; status.className = 'pin-status checking'; status.textContent = 'Checking delivery…';
-    try {
-      const r = await window.GOB_PINCODE_CHECKER(pin);
-      if (pin !== last) return;
-      if (!r.serviceable) { status.className = 'pin-status error'; status.textContent = 'Delhivery doesn’t deliver to this PIN yet. Please check it, or WhatsApp us on +91 90825 03295.'; return; }
-      const city = r.city ? r.city.toLowerCase().replace(/\b\w/g, c => c.toUpperCase()) : '';
-      fill(cityEl, city); fill(stateEl, STATES[r.state] || '');
-      const [a, b] = span(r.state);
-      status.className = 'pin-status ok';
-      status.innerHTML = `✓ Delivers${city ? ' to ' + city : ''}. <b>Arrives ${fmt(addWorkingDays(a))} – ${fmt(addWorkingDays(b))}</b>${r.cod ? ' · Cash on delivery available' : ' · Online payment only for this PIN'}`;
-      setPay('cod', r.cod, 'Not available for this PIN code');
-      setPay('online', r.prepaid !== false, 'Not available for this PIN code');
-    } catch (_) {
-      if (pin === last) { status.className = 'pin-status'; status.textContent = 'We’ll confirm delivery for this PIN when you continue.'; last = ''; }
-    }
-  }
-  pinEl.addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(check, 350); });
-  pinEl.addEventListener('change', check);
-  // Saved addresses fill the PIN in for returning customers.
-  setTimeout(check, 1200);
-})();
-;
-/* ===== trust.js ===== */
-/* Trust details: star ratings, homepage reviews, order-help promise, courier, cart/checkout reassurance, footer contact, contact page. */
-(() => {
-  const WA = 'https://wa.me/919082503295';
-  const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  const norm = v => String(v || '').toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, ' ').trim();
-  const stars = avg => { const full = Math.round(avg); return '<span class="gob-st" aria-hidden="true">' + '★★★★★'.slice(0, full) + '<i>' + '★★★★★'.slice(full) + '</i></span>'; };
-  const ICON = {
-    truck: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 6h11v10H2zM13 9h4l3 3v4h-7"/><circle cx="6" cy="17.5" r="1.8" stroke="#bd812a"/><circle cx="17" cy="17.5" r="1.8" stroke="#bd812a"/></svg>',
-    shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.4 8.2-8 9-4.6-.8-8-4.5-8-9V6z"/><path d="M8.5 12l2.4 2.4 4.6-4.8" stroke="#bd812a"/></svg>',
-    chat: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19l1.4-3.6A8 8 0 1 1 8.6 19z"/><path d="M9 10h6M9 13h4" stroke="#bd812a"/></svg>',
-    pin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0C18.5 15.4 12 21 12 21z"/><circle cx="12" cy="10" r="2.3" stroke="#bd812a"/></svg>',
-    mail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6" stroke="#bd812a"/></svg>',
-  };
-  const PROMISE = `<div class="gob-promise">${ICON.shield}<p><b>Something wrong with your order?</b> Tell us within 48 hours of delivery, with a photo, and we’ll replace it or refund you. <a href="/policies#returns">Returns policy</a></p></div>`;
-  const COURIER = `<p class="gob-courier">${ICON.truck}<span>Shipped &amp; tracked by <b>Delhivery</b> · dispatched in 1–2 working days · <a href="/track">Track an order</a></span></p>`;
-  const HELP = `<a class="gob-help" href="${WA}" target="_blank" rel="noopener">${ICON.chat}<span><b>Questions before you order?</b> WhatsApp us on +91 90825 03295</span></a>`;
-
-  // ---------- review data (cached for 10 minutes per tab)
-  let summaryP;
-  const summary = () => summaryP || (summaryP = (async () => {
-    try { const c = JSON.parse(sessionStorage.getItem('gob-rev-sum') || 'null'); if (c && Date.now() - c.t < 600000) return c.d; } catch {}
-    const d = await fetch('/api/public-product-reviews?summary=1', { headers: { Accept: 'application/json' } }).then(r => r.ok ? r.json() : null).catch(() => null);
-    if (d) { try { sessionStorage.setItem('gob-rev-sum', JSON.stringify({ t: Date.now(), d })); } catch {} }
-    return d;
-  })());
-  const lookup = (d, name) => { if (!d?.products) return null; const n = norm(name); for (const [k, v] of Object.entries(d.products)) if (norm(k) === n) return v; return null; };
-
-  // ---------- 1. stars on product cards (shop, collections, homepage bestsellers)
-  async function cardStars() {
-    const d = await summary(); if (!d) return;
-    document.querySelectorAll('.product-card h3, .hv2 .card h3, a.card h3').forEach(h => {
-      const box = h.closest('.product-card, .card'); if (!box || box.querySelector('.gob-card-rating')) return;
-      const r = lookup(d, h.textContent.trim()); if (!r || !r.count) return;
-      h.insertAdjacentHTML('afterend', `<p class="gob-card-rating" aria-label="Rated ${r.average} out of 5 from ${r.count} review${r.count > 1 ? 's' : ''}">${stars(r.average)}<b>${r.average.toFixed(1)}</b><span>(${r.count})</span></p>`);
-    });
-  }
-  // ---------- product page: stars under the name + promise + courier
-  async function productPage() {
-    const h1 = document.getElementById('productName'); if (!h1) return;
-    const ship = document.getElementById('v2Ship');
-    if (ship && !ship.querySelector('.gob-promise')) { const pay = ship.querySelector('.gob-pay'); (pay || ship.lastElementChild).insertAdjacentHTML(pay ? 'beforebegin' : 'afterend', COURIER + PROMISE); }
-    if (document.querySelector('.gob-pdp-rating')) return;
-    const d = await summary(); const r = lookup(d, h1.textContent.trim()); if (!r || !r.count) return;
-    const target = document.getElementById('productReviewFeed') || document.querySelector('[id*="review" i]');
-    h1.insertAdjacentHTML('afterend', `<a class="gob-pdp-rating" href="#${target?.id || ''}">${stars(r.average)}<b>${r.average.toFixed(1)}</b><span>${r.count} review${r.count > 1 ? 's' : ''}</span></a>`);
-  }
-  // ---------- 3. homepage reviews strip (before the FAQ)
-  async function homeReviews() {
-    const faq = document.querySelector('.hv2 section.faq'); if (!faq || document.getElementById('gobReviews')) return;
-    const d = await summary(); if (!d?.latest?.length) return;
-    const o = d.overall || {};
-    // One review per person (their best), and leave out reviews that read like health claims.
-    const CLAIM = /inflamm|sooth|cure|heal|skin|gut|medic|disease|allerg|immun|joint|digest/i;
-    const best = new Map();
-    for (const r of d.latest) { if (CLAIM.test(r.review)) continue; const k = r.name.split('·')[0].trim(); const b = best.get(k); if (!b || r.rating > b.rating || (r.rating === b.rating && r.review.length > b.review.length)) best.set(k, r); }
-    const picks = [...best.values()].slice(0, 8); if (!picks.length) return;
-    const cards = picks.map(r => `<figure class="gob-rv"><div class="gob-rv-top">${stars(r.rating)}<span class="gob-rv-p">${esc(r.product)}</span></div><blockquote>“${esc(r.review)}”</blockquote><figcaption>${esc(r.name)}</figcaption></figure>`).join('');
-    faq.insertAdjacentHTML('beforebegin', `<section class="s" id="gobReviews" style="padding-top:0"><div class="wrap"><div class="row-head"><div><p class="eyebrow">Reviews</p><h2>What pet parents say</h2></div>${o.count ? `<p class="gob-rv-sum">${stars(o.average)} <b>${Number(o.average).toFixed(1)}</b> from ${o.count} reviews</p>` : ''}</div><div class="gob-rv-row">${cards}</div><p class="gob-rv-note">Every review is from a real customer and is checked before it appears.</p></div></section>`);
-  }
-  // ---------- 6. cart + checkout reassurance
-  // Checkout doesn't load header-navigation.js, so define the same payment-logo row here if it's missing.
-  // Keep in step with header-navigation.js (PAY list).
-  if (typeof window.GOB_payRow !== 'function') {
-    const PAY = [['upi','UPI'],['googlepay','Google Pay'],['phonepe','PhonePe'],['paytm','Paytm'],['visa','Visa'],['mastercard','Mastercard'],['rupay','RuPay'],['maestro','Maestro']];
-    const EXTRA = [['Net banking','<path d="M3 10h18M5 10v8M9 10v8M15 10v8M19 10v8M3 20h18M12 3l9 5H3z"/>'],['Wallets','<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M16 12h5M3 9h14"/>'],['Cash on delivery','<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/>']];
-    const LOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3" stroke="#bd812a"/></svg>';
-    const payRow = extra => `<div class="gob-pay${extra ? ' ' + extra : ''}" aria-label="Payment methods we accept"><p class="gob-pay-t">${LOCK}<span>Secure payments by Razorpay</span></p><ul class="gob-pay-logos">${PAY.map(([k, n]) => `<li class="gob-pay-${k}"><img src="/assets/pay/${k}.svg" alt="${n}" width="54" height="34" loading="lazy" decoding="async"></li>`).join('')}</ul><ul class="gob-pay-more">${EXTRA.map(([n, d]) => `<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>${n}</li>`).join('')}</ul></div>`;
-    window.GOB_payRow = payRow;
-  }
-  function cartCheckout() {
-    const pay = typeof window.GOB_payRow === 'function' ? window.GOB_payRow('gob-pay-cart') : '';
-    const cart = document.querySelector('.cart-assurance');
-    if (cart && !document.querySelector('.gob-cart-trust')) cart.insertAdjacentHTML('afterend', `<div class="gob-cart-trust">${pay}${COURIER}${PROMISE}${HELP}</div>`);
-    const btn = [...document.querySelectorAll('form button[type=submit]')].find(b => /secure payment/i.test(b.textContent));
-    if (btn && !document.querySelector('.gob-checkout-trust')) btn.insertAdjacentHTML('afterend', `<div class="gob-checkout-trust">${pay}${PROMISE}${HELP}</div>`);
-  }
-  // ---------- 8. contact page: big WhatsApp button + map link
-  function contact() {
-    if (!/\/contact(\.html)?$/.test(location.pathname)) return;
-    const h = [...document.querySelectorAll('h1,h2')].find(x => /talk treats|contact/i.test(x.textContent));
-    if (!h || document.querySelector('.gob-contact-cta')) return;
-    let block = h; while (block.nextElementSibling && block.nextElementSibling.tagName === 'P') block = block.nextElementSibling;
-    block.insertAdjacentHTML('afterend', `<div class="gob-contact-cta"><a class="gob-wa-btn" href="${WA}?text=${encodeURIComponent('Hi Game of Bones! I have a question.')}" target="_blank" rel="noopener">${ICON.chat}Chat on WhatsApp</a><a class="gob-map-btn" href="https://www.google.com/maps/search/?api=1&query=Kalyan+West+Maharashtra+421301" target="_blank" rel="noopener">${ICON.pin}Kalyan West, Maharashtra 421301</a><p>Replies come from a real person in our Kalyan kitchen.</p></div>`);
-  }
-
-  function run() { cardStars(); productPage(); homeReviews(); cartCheckout(); contact(); }
-  [200, 1200, 3000, 6000].forEach(ms => setTimeout(run, ms));
-  const lc = document.getElementById('liveCatalog');
-  if (lc) new MutationObserver(() => setTimeout(cardStars, 50)).observe(lc, { childList: true });
 })();
 ;

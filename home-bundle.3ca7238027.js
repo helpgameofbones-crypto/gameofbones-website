@@ -135,7 +135,7 @@ function closeCart(){document.querySelector('#cartDrawer')?.classList.remove('op
 // .html names. This also covers links injected by catalogue, cart and blog UI.
 const cleanPageUrls={'index.html':'/','products.html':'/products','product.html':'/product','our-story.html':'/our-story','bundles.html':'/bundles','blog.html':'/blog','contact.html':'/contact','rewards.html':'/rewards','track.html':'/track','learn.html':'/learn','cart.html':'/cart','checkout.html':'/checkout','login.html':'/login','account.html':'/account','policies.html':'/policies'};
 function cleanStorefrontUrls(root=document){const links=[...(root.matches?.('a[href]')?[root]:[]),...(root.querySelectorAll?.('a[href]')||[])];links.forEach(link=>{const raw=link.getAttribute('href');if(!raw||/^(?:#|mailto:|tel:|https?:|\/\/)/i.test(raw))return;const match=raw.match(/^([^?#]+)(.*)$/);if(!match)return;const cleaned=cleanPageUrls[match[1]];if(cleaned)link.setAttribute('href',cleaned+match[2])})}
-function ensureCart(){if(document.querySelector('#cartDrawer'))return;document.body.insertAdjacentHTML('beforeend','<div class="scrim" id="scrim"></div><aside class="drawer" id="cartDrawer" aria-label="Shopping treat jar"><div class="drawer-top"><h2>Your treat jar</h2><button class="close" data-close-cart aria-label="Close treat jar">×</button></div><div class="cart-items" id="cartItems"></div><div class="cart-total"><div><span>Subtotal</span><span id="cartTotal">₹0</span></div><a class="button" style="width:100%" href="/checkout">Checkout securely</a><a href="/cart" style="display:block;text-align:center;margin-top:10px;font-size:13px;text-decoration:underline">View or edit treat jar</a><p style="margin:8px 0 0;font-size:12px;text-align:center;opacity:.75">Free delivery on full packs · UPI, cards or Cash on Delivery</p></div></aside><div class="toast" id="toast" role="status"></div>')}
+function ensureCart(){if(document.querySelector('#cartDrawer'))return;document.body.insertAdjacentHTML('beforeend','<div class="scrim" id="scrim"></div><aside class="drawer" id="cartDrawer" aria-label="Shopping treat jar"><div class="drawer-top"><h2>Your treat jar</h2><button class="close" data-close-cart aria-label="Close treat jar">×</button></div><div class="cart-items" id="cartItems"></div><div class="cart-total"><div><span>Subtotal</span><span id="cartTotal">₹0</span></div><a class="button" style="width:100%" href="/checkout">Checkout securely</a><a href="/cart" style="display:block;text-align:center;margin-top:10px;font-size:13px;text-decoration:underline">View or edit treat jar</a><p style="margin:8px 0 0;font-size:12px;text-align:center;opacity:.75">Free delivery on full packs. Pay by UPI, card or cash on delivery.</p></div></aside><div class="toast" id="toast" role="status"></div>')}
 function enhanceHeader(){const actions=document.querySelector('.nav-actions'),links=document.querySelector('.nav-links');if(!actions)return;links?.classList.add('compact-nav');const track=links?.querySelector('a[href="track.html"]'),bundles=links?.querySelector('a[href="bundles.html"]');if(track&&bundles)bundles.insertAdjacentElement('afterend',track);if(!document.querySelector('.search-trigger'))actions.insertAdjacentHTML('afterbegin','<button class="search-trigger" type="button" aria-label="Search products" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.4"></circle><path d="m16 16 4.3 4.3"></path></svg><span>Search</span></button>');if(!document.querySelector('.login-trigger'))actions.insertAdjacentHTML('afterbegin',(window.GOB_SIGNED_IN?'<a class="login-trigger" href="/account">Account</a>':'<a class="login-trigger" href="login.html">Log in</a>'));actions.querySelector('.icon-btn')?.remove();const jar=actions.querySelector('.cart-trigger');if(jar&&!jar.dataset.jarReady){jar.dataset.jarReady='true';jar.setAttribute('aria-label','Open treat jar');jar.innerHTML='<svg class="jar-icon" viewBox="0 0 32 36" fill="none" aria-hidden="true"><path d="M9 8V5h14v3M7 9h18l2 22H5L7 9Z" stroke="currentColor" stroke-width="2"/><path d="M10 16h12M11 21h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="sr-only">Treat jar, </span><span class="jar-count" data-cart-count>0</span>'}if(!document.querySelector('link[data-gob-header]')){const styles=document.createElement('link');styles.rel='stylesheet';styles.href='header.css?v=header-4';styles.dataset.gobHeader='true';document.head.append(styles)}}
 function setupAnnouncement(){const bar=document.querySelector('.notice'),text=bar?.querySelector('span');if(!bar||!text||bar.dataset.ready)return;bar.dataset.ready='true';const copy=()=> 'Free delivery on full packs • ₹30 off when you pay online • MEGA20: 20% off ₹2,199+';bar.innerHTML='<div class="notice-track"><span></span></div>';const label=bar.querySelector('.notice-track span'),paint=()=>label.textContent=copy();paint()}
 function setupSearch(){const trigger=document.querySelector('.search-trigger');if(!trigger||document.querySelector('#productSearch'))return;document.body.insertAdjacentHTML('beforeend','<section class="search-sheet" id="productSearch" aria-hidden="true"><div class="search-panel" role="dialog" aria-modal="true" aria-labelledby="searchTitle"><div class="search-top"><div><p class="eyebrow">Find a treat</p><h2 id="searchTitle">Search the treat cupboard.</h2></div><button class="search-close" type="button" aria-label="Close search">×</button></div><label class="search-field" for="productSearchInput"><span class="sr-only">Search products</span><input id="productSearchInput" type="search" autocomplete="off" placeholder="Try chicken, goat or chew"><span>⌕</span></label><div class="search-results" id="productSearchResults"></div></div></section>');const sheet=document.querySelector('#productSearch'),input=document.querySelector('#productSearchInput'),results=document.querySelector('#productSearchResults');const products=()=>Object.entries(window.GOB_PRODUCTS||GOB_PRODUCTS);const render=value=>{const query=value.trim().toLowerCase(),matches=products().filter(([id,p])=>!query||`${p.name} ${p.tag||''}`.toLowerCase().includes(query)).slice(0,6);results.innerHTML=matches.length?matches.map(([id,p])=>`<a href="product.html?catalog=${encodeURIComponent(id)}"><img src="${p.image}" alt="${p.name||'Game of Bones treat'}"><span><b>${p.name}</b><small>${p.tag||'Single-ingredient treat'} · ${money(p.price)}</small></span><i>→</i></a>`).join(''):'<p>No treats found. Try “chicken” or “goat”.</p>'};const close=()=>{sheet.classList.remove('open');sheet.setAttribute('aria-hidden','true');trigger.setAttribute('aria-expanded','false');document.body.classList.remove('locked')};trigger.addEventListener('click',()=>{sheet.classList.add('open');sheet.setAttribute('aria-hidden','false');trigger.setAttribute('aria-expanded','true');document.body.classList.add('locked');render('');setTimeout(()=>input.focus(),10)});input.addEventListener('input',()=>render(input.value));sheet.querySelector('.search-close').addEventListener('click',close);sheet.addEventListener('click',event=>{if(event.target===sheet)close()});document.addEventListener('keydown',event=>{if(event.key==='Escape'&&sheet.classList.contains('open'))close()})}
@@ -258,7 +258,7 @@ document.addEventListener('DOMContentLoaded',installFormFeedback);
     ['/cat-treats', 'Cat treats'],
     ['/our-story', 'Our story'],
   ];
-  const tickerCopy = 'Free delivery on full packs · ₹30 off when you pay online';
+  const tickerCopy = 'Free delivery on full packs, and ₹30 off when you pay online';
 
   const installLiveTicker = () => {
     const notice = document.querySelector('.notice');
@@ -324,6 +324,118 @@ document.addEventListener('DOMContentLoaded',installFormFeedback);
   if (!links.parentElement) nav.insertBefore(links, nav.querySelector('.nav-actions'));
 })();
 ;
+/* ===== conversion-extras.js ===== */
+(() => {
+  function ensureStyles() {
+    if (document.querySelector('link[href^="conversion-extras.css"]')) return;
+    const stylesheet = document.createElement('link');
+    stylesheet.rel = 'stylesheet';
+    stylesheet.href = 'conversion-extras.css?v=review-flow-2';
+    document.head.append(stylesheet);
+    const paidTrafficStyles = document.createElement('link');
+    paidTrafficStyles.rel = 'stylesheet';
+    paidTrafficStyles.href = 'conversion-paid-traffic.css?v=1';
+    document.head.append(paidTrafficStyles);
+    const reviewStyles = document.createElement('link');
+    reviewStyles.rel = 'stylesheet';
+    reviewStyles.href = 'review-public.css?v=verified-reviews-1';
+    document.head.append(reviewStyles);
+  }
+
+  function addWheelPrompt() {
+    // The Bone Run launcher now lives in /bone-run-loader.js (loaded by
+    // site.js on every page). Load it here too in case site.js is older.
+    if (window.__gobBRLoaderRan || document.querySelector('script[src^="/bone-run-loader.js"]')) return;
+    const s = document.createElement('script'); s.src = '/bone-run-loader.js?v=1'; document.body.append(s);
+  }
+
+  function addHomeExtras() {
+    document.querySelector('.hero .proof')?.insertAdjacentHTML('afterend', `
+      <aside class="home-sale-note" aria-label="Shopping details">
+        <strong>Simple prices, straight to your jar.</strong>
+        <span>Free delivery on full packs across India · ₹30 off when you pay online.</span>
+      </aside>`);
+    const target = document.querySelector('.subscribe');
+    target?.insertAdjacentHTML('beforebegin', `
+      <section class="conversion-block">
+        <div class="compare-grid">
+          <div><p class="eyebrow">The label check</p><h2>Game of Bones</h2><ul><li>One named ingredient per treat</li><li>No filler, artificial colour or flavour listed</li><li>Slow-dehydrated for a simple treat routine</li></ul></div>
+          <div><p class="eyebrow">Typical processed treats</p><h2>More to decode.</h2><ul><li>Ingredient lists can include binders and flavour systems</li><li>Processing and formulation vary by brand</li><li>Always read the current pouch label</li></ul></div>
+        </div>
+        <div class="bundle-cta"><div><p class="eyebrow">First order, made easy</p><h2>Build a treat box they’ll remember.</h2></div><a class="button" href="bundles.html">Build your bundle</a></div>
+      </section>`);
+  }
+
+  function addProductExtras() {
+    const buyRow = document.querySelector('.buy-row');
+    buyRow?.insertAdjacentHTML('afterend', `
+      <section class="paid-traffic-promise" aria-label="Order reassurance">
+        <span><b>Price shown is current</b><small>No code needed</small></span>
+        <span><b>Free delivery</b><small>On all full packs</small></span>
+        <span><b>₹30 off paying online</b><small>no COD fee</small></span>
+      </section>
+      <section class="quick-review-proof" id="quickReviewProof" aria-live="polite">
+        <span class="quick-review-stars" aria-hidden="true">★★★★★</span>
+        <span><b>Verified dog-parent reviews</b><small>Loading product feedback…</small></span>
+        <a href="#productReviewSection">Read reviews</a>
+      </section>
+      <button class="wish-btn" id="wishBtn">Sign in to save favourites</button>`);
+    document.querySelector('#wishBtn')?.addEventListener('click', () => location.assign('login.html'));
+
+    // Reviews sit full width under the photos and details on product pages, so the
+    // details column stays short; other layouts keep them after the accordion.
+    const reviewSpot = document.querySelector('.detail') || document.querySelector('.accordion');
+    reviewSpot?.insertAdjacentHTML('afterend', `
+      <section class="review-box${reviewSpot?.classList.contains('detail') ? ' review-band' : ''}" id="productReviewSection" aria-labelledby="reviewFlowTitle">
+        <p class="eyebrow">Notes from dog parents</p>
+        <h2 id="reviewFlowTitle">Reviews from real treat time.</h2>
+        <p class="review-intro">New reviews can only be written by customers with a delivered order, and every review is checked before it appears.</p>
+        <div id="productReviewFeed" class="product-review-feed" aria-live="polite"><p>Loading reviews…</p></div>
+        <div class="reward-review">Bought this treat? <a href="/account">Sign in to review your delivered items</a> · 100 points for an approved review, or 150 with a photo of your dog.</div>
+      </section>`);
+    const renderReviews = async () => {
+      const name = document.querySelector('#productName')?.textContent?.trim();
+      const feed = document.querySelector('#productReviewFeed'); if (!name || !feed || !window.GOB_API?.publicProductReviews) return;
+      const quickProof = document.querySelector('#quickReviewProof');
+      feed.innerHTML = '<p>Loading reviews…</p>';
+      try {
+        const data = await window.GOB_API.publicProductReviews(name), rows = Array.isArray(data.reviews) ? data.reviews : [];
+        const stars = value => '★'.repeat(Math.max(0, Math.min(5, Number(value) || 0))) + '☆'.repeat(Math.max(0, 5 - Math.min(5, Number(value) || 0)));
+        const headerRating = document.querySelector('#productRating');
+        if (headerRating) {
+          if (rows.length) {
+            const avg = Number(data.average_rating || 0);
+            headerRating.innerHTML = `${stars(Math.round(avg))} <a href="#productReviewSection" style="color:var(--ink);font-weight:600">${avg.toFixed(1)} · ${data.review_count} review${Number(data.review_count) === 1 ? '' : 's'}</a>`;
+            headerRating.hidden = false;
+          } else { headerRating.hidden = true; headerRating.innerHTML = ''; }
+        }
+        if (quickProof) {
+          const firstReview = String(rows[0]?.review || '').replace(/\s+/g, ' ').trim();
+          const safeExcerpt = firstReview.replace(/[&<>'"]/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' })[char]);
+          quickProof.innerHTML = rows.length
+            ? `<span class="quick-review-stars" aria-hidden="true">${stars(Math.round(Number(data.average_rating || 0)))}</span><span><b>${Number(data.average_rating || 0).toFixed(1)} from dog parents</b><small>${safeExcerpt.slice(0, 96)}${safeExcerpt.length > 96 ? '…' : ''}</small></span><a href="#productReviewSection">Read ${data.review_count} review${Number(data.review_count) === 1 ? '' : 's'}</a>`
+            : '<span><b>No reviews yet</b><small>Bought it? Review it after delivery and earn 100 points.</small></span>';
+        }
+        feed.innerHTML = rows.length ? `<div class="review-summary"><strong>${Number(data.average_rating || 0).toFixed(1)} / 5</strong><span aria-label="${Number(data.average_rating || 0)} out of 5 stars">${stars(Math.round(Number(data.average_rating || 0)))}</span><small>${data.review_count} review${Number(data.review_count) === 1 ? '' : 's'}</small></div><div class="public-review-list">${rows.map(row => `<article class="public-review"><div><strong>${String(row.name || 'Verified dog parent')}</strong><span aria-label="${Number(row.rating || 0)} out of 5 stars">${stars(row.rating)}</span></div><p>${String(row.review || '').replace(/[&<>'"]/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' })[char])}</p>${row.photo_url ? `<img src="${String(row.photo_url)}" alt="A dog enjoying ${name}" loading="lazy">` : ''}</article>`).join('')}</div>` : '<p class="review-empty">Be the first verified dog parent to share a note about this treat.</p>';
+      } catch {
+        if (quickProof) quickProof.innerHTML = '<span><b>Customer reviews</b><small>Reviews are shown after moderation.</small></span>';
+        const headerRating = document.querySelector('#productRating'); if (headerRating) headerRating.hidden = true;
+        feed.innerHTML = '<p class="review-empty">Reviews are temporarily unavailable. Please check back soon.</p>';
+      }
+    };
+    renderReviews();
+    document.addEventListener('gob:product-ready', renderReviews);
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    ensureStyles();
+    addWheelPrompt();
+    const isHome = location.pathname === '/' || location.pathname.endsWith('/index.html');
+    if (isHome) addHomeExtras();
+    if (document.querySelector('#addProduct')) addProductExtras();
+  });
+})();
+;
 /* ===== api-client.js ===== */
 /* Customer storefront API bridge. Production calls stay on the protected
    server-side admin API; previews remain visually testable without it. */
@@ -355,19 +467,32 @@ document.addEventListener('DOMContentLoaded',installFormFeedback);
     if (!response.ok) throw new Error(data.error || 'The service could not complete that request.');
     return data;
   }
+  // Several page scripts ask for the same catalogue and reviews while the page
+  // builds. Share one request per page (for 60 seconds); a failed request is
+  // dropped so the next caller retries.
+  const sharedCache = new Map();
+  const shared = (key, load) => {
+    const hit = sharedCache.get(key);
+    const copy = data => (typeof structuredClone === 'function' ? structuredClone(data) : JSON.parse(JSON.stringify(data)));
+    if (hit && Date.now() - hit.at < 60000) return hit.promise.then(copy);
+    const promise = Promise.resolve().then(load);
+    sharedCache.set(key, { at: Date.now(), promise });
+    promise.catch(() => { if (sharedCache.get(key)?.promise === promise) sharedCache.delete(key); });
+    return promise.then(copy);
+  };
   const customerHeaders = () => {
     const token = window.sessionStorage.getItem('gob-customer-token');
     return token ? { Authorization: `Bearer ${token}` } : {};
   };
   const api = {
     base, request,
-    catalogue: async () => {
+    catalogue: () => shared('catalogue', async () => {
       if (!catalogueBase) throw new Error('The catalogue feed is not configured for this preview.');
       const response = await fetch(`${catalogueBase}/public-products`, { cache: 'no-store' });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(data.error || 'The catalogue could not be loaded.');
       return data;
-    },
+    }),
     blogs: async () => {
       if (!catalogueBase) throw new Error('The blog feed is not configured for this preview.');
       const response = await fetch(`${catalogueBase}/public-blogs`, { cache: 'no-store' });
@@ -384,7 +509,7 @@ document.addEventListener('DOMContentLoaded',installFormFeedback);
     updateAccount: (token, body) => request('/customer-account', { method: 'PATCH', headers: { Authorization: `Bearer ${token}` }, body: JSON.stringify(body) }),
     customerReviews: token => request('/customer-reviews', { headers: { Authorization: `Bearer ${token}` } }),
     submitCustomerReview: (token, formData) => multipartRequest('/customer-reviews', token, formData),
-    publicProductReviews: product => request(`/public-product-reviews?product=${encodeURIComponent(product)}`),
+    publicProductReviews: product => shared(`reviews:${product}`, () => request(`/public-product-reviews?product=${encodeURIComponent(product)}`)),
     capture: body => request('/public-email-capture', { method: 'POST', body: JSON.stringify(body) }),
     contactInquiry: body => request('/contact-inquiries', { method: 'POST', body: JSON.stringify(body) }),
     spinWheel: body => request('/spin-wheel', { method: 'POST', body: JSON.stringify(body) }),
@@ -615,708 +740,136 @@ document.addEventListener('DOMContentLoaded',()=>{const root=document.querySelec
   document.addEventListener('DOMContentLoaded', syncCatalogue);
 })();
 ;
-/* ===== commerce.js ===== */
-// Preserve the product snapshot selected by the customer. Live catalogue
-// syncs must not rewrite an existing cart line's presentation. The one
-// exception is an expired sitewide-sale snapshot: restore its current live
-// price so an old browser cart cannot retain a finished promotion.
-function commerceProduct(item){const snapshot=item.product,current=GOB_PRODUCTS[item.id]||null;if(snapshot&&current&&Number(snapshot.comparePrice)>Number(snapshot.price)&&!(Number(current.comparePrice)>Number(current.price)))return {...snapshot,price:Number(current.price)||0,comparePrice:Number(current.comparePrice)||0};return snapshot||current}
-function cartValue(){return cart().reduce((total,item)=>total+(commerceProduct(item)?.price||0)*item.quantity,0)}
-// Trial boxes: ₹50 delivery when the treat jar holds trial packs and the treat
-// subtotal is under ₹300. The checkout server applies the same rule.
-const TRIAL_FREE_DELIVERY_MIN=300,TRIAL_DELIVERY_CHARGE=50
-function cartHasTrialPacks(){return cart().some(item=>{const p=commerceProduct(item);return /^trial\b/i.test(String(p?.packLabel||'').trim())||/—\s*trial\b/i.test(String(p?.name||''))})}
-function trialDeliveryCharge(){return cartHasTrialPacks()&&cartValue()<TRIAL_FREE_DELIVERY_MIN?TRIAL_DELIVERY_CHARGE:0}
-function cartHasSaleItems(){return cart().some(item=>{const product=commerceProduct(item);return Number(product?.comparePrice)>Number(product?.price)})}
-const BOGO_TREATS=new Set([]) // Buy 1 Get 1 ended 2 Nov 2026; add names to run it again
-function bogoTreat(product){return BOGO_TREATS.has(String(product?.name||'').replace(/\s+—\s+.+$/,'').trim().toLowerCase())}
-function cartHasBogoItems(){return cart().some(item=>bogoTreat(commerceProduct(item)))}
-function bogoDiscount(){return cart().reduce((total,item)=>{const product=commerceProduct(item);return total+(bogoTreat(product)?Math.floor((Number(item.quantity)||0)/2)*(Number(product?.price)||0):0)},0)}
-const POINT_VALUE_RUPEES=.3,MAX_POINTS_DISCOUNT_RUPEES=100,MAX_REDEMPTION_POINTS=Math.floor(MAX_POINTS_DISCOUNT_RUPEES/POINT_VALUE_RUPEES)
-
-// Private offers are still checked by the server before payment. These
-// families mirror the currently active campaign configuration so shoppers see
-// the same saving in the treat jar and at checkout.
-function privateOfferRate(code){
-  if(/^SAVE10-[A-Z0-9]+$/.test(code)||code==='GOBFAMILY10'||code==='BOWL10')return .1
-  if(/^BDAY[A-Z0-9]+$/.test(code)||code==='PAWTY25')return .25
-  return 0
-}
-function isPreviewablePrivateOffer(code){return privateOfferRate(code)>0}
-
-// Bag-page offer: sharing a WhatsApp number unlocks ₹50 off a first order
-// (CART50). The browser only remembers that it was unlocked; the server
-// re-checks that the mobile number/email has never ordered at payment.
-const CART_OFFER_CODE='CART50',CART_OFFER_AMOUNT=50,CART_OFFER_KEY='gob-cart-offer'
-function cartOfferClaimed(){try{const claim=JSON.parse(window.localStorage.getItem(CART_OFFER_KEY)||'null');return Boolean(claim&&claim.code===CART_OFFER_CODE&&Date.now()-Number(claim.at||0)<30*24*60*60*1000)}catch(_){return false}}
-function setCartOfferClaim(on){try{if(on)window.localStorage.setItem(CART_OFFER_KEY,JSON.stringify({code:CART_OFFER_CODE,at:Date.now()}));else window.localStorage.removeItem(CART_OFFER_KEY)}catch(_){}}
-function offerDiscountFor(code,subtotal,rate){return code===CART_OFFER_CODE?Math.min(CART_OFFER_AMOUNT,Math.max(0,subtotal)):Math.round(subtotal*rate)}
-
-const commerceSlug=value=>String(value||'').toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'')
-async function recoverUnknownCartLines(){
-  const lines=cart(),missing=lines.filter(line=>!commerceProduct(line))
-  if(!missing.length||!window.GOB_API?.catalogue)return
-  try{
-    const response=await window.GOB_API.catalogue(),products=Array.isArray(response?.products)?response.products:[]
-    let changed=false
-    missing.forEach(line=>{
-      const id=String(line.id||''),packMatch=id.match(/-pack-(\d+)$/),baseId=packMatch?id.slice(0,packMatch.index):id
-      const source=products.find(product=>String(product.id||'')===baseId||commerceSlug(product.name)===baseId)
-      if(!source)return
-      const packIndex=Math.max(0,Number(packMatch?.[1]||1)-1),pack=Array.isArray(source.sizes)?source.sizes[packIndex]||source.sizes[0]:null
-      const price=Number(pack?.price??source.price)
-      if(!Number.isFinite(price)||price<=0)return
-      line.product={name:source.name,price,comparePrice:Number(pack?.compare_price??source.compare_price)||0,image:source.image_url||source.images?.[0]||'',tag:'Game of Bones treat',packLabel:pack?.label||''}
-      changed=true
-    })
-    if(changed){saveCart(lines);updateCart();renderCommerceCart()}
-  }catch(error){console.warn('Cart item recovery will retry when the catalogue is available.',error)}
-}
-
-function renderCommerceCart(){
-  const root=document.querySelector('#commerceCart')
-  if(!root)return
-  const items=cart()
-  if(!items.length){
-    root.innerHTML='<div class="empty-cart"><h2>Your treat jar is ready when you are.</h2><p>Pick a single-ingredient treat and come back when you are ready to check out.</p><a class="button" href="/products">Shop all treats</a></div>'
-    document.querySelector('#checkoutLink')?.setAttribute('href','/products')
-    updateCommerceTotals()
-    updateSaleOfferControls()
-    return
-  }
-  const saleBasket=cartHasSaleItems(),bogoBasket=cartHasBogoItems()
-  const saleNote=saleBasket?'<aside class="cart-sale-note" role="status"><strong>Your listed sale price is locked in.</strong><span>Add one eligible code and/or reward points at secure checkout for extra savings.</span></aside>':''
-  const bogoNote=bogoBasket?'<aside class="cart-sale-note" role="status"><strong>Buy 1 Get 1 is on for Chicken Feet & Chicken Neck.</strong><span>Add two of the same eligible pack and one is free. This offer cannot be combined with coupon codes or reward points.</span></aside>':''
-  root.innerHTML=bogoNote+saleNote+items.map(item=>{
-    const product=commerceProduct(item)
-    if(!product)return ''
-    const sale=Number(product.comparePrice)>Number(product.price)
-    const bogo=bogoTreat(product),bogoSaving=bogo?Math.floor((Number(item.quantity)||0)/2)*(Number(product.price)||0):0,lineTotal=(Number(product.price)||0)*(Number(item.quantity)||0)-bogoSaving
-    return `<article class="cart-line"><img src="${product.image}" alt="${product.name}"><div><h2>${product.name}</h2><p>${product.tag||'Game of Bones treat'}${sale?' · <b>Sale</b>':''}${bogo?' · <b>BUY 1 GET 1</b>':''}</p><div class="line-actions"><div class="mini-qty"><button data-change="${item.id}" data-amount="-1" aria-label="Decrease ${product.name}">−</button><span>${item.quantity}</span><button data-change="${item.id}" data-amount="1" aria-label="Increase ${product.name}">+</button></div><button class="remove-link" data-delete="${item.id}">Remove</button></div></div><div class="line-price">${sale?`<s>${money(product.comparePrice*item.quantity)}</s> `:''}${bogoSaving?`<s>${money(product.price*item.quantity)}</s> `:''}${money(lineTotal)}${bogoSaving?'<small>Buy 1 Get 1</small>':''}</div></article>`
-  }).join('')
-  root.querySelectorAll('[data-change]').forEach(button=>button.addEventListener('click',()=>{
-    const items=cart(),entry=items.find(item=>item.id===button.dataset.change)
-    if(!entry)return
-    entry.quantity=Math.max(1,entry.quantity+Number(button.dataset.amount))
-    saveCart(items);updateCart();renderCommerceCart()
-  }))
-  root.querySelectorAll('[data-delete]').forEach(button=>button.addEventListener('click',()=>{
-    saveCart(cart().filter(item=>item.id!==button.dataset.delete));updateCart();renderCommerceCart()
-  }))
-  updateCommerceTotals()
-  updateSaleOfferControls()
-}
-
-function updateCommerceTotals(){
-  const subtotal=cartValue(),count=cartCount(),saleBasket=cartHasSaleItems(),bogoBasket=cartHasBogoItems(),bogoSaving=bogoDiscount()
-  const privateCoupon=document.querySelector('[name="private_coupon"]')?.value.trim().toUpperCase()||''
-  // A recognised private code can be entered from the treat jar before the secure
-  // checkout form exists. Keep it in session storage and show the same quote.
-  const storedCoupon=window.sessionStorage.getItem('gob-checkout-coupon')||''
-  const coupon=privateCoupon||storedCoupon||document.querySelector('[name="coupon"]:checked')?.value||(!document.querySelector('[name="coupon"]')&&cartOfferClaimed()?'WELCOME15':'none')
-  const eligibility=window.GOB_CHECKOUT_ELIGIBILITY||{signedIn:false,firstOrder:false,checking:false,points:0}
-  // The displayed price, one valid code and loyalty points can be used together.
-  const couponRate=bogoBasket?0:(coupon==='WELCOME15'&&!(eligibility.signedIn&&!eligibility.checking&&!eligibility.firstOrder) ? .15 : coupon==='MEGA20'&&subtotal>=2199 ? .2 : privateOfferRate(coupon))
-  const couponDiscount=bogoBasket?0:offerDiscountFor(coupon,subtotal,couponRate),saving=bogoSaving+couponDiscount
-  const payment=document.querySelector('[name="payment"]:checked')?.value||'online'
-  const requestedPoints=Number(document.querySelector('[name="loyalty_points_redeemed"]')?.value||0)
-  const pointsRedeemed=bogoBasket?0:(eligibility.signedIn?Math.min(Math.max(Math.floor(requestedPoints)||0,0),MAX_REDEMPTION_POINTS,Number(eligibility.points||0)):0)
-  const pointsDiscount=Math.min(MAX_POINTS_DISCOUNT_RUPEES,Math.round(pointsRedeemed*POINT_VALUE_RUPEES))
-  const delivery=trialDeliveryCharge(),paymentChange=payment==='cod'?40:-30,total=Math.max(0,subtotal-saving-pointsDiscount+paymentChange+delivery)
-  const pointsEarned=Math.floor(total/10),pointsValue=pointsEarned*.3
-  document.querySelectorAll('[data-commerce-subtotal]').forEach(el=>el.textContent=money(subtotal))
-  document.querySelectorAll('[data-shipping-label]').forEach(el=>el.textContent=delivery?money(delivery):'Free')
-  document.querySelectorAll('[data-delivery-row]').forEach(el=>el.hidden=!delivery)
-  document.querySelectorAll('[data-delivery-charge]').forEach(el=>el.textContent=`+${money(delivery)}`)
-  document.querySelectorAll('[data-delivery-note]').forEach(el=>{el.hidden=!cartHasTrialPacks();el.textContent=delivery?`Trial box under ${money(TRIAL_FREE_DELIVERY_MIN)}: ${money(delivery)} delivery. Add ${money(TRIAL_FREE_DELIVERY_MIN-subtotal)} more for free delivery.`:'Free delivery on this trial box.'})
-  document.querySelectorAll('[data-commerce-total]').forEach(el=>el.textContent=money(total))
-  document.querySelectorAll('[data-coupon-discount]').forEach(el=>el.textContent=saving?`−${money(saving)}`:'—')
-  document.querySelectorAll('[data-coupon-row]').forEach(el=>el.hidden=!saving)
-  document.querySelectorAll('[data-coupon-label]').forEach(el=>el.textContent=bogoSaving?'Buy 1 Get 1':(saving?`Coupon — ${coupon}`:'Coupon'))
-  document.querySelectorAll('[data-payment-change]').forEach(el=>el.textContent=payment==='cod'?`+${money(40)}`:`−${money(30)}`)
-  document.querySelectorAll('[data-points-discount]').forEach(el=>el.textContent=pointsDiscount?`−${money(pointsDiscount)}`:'—')
-  document.querySelectorAll('[data-loyalty-points]').forEach(el=>el.textContent=pointsEarned.toLocaleString('en-IN'))
-  document.querySelectorAll('[data-loyalty-value]').forEach(el=>el.textContent=pointsValue.toFixed(pointsValue%1?2:0))
-  document.querySelectorAll('[data-commerce-count]').forEach(el=>el.textContent=count)
-  const statusMessage=()=>{
-    if(bogoBasket){
-      return bogoSaving?`Buy 1 Get 1 is applied: ${money(bogoSaving)} saved. Coupon codes and reward points cannot be used with this offer.`:'Buy 1 Get 1 is active for Chicken Feet and Chicken Neck. Add one more of the same eligible pack to receive one free. Coupon codes and reward points cannot be used with this offer.'
-    }else if(saleBasket){
-      return coupon==='none'&&!privateCoupon?'Your current listed price is applied. Add one eligible code and/or reward points at checkout for extra savings.':'Your current listed price, eligible code and reward points are being applied.'
-    }else if(coupon==='WELCOME15'){
-      return !eligibility.signedIn?'WELCOME15 is applied: 15% off your first order. No login needed — we check your mobile number and email at payment.':eligibility.checking?'Checking whether this account is eligible for WELCOME15…':eligibility.firstOrder?'WELCOME15 is available for this first order.':'WELCOME15 is not applied: this account already has a completed order, or its first-order status could not be verified.'
-    } else if(coupon===CART_OFFER_CODE){
-      return `₹${CART_OFFER_AMOUNT} off is applied — your first-order treat jar offer. We confirm it with your mobile number at payment.`
-    } else if(coupon==='MEGA20'){
-      const remaining=Math.max(0,2199-subtotal)
-      return remaining?`MEGA20 is not applied: add ${money(remaining)} of eligible treats to reach the ₹2,199 minimum.`:'MEGA20 is available on this basket.'
-    } else if(privateOfferRate(coupon)){
-      return `${coupon} is applied — ${Math.round(privateOfferRate(coupon)*100)}% off this order.`
-    } else if(privateCoupon){
-      return 'Your coupon will be securely verified before payment.'
-    } else {
-      return 'Your listed price is already applied. Choose one eligible code and/or use reward points for extra savings.'
-    }
-  }
-  const message=statusMessage()
-  document.querySelectorAll('[data-coupon-status],[data-checkout-coupon-status]').forEach(status=>status.textContent=message)
-}
-
-function ensureLoyaltyEarn(){
-  if(!document.querySelector('#checkoutForm'))return
-  const total=document.querySelector('.order-row.total')
-  if(!total||document.querySelector('.loyalty-earn'))return
-  const styles=document.createElement('link');styles.rel='stylesheet';styles.href='loyalty-checkout.css';document.head.append(styles)
-  total.insertAdjacentHTML('beforebegin','<div class="loyalty-earn" aria-live="polite"><div class="loyalty-earn-mark" aria-hidden="true">G</div><div><span>Game of Bones rewards</span><strong>You’ll earn <b data-loyalty-points>0</b> points</strong><small>That’s worth ₹<b data-loyalty-value>0</b> off a future order.</small></div></div>')
-}
-
-function ensureBulkDiscount(){
-  const total=document.querySelector('.order-row.total')
-  if(!total)return
-  document.querySelector('.bulk-discount')?.remove()
-}
-
-function ensureCheckoutOptions(){
-  const form=document.querySelector('#checkoutForm'),total=document.querySelector('.order-row.total')
-  if(!form||document.querySelector('.checkout-perks'))return
-  form.querySelectorAll('[name="payment"]').forEach((input,index)=>input.value=index?'cod':'online')
-  const payment=form.querySelector('.form-section:last-of-type')
-  payment.insertAdjacentHTML('beforebegin',`<section class="form-section checkout-perks">
-    <h3>Offers & rewards</h3>
-    <label data-automatic-offer><input type="radio" name="coupon" value="none" checked><span><b data-automatic-offer-title>Continue with the listed price</b> <small data-automatic-offer-copy>Your current listed price is shown above. You may choose one eligible code below.</small></span></label>
-    <label data-welcome-offer><input type="radio" name="coupon" value="WELCOME15"><span>WELCOME15 — 15% off your first order <small>No login needed · one use per mobile number and email · checked at payment.</small></span></label>
-    <label data-mega-offer><input type="radio" name="coupon" value="MEGA20"><span>MEGA20 — 20% off orders ₹2,199+ <small>Eligible treat subtotal must reach ₹2,199.</small></span></label>
-    <details class="private-code"><summary>Have a private code from us?</summary><label>Private birthday code <input name="private_coupon" type="text" inputmode="text" autocomplete="off" maxlength="32" placeholder="Enter your private code"></label><small>Private rewards are sent directly to the pet parent and are not public offers.</small></details>
-    <label data-loyalty-redeem hidden><input type="number" name="loyalty_points_redeemed" min="0" max="333" step="1" value="0" inputmode="numeric"><span>Use reward points <small>Use up to ₹100 off per order (maximum 333 points). Every point is worth ₹0.30 and can be combined with one eligible coupon.</small></span></label>
-    <p class="perk-status" data-coupon-status role="status" aria-live="polite"></p>
-  </section>`)
-  total.insertAdjacentHTML('beforebegin','<div class="order-row" data-coupon-row hidden><span data-coupon-label>Coupon</span><span data-coupon-discount>—</span></div><div class="order-row" data-loyalty-discount-row hidden><span>Reward points</span><span data-points-discount>—</span></div><div class="order-row"><span>Payment adjustment</span><span data-payment-change>−₹30</span></div>')
-  form.querySelectorAll('[name="coupon"],[name="payment"],[name="loyalty_points_redeemed"],[name="private_coupon"]').forEach(input=>input.addEventListener('input',updateCommerceTotals))
-
-  const privateCode=form.querySelector('[name="private_coupon"]')
-  const summaryCode=document.querySelector('#checkoutCoupon')
-  const applySummaryCode=()=>{
-    if(!privateCode||!summaryCode)return
-    const code=summaryCode.value.trim().toUpperCase()
-    summaryCode.value=code
-    privateCode.value=code
-    if(code) privateCode.closest('details')?.setAttribute('open','')
-    updateCommerceTotals()
-  }
-  document.querySelector('[data-apply-checkout-coupon]')?.addEventListener('click',applySummaryCode)
-  summaryCode?.addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();applySummaryCode()}})
-  privateCode?.addEventListener('input',()=>{if(summaryCode)summaryCode.value=privateCode.value.trim().toUpperCase()})
-
-  // A code applied from the treat jar is only carried to this secure checkout; it
-  // is still checked against the signed-in customer's eligibility below.
-  const storedCoupon=window.sessionStorage.getItem('gob-checkout-coupon')
-  const requestedCoupon=['WELCOME15','MEGA20'].includes(storedCoupon)?storedCoupon:''
-  const requestedInput=requestedCoupon&&form.querySelector(`[name="coupon"][value="${requestedCoupon}"]`)
-  if(requestedInput) requestedInput.checked=true
-  // Sharing a WhatsApp number in the treat jar pre-selects WELCOME15 (the one first-order offer).
-  const welcomeInput=form.querySelector('[name="coupon"][value="WELCOME15"]')
-  if(welcomeInput&&cartOfferClaimed()&&!requestedInput&&!isPreviewablePrivateOffer(storedCoupon))welcomeInput.checked=true
-  if(isPreviewablePrivateOffer(storedCoupon)){
-    if(privateCode){privateCode.value=storedCoupon;privateCode.closest('details')?.setAttribute('open','')}
-  }
-  if(summaryCode&&privateCode)summaryCode.value=privateCode.value.trim().toUpperCase()
-  window.sessionStorage.removeItem('gob-checkout-coupon')
-  updateSaleOfferControls()
-}
-
-function updateSaleOfferControls(){
-  const title=document.querySelector('[data-automatic-offer-title]'),copy=document.querySelector('[data-automatic-offer-copy]')
-  const bogoBasket=cartHasBogoItems()
-  const form=document.querySelector('#checkoutForm')
-  const privateCode=form?.querySelector('[name="private_coupon"]')
-  const points=form?.querySelector('[name="loyalty_points_redeemed"]')
-  if(bogoBasket){
-    if(title)title.textContent='Buy 1 Get 1 is applied automatically'
-    if(copy)copy.textContent='Chicken Feet and Chicken Neck Buy 1 Get 1 cannot be combined with coupon codes or reward points.'
-    document.querySelectorAll('[data-welcome-offer],[data-cart-offer],[data-mega-offer],.private-code,[data-loyalty-redeem],[data-loyalty-mirror]').forEach(el=>el.hidden=true)
-    document.querySelector('[name="coupon"][value="none"]')?.click()
-    if(privateCode)privateCode.value=''
-    if(points)points.value='0'
-    const summary=document.querySelector('#checkoutCoupon');if(summary){summary.value='';summary.disabled=true;summary.placeholder='Not available with Buy 1 Get 1'}
-    return
-  }
-  document.querySelectorAll('[data-welcome-offer],[data-mega-offer],.private-code').forEach(el=>el.hidden=false)
-  const summary=document.querySelector('#checkoutCoupon');if(summary){summary.disabled=false;summary.placeholder='Enter coupon code'}
-  if(title)title.textContent='Continue with the listed price'
-  if(copy)copy.textContent='Your current listed price is shown above. You may choose one eligible code and use reward points.'
-  updateWelcomeOfferVisibility()
-  updateLoyaltyRedemptionVisibility()
-}
-
-function updateWelcomeOfferVisibility(){
-  const offer=document.querySelector('[data-welcome-offer]')
-  const eligibility=window.GOB_CHECKOUT_ELIGIBILITY
-  if(!offer||!eligibility)return
-  const hasOrdered=eligibility.signedIn&&!eligibility.checking&&!eligibility.firstOrder
-  offer.hidden=hasOrdered
-  if(hasOrdered&&offer.querySelector('input:checked')){
-    document.querySelector('[name="coupon"][value="none"]')?.click()
-  }
-  // A signed-in customer with an earlier order cannot use the first-order ₹50 offer.
-  const cartOffer=document.querySelector('[data-cart-offer]')
-  if(cartOffer&&hasOrdered){
-    cartOffer.hidden=true
-    if(cartOffer.querySelector('input:checked'))document.querySelector('[name="coupon"][value="none"]')?.click()
-  }
-}
-
-function updateLoyaltyRedemptionVisibility(){
-  const eligibility=window.GOB_CHECKOUT_ELIGIBILITY||{},control=document.querySelector('[data-loyalty-redeem]'),row=document.querySelector('[data-loyalty-discount-row]')
-  if(!control||!row)return
-  if(cartHasBogoItems()){
-    control.hidden=true;row.hidden=true
-    const input=control.querySelector('[name="loyalty_points_redeemed"]');if(input)input.value='0'
-    const toggle=control.querySelector('[data-loyalty-toggle]');if(toggle)toggle.checked=false
-    const mirror=document.querySelector('[data-loyalty-mirror]');if(mirror)mirror.style.display='none'
-    const prompt=document.querySelector('[data-loyalty-login]');if(prompt)prompt.hidden=true
-    return
-  }
-  const available=Math.min(MAX_REDEMPTION_POINTS,Math.max(0,Math.floor(Number(eligibility.points||0))))
-  control.hidden=!eligibility.signedIn||available<=0
-  // Signed-out shoppers never see the points box, so tell them how to use their points.
-  let prompt=document.querySelector('[data-loyalty-login]')
-  if(!prompt){prompt=document.createElement('p');prompt.dataset.loyaltyLogin='';prompt.className='order-note loyalty-login-prompt';prompt.innerHTML=`Have reward points? <a href="/login?next=${encodeURIComponent(location.pathname)}">Log in</a> to use them on this order.`;control.before(prompt)}
-  prompt.hidden=Boolean(eligibility.signedIn)||Boolean(eligibility.checking)
-  row.hidden=!eligibility.signedIn||available<=0
-  const input=control.querySelector('[name="loyalty_points_redeemed"]')
-  if(input){input.max=String(available);input.value=String(Math.min(Number(input.value)||0,available))}
-  // The number box rendered as a tiny empty square, so customers could not see or enter points.
-  // Use a clear tick-box instead: ticking applies the most points allowed on this order.
-  let toggle=control.querySelector('[data-loyalty-toggle]')
-  if(!toggle&&input){
-    toggle=document.createElement('input');toggle.type='checkbox';toggle.dataset.loyaltyToggle=''
-    input.before(toggle);input.style.display='none'
-    const copy=control.querySelector('span');if(copy){const note=copy.querySelector('small');copy.innerHTML='<b data-loyalty-title>Use reward points</b> ';if(note)copy.append(note)}
-    toggle.addEventListener('change',()=>{input.value=toggle.checked?input.max:'0';input.dispatchEvent(new Event('input',{bubbles:true}))})
-  }
-  if(toggle&&input){
-    toggle.checked=Number(input.value)>0
-    const title=control.querySelector('[data-loyalty-title]'),balance=Math.max(0,Math.floor(Number(eligibility.points||0)))
-    if(title&&available>0)title.textContent=`Use ${available} reward points — save ₹${Math.min(100,Math.round(available*.3))} (you have ${balance})`
-  }
-  // Also offer the points in the order summary, next to the coupon box, where shoppers look for savings.
-  let mirror=document.querySelector('[data-loyalty-mirror]')
-  const promo=document.querySelector('.checkout-promo')
-  if(!mirror&&promo&&toggle){
-    mirror=document.createElement('label');mirror.dataset.loyaltyMirror=''
-    mirror.style.cssText='display:flex;gap:10px;align-items:flex-start;margin:14px 0 0;padding:12px 14px;border:1px solid #c9a24a;background:#fff8e6;font-size:13px;line-height:1.45;cursor:pointer'
-    mirror.innerHTML='<input type="checkbox" style="margin-top:2px;flex:none"><span><b data-mirror-title></b><br><small>Up to ₹100 off per order. Works with one coupon.</small></span>'
-    promo.after(mirror)
-    const box=mirror.querySelector('input')
-    box.addEventListener('change',()=>{toggle.checked=box.checked;toggle.dispatchEvent(new Event('change'))})
-    toggle.addEventListener('change',()=>{box.checked=toggle.checked})
-  }
-  if(mirror&&toggle){
-    mirror.style.display=control.hidden?'none':'flex'
-    mirror.querySelector('input').checked=toggle.checked
-    const t=mirror.querySelector('[data-mirror-title]'),src=control.querySelector('[data-loyalty-title]');if(t&&src)t.textContent=src.textContent
-  }
-}
-
-// Signed-in customers: fill any empty checkout fields from their saved account
-// (name, mobile, email, default address, dog), so they do not retype them each order.
-// The mobile comes from their own session, which also keeps reward points valid.
-function prefillCheckoutFromAccount(account,token){
-  const form=document.querySelector('#checkoutForm');if(!form||!account)return
-  const set=(sel,val)=>{const el=form.querySelector(sel);if(!el||val==null||!String(val).trim()||String(el.value||'').trim())return;el.value=String(val).trim();el.dispatchEvent(new Event('input',{bubbles:true}));el.dispatchEvent(new Event('change',{bubbles:true}))}
-  const p=account.profile||{},parts=String(p.name||'').trim().split(/\s+/)
-  set('[autocomplete="name"]',parts.join(' '))
-  set('[autocomplete="email"]',p.email)
-  let phone='';try{let b=String(token).split('.')[0].replace(/-/g,'+').replace(/_/g,'/');while(b.length%4)b+='=';phone=String(JSON.parse(atob(b)).phone||'').replace(/\D/g,'').slice(-10)}catch(_){}
-  set('[autocomplete="tel"]',phone)
-  const list=Array.isArray(account.addresses)?account.addresses.filter(Boolean):[]
-  const a=list.find(x=>x.is_default)||list[0]||{line1:p.address_line1,line2:p.address_line2,city:p.city,state:p.state,pincode:p.pincode}
-  set('[autocomplete="street-address"]',a.line1);set('[autocomplete="address-line2"]',a.line2);set('[autocomplete="address-level2"]',a.city);set('[autocomplete="address-level1"]',a.state);set('[autocomplete="postal-code"]',a.pincode)
-  const d=(Array.isArray(account.dogs)&&account.dogs[0])||{}
-  set('[name="dog_name"]',d.name||p.dog_name);set('[name="dog_birthday"]',String(d.birthday||p.dog_birthday||'').slice(0,10))
-}
-
-async function loadCheckoutEligibility(){
-  const token=window.sessionStorage.getItem('gob-customer-token')
-  window.GOB_CHECKOUT_ELIGIBILITY={signedIn:Boolean(token),firstOrder:false,checking:Boolean(token),points:0}
-  updateCommerceTotals()
-  updateWelcomeOfferVisibility()
-  updateLoyaltyRedemptionVisibility()
-  if(!token)return
-  try{
-    const account=await window.GOB_API?.account(token)
-    try{prefillCheckoutFromAccount(account,token)}catch(_){}
-    const orders=Array.isArray(account?.orders)?account.orders:[]
-    window.GOB_CHECKOUT_ELIGIBILITY={signedIn:true,firstOrder:orders.length===0,checking:false,points:Number(account?.points?.available||0)}
-  }catch(error){
-    window.GOB_CHECKOUT_ELIGIBILITY={signedIn:true,firstOrder:false,checking:false,points:0}
-  }
-  updateWelcomeOfferVisibility()
-  updateLoyaltyRedemptionVisibility()
-  updateCommerceTotals()
-}
-
-function setupCommerce(){
-  ensureLoyaltyEarn();ensureBulkDiscount();ensureCheckoutOptions();renderCommerceCart();updateSaleOfferControls();recoverUnknownCartLines();loadCheckoutEligibility()
-  document.querySelector('#promoForm')?.addEventListener('submit',event=>{
-    event.preventDefault()
-    const code=document.querySelector('#promoCode').value.trim().toUpperCase(),message=document.querySelector('#promoMessage')
-    if(cartHasBogoItems()){
-      window.sessionStorage.removeItem('gob-checkout-coupon')
-      message.textContent='Buy 1 Get 1 on Chicken Feet and Chicken Neck cannot be combined with coupon codes or reward points.'
-      return
-    }
-    if(code==='WELCOME15'){
-      window.sessionStorage.setItem('gob-checkout-coupon',code)
-      message.innerHTML='WELCOME15 is applied: 15% off your first order. <a href="/checkout">Continue to checkout</a>, no login needed.'
-    }else if(code==='MEGA20'){
-      window.sessionStorage.setItem('gob-checkout-coupon',code)
-      message.textContent=cartValue()>=2199?'MEGA20 is ready for secure checkout.':'MEGA20 needs a treat subtotal of ₹2,199 or more; you can still continue to checkout.'
-    }else if(isPreviewablePrivateOffer(code)){
-      window.sessionStorage.setItem('gob-checkout-coupon',code)
-      updateCommerceTotals()
-      message.textContent=`${code} is applied — ${Math.round(privateOfferRate(code)*100)}% off will carry through to secure checkout.`
-    }else{
-      window.sessionStorage.removeItem('gob-checkout-coupon')
-      message.textContent='Private birthday rewards are entered securely at checkout. Public offers: WELCOME15 or MEGA20.'
-    }
-  })
-}
-
-document.addEventListener('DOMContentLoaded',setupCommerce)
-document.addEventListener('gob:catalog-sync',()=>{renderCommerceCart();updateSaleOfferControls();recoverUnknownCartLines()})
-;
-/* ===== cart-recovery.js ===== */
-/* Cart page conversion helpers.
-   1. The "save your bowl" box becomes a WhatsApp offer: sharing a number
-      applies WELCOME15 automatically (15% off; first order only, once per
-      customer) and saves the bowl for a reminder.
-   2. The total and checkout button sit above that box, so shoppers see the
-      way forward before an invitation to leave.
-   3. Phones get a sticky checkout bar while the checkout button is off screen.
-   4. Reassurance (shipping, payment, quality, returns) sits next to the button.
-   Contact details are still only sent when the shopper submits the form. */
+/* ===== restock-notify.js ===== */
+/* Back-in-stock requests are offered only for catalogue items that the public
+   API marks as low stock. Contact data is saved by the protected admin API. */
 (() => {
-  // `cart` and `commerceProduct` are top-level declarations in the storefront
-  // scripts, so they are global names but NOT properties of window.
-  // (Reading window.cart made the old save form always say the treat jar was empty.)
-  const cartLines = () => { try { return typeof cart === 'function' ? cart() : []; } catch (_) { return []; } };
-  const productFor = line => line.product || (typeof commerceProduct === 'function' ? commerceProduct(line) : null) || (typeof GOB_PRODUCTS !== 'undefined' ? GOB_PRODUCTS[line.id] : null);
-  const form = document.querySelector('#cartSaveForm');
-  const save = document.querySelector('.cart-save');
-  const total = document.querySelector('.order-row.total');
-  const checkout = document.querySelector('#checkoutLink');
-  const assurance = document.querySelector('.cart-assurance');
+  const escape = value => String(value || '').replace(/[&<>'"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[char]);
+  const decode = value => { try { return decodeURIComponent(value || '') } catch { return '' } };
+  const style = `
+    .restock-notify-area{display:grid;gap:7px;margin-top:12px;padding:13px 14px;border:1px solid #ead8b9;border-radius:10px;background:#fff8e7;color:#553719;font-size:13px;line-height:1.45}.restock-notify-area strong{font-size:13px}.restock-notify-area span{color:#66594d}.restock-notify-button{border:1px solid #6d4825;background:#fff8e7;color:#553719;border-radius:999px;padding:9px 14px;font:700 12px/1.2 inherit;cursor:pointer;white-space:nowrap;width:max-content}.restock-notify-button:hover{background:#f6e2b9}.restock-notify-modal{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;padding:20px;background:rgba(26,16,8,.56)}.restock-notify-card{width:min(460px,100%);background:#fffaf3;border-radius:16px;padding:28px;box-shadow:0 20px 60px rgba(0,0,0,.28);position:relative}.restock-notify-card h2{margin:4px 0 8px;color:#1a1008}.restock-notify-card p{color:#66594d;line-height:1.55}.restock-notify-close{position:absolute;right:14px;top:12px;background:transparent;border:0;font-size:24px;cursor:pointer;color:#553719}.restock-notify-card label{display:grid;gap:7px;margin:18px 0 10px;color:#382617;font-weight:700;font-size:13px}.restock-notify-card input{border:1px solid #d9c8b3;border-radius:8px;padding:12px;font:inherit}.restock-notify-consent{display:flex!important;grid-template-columns:18px 1fr;align-items:start;font-weight:400!important;line-height:1.4}.restock-notify-submit{width:100%;border:0;border-radius:8px;background:#1a1008;color:#fff;padding:13px;font:700 14px inherit;cursor:pointer}.restock-notify-status{min-height:20px;font-size:13px;margin:10px 0 0;color:#8b3f19}`;
 
-  const style = document.createElement('style');
-  style.textContent = `
-.cart-save .cart-offer-code{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}
-.cart-save .cart-offer-code b{font-size:18px;letter-spacing:.08em;padding:6px 12px;border:1px dashed currentColor;background:#fff}
-.cart-save .cart-offer-code button{padding:8px 14px;font-size:13px}
-.cart-assurance.cart-assurance-list{display:block;margin:14px 0 18px;padding:0;list-style:none;font-size:13px;line-height:1.5}
-.cart-assurance-list li{display:flex;gap:8px;align-items:flex-start;padding:4px 0}
-.cart-assurance-list li::before{content:"✓";font-weight:700;color:var(--gold,#a8681c)}
-.cart-sticky-checkout{display:none}
-@media (max-width:760px){
-  .cart-sticky-checkout{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;align-items:center;gap:12px;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:var(--paper,#fffdf8);border-top:1px solid rgba(16,44,34,.15);box-shadow:0 -6px 18px rgba(0,0,0,.08);transition:transform .2s ease}
-  .cart-sticky-checkout[hidden]{display:flex;transform:translateY(110%)}
-  .cart-sticky-checkout .sticky-total{display:flex;flex-direction:column;font-size:12px;line-height:1.2}
-  .cart-sticky-checkout .sticky-total strong{font-size:18px}
-  .cart-sticky-checkout .button{flex:1;text-align:center;margin:0}
-  body.has-cart-sticky{padding-bottom:84px}
-}`;
-  document.head.append(style);
-
-  // 2. Total and checkout button before the offer box.
-  if (save && total && checkout) {
-    save.before(total);
-    save.before(checkout);
+  function ensureStyles() { if (!document.querySelector('#restock-notify-styles')) { const tag = document.createElement('style'); tag.id = 'restock-notify-styles'; tag.textContent = style; document.head.append(tag); } }
+  function close() { document.querySelector('#restockNotifyModal')?.remove(); }
+  function open(button) {
+    ensureStyles(); close();
+    const productId = decode(button.dataset.restockProduct), productName = decode(button.dataset.restockName);
+    if (!productId || !productName) return;
+    const modal = document.createElement('section'); modal.id = 'restockNotifyModal'; modal.className = 'restock-notify-modal'; modal.setAttribute('role', 'dialog'); modal.setAttribute('aria-modal', 'true');
+    modal.innerHTML = `<form class="restock-notify-card"><button class="restock-notify-close" type="button" aria-label="Close">×</button><p class="eyebrow">Fresh batches, every day</p><h2>Tell us where to reach you.</h2><p>${escape(productName)} is running low. Leave an email address or WhatsApp number and we’ll let you know when fresh stock is ready.</p><label>Email address or mobile number<input name="contact" required autocomplete="email" placeholder="you@example.com or 98765 43210"></label><label class="restock-notify-consent"><input name="consent" type="checkbox" required><span>I agree to receive a back-in-stock alert for this treat.</span></label><button class="restock-notify-submit" type="submit">Notify me when it’s back</button><p class="restock-notify-status" aria-live="polite"></p></form>`;
+    modal.addEventListener('click', event => { if (event.target === modal) close(); });
+    modal.querySelector('.restock-notify-close').addEventListener('click', close);
+    modal.querySelector('form').addEventListener('submit', async event => {
+      event.preventDefault(); const form = event.currentTarget, contact = String(new FormData(form).get('contact') || '').trim(), status = form.querySelector('.restock-notify-status'), submit = form.querySelector('button[type="submit"]');
+      const email = /@/.test(contact) ? contact : '', phone = email ? '' : contact.replace(/[\s()-]/g, '');
+      submit.disabled = true; status.textContent = 'Saving your alert…';
+      try { await window.GOB_API.restockAlert({ product_id: productId, email, phone, notification_consent: true, privacy_notice_version: '2026-10-15' }); status.style.color = '#146c61'; status.textContent = 'You’re on the list. We’ll let you know when fresh stock is ready.'; form.reset(); submit.remove(); }
+      catch (error) { status.style.color = '#8b3f19'; status.textContent = error?.message || 'We could not save your alert. Please try again.'; submit.disabled = false; }
+    });
+    document.body.append(modal); modal.querySelector('input[name="contact"]')?.focus();
   }
-
-  // 4. Reassurance right under the checkout button.
-  if (checkout) {
-    const list = document.createElement('ul');
-    list.className = 'cart-assurance cart-assurance-list';
-    list.setAttribute('aria-label', 'Why order with us');
-    list.innerHTML = [
-      'Free delivery on all full packs · dispatched within 1–2 business days',
-      'Pay by UPI, card or Cash on Delivery (most PIN codes)',
-      'Single-ingredient treats made in Kalyan · loved by verified dog parents',
-      'Wrong or damaged pack? Tell us within 48 hours and we will make it right',
-    ].map(text => `<li>${text}</li>`).join('');
-    checkout.after(list);
-    assurance?.remove();
+  document.addEventListener('click', event => { const button = event.target.closest('[data-restock-product]'); if (button) { event.preventDefault(); open(button); } });
+})()
+;
+/* ===== catalog-restock.js ===== */
+/* Adds low-stock alerts to the homepage catalogue after its cards are rendered. */
+(() => {
+  const encode = value => encodeURIComponent(String(value || ''));
+  function addRestockButtons() {
+    const catalogue = Array.isArray(window.GOB_LIVE_CATALOG) ? window.GOB_LIVE_CATALOG : [];
+    document.querySelectorAll('#liveCatalog .product-card').forEach(card => {
+      if (card.querySelector('[data-restock-product]')) return;
+      const name = card.querySelector('h3')?.textContent?.trim();
+      const product = catalogue.find(item => item.n === name);
+      if (!product?.low_stock) return;
+      const button = document.createElement('button');
+      button.type = 'button'; button.className = 'restock-notify-button';
+      button.dataset.restockProduct = encode(product.inventory_id || product.id);
+      button.dataset.restockName = encode(product.n);
+      button.textContent = 'Notify me';
+      card.querySelector('.card-bottom')?.insertAdjacentElement('afterend', button);
+    });
   }
-
-  // 3. Sticky checkout bar for phones.
-  if (checkout) {
-    const bar = document.createElement('div');
-    bar.className = 'cart-sticky-checkout';
-    bar.hidden = true;
-    bar.innerHTML = '<span class="sticky-total">Total<strong data-sticky-total>₹0</strong></span><a class="button" href="/checkout">Secure checkout</a>';
-    document.body.append(bar);
-    const source = document.querySelector('[data-commerce-total]');
-    const sync = () => {
-      const target = bar.querySelector('[data-sticky-total]');
-      if (source && target && target.textContent !== source.textContent) target.textContent = source.textContent;
-      const empty = !cartLines().length;
-      bar.style.visibility = empty ? 'hidden' : '';
-    };
-    sync();
-    if (source) new MutationObserver(sync).observe(source, { childList: true, characterData: true, subtree: true });
-    document.addEventListener('gob:cart-updated', sync);
-    // Show the bar whenever the real checkout button is not on screen.
-    let queued = false;
-    const update = () => {
-      queued = false;
-      const mobile = window.matchMedia('(max-width: 760px)').matches;
-      const rect = checkout.getBoundingClientRect();
-      const buttonVisible = rect.top < window.innerHeight - 8 && rect.bottom > 0;
-      bar.hidden = !mobile || buttonVisible;
-      document.body.classList.toggle('has-cart-sticky', mobile && !buttonVisible);
-    };
-    const queue = () => { if (!queued) { queued = true; requestAnimationFrame(update); } };
-    window.addEventListener('scroll', queue, { passive: true });
-    window.addEventListener('resize', queue);
-    update();
-    setTimeout(update, 600);
-  }
-
-  // 1. WhatsApp offer.
-  if (!form) return;
-  const email = form.querySelector('[name="email"]');
-  const phone = form.querySelector('[name="phone"]');
-  const status = document.querySelector('#cartSaveStatus');
-  const button = form.querySelector('button[type="submit"]');
-  const setCopy = (eyebrowText, titleText, introText) => {
-    if (!save) return;
-    const eyebrow = save.querySelector('.eyebrow');
-    const title = save.querySelector('h3');
-    const intro = save.querySelector('p:not(.eyebrow):not(.cart-save-status)');
-    if (eyebrow) eyebrow.textContent = eyebrowText;
-    if (title) title.textContent = titleText;
-    if (intro) intro.textContent = introText;
-  };
-  setCopy('First order? 15% off', 'Get 15% off this order.', 'Add your WhatsApp number and WELCOME15 (15% off) is applied to your treat jar automatically. For first orders, once per customer. You agree to a reminder or two about this treat jar on WhatsApp (reply STOP anytime).');
-  if (email) email.hidden = true;
-  if (phone) phone.placeholder = 'WhatsApp number (10 digits)';
-  if (button) button.textContent = 'Get 15% off';
-
-  const message = (text, kind = '') => { if (!status) return; status.textContent = text; status.className = `cart-save-status ${kind}`; };
-  const refreshTotals = () => { if (typeof updateCommerceTotals === 'function') updateCommerceTotals(); };
-  const lines = () => cartLines().map(line => {
-    const product = productFor(line);
-    return product ? { name: product.name, pack_label: product.packLabel || '', quantity: Number(line.quantity) || 1, price: Number(product.price) || 0 } : null;
-  }).filter(Boolean);
-
-  const showApplied = () => {
-    form.hidden = false;
-    form.querySelectorAll('input,button').forEach(el => { el.hidden = true; });
-    setCopy('Offer unlocked', 'WELCOME15 (15% off) is applied to your treat jar.', 'It will show at checkout. We confirm it with your mobile number at payment, as it is for first orders.');
-    message('15% off applied ✓', 'success');
-  };
-  const claimed = () => (typeof cartOfferClaimed === 'function' ? cartOfferClaimed() : false);
-  if (claimed()) showApplied();
-
-  form.addEventListener('submit', async event => {
-    event.preventDefault();
-    const normalizedEmail = String(email?.value || '').trim().toLowerCase();
-    const normalizedPhone = String(phone?.value || '').replace(/\D/g, '').replace(/^91(?=\d{10}$)/, '');
-    const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail);
-    const validPhone = /^[6-9]\d{9}$/.test(normalizedPhone);
-    if (!validPhone) return message('Enter a valid 10-digit WhatsApp number to get 15% off.', 'error');
-    const items = lines();
-    if (!items.length) return message('Add a treat first, then unlock your 15% off.', 'error');
-    const totalValue = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    if (!window.GOB_API?.abandonedCart) return message('We could not unlock this right now. Please try again.', 'error');
-    button.disabled = true; button.textContent = 'Checking…';
-    try {
-      const rawLines = cartLines().map(line => { const product = productFor(line); return { id: line.id, quantity: Number(line.quantity) || 1, product: product ? { name: product.name, price: Number(product.price) || 0, packLabel: product.packLabel || '', tag: product.tag || '', catalog_slug: product.catalog_slug || '', image: product.image || '' } : null }; });
-      const response = await window.GOB_API.abandonedCart({ offer: 'CART50', cart_token: window.GOB_CART_TRACKING?.token?.(), whatsapp_opt_in: true, cart_lines: rawLines, email: validEmail ? normalizedEmail : '', phone: normalizedPhone, items, total: totalValue });
-      const offer = response && response.cart_offer;
-      if (!offer) { message('We saved your treat jar but could not check the offer. Please try again.', 'error'); return; }
-      if (!offer.eligible) {
-        if (typeof setCartOfferClaim === 'function') setCartOfferClaim(false);
-        form.reset();
-        message('Thanks, your treat jar is saved. This number has ordered with us before, so the first-order offer does not apply — but you still save ₹30 when you pay online.', '');
-        refreshTotals();
-        return;
-      }
-      if (typeof setCartOfferClaim === 'function') setCartOfferClaim(true);
-      form.reset();
-      refreshTotals();
-      showApplied();
-    } catch (_) { message('We could not unlock this right now. Please try again.', 'error'); }
-    finally { button.disabled = false; if (!claimed()) button.textContent = 'Get 15% off'; }
-  });
+  document.addEventListener('DOMContentLoaded', () => setTimeout(addRestockButtons, 0));
+  document.addEventListener('gob:catalog-sync', () => setTimeout(addRestockButtons, 0));
 })();
 ;
-/* ===== spin-gift-checkout.js ===== */
-/* Free prize (Bone Run game, or an older spin-wheel gift) in the cart and at
-   checkout. When the treat jar is ₹499+ the prize is shown as a ₹0 line in the
-   order summary, because the server adds it to the order automatically
-   (admin lib/spin-gifts.ts, matched by the mobile number or email used to
-   claim it). This file only previews it; the server decides. */
+/* ===== bogo-promo.js ===== */
+/* Buy 1 Get 1 is automatic for the two selected treats. The checkout service
+   remains authoritative for the discount and exclusivity rules. */
 (() => {
-  const MIN_ORDER = 499;
-  // Goat Trachea (Bone Run tier 1) is free with any order; bigger prizes need ₹499+.
-  const minFor = label => /all 3 treats/i.test(String(label || '')) ? 2500 : /goat trachea/i.test(String(label || '')) ? 0 : MIN_ORDER;
-  const form = document.querySelector('#checkoutForm');
-  const cartPage = !form && document.querySelector('#checkoutLink');
-  if (!form && !cartPage) return;
-
-  const style = document.createElement('style');
-  style.textContent = `
-.spin-gift-note{margin:0 0 14px;padding:12px 14px;border:1px solid var(--ink,#102c22);background:var(--gold-soft,#f4e6c9);color:var(--ink,#102c22);font-size:13px;line-height:1.45}
-.spin-gift-note strong{display:block;margin-bottom:2px;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
-.spin-gift-note.is-unlocked{background:#e4ebdf}
-.order-row.prize-row{background:#fff4d6;margin:6px -8px;padding:8px;border-radius:6px;font-weight:700}
-.order-row.prize-row span:last-child{color:#16824a}`;
-  document.head.append(style);
-
-  const note = document.createElement('div');
-  note.className = 'spin-gift-note';
-  note.setAttribute('role', 'status');
-  note.setAttribute('aria-live', 'polite');
-  note.hidden = true;
-  if (form) { const submit = form.querySelector('[type="submit"]'); (submit || form.lastElementChild)?.before(note); }
-  else cartPage.before(note);
-
-  const prizeRow = document.createElement('div');
-  prizeRow.className = 'order-row prize-row';
-  prizeRow.hidden = true;
-  const placeRow = () => { const total = document.querySelector('.order-row.total'); if (total && prizeRow.nextElementSibling !== total) total.before(prizeRow); };
-
-  const value = selector => form?.querySelector(selector)?.value.trim() || '';
-  const rupees = amount => `₹${Math.round(amount).toLocaleString('en-IN')}`;
-  const escapeHtml = text => String(text).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-
-  function subtotal() {
-    try {
-      const lines = typeof cart === 'function' ? cart() : [];
-      return lines.reduce((sum, line) => {
-        const product = line.product || (typeof GOB_PRODUCTS !== 'undefined' ? GOB_PRODUCTS[line.id] : null);
-        return sum + (Number(product?.price) || 0) * (Number(line.quantity) || 0);
-      }, 0);
-    } catch (_) { return 0; }
+  const eligible = value => [].includes(String(value || '').replace(/\s+—\s+.+$/, '').trim().toLowerCase());
+  const cardOffer = card => {
+    if (card.querySelector('[data-bogo-card]') || !eligible(card.querySelector('h3')?.textContent)) return;
+    const badge = document.createElement('p'); badge.dataset.bogoCard = '';
+    badge.style.cssText = 'margin:10px 0 0;color:#a84312;font-size:12px;font-weight:800';
+    badge.textContent = 'Buy 1 Get 1 · no code needed';
+    card.querySelector('.card-bottom')?.insertAdjacentElement('afterend', badge);
+  };
+  const productOffer = product => {
+    if (!eligible(product?.n || product?.name) || document.querySelector('[data-bogo-product]')) return;
+    const note = document.createElement('aside'); note.dataset.bogoProduct = '';
+    note.className = 'restock-notify-area';
+    note.innerHTML = '<strong>Buy 1 Get 1 on this treat</strong><span>Add two of the same pack and one is free automatically at checkout. This offer cannot be combined with coupon codes or reward points.</span>';
+    document.querySelector('#addProduct')?.insertAdjacentElement('afterend', note);
+  };
+  const decorate = () => document.querySelectorAll('.product-card').forEach(cardOffer);
+  const observeCards = () => {
+    const catalogue = document.querySelector('#liveCatalog');
+    if (!catalogue || catalogue.dataset.bogoObserved) return;
+    catalogue.dataset.bogoObserved = 'true';
+    new MutationObserver(() => decorate()).observe(catalogue, { childList: true, subtree: true });
+  };
+  document.addEventListener('DOMContentLoaded', () => { decorate(); observeCards(); productOffer(window.GOB_CURRENT_PRODUCT); });
+  document.addEventListener('gob:catalog-sync', () => setTimeout(decorate, 0));
+  document.addEventListener('gob:product-ready', event => productOffer(event.detail?.product));
+})();
+;
+/* ===== community.js ===== */
+/* "Dogs of Game of Bones": real customer photos from published, verified-purchase reviews.
+   Stays hidden until at least 3 photos exist, so the homepage never shows an empty or padded gallery. */
+(() => {
+  const box = document.getElementById('gobDogs');
+  if (!box) return;
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+  fetch('/api/public-product-reviews?photos=1', { headers: { Accept: 'application/json' } })
+    .then(r => r.ok ? r.json() : { photos: [] })
+    .then(({ photos = [] }) => {
+      const list = photos.filter(p => p && p.photo_url).slice(0, 8);
+      if (list.length < 3) return;
+      box.querySelector('.dogs-grid').innerHTML = list.map(p => `<figure class="dog-tile"><img src="${esc(p.photo_url)}" alt="${esc(p.name.split(' ·')[0])}’s dog with ${esc(p.product)}" loading="lazy"><figcaption><b>${'★'.repeat(Math.max(1, Math.min(5, p.rating || 5)))}</b> ${esc(p.product)}${p.review ? `<span>“${esc(p.review.slice(0, 90))}${p.review.length > 90 ? '…' : ''}”</span>` : ''}<small>${esc(p.name)}</small></figcaption></figure>`).join('');
+      box.hidden = false;
+    })
+    .catch(() => {});
+})();
+;
+/* ===== howmade.js ===== */
+/* Scroll-driven "How it's made": the photo and progress follow whichever step is in the middle of the screen. */
+(() => {
+  const root = document.querySelector('[data-howmade]'); if (!root) return;
+  const steps = [...root.querySelectorAll('.hm-step')], imgs = [...root.querySelectorAll('.hm-img')];
+  const cap = root.querySelector('.hm-cap b'), count = root.querySelector('.hm-count'), bar = root.querySelector('.hm-bar i'), line = root.querySelector('.hm-line'), list = root.querySelector('.hm-steps');
+  let cur = -1, ticking = false;
+  function set(i) {
+    if (i === cur) return; cur = i;
+    steps.forEach((s, k) => s.classList.toggle('on', k === i));
+    imgs.forEach((im, k) => im.classList.toggle('on', k === i));
+    cap.textContent = steps[i].querySelector('h3').textContent;
+    count.textContent = String(i + 1).padStart(2, '0') + ' / ' + String(steps.length).padStart(2, '0');
+    bar.style.width = ((i + 1) / steps.length * 100) + '%';
+    const s = steps[i], top = s.offsetTop + 26; line.style.height = Math.max(0, top - 10) + 'px';
   }
-
-  // Prize claimed on this device (set by bone-run.js), or the per-customer
-  // record saved when they claimed with this email + mobile.
-  function deviceAward() {
-    try {
-      const award = JSON.parse(localStorage.getItem('gob-bonerun-award') || 'null');
-      if (!award || !award.label || !award.claimed) return null;
-      if (award.valid_until && String(award.valid_until).slice(0, 10) < new Date().toISOString().slice(0, 10)) return null;
-      return award;
-    } catch (_) { return null; }
+  // keep the photo just below the sticky header, whatever its height
+  function headerGap(){ const h=document.querySelector('.site-header,header,.nav'); const b=h?h.getBoundingClientRect().bottom:64; root.style.setProperty('--hm-top', Math.max(56, Math.round(b+12))+'px'); }
+  function update() {
+    ticking = false;
+    const mid = window.innerHeight * (window.innerWidth < 880 ? 0.72 : 0.55);
+    let best = 0;
+    steps.forEach((s, k) => { if (s.getBoundingClientRect().top < mid) best = k; });
+    set(best);
   }
-  async function customerAward() {
-    const email = value('[autocomplete="email"]').toLowerCase();
-    const phone = value('[autocomplete="tel"]').replace(/\D/g, '').slice(-10);
-    if (!email || phone.length !== 10 || !window.crypto?.subtle) return null;
-    try {
-      const bytes = new TextEncoder().encode(`gob-spin-v1:${email}|${phone}`);
-      const hash = [...new Uint8Array(await crypto.subtle.digest('SHA-256', bytes))].map(b => b.toString(16).padStart(2, '0')).join('');
-      const award = JSON.parse(localStorage.getItem(`gob-spin:${hash}`) || 'null');
-      return award && award.label && !/%/.test(award.label) ? award : null;
-    } catch (_) { return null; }
-  }
-
-  // ---- Prize won in Bone Run but the form was skipped: claim it here with
-  // the checkout's name, mobile and email, so it is added to this order.
-  function unclaimedPrize() {
-    try { const u = JSON.parse(localStorage.getItem('gob-bonerun-unclaimed') || 'null'); return u && u.tier >= 0 && Date.now() - Number(u.at || 0) < 7 * 864e5 ? u : null; } catch (_) { return null; }
-  }
-  const TIER_LABELS = ['2 free Goat Trachea', '1 free pack of Chicken Feet (70 g)', '1 free pack of Mackerel (60 g)', 'All 3 treats free: 2 Goat Trachea, Chicken Feet 70 g & Mackerel 60 g'];
-  let claimPromise = null, claimedKey = '', claimError = '';
-  async function claimAtCheckout() {
-    const u = unclaimedPrize(); if (!form || !u) return null;
-    const name = value('[autocomplete="name"]') || value('[autocomplete="name"]');
-    const email = value('[autocomplete="email"]').toLowerCase();
-    const phone = value('[autocomplete="tel"]').replace(/\D/g, '').slice(-10);
-    if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !/^[6-9]\d{9}$/.test(phone)) return null;
-    const key = email + '|' + phone;
-    if (claimPromise && claimedKey === key) return claimPromise;
-    claimedKey = key; claimError = '';
-    claimPromise = (async () => {
-      const response = await fetch('/api/bone-run', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, email, phone, score: u.score, run_ms: u.ms, via_checkout: true }) });
-      const result = await response.json().catch(() => ({}));
-      if (!response.ok) { claimError = result.error || 'Your Bone Run prize could not be added.'; claimPromise = null; queue(); return null; }
-      const label = result.prize || TIER_LABELS[u.tier];
-      try {
-        localStorage.removeItem('gob-bonerun-unclaimed');
-        if (result.status !== 'already_used') {
-          localStorage.setItem('gob-bonerun-award', JSON.stringify({ label, claimed: true, valid_until: result.valid_until || new Date(Date.now() + 7 * 864e5).toISOString().slice(0, 10) }));
-          const bytes = new TextEncoder().encode(`gob-spin-v1:${email}|${phone}`);
-          const hash = [...new Uint8Array(await crypto.subtle.digest('SHA-256', bytes))].map(b => b.toString(16).padStart(2, '0')).join('');
-          localStorage.setItem(`gob-spin:${hash}`, JSON.stringify({ label, detail: result.coupon_code || '' }));
-        } else claimError = 'Your Bone Run prize was already used on an earlier order.';
-      } catch (_) {}
-      document.dispatchEvent(new Event('gob:prize-updated'));
-      queue();
-      return result;
-    })();
-    return claimPromise;
-  }
-  // Checkout waits for this before starting payment, so the prize is linked first.
-  window.GOB_PRIZE_CLAIM = () => claimAtCheckout().catch(() => null);
-
-  let renderId = 0;
-  async function render() {
-    const id = ++renderId;
-    const total = subtotal();
-    const award = (form ? await customerAward() : null) || deviceAward();
-    const pending = !award && unclaimedPrize();
-    if (pending) {
-      const label = escapeHtml(TIER_LABELS[pending.tier] || 'your free treat');
-      const min = minFor(TIER_LABELS[pending.tier]);
-      const shortBy = Math.max(0, min - total);
-      placeRow();
-      prizeRow.hidden = !(total > 0 && shortBy === 0);
-      prizeRow.innerHTML = `<span>🎁 FREE: ${label} (Bone Run prize)</span><span>₹0</span>`;
-      note.hidden = false; note.classList.toggle('is-unlocked', shortBy === 0);
-      note.innerHTML = claimError
-        ? `<strong>Bone Run prize</strong>${escapeHtml(claimError)}`
-        : shortBy > 0
-          ? `<strong>You're ${rupees(shortBy)} away from your free treat</strong>Add ${rupees(shortBy)} more and ${label} from Bone Run is added free.`
-          : `<strong>🎁 Your Bone Run prize is ready</strong>${label} will be added at ₹0 when you place this order. ${form ? 'Just fill in your details below, no extra form.' : 'Continue to checkout to get it.'}`;
-      if (form) claimAtCheckout();
-      return;
-    }
-    if (id !== renderId) return;
-    const short = Math.max(0, (award ? minFor(award.label) : MIN_ORDER) - total);
-    const label = award ? escapeHtml(award.label) : '';
-    const item = award ? escapeHtml(award.label.replace(/\bfree\s+/i, '')) : '';
-    placeRow();
-    if (award && total > 0 && short === 0) {
-      prizeRow.innerHTML = `<span>🎁 FREE: ${item} (Bone Run prize)</span><span>₹0</span>`;
-      prizeRow.hidden = false;
-      note.hidden = false; note.classList.add('is-unlocked');
-      note.innerHTML = `<strong>🎁 Your free treat is in!</strong>${label} is included in this order at ₹0. Check out with the same mobile number or email you used to claim it. Works together with your coupon code and reward points.`;
-    } else if (award && total > 0) {
-      prizeRow.hidden = true;
-      note.hidden = false; note.classList.remove('is-unlocked');
-      note.innerHTML = `<strong>You're ${rupees(short)} away from your free treat</strong>Add ${rupees(short)} more and ${label} is added to this order automatically.`;
-    } else if (form && !award) {
-      prizeRow.hidden = true;
-      note.hidden = false; note.classList.remove('is-unlocked');
-      note.innerHTML = `<strong>Won a free treat in Bone Run?</strong>It is added automatically when you order with the same mobile number or email: Goat Trachea on any order, bigger prizes on orders of ${rupees(MIN_ORDER)}+. No code needed, and it works with coupon codes and reward points.`;
-    } else {
-      prizeRow.hidden = true; note.hidden = true;
-    }
-  }
-
-  let timer;
-  const queue = () => { clearTimeout(timer); timer = setTimeout(render, 250); };
-  form?.addEventListener('input', queue);
-  document.addEventListener('click', () => setTimeout(queue, 60));
-  window.addEventListener('storage', queue);
-  document.addEventListener('gob:cart-updated', queue);
-  document.addEventListener('gob:prize-updated', queue);
-  const totalEl = document.querySelector('[data-commerce-total]');
-  if (totalEl) new MutationObserver(queue).observe(totalEl, { childList: true, characterData: true, subtree: true });
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', render, { once: true });
-  else render();
+  window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+  window.addEventListener('resize', () => { headerGap(); update(); });
+  headerGap(); update(); setTimeout(headerGap, 1200);
 })();
 ;

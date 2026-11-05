@@ -135,7 +135,7 @@ function closeCart(){document.querySelector('#cartDrawer')?.classList.remove('op
 // .html names. This also covers links injected by catalogue, cart and blog UI.
 const cleanPageUrls={'index.html':'/','products.html':'/products','product.html':'/product','our-story.html':'/our-story','bundles.html':'/bundles','blog.html':'/blog','contact.html':'/contact','rewards.html':'/rewards','track.html':'/track','learn.html':'/learn','cart.html':'/cart','checkout.html':'/checkout','login.html':'/login','account.html':'/account','policies.html':'/policies'};
 function cleanStorefrontUrls(root=document){const links=[...(root.matches?.('a[href]')?[root]:[]),...(root.querySelectorAll?.('a[href]')||[])];links.forEach(link=>{const raw=link.getAttribute('href');if(!raw||/^(?:#|mailto:|tel:|https?:|\/\/)/i.test(raw))return;const match=raw.match(/^([^?#]+)(.*)$/);if(!match)return;const cleaned=cleanPageUrls[match[1]];if(cleaned)link.setAttribute('href',cleaned+match[2])})}
-function ensureCart(){if(document.querySelector('#cartDrawer'))return;document.body.insertAdjacentHTML('beforeend','<div class="scrim" id="scrim"></div><aside class="drawer" id="cartDrawer" aria-label="Shopping treat jar"><div class="drawer-top"><h2>Your treat jar</h2><button class="close" data-close-cart aria-label="Close treat jar">×</button></div><div class="cart-items" id="cartItems"></div><div class="cart-total"><div><span>Subtotal</span><span id="cartTotal">₹0</span></div><a class="button" style="width:100%" href="/checkout">Checkout securely</a><a href="/cart" style="display:block;text-align:center;margin-top:10px;font-size:13px;text-decoration:underline">View or edit treat jar</a><p style="margin:8px 0 0;font-size:12px;text-align:center;opacity:.75">Free delivery on full packs · UPI, cards or Cash on Delivery</p></div></aside><div class="toast" id="toast" role="status"></div>')}
+function ensureCart(){if(document.querySelector('#cartDrawer'))return;document.body.insertAdjacentHTML('beforeend','<div class="scrim" id="scrim"></div><aside class="drawer" id="cartDrawer" aria-label="Shopping treat jar"><div class="drawer-top"><h2>Your treat jar</h2><button class="close" data-close-cart aria-label="Close treat jar">×</button></div><div class="cart-items" id="cartItems"></div><div class="cart-total"><div><span>Subtotal</span><span id="cartTotal">₹0</span></div><a class="button" style="width:100%" href="/checkout">Checkout securely</a><a href="/cart" style="display:block;text-align:center;margin-top:10px;font-size:13px;text-decoration:underline">View or edit treat jar</a><p style="margin:8px 0 0;font-size:12px;text-align:center;opacity:.75">Free delivery on full packs. Pay by UPI, card or cash on delivery.</p></div></aside><div class="toast" id="toast" role="status"></div>')}
 function enhanceHeader(){const actions=document.querySelector('.nav-actions'),links=document.querySelector('.nav-links');if(!actions)return;links?.classList.add('compact-nav');const track=links?.querySelector('a[href="track.html"]'),bundles=links?.querySelector('a[href="bundles.html"]');if(track&&bundles)bundles.insertAdjacentElement('afterend',track);if(!document.querySelector('.search-trigger'))actions.insertAdjacentHTML('afterbegin','<button class="search-trigger" type="button" aria-label="Search products" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.4"></circle><path d="m16 16 4.3 4.3"></path></svg><span>Search</span></button>');if(!document.querySelector('.login-trigger'))actions.insertAdjacentHTML('afterbegin',(window.GOB_SIGNED_IN?'<a class="login-trigger" href="/account">Account</a>':'<a class="login-trigger" href="login.html">Log in</a>'));actions.querySelector('.icon-btn')?.remove();const jar=actions.querySelector('.cart-trigger');if(jar&&!jar.dataset.jarReady){jar.dataset.jarReady='true';jar.setAttribute('aria-label','Open treat jar');jar.innerHTML='<svg class="jar-icon" viewBox="0 0 32 36" fill="none" aria-hidden="true"><path d="M9 8V5h14v3M7 9h18l2 22H5L7 9Z" stroke="currentColor" stroke-width="2"/><path d="M10 16h12M11 21h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="sr-only">Treat jar, </span><span class="jar-count" data-cart-count>0</span>'}if(!document.querySelector('link[data-gob-header]')){const styles=document.createElement('link');styles.rel='stylesheet';styles.href='header.css?v=header-4';styles.dataset.gobHeader='true';document.head.append(styles)}}
 function setupAnnouncement(){const bar=document.querySelector('.notice'),text=bar?.querySelector('span');if(!bar||!text||bar.dataset.ready)return;bar.dataset.ready='true';const copy=()=> 'Free delivery on full packs • ₹30 off when you pay online • MEGA20: 20% off ₹2,199+';bar.innerHTML='<div class="notice-track"><span></span></div>';const label=bar.querySelector('.notice-track span'),paint=()=>label.textContent=copy();paint()}
 function setupSearch(){const trigger=document.querySelector('.search-trigger');if(!trigger||document.querySelector('#productSearch'))return;document.body.insertAdjacentHTML('beforeend','<section class="search-sheet" id="productSearch" aria-hidden="true"><div class="search-panel" role="dialog" aria-modal="true" aria-labelledby="searchTitle"><div class="search-top"><div><p class="eyebrow">Find a treat</p><h2 id="searchTitle">Search the treat cupboard.</h2></div><button class="search-close" type="button" aria-label="Close search">×</button></div><label class="search-field" for="productSearchInput"><span class="sr-only">Search products</span><input id="productSearchInput" type="search" autocomplete="off" placeholder="Try chicken, goat or chew"><span>⌕</span></label><div class="search-results" id="productSearchResults"></div></div></section>');const sheet=document.querySelector('#productSearch'),input=document.querySelector('#productSearchInput'),results=document.querySelector('#productSearchResults');const products=()=>Object.entries(window.GOB_PRODUCTS||GOB_PRODUCTS);const render=value=>{const query=value.trim().toLowerCase(),matches=products().filter(([id,p])=>!query||`${p.name} ${p.tag||''}`.toLowerCase().includes(query)).slice(0,6);results.innerHTML=matches.length?matches.map(([id,p])=>`<a href="product.html?catalog=${encodeURIComponent(id)}"><img src="${p.image}" alt="${p.name||'Game of Bones treat'}"><span><b>${p.name}</b><small>${p.tag||'Single-ingredient treat'} · ${money(p.price)}</small></span><i>→</i></a>`).join(''):'<p>No treats found. Try “chicken” or “goat”.</p>'};const close=()=>{sheet.classList.remove('open');sheet.setAttribute('aria-hidden','true');trigger.setAttribute('aria-expanded','false');document.body.classList.remove('locked')};trigger.addEventListener('click',()=>{sheet.classList.add('open');sheet.setAttribute('aria-hidden','false');trigger.setAttribute('aria-expanded','true');document.body.classList.add('locked');render('');setTimeout(()=>input.focus(),10)});input.addEventListener('input',()=>render(input.value));sheet.querySelector('.search-close').addEventListener('click',close);sheet.addEventListener('click',event=>{if(event.target===sheet)close()});document.addEventListener('keydown',event=>{if(event.key==='Escape'&&sheet.classList.contains('open'))close()})}
@@ -258,7 +258,7 @@ document.addEventListener('DOMContentLoaded',installFormFeedback);
     ['/cat-treats', 'Cat treats'],
     ['/our-story', 'Our story'],
   ];
-  const tickerCopy = 'Free delivery on full packs · ₹30 off when you pay online';
+  const tickerCopy = 'Free delivery on full packs, and ₹30 off when you pay online';
 
   const installLiveTicker = () => {
     const notice = document.querySelector('.notice');
@@ -355,19 +355,32 @@ document.addEventListener('DOMContentLoaded',installFormFeedback);
     if (!response.ok) throw new Error(data.error || 'The service could not complete that request.');
     return data;
   }
+  // Several page scripts ask for the same catalogue and reviews while the page
+  // builds. Share one request per page (for 60 seconds); a failed request is
+  // dropped so the next caller retries.
+  const sharedCache = new Map();
+  const shared = (key, load) => {
+    const hit = sharedCache.get(key);
+    const copy = data => (typeof structuredClone === 'function' ? structuredClone(data) : JSON.parse(JSON.stringify(data)));
+    if (hit && Date.now() - hit.at < 60000) return hit.promise.then(copy);
+    const promise = Promise.resolve().then(load);
+    sharedCache.set(key, { at: Date.now(), promise });
+    promise.catch(() => { if (sharedCache.get(key)?.promise === promise) sharedCache.delete(key); });
+    return promise.then(copy);
+  };
   const customerHeaders = () => {
     const token = window.sessionStorage.getItem('gob-customer-token');
     return token ? { Authorization: `Bearer ${token}` } : {};
   };
   const api = {
     base, request,
-    catalogue: async () => {
+    catalogue: () => shared('catalogue', async () => {
       if (!catalogueBase) throw new Error('The catalogue feed is not configured for this preview.');
       const response = await fetch(`${catalogueBase}/public-products`, { cache: 'no-store' });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(data.error || 'The catalogue could not be loaded.');
       return data;
-    },
+    }),
     blogs: async () => {
       if (!catalogueBase) throw new Error('The blog feed is not configured for this preview.');
       const response = await fetch(`${catalogueBase}/public-blogs`, { cache: 'no-store' });
@@ -384,7 +397,7 @@ document.addEventListener('DOMContentLoaded',installFormFeedback);
     updateAccount: (token, body) => request('/customer-account', { method: 'PATCH', headers: { Authorization: `Bearer ${token}` }, body: JSON.stringify(body) }),
     customerReviews: token => request('/customer-reviews', { headers: { Authorization: `Bearer ${token}` } }),
     submitCustomerReview: (token, formData) => multipartRequest('/customer-reviews', token, formData),
-    publicProductReviews: product => request(`/public-product-reviews?product=${encodeURIComponent(product)}`),
+    publicProductReviews: product => shared(`reviews:${product}`, () => request(`/public-product-reviews?product=${encodeURIComponent(product)}`)),
     capture: body => request('/public-email-capture', { method: 'POST', body: JSON.stringify(body) }),
     contactInquiry: body => request('/contact-inquiries', { method: 'POST', body: JSON.stringify(body) }),
     spinWheel: body => request('/spin-wheel', { method: 'POST', body: JSON.stringify(body) }),
@@ -556,7 +569,7 @@ function hydrateProduct() {
   }
   setText('#productName', product.n);
   setText('#productPrice', product.p ? `₹${Number(product.p).toLocaleString('en-IN')}` : 'Contact us');
-  setText('#productTag', `${product.c} · Made in Kalyan`);
+  setText('#productTag', `${product.c}, made in Kalyan`);
   setText('#productDesc', product.d);
   const contentsSection = document.querySelector('#bundleContents');
   const contentsList = document.querySelector('#bundleContentsList');
@@ -815,7 +828,7 @@ document.addEventListener('gob:catalog-sync', () => {
         selectedPack = index;
         const pack = packs[index];
         packOptions.querySelectorAll('.option').forEach((button, buttonIndex) => button.classList.toggle('selected', buttonIndex === index));
-        addButton.textContent = `Add to treat jar · ₹${format(pack.price)}`;
+        addButton.textContent = `Add to treat jar (₹${format(pack.price)})`;
         const stickyPrice = document.querySelector('#stickyPrice');
         const stickyLabel = document.querySelector('#stickyPackLabel');
         if (stickyPrice) stickyPrice.textContent = `₹${format(pack.price)}`;
@@ -908,7 +921,7 @@ document.addEventListener('gob:catalog-sync', () => {
   const cardOffer = card => {
     if (card.querySelector('[data-bogo-card]') || !eligible(card.querySelector('h3')?.textContent)) return;
     const badge = document.createElement('p'); badge.dataset.bogoCard = '';
-    badge.style.cssText = 'margin:10px 0 0;color:#a84312;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase';
+    badge.style.cssText = 'margin:10px 0 0;color:#a84312;font-size:12px;font-weight:800';
     badge.textContent = 'Buy 1 Get 1 · no code needed';
     card.querySelector('.card-bottom')?.insertAdjacentElement('afterend', badge);
   };
@@ -979,7 +992,7 @@ function renderProductMedia(){
     }else stage.innerHTML=`<img id="productImage" src="${item.src}" alt="${item.alt||item.label||'Product photo'}" width="1000" height="1000" decoding="async" fetchpriority="high">`
     count.textContent=`${index+1} of ${media.length} media`
   }
-  thumbs.innerHTML=media.map((item,index)=>`<button class="thumb media-thumb${index===0?' active':''}" type="button" aria-pressed="${index===0}" aria-label="View ${item.label||`media ${index+1}`}"><img src="${item.type==='video'?(item.poster||''):item.src}" alt="" width="120" height="120" loading="lazy" decoding="async"><span>${item.type==='video'?'▶':''}</span></button>`).join('')
+  thumbs.innerHTML=media.map((item,index)=>`<button class="thumb media-thumb${index===0?' active':''}" type="button" aria-pressed="${index===0}" aria-label="View ${item.label||`media ${index+1}`}"><img src="${item.type==='video'?(item.poster||''):item.src}" alt="" width="120" height="120" loading="lazy" decoding="async" fetchpriority="low"><span>${item.type==='video'?'▶':''}</span></button>`).join('')
   thumbs.querySelectorAll('.thumb').forEach((button,index)=>button.addEventListener('click',()=>select(index)))
   select(0)
 }
@@ -1248,8 +1261,11 @@ document.addEventListener('DOMContentLoaded',()=>{const panel=document.querySele
       <button class="wish-btn" id="wishBtn">Sign in to save favourites</button>`);
     document.querySelector('#wishBtn')?.addEventListener('click', () => location.assign('login.html'));
 
-    document.querySelector('.accordion')?.insertAdjacentHTML('afterend', `
-      <section class="review-box" id="productReviewSection" aria-labelledby="reviewFlowTitle">
+    // Reviews sit full width under the photos and details on product pages, so the
+    // details column stays short; other layouts keep them after the accordion.
+    const reviewSpot = document.querySelector('.detail') || document.querySelector('.accordion');
+    reviewSpot?.insertAdjacentHTML('afterend', `
+      <section class="review-box${reviewSpot?.classList.contains('detail') ? ' review-band' : ''}" id="productReviewSection" aria-labelledby="reviewFlowTitle">
         <p class="eyebrow">Notes from dog parents</p>
         <h2 id="reviewFlowTitle">Reviews from real treat time.</h2>
         <p class="review-intro">New reviews can only be written by customers with a delivered order, and every review is checked before it appears.</p>
@@ -1509,8 +1525,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     const f = [];
     if (d[1]) f.push(['Texture', esc(d[1]), '']);
     if (hero.best) f.push(['Best for', esc(hero.best), '']);
-    if (hero.dogs) f.push(['Suits', esc(hero.dogs), '']);
-    if (d[2]) f.push(['Chew level', esc(d[3]), meter(d[2])]);
+    if (hero.dogs) f.push(['Suits', esc(String(hero.dogs).replace(/ · /g, ', ')), '']);
+    if (d[2]) f.push(['Chew level', esc(d[3].replace(/ · /g, ', ')), meter(d[2])]);
     if (!d[1] && hero.pack) f.unshift(['In the box', esc(hero.pack), '']);
     return f.length ? `<div class="v2-facts" id="v2Facts">${f.slice(0, 4).map(([k, v, m]) => `<div class="v2-fact"><small>${k}</small><strong>${v}</strong>${m}</div>`).join('')}</div>` : '';
   }
@@ -1635,7 +1651,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 
     // identity line under the name, and a plainer description
     const h1 = $('#productName');
-    if (h1 && !$('#v2Ident')) h1.insertAdjacentHTML('afterend', `<p class="v2-ident" id="v2Ident">${esc(d[0])}</p>`);
+    if (h1 && !$('#v2Ident')) h1.insertAdjacentHTML('afterend', `<p class="v2-ident" id="v2Ident">${esc(d[0].replace(/ · /g, ', '))}</p>`);
     const identEl = $('#v2Ident');
     const GAIN = {"chicken-jerky": "Lean protein that snaps into tiny rewards, so you can train more without overfeeding.", "chicken-bites": "Ready-cut lean protein bites, so every “good dog” is a quick, light reward.", "buff-jerky": "A different protein from chicken – a good switch for picky eaters and dogs chicken doesn’t suit.", "chicken-feet": "Naturally contains glucosamine and collagen, and the crunch keeps your dog happily busy.", "chicken-neck": "High in protein (42.8 g per 100 g) with a satisfying bone-in crunch for medium and large dogs.", "chicken-wings": "A meaty, bone-in chew that gives your dog a natural outlet for the urge to chew.", "chicken-wing-tips": "A light, crunchy chew sized for small and medium dogs who love to crunch.", "chicken-bones": "A hard, crunchy chew that keeps steady chewers busy – instead of your furniture.", "goat-trotter": "A long-lasting chew that keeps strong chewers busy, with natural collagen from skin and tendon.", "goat-trachea": "Naturally contains cartilage, a natural source of glucosamine and chondroitin, in a long crunchy chew.", "goat-ear": "A thin, crunchy chew for a quick, satisfying chew session – suits most dogs.", "chicken-gizzards": "Naturally protein-rich and chewy – a high-value reward dogs will work hard for.", "chicken-heart-and-liver": "Naturally contains iron and vitamin A – so rich that a few small pieces go a long way.", "goat-liver": "Naturally contains vitamin A, iron and B vitamins – a rich, high-value reward for big moments.", "goat-lungs": "Light and airy, so you can give lots of rewards in one session without overfeeding.", "goat-heart-and-kidney-mix": "Naturally contains taurine from heart and iron from kidney – rich organ variety in small pieces.", "goat-spleen": "Naturally contains iron – a rich organ treat that adds variety to your dog’s rewards.", "anchovies": "Naturally contains omega-3 fatty acids and calcium from tiny soft bones – loved by cats and dogs.", "sardines": "Naturally contains omega-3 fatty acids, and the strong smell wins over picky dogs and cats.", "white-sardines": "Naturally contains omega-3 fatty acids, with a milder taste for fussy dogs and cats.", "bombay-duck": "A lean, light fish treat that even small dogs and cats can enjoy.", "tuna": "Lean, boneless fish protein – easy to break into tiny pieces for cats and small dogs.", "mackerel-fillet": "Boneless, and naturally contains omega-3 fatty acids – a rich fish reward for dogs and cats.", "whole-mackerel": "A whole oily fish that naturally contains omega-3 fatty acids, eaten as a crunchy chew.", "whole-quail": "Whole prey – meat, bone and organs together, the way dogs naturally eat.", "cat-trial-box": "Five fish treats in one box, so you find out what your cat loves before buying full packs.", "small-treat-box": "Nine single-ingredient treats to try, so you find your dog’s favourite without buying full packs.", "medium-treat-box": "Seven full packs – a month of variety so treat time never gets boring.", "large-treat-box": "Ten full packs – the best value for multi-dog homes and gifting.", "surprise-me-box": "A surprise mix of single-ingredient treats that keeps treat time exciting."};
     if (identEl && GAIN[id] && !$('#v2Gain')) identEl.insertAdjacentHTML('afterend', `<p class="v2-gain" id="v2Gain">${esc(GAIN[id])}</p>`);
