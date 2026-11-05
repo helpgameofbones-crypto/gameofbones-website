@@ -602,7 +602,7 @@ function renderCommerceCart(){
   if(!root)return
   const items=cart()
   if(!items.length){
-    root.innerHTML='<div class="empty-cart"><h2>Your bowl is ready when you are.</h2><p>Pick a single-ingredient treat and come back when you are ready to check out.</p><a class="button" href="/products">Shop all treats</a></div>'
+    root.innerHTML='<div class="empty-cart"><h2>Your treat jar is ready when you are.</h2><p>Pick a single-ingredient treat and come back when you are ready to check out.</p><a class="button" href="/products">Shop all treats</a></div>'
     document.querySelector('#checkoutLink')?.setAttribute('href','/products')
     updateCommerceTotals()
     updateSaleOfferControls()

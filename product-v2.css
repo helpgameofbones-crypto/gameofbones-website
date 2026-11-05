@@ -127,3 +127,11 @@ body.gob-v2 #restockNotifyProduct .restock-notify-button:hover { background: #10
 .v2-legal th { width: 38%; vertical-align: top; font-size: 11.5px; }
 .v2-legal td, .v2-legal td:last-child { text-align: left; font-variant-numeric: normal; }
 .v2-legal small { color: var(--muted, #557064); }
+
+/* Nov 2026 audit fixes */
+/* Text at least 12px */
+.v2-legal th,.v2-legal small,.v2-pair small{font-size:12px}
+/* One rating under the product name: hide the second line when the main one is shown */
+.product-info:has(.gob-pdp-rating) #productRating{display:none!important}
+/* Smallest phones: keep "Add to treat jar · price" on one line */
+@media (max-width: 380px) { body.gob-v2 .buy-row { grid-template-columns: 92px minmax(0, 1fr) !important; } body.gob-v2 .buy-row > #addProduct { white-space: nowrap; letter-spacing: .02em; padding-inline: 8px; } }

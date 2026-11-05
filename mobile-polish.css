@@ -8,7 +8,7 @@
 @media (min-width: 761px) { .nav .compact-nav a.mp-login-link, .nav .nav-links a.mp-login-link { display: none !important; } }
 /* Card price split (all widths): bold price, muted pack size */
 .mp-price { color: var(--ink, #102c22); font-weight: 800; }
-.mp-weight { margin-left: 6px; color: var(--muted, #557064); font-size: .88em; font-weight: 600; }
+.mp-weight { margin-left: 6px; color: var(--muted, #557064); font-size: max(12px, .88em); font-weight: 600; }
 
 /* Product page: the restock note sits under the quantity + Add row, full width */
 .buy-row > .restock-notify-area { grid-column: 1 / -1 !important; width: 100%; margin-top: 4px; }
@@ -43,7 +43,7 @@
   .nav .brand small { display: none !important; }
   .nav .nav-actions { gap: 6px !important; }
   .nav .login-trigger, .nav .nav-actions > a[href*="login"] { display: none !important; }
-  .nav .search-trigger { width: 40px !important; height: 40px !important; min-width: 40px; padding: 0 !important; display: grid !important; place-items: center; }
+  .nav .search-trigger { width: 44px !important; height: 44px !important; min-width: 44px; padding: 0 !important; display: grid !important; place-items: center; }
   .nav .search-trigger span:not(.sr-only) { display: none !important; }
   .nav .cart-trigger {
     position: relative; width: 44px !important; height: 44px !important; min-width: 44px !important;
@@ -51,7 +51,7 @@
   }
   .nav .cart-trigger svg { width: 20px; height: 20px; }
   .nav .cart-trigger .jar-count { top: -3px !important; right: -3px !important; min-width: 19px; height: 19px; font-size: 12px !important; line-height: 19px !important; }
-  .nav .menu-toggle { min-height: 40px !important; padding: 0 12px !important; font-size: 14px !important; }
+  .nav .menu-toggle { min-height: 44px !important; padding: 0 12px !important; font-size: 14px !important; }
   .nav .compact-nav.open, .nav .nav-links.open { max-height: calc(100vh - var(--mp-notice) - var(--mp-nav)); overflow-y: auto; }
   .nav .compact-nav .mp-login-link { font-weight: 800; }
 
@@ -87,7 +87,7 @@
     scrollbar-width: none; -webkit-overflow-scrolling: touch; scroll-snap-type: x proximity;
   }
   .catalog-filters .filter {
-    flex: none; min-height: 38px !important; padding: 0 14px !important; border-radius: 999px !important;
+    flex: none; min-height: 44px !important; padding: 0 14px !important; border-radius: 999px !important;
     font-size: 12px !important; letter-spacing: .04em !important; white-space: nowrap; scroll-snap-align: start;
   }
 
@@ -101,9 +101,9 @@
   .products .product-card:not([data-home-product]) .tag {
     display: flex !important; align-items: center; gap: 6px; margin: 0 !important; min-width: 0;
     font-size: 12px !important; letter-spacing: .06em !important; line-height: 1.2 !important;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-wrap: wrap; row-gap: 4px;
   }
-  .products .product-card:not([data-home-product]) .bestseller-tag { flex: none; padding: 2px 6px !important; font-size: 9.5px !important; }
+  .products .product-card:not([data-home-product]) .bestseller-tag { flex: none; padding: 2px 6px !important; font-size: 12px !important; }
   .products .product-card:not([data-home-product]) h3 {
     margin: 2px 0 0 !important; font-size: 17px !important; line-height: 1.15 !important;
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 0 !important;
@@ -117,7 +117,7 @@
   .mp-price { color: var(--ink, #102c22); font-size: 17px; font-weight: 800; letter-spacing: -.01em; }
   .mp-weight { color: var(--muted, #557064); font-size: 12px; font-weight: 600; }
   .products .product-card:not([data-home-product]) .quick-add, .products .product-card:not([data-home-product]) .card-bottom > a {
-    width: 100% !important; min-height: 42px !important; height: auto !important; margin: 0 !important;
+    width: 100% !important; min-height: 44px !important; height: auto !important; margin: 0 !important;
     border-radius: 999px !important; font-size: 14px !important; justify-content: center;
   }
   /* "Notify me" is secondary while a treat is in stock, primary once it sells out */

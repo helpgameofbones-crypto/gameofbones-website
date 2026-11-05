@@ -11,3 +11,12 @@
 .pin-status.ok{color:#245b42}.pin-status.ok b{color:#102c22}
 .pin-status.error{color:#b8442f}.pin-status.checking{color:#557064}
 .payment-option.is-unavailable{opacity:.55}.payment-option .pay-note{display:block;font-style:normal;font-size:12px;color:#b8442f;margin-top:2px}
+
+/* Nov 2026 audit fixes: visible field edges, readable payment note, button on one line */
+.promo,.cart-save input{border-color:var(--muted)}
+.payment-option:has(input:checked) small{color:var(--ink-soft)}
+@media(max-width:380px){.checkout-form>.button{padding-inline:12px;letter-spacing:.06em;white-space:nowrap}}
+.cart-save input,.cart-save button{min-height:44px}
+/* Private birthday code: a full-width field you can type in (was squashed to 18px) */
+.private-code label{display:grid;gap:6px;margin-top:10px}
+.private-code input{width:100%;min-width:0;min-height:44px;padding:10px 12px;border:1px solid var(--muted);background:#fffdf8;color:var(--ink);font:inherit}

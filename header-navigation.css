@@ -118,7 +118,7 @@
 .eyebrow, .product-card .tag, .catalog-desc + .tag, .bestseller-tag, .v2-acc .eyebrow { color: #7a4f0e; }
 .eyebrow { font-size: 12px !important; }
 .product-card .tag, .bestseller-tag { font-size: 12px !important; }
-.catalog-filters button, .catalog-filters a { font-size: 12px !important; min-height: 40px; }
+.catalog-filters button, .catalog-filters a { font-size: 12px !important; min-height: 44px; }
 .shop-trust li { font-size: 12px !important; }
 /* keep light gold where the background is dark */
 .footer .eyebrow, .hv2 .trial .eyebrow, .h-hero .eyebrow.on-dark, [class*="dark"] .eyebrow { color: #e7bd68; }

@@ -61,6 +61,7 @@
   .gob-quotes blockquote{margin:0;padding:8px 10px;background:#f7f0e4;border-left:3px solid #bd812a;border-radius:6px;font-size:13px;line-height:1.4;color:#102c22}
   .gob-quotes cite{display:block;margin-top:3px;font-style:normal;font-size:12px;font-weight:700;color:#557064}
   .gob-quotes .gob-stars{color:#96620f;letter-spacing:1px;margin-right:4px}
+  .gob-quotes .gob-stars i{font-style:normal;color:rgba(16,44,34,.2)}
   #productMediaStage{position:relative}
   .gob-clip{position:absolute;right:10px;bottom:10px;width:38%;max-width:190px;aspect-ratio:1;border-radius:14px;overflow:hidden;border:3px solid #fffdf8;box-shadow:0 8px 22px rgba(16,44,34,.28);background:#102c22;z-index:3;cursor:pointer}
   .gob-clip video{width:100%;height:100%;object-fit:cover;display:block}
@@ -116,7 +117,7 @@
     box.innerHTML = picks.map(r => {
       const text = String(r.review).replace(/\s+/g, ' ').trim();
       const short = text.length > 110 ? text.slice(0, 107).replace(/\s+\S*$/, '') + '…' : text;
-      return `<blockquote><span class="gob-stars" aria-label="${Number(r.rating) || 5} out of 5">${'★'.repeat(Math.max(1, Math.min(5, Number(r.rating) || 5)))}</span>“${esc(short)}”<cite>${esc(r.name || 'Verified dog parent')}</cite></blockquote>`;
+      return `<blockquote><span class="gob-stars" aria-label="${Number(r.rating) || 5} out of 5">${(n => '★'.repeat(n) + '<i>' + '★'.repeat(5 - n) + '</i>')(Math.max(1, Math.min(5, Math.round(Number(r.rating)) || 5)))}</span>“${esc(short)}”<cite>${esc(r.name || 'Verified dog parent')}</cite></blockquote>`;
     }).join('');
     const desktop = window.matchMedia('(min-width: 761px)').matches;
     const anchor = desktop
