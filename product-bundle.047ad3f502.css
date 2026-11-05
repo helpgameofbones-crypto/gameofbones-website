@@ -11,8 +11,8 @@
 .nav .brand,.nav .nav-actions>a{display:inline-flex;align-items:center;min-height:44px}
 .card-bottom a,.card-bottom .quick-add{min-height:44px}
 /* Text links keep their look; an invisible layer makes the tap area 44px tall */
-.row-head>a,.text-link,.cart-total a,.reward-review a,.guide>a{position:relative}
-.row-head>a::before,.text-link::before,.cart-total a::before,.reward-review a::before,.guide>a::before{content:"";position:absolute;inset:-14px -6px}
+.row-head>a,.text-link,.cart-total a,.reward-review a,.guide>a,.gob-pdp-rating{position:relative}
+.row-head>a::before,.text-link::before,.cart-total a::before,.reward-review a::before,.guide>a::before,.gob-pdp-rating::before{content:"";position:absolute;inset:-14px -6px}
 .private-code summary{padding-block:12px}
 .policy-check input[type=checkbox],.payment-option input[type=radio],.footer-consent input[type=checkbox]{width:20px;height:20px;flex:none;accent-color:var(--ink)}
 /* Footer sign-up: keep "Join" on one line and easy to tap */
