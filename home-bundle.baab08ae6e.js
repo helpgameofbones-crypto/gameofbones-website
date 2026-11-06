@@ -243,6 +243,8 @@ document.addEventListener('DOMContentLoaded',installFormFeedback);
 // Stock limits and "Only N left" badges live in their own file so every page
 // that loads site.js gets them without editing each HTML page.
 (function loadStockGuard(){if(document.querySelector('script[data-gob-stock-guard]'))return;const s=document.createElement('script');s.src='/stock-guard.js?v=1';s.defer=true;s.dataset.gobStockGuard='true';document.head.append(s)})();
+// Origin line under each treat's name on product cards (origin-lines.js).
+(function loadOriginLines(){if(document.querySelector('script[data-gob-origin]'))return;const s=document.createElement('script');s.src='/origin-lines.js?v=1';s.defer=true;s.dataset.gobOrigin='true';document.head.append(s)})();
 
 (function loadMobilePolish(){if(document.querySelector('script[data-gob-mobile-polish]'))return;const s=document.createElement('script');s.src='/mobile-polish.js?v=2';s.defer=true;s.dataset.gobMobilePolish='true';document.head.append(s)})();
 
@@ -827,7 +829,7 @@ document.addEventListener('DOMContentLoaded',()=>{const root=document.querySelec
 ;
 /* ===== community.js ===== */
 /* "Dogs of Game of Bones": real customer photos from published, verified-purchase reviews.
-   Stays hidden until at least 3 photos exist, so the homepage never shows an empty or padded gallery. */
+   Until at least 3 exist, the section shows our own treat-time photos and an invitation to add one. */
 (() => {
   const box = document.getElementById('gobDogs');
   if (!box) return;
@@ -839,6 +841,7 @@ document.addEventListener('DOMContentLoaded',()=>{const root=document.querySelec
       if (list.length < 3) return;
       box.querySelector('.dogs-grid').innerHTML = list.map(p => `<figure class="dog-tile"><img src="${esc(p.photo_url)}" alt="${esc(p.name.split(' ·')[0])}’s dog with ${esc(p.product)}" loading="lazy"><figcaption><b>${'★'.repeat(Math.max(1, Math.min(5, p.rating || 5)))}</b> ${esc(p.product)}${p.review ? `<span>“${esc(p.review.slice(0, 90))}${p.review.length > 90 ? '…' : ''}”</span>` : ''}<small>${esc(p.name)}</small></figcaption></figure>`).join('');
       box.hidden = false;
+      const note = box.querySelector('.dogs-note'); if (note) note.hidden = false; // only true once customer photos show
     })
     .catch(() => {});
 })();
