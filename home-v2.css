@@ -131,3 +131,32 @@
 .hv2 .dog-tile figcaption small{display:block;margin-top:3px;color:var(--muted)}
 @media(min-width:880px){.hv2 .dogs-grid{grid-template-columns:repeat(4,1fr);gap:14px}}
 .hv2 .h-hero-img picture{display:contents}
+
+/* Nov 2026: ideas adapted from pet-food sites */
+/* Shop by need: quick buttons under the type tiles */
+.hv2 .need-chips{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:20px}
+.hv2 .need-chips span{font-size:14px;font-weight:700;color:var(--muted);margin-right:4px}
+.hv2 .need-chips a{display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border:1.5px solid var(--line);border-radius:999px;background:var(--paper);color:var(--ink);font-size:15px;font-weight:700;transition:border-color .2s,background .2s}
+.hv2 .need-chips a:hover{border-color:var(--ink);background:#fff}
+/* Where it's made: the place leads the how-it's-made section */
+.hv2 .kitchen{display:grid;gap:22px;margin-bottom:clamp(40px,6vw,72px)}
+.hv2 .kitchen-img{position:relative;margin:0;border-radius:22px;overflow:hidden;background:var(--ink)}
+.hv2 .kitchen-img img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}
+.hv2 .kitchen-img figcaption{position:absolute;left:14px;bottom:14px;padding:8px 12px;border-radius:999px;background:rgba(16,44,34,.82);color:var(--paper);font-size:13px;font-weight:700}
+.hv2 .kitchen-tx .lead{max-width:560px}
+.hv2 .kitchen-facts{list-style:none;margin:18px 0 24px;padding:0;display:grid;gap:0;border-top:1px solid var(--line)}
+.hv2 .kitchen-facts li{display:grid;gap:2px;padding:12px 0;border-bottom:1px solid var(--line)}
+.hv2 .kitchen-facts b{font-family:var(--display);font-size:20px;color:var(--ink)}
+.hv2 .kitchen-facts span{font-size:15px;color:var(--muted)}
+.hv2 .hm-eyebrow{margin-top:0}
+@media(min-width:880px){.hv2 .kitchen{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:clamp(32px,5vw,72px);align-items:center}.hv2 .kitchen-img img{aspect-ratio:5/4}}
+/* Real dogs: our own photos plus an invitation, until customer photos replace them */
+.hv2 .dogs-invite{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px 24px;margin-top:18px;padding:18px 20px;border:1px solid var(--line);border-radius:16px;background:var(--paper)}
+.hv2 .dogs-invite p{margin:0;max-width:640px;font-size:15px;line-height:1.55;color:var(--ink2)}
+.hv2 .dogs-invite b{color:var(--ink)}
+/* Category pages: the key claims as a short checklist */
+.hv2 .c-checks{list-style:none;margin:20px 0 6px;padding:0;display:grid;gap:10px;max-width:640px}
+.hv2 .c-checks li{position:relative;padding-left:32px;font-size:16px;font-weight:600;line-height:1.45;color:var(--ink)}
+.hv2 .c-checks li::before{content:"";position:absolute;left:0;top:1px;width:20px;height:20px;border:2px solid var(--ink);border-radius:50%;box-sizing:border-box}
+.hv2 .c-checks li::after{content:"";position:absolute;left:7px;top:5px;width:5px;height:9px;border:solid var(--gold);border-width:0 2px 2px 0;transform:rotate(45deg)}
+@media(min-width:760px){.hv2 .c-checks{grid-template-columns:1fr 1fr;column-gap:28px}}
