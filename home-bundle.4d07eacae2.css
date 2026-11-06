@@ -268,6 +268,8 @@
 .hv2 .c-checks li::before{content:"";position:absolute;left:0;top:1px;width:20px;height:20px;border:2px solid var(--ink);border-radius:50%;box-sizing:border-box}
 .hv2 .c-checks li::after{content:"";position:absolute;left:7px;top:5px;width:5px;height:9px;border:solid var(--gold);border-width:0 2px 2px 0;transform:rotate(45deg)}
 @media(min-width:760px){.hv2 .c-checks{grid-template-columns:1fr 1fr;column-gap:28px}}
+/* Category pages: related-guide links at least 44px to tap */
+.hv2 .c-links a{display:inline-flex;align-items:center;min-height:44px}
 /* ===== howmade.css ===== */
 /* "How it's made" – scroll-driven photo process (homepage) */
 .hm{display:grid;gap:24px;margin-top:22px}
