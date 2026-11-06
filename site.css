@@ -99,3 +99,6 @@
 :root .gob-why .eyebrow,
 :root .spin-gift-note strong{text-transform:none!important;letter-spacing:normal!important}
 :root .eyebrow,:root .hv2 .eyebrow,:root .gob-why .eyebrow{font-size:14px!important}
+/* Shop cards: "Notify me" on sold-out treats, styled like the product page button, 44px to tap */
+.card-bottom .restock-notify-button{display:inline-flex;align-items:center;justify-content:center;min-height:44px!important;padding:0 16px;border:1.5px solid var(--ink);border-radius:999px;background:transparent;color:var(--ink);font:700 13px/1.2 var(--body);white-space:nowrap;cursor:pointer}
+.card-bottom .restock-notify-button:hover{background:var(--ink);color:var(--paper)}

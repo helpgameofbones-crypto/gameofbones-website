@@ -131,8 +131,8 @@ body.gob-v2 #restockNotifyProduct .restock-notify-button:hover { background: #10
 /* Nov 2026 audit fixes */
 /* Text at least 12px */
 .v2-legal th,.v2-legal small,.v2-pair small{font-size:12px}
-/* One rating under the product name: hide the second line when the main one is shown */
-.product-info:has(.gob-pdp-rating) #productRating{display:none!important}
+/* One rating under the product name (it moves into the phone header on small screens): hide the repeats */
+body:has(.gob-pdp-rating) #productRating{display:none!important}
 /* Smallest phones: keep "Add to treat jar · price" on one line */
 @media (max-width: 380px) { body.gob-v2 .buy-row { grid-template-columns: 92px minmax(0, 1fr) !important; } body.gob-v2 .buy-row > #addProduct { white-space: nowrap; letter-spacing: .02em; padding-inline: 8px; } }
 /* Shorter details column (Nov 2026) */
@@ -145,6 +145,6 @@ body.gob-v2 #restockNotifyProduct .restock-notify-button:hover { background: #10
 }
 @media (max-width: 560px) { .review-box.review-band { width: calc(100% - 32px); } }
 /* The rating already sits under the product name: skip the repeat summary line */
-.product-info:has(.gob-pdp-rating) #quickReviewProof { display: none !important; }
+body:has(.gob-pdp-rating) #quickReviewProof { display: none !important; }
 /* Payment logos already sit beside "Add to treat jar": no second copy in the footer */
 body.gob-v2 footer .gob-pay { display: none; }
